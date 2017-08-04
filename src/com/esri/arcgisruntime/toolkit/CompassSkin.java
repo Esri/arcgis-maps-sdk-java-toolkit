@@ -14,7 +14,7 @@
  email: contracts@esri.com
  */
 
-package Toolkit;
+package toolkit;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;

@@ -14,7 +14,7 @@
  email: contracts@esri.com
  */
 
-package Toolkit;
+package toolkit;
 
 import com.esri.arcgisruntime.mapping.view.MapView;
 import javafx.beans.property.ObjectProperty;
