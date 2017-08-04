@@ -28,10 +28,12 @@ import javafx.scene.control.Skin;
 
 public final class Compass extends Control {
 
-  private SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
-  private SimpleBooleanProperty autoHideProperty = new SimpleBooleanProperty(true);
+  private static final double SIZE = 100.0;
 
-  private ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
+  private final SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
+  private final SimpleBooleanProperty autoHideProperty = new SimpleBooleanProperty(true);
+
+  private final ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
     @Override
     protected void invalidated() {
       setEventHandler(ActionEvent.ACTION, get());
@@ -49,8 +51,10 @@ public final class Compass extends Control {
   };
 
   public Compass() {
-    setMaxHeight(100.0);
-    setMaxWidth(100.0);
+    setPrefHeight(SIZE);
+    setPrefWidth(SIZE);
+    setMaxHeight(USE_PREF_SIZE);
+    setMaxWidth(USE_PREF_SIZE);
   }
 
   @Override
