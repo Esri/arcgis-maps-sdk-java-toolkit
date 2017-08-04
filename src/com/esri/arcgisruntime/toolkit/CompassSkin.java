@@ -40,7 +40,7 @@ public final class CompassSkin extends SkinBase<Compass> {
 
     control.widthProperty().addListener(o -> invalid = true);
     control.heightProperty().addListener(o -> invalid = true);
-    // bind to the heading but also subtract rotation of the to ensure north stays pointing up
+    // bind to the heading but also subtract rotation of the control to ensure north stays pointing up
     compassStackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
 
     getChildren().add(compassStackPane);
@@ -50,7 +50,6 @@ public final class CompassSkin extends SkinBase<Compass> {
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
     if (invalid) {
       update(contentWidth, contentHeight);
-      System.out.println(getSkinnable().getWidth() + " " + getSkinnable().getHeight());
       invalid = false;
     }
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
