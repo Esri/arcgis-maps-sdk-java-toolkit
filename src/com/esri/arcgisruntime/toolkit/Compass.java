@@ -25,10 +25,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import toolkit.skin.CompassSkin;
 
 public final class Compass extends Control {
 
   private static final double SIZE = 100.0;
+
+  private MapView view;
 
   private final SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
   private final SimpleBooleanProperty autoHideProperty = new SimpleBooleanProperty(true);
@@ -62,11 +65,10 @@ public final class Compass extends Control {
     return new CompassSkin(this);
   }
 
-  public void setView(MapView view) {
+  public void setView(MapView mapView) {
+    view = mapView;
     if (view != null) {
-      view.addMapRotationChangedListener(r -> {
-        headingProperty.set(view.getMapRotation());
-      });
+      view.addMapRotationChangedListener(r -> headingProperty.set(view.getMapRotation()));
       setOnAction(e -> view.setViewpointRotationAsync(0.0));
     }
   }
@@ -81,6 +83,9 @@ public final class Compass extends Control {
 
   public void setHeading(double heading) {
     headingProperty.set(heading);
+    if (view != null) {
+      view.setViewpointRotationAsync(heading);
+    }
   }
 
   public SimpleBooleanProperty autoHideProperty() {
@@ -95,15 +100,15 @@ public final class Compass extends Control {
     autoHideProperty.set(autoHide);
   }
 
-  public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
+  private ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
     return onAction;
   }
 
-  public final void setOnAction(EventHandler<ActionEvent> value) {
+  private void setOnAction(EventHandler<ActionEvent> value) {
     onActionProperty().set(value);
   }
 
-  public final EventHandler<ActionEvent> getOnAction() {
+  private EventHandler<ActionEvent> getOnAction() {
     return onActionProperty().get();
   }
 }

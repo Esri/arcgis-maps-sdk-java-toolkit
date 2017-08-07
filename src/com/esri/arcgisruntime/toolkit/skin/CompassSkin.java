@@ -14,7 +14,7 @@
  email: contracts@esri.com
  */
 
-package toolkit;
+package toolkit.skin;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
@@ -29,17 +29,19 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import javafx.scene.shape.VLineTo;
+import toolkit.Compass;
 
 public final class CompassSkin extends SkinBase<Compass> {
 
   private boolean invalid = true;
   private final StackPane compassStackPane = new StackPane();
 
-  CompassSkin(Compass control) {
+  public CompassSkin(Compass control) {
     super(control);
 
     control.widthProperty().addListener(o -> invalid = true);
     control.heightProperty().addListener(o -> invalid = true);
+
     // bind to the heading but also subtract rotation of the control to ensure north stays pointing up
     compassStackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
 
