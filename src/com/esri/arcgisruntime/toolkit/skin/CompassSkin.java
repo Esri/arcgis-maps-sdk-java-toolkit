@@ -31,11 +31,18 @@ import javafx.scene.shape.PathElement;
 import javafx.scene.shape.VLineTo;
 import toolkit.Compass;
 
+/**
+ * Implements a skin for the {@link Compass} control.
+ */
 public final class CompassSkin extends SkinBase<Compass> {
 
   private boolean invalid = true;
   private final StackPane compassStackPane = new StackPane();
 
+  /**
+   * Creates an instance of the skin.
+   * @param control the {@link Compass} control this skin represents
+   */
   public CompassSkin(Compass control) {
     super(control);
 
@@ -44,6 +51,9 @@ public final class CompassSkin extends SkinBase<Compass> {
 
     // bind to the heading but also subtract rotation of the control to ensure north stays pointing up
     compassStackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
+
+    // hide the compass when map is close to north if the auto hide property is enabled
+    compassStackPane.visibleProperty().bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()).not());
 
     getChildren().add(compassStackPane);
   }
@@ -94,6 +104,11 @@ public final class CompassSkin extends SkinBase<Compass> {
 //    return 60 + topInset + bottomInset;
 //  }
 
+  /**
+   * Updates the visual representation of the compass e.g. when the size is changed.
+   * @param width the width of the control
+   * @param height the height of the control
+   */
   private void update(double width, double height) {
     compassStackPane.getChildren().clear();
 

@@ -27,6 +27,11 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import toolkit.skin.CompassSkin;
 
+/**
+ * A compass control which shows the direction of north for the view. Clicking on the compass will return the view to
+ * north. The compass can be set to make itself invisible when its heading is north. The size of the compass is the
+ * smaller of its width and height values.
+ */
 public final class Compass extends Control {
 
   private static final double SIZE = 100.0;
@@ -53,6 +58,10 @@ public final class Compass extends Control {
     }
   };
 
+  /**
+   * Creates an instance of a compass control. The compass control will show the direction of north when a view has been
+   * see using {@link #setView(MapView)}.
+   */
   public Compass() {
     setPrefHeight(SIZE);
     setPrefWidth(SIZE);
@@ -65,6 +74,10 @@ public final class Compass extends Control {
     return new CompassSkin(this);
   }
 
+  /**
+   * Sets the {@link MapView} which this compass is representing.
+   * @param mapView the map view
+   */
   public void setView(MapView mapView) {
     view = mapView;
     if (view != null) {
@@ -73,14 +86,27 @@ public final class Compass extends Control {
     }
   }
 
+  /**
+   * A property containing the current compass heading in degrees.
+   * @return the compass heading property
+   */
   public SimpleDoubleProperty headingProperty() {
     return headingProperty;
   }
 
+  /**
+   * Returns the compass heading in degrees.
+   * @return the compass heading
+   */
   public double getHeading() {
     return headingProperty.get();
   }
 
+  /**
+   * Sets the compass heading in degrees. If {@link #setView(MapView)} has been called with a non-null argument then
+   * that view will rotate to match the heading set.
+   * @param heading the compass heading
+   */
   public void setHeading(double heading) {
     headingProperty.set(heading);
     if (view != null) {
@@ -88,14 +114,26 @@ public final class Compass extends Control {
     }
   }
 
+  /**
+   * A property controlling if the compass automatically hides when the view is oriented to north.
+   * @return the auto hide property
+   */
   public SimpleBooleanProperty autoHideProperty() {
     return autoHideProperty;
   }
 
+  /**
+   * Returns true if the compass automatically hides when its heading is north.
+   * @return true if enabled, false otherwise
+   */
   public boolean isAutoHide() {
     return autoHideProperty.get();
   }
 
+  /**
+   * Enables or disables automatically hiding the compass when its heading is north.
+   * @param autoHide true to enable, false to disable
+   */
   public void setAutoHide(boolean autoHide) {
     autoHideProperty.set(autoHide);
   }
