@@ -16,6 +16,9 @@
 
 package toolkit.skin;
 
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -29,7 +32,11 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import javafx.scene.shape.VLineTo;
+import javafx.util.Duration;
 import toolkit.Compass;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Implements a skin for the {@link Compass} control.
@@ -38,6 +45,12 @@ public final class CompassSkin extends SkinBase<Compass> {
 
   private boolean invalid = true;
   private final StackPane compassStackPane = new StackPane();
+
+  // duration used for fading the compass
+  private static final long TIMER_DURATION = 500;
+
+  // property that will be true when the compass is hidden
+  private final SimpleBooleanProperty hiddenProperty = new SimpleBooleanProperty(true);
 
   /**
    * Creates an instance of the skin.
@@ -53,7 +66,28 @@ public final class CompassSkin extends SkinBase<Compass> {
     compassStackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
 
     // hide the compass when map is close to north if the auto hide property is enabled
-    compassStackPane.visibleProperty().bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()).not());
+    hiddenProperty.bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()));
+    hiddenProperty.addListener(o -> {
+      // use a timer to wait and see if the compass has stayed at north before fading it
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          Platform.runLater(() -> {
+            FadeTransition fadeTransition = new FadeTransition(Duration.millis(TIMER_DURATION), compassStackPane);
+            if (hiddenProperty.get()) {
+              fadeTransition.setToValue(0.0);
+            } else {
+              fadeTransition.setToValue(1.0);
+            }
+            fadeTransition.play();
+          });
+        }
+      }, TIMER_DURATION);
+    });
+
+    // initial opacity based on the auto-hide property
+    compassStackPane.setOpacity(control.autoHideProperty().get() == true ? 0.0 : 1.0);
 
     getChildren().add(compassStackPane);
   }
