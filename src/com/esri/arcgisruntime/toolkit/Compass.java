@@ -19,7 +19,6 @@ package toolkit;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.GeoView;
-import com.esri.arcgisruntime.mapping.view.MapRotationChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
@@ -90,14 +89,25 @@ public final class Compass extends Control {
   };
 
   /**
-   * Creates an instance of a compass control. The compass control will show the direction of north when a view has been
-   * see using {@link #setView(GeoView)}.
+   * Creates an instance of a compass control. The compass control will show the direction of north when a
+   * {@link GeoView} has been set using {@link #setGeoView(GeoView)}.
    */
   public Compass() {
+    this(null);
+  }
+
+  /**
+   * Creates an instance of a compass control. The compass control will show the direction of north when a non-null
+   * {@link GeoView} has been set.
+   *
+   * @param geoView the GeoView to link with this compass
+   */
+  public Compass(GeoView geoView) {
     setPrefHeight(SIZE);
     setPrefWidth(SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
+    setGeoView(geoView);
   }
 
   @Override
@@ -107,9 +117,9 @@ public final class Compass extends Control {
 
   /**
    * Sets the {@link GeoView} which this compass is representing.
-   * @param geoView the geoview
+   * @param geoView the GeoView
    */
-  public void setView(GeoView geoView) {
+  public void setGeoView(GeoView geoView) {
     if (view != null) {
       view.removeViewpointChangedListener(viewpointChangedListener);
     }
@@ -140,7 +150,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * Sets the compass heading in degrees. If {@link #setView(GeoView)} has been called with a non-null argument then
+   * Sets the compass heading in degrees. If {@link #setGeoView(GeoView)} has been called with a non-null argument then
    * that view will rotate to match the heading set.
    * @param heading the compass heading
    */
