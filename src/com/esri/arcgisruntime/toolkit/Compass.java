@@ -80,10 +80,12 @@ public final class Compass extends Control {
 
   // handler for heading changes
   private final ViewpointChangedListener viewpointChangedListener = v -> {
-    if (view instanceof MapView) {
-      headingProperty.set(((MapView) view).getMapRotation());
-    } else if (view instanceof SceneView) {
-      headingProperty.set(((SceneView )view).getCurrentViewpointCamera().getHeading());
+    if (view != null) {
+      if (view instanceof MapView) {
+        headingProperty.set(((MapView) view).getMapRotation());
+      } else if (view instanceof SceneView) {
+        headingProperty.set(((SceneView) view).getCurrentViewpointCamera().getHeading());
+      }
     }
   };
 
@@ -96,8 +98,6 @@ public final class Compass extends Control {
     setPrefWidth(SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
-
-    setOnAction(compassClickedAction);
   }
 
   @Override
@@ -116,8 +116,10 @@ public final class Compass extends Control {
     view = geoView;
     if (view != null) {
       view.addViewpointChangedListener(viewpointChangedListener);
+      setOnAction(compassClickedAction);
     } else {
       headingProperty.set(0.0);
+      setOnAction(null);
     }
   }
 
