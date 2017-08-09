@@ -16,7 +16,11 @@
 
 package toolkit;
 
+import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.Camera;
+import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,7 +40,7 @@ public final class Compass extends Control {
 
   private static final double SIZE = 100.0;
 
-  private MapView view;
+  private GeoView view;
 
   private final SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
   private final SimpleBooleanProperty autoHideProperty = new SimpleBooleanProperty(true);
@@ -75,14 +79,25 @@ public final class Compass extends Control {
   }
 
   /**
-   * Sets the {@link MapView} which this compass is representing.
-   * @param mapView the map view
+   * Sets the {@link GeoView} which this compass is representing.
+   * @param view the geoview
    */
-  public void setView(MapView mapView) {
-    view = mapView;
-    if (view != null) {
-      view.addMapRotationChangedListener(r -> headingProperty.set(view.getMapRotation()));
-      setOnAction(e -> view.setViewpointRotationAsync(0.0));
+  public void setView(GeoView geoView) {
+    view = geoView;
+    if (this.view != null) {
+      if (view instanceof MapView) {
+        MapView mapView = (MapView) view;
+        mapView.addMapRotationChangedListener(r -> headingProperty.set(mapView.getMapRotation()));
+        setOnAction(e -> mapView.setViewpointRotationAsync(0.0));
+      } else if (view instanceof SceneView) {
+        SceneView sceneView = (SceneView) view;
+        sceneView.addViewpointChangedListener(v -> headingProperty.set(sceneView.getCurrentViewpointCamera().getHeading()));
+        setOnAction(e -> {
+          Camera camera = sceneView.getCurrentViewpointCamera();
+          camera = new Camera(camera.getLocation(), 0.0, camera.getPitch(), camera.getRoll());
+          sceneView.setViewpointAsync(new Viewpoint(camera.getLocation(), 1, camera), 0.25f);
+        });
+      }
     }
   }
 
@@ -103,14 +118,21 @@ public final class Compass extends Control {
   }
 
   /**
-   * Sets the compass heading in degrees. If {@link #setView(MapView)} has been called with a non-null argument then
+   * Sets the compass heading in degrees. If {@link #setView(GeoView)} has been called with a non-null argument then
    * that view will rotate to match the heading set.
    * @param heading the compass heading
    */
   public void setHeading(double heading) {
     headingProperty.set(heading);
     if (view != null) {
-      view.setViewpointRotationAsync(heading);
+      if (view instanceof MapView) {
+        ((MapView) view).setViewpointRotationAsync(heading);
+      } else if (view instanceof SceneView) {
+        SceneView sceneView = (SceneView) view;
+        Camera camera = sceneView.getCurrentViewpointCamera();
+        camera = new Camera(camera.getLocation(), 0.0, camera.getPitch(), camera.getRoll());
+        sceneView.setViewpointAsync(new Viewpoint(camera.getLocation(), 1, camera), 0.25f);
+      }
     }
   }
 
