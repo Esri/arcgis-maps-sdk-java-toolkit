@@ -19,8 +19,10 @@ package toolkit;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.GeoView;
+import com.esri.arcgisruntime.mapping.view.MapRotationChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -62,6 +64,29 @@ public final class Compass extends Control {
     }
   };
 
+  // handler for clicking on the compass - resets to north
+  private final EventHandler<ActionEvent> compassClickedAction = e -> {
+    if (view != null) {
+      if (view instanceof MapView) {
+        ((MapView) view).setViewpointRotationAsync(0.0);
+      } else if (view instanceof SceneView) {
+        SceneView sceneView = (SceneView) view;
+        Camera camera = sceneView.getCurrentViewpointCamera();
+        camera = new Camera(camera.getLocation(), 0.0, camera.getPitch(), camera.getRoll());
+        sceneView.setViewpointAsync(new Viewpoint(camera.getLocation(), 1, camera), 0.25f);
+      }
+    }
+  };
+
+  // handler for heading changes
+  private final ViewpointChangedListener viewpointChangedListener = v -> {
+    if (view instanceof MapView) {
+      headingProperty.set(((MapView) view).getMapRotation());
+    } else if (view instanceof SceneView) {
+      headingProperty.set(((SceneView )view).getCurrentViewpointCamera().getHeading());
+    }
+  };
+
   /**
    * Creates an instance of a compass control. The compass control will show the direction of north when a view has been
    * see using {@link #setView(GeoView)}.
@@ -71,6 +96,8 @@ public final class Compass extends Control {
     setPrefWidth(SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
+
+    setOnAction(compassClickedAction);
   }
 
   @Override
@@ -83,21 +110,14 @@ public final class Compass extends Control {
    * @param geoView the geoview
    */
   public void setView(GeoView geoView) {
+    if (view != null) {
+      view.removeViewpointChangedListener(viewpointChangedListener);
+    }
     view = geoView;
-    if (this.view != null) {
-      if (view instanceof MapView) {
-        MapView mapView = (MapView) view;
-        mapView.addMapRotationChangedListener(r -> headingProperty.set(mapView.getMapRotation()));
-        setOnAction(e -> mapView.setViewpointRotationAsync(0.0));
-      } else if (view instanceof SceneView) {
-        SceneView sceneView = (SceneView) view;
-        sceneView.addViewpointChangedListener(v -> headingProperty.set(sceneView.getCurrentViewpointCamera().getHeading()));
-        setOnAction(e -> {
-          Camera camera = sceneView.getCurrentViewpointCamera();
-          camera = new Camera(camera.getLocation(), 0.0, camera.getPitch(), camera.getRoll());
-          sceneView.setViewpointAsync(new Viewpoint(camera.getLocation(), 1, camera), 0.25f);
-        });
-      }
+    if (view != null) {
+      view.addViewpointChangedListener(viewpointChangedListener);
+    } else {
+      headingProperty.set(0.0);
     }
   }
 
