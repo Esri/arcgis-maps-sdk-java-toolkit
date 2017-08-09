@@ -64,7 +64,7 @@ public final class Compass extends Control {
 
   /**
    * Creates an instance of a compass control. The compass control will show the direction of north when a view has been
-   * see using {@link #setView(MapView)}.
+   * see using {@link #setView(GeoView)}.
    */
   public Compass() {
     setPrefHeight(SIZE);
@@ -80,7 +80,7 @@ public final class Compass extends Control {
 
   /**
    * Sets the {@link GeoView} which this compass is representing.
-   * @param view the geoview
+   * @param geoView the geoview
    */
   public void setView(GeoView geoView) {
     view = geoView;
