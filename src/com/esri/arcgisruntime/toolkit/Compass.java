@@ -118,6 +118,7 @@ public final class Compass extends Control {
 
   /**
    * Sets the {@link GeoView} which this compass is representing.
+   *
    * @param geoView the GeoView
    */
   public void setGeoView(GeoView geoView) {
