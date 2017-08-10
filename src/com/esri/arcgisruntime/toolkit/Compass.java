@@ -46,6 +46,7 @@ public final class Compass extends Control {
   private final SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
   private final SimpleBooleanProperty autoHideProperty = new SimpleBooleanProperty(true);
 
+  // property to hold the action to be executed when the compass is clicked
   private final ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
     @Override
     protected void invalidated() {
@@ -89,7 +90,7 @@ public final class Compass extends Control {
   };
 
   /**
-   * Creates an instance of a compass control. The compass control will show the direction of north when a
+   * Creates an instance of a compass control. The compass control will show the direction of north when a non-null
    * {@link GeoView} has been set using {@link #setGeoView(GeoView)}.
    */
   public Compass() {
@@ -135,6 +136,7 @@ public final class Compass extends Control {
 
   /**
    * A property containing the current compass heading in degrees.
+   *
    * @return the compass heading property
    */
   public SimpleDoubleProperty headingProperty() {
@@ -143,6 +145,7 @@ public final class Compass extends Control {
 
   /**
    * Returns the compass heading in degrees.
+   *
    * @return the compass heading
    */
   public double getHeading() {
@@ -152,6 +155,7 @@ public final class Compass extends Control {
   /**
    * Sets the compass heading in degrees. If {@link #setGeoView(GeoView)} has been called with a non-null argument then
    * that view will rotate to match the heading set.
+   *
    * @param heading the compass heading
    */
   public void setHeading(double heading) {
@@ -170,6 +174,7 @@ public final class Compass extends Control {
 
   /**
    * A property controlling if the compass automatically hides when the view is oriented to north.
+   *
    * @return the auto hide property
    */
   public SimpleBooleanProperty autoHideProperty() {
@@ -178,6 +183,7 @@ public final class Compass extends Control {
 
   /**
    * Returns true if the compass automatically hides when its heading is north.
+   *
    * @return true if enabled, false otherwise
    */
   public boolean isAutoHide() {
@@ -186,20 +192,36 @@ public final class Compass extends Control {
 
   /**
    * Enables or disables automatically hiding the compass when its heading is north.
+   *
    * @param autoHide true to enable, false to disable
    */
   public void setAutoHide(boolean autoHide) {
     autoHideProperty.set(autoHide);
   }
 
+  /**
+   * A property to hold the action to execute when the compass is clicked.
+   *
+   * @return the action property
+   */
   private ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
     return onAction;
   }
 
+  /**
+   * Sets the action to execute when the compass is clicked.
+   *
+   * @param value the action
+   */
   private void setOnAction(EventHandler<ActionEvent> value) {
     onActionProperty().set(value);
   }
 
+  /**
+   * Returns the action that is set to execute when the compass is clicked.
+   *
+   * @return the action
+   */
   private EventHandler<ActionEvent> getOnAction() {
     return onActionProperty().get();
   }
