@@ -101,43 +101,6 @@ public final class CompassSkin extends SkinBase<Compass> {
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
-//  @Override
-//  protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double
-//    leftInset) {
-//    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
-//  }
-//
-//  @Override
-//  protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double
-//    leftInset) {
-//    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
-//  }
-//
-//
-//  @Override
-//  protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double
-//    leftInset) {
-//    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
-//  }
-//
-//  @Override
-//  protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double
-//    leftInset) {
-//    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
-//  }
-//
-//  @Override
-//  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
-//    leftInset) {
-//    return 60 + rightInset + leftInset;
-//  }
-//
-//  @Override
-//  protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double
-//    leftInset) {
-//    return 60 + topInset + bottomInset;
-//  }
-
   /**
    * Updates the visual representation of the compass e.g. when the size is changed.
    * @param width the width of the control
