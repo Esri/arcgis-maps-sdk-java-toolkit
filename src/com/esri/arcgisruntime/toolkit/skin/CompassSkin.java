@@ -60,15 +60,15 @@ public final class CompassSkin extends SkinBase<Compass> {
   public CompassSkin(Compass control) {
     super(control);
 
-    control.widthProperty().addListener(o -> invalid = true);
-    control.heightProperty().addListener(o -> invalid = true);
+    control.widthProperty().addListener(observable -> invalid = true);
+    control.heightProperty().addListener(observable -> invalid = true);
 
     // bind to the heading but also subtract rotation of the control to ensure north stays pointing up
     compassStackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
 
     // hide the compass when the heading is close to north if the auto hide property is enabled
     hiddenProperty.bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()));
-    hiddenProperty.addListener(o -> {
+    hiddenProperty.addListener(observable -> {
       // use a timer to wait and see if the compass has stayed at north before fading it
       Timer timer = new Timer();
       timer.schedule(new TimerTask() {
