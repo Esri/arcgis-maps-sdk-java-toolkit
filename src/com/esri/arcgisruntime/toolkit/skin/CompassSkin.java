@@ -99,7 +99,7 @@ public final class CompassSkin extends SkinBase<Compass> {
       update(contentWidth, contentHeight);
       invalid = false;
     }
-    getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
+    layoutInArea(compassStackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
   }
 
   /**
