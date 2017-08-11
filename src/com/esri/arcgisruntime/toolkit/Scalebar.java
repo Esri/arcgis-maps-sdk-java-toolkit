@@ -16,15 +16,24 @@
 
 package toolkit;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.HPos;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import toolkit.skin.AlternatingBarScalebarSkin;
+import toolkit.skin.BarScalebarSkin;
+import toolkit.skin.DualUnitScalebarSkin;
+import toolkit.skin.GraduatedLineScalebarSkin;
+import toolkit.skin.LineScaleBarSkin;
+
+import java.util.Objects;
 
 public final class Scalebar extends Control {
 
   /**
    * Scalebar styles.
    */
-  public enum Style {
+  public enum SkinStyle {
     LINE,
     BAR,
     GRADUATED_LINE,
@@ -32,25 +41,60 @@ public final class Scalebar extends Control {
     DUAL_UNIT_LINE,
   }
 
-  private Style skinStyle;
+  public enum Units {
+    METRIC,
+    IMPERIAL,
+  }
 
-  public Scalebar(Style style) {
-    skinStyle = style != null ? style : Style.LINE;
+  private SkinStyle skinStyle;
+  private SimpleObjectProperty<HPos> alignmentProperty;
+
+  public Scalebar() {
+    this(SkinStyle.LINE, HPos.LEFT);
+  }
+
+  public Scalebar(SkinStyle style, HPos alignment) {
+    skinStyle = Objects.requireNonNull(style,"style cannot be null");
+    alignmentProperty.set(Objects.requireNonNull(alignment, "alignment cannot be null"));
+  }
+
+  public SimpleObjectProperty<HPos> alignmentProperty() {
+    return alignmentProperty;
+  }
+
+  public HPos getAlignmentProperty() {
+    return alignmentProperty.get();
+  }
+
+  public void setAlignment(HPos hPos) {
+    alignmentProperty.set(hPos);
+  }
+
+  public SkinStyle getSkinStyle() {
+    return skinStyle;
+  }
+
+  public void setSkinStyle(SkinStyle style) {
+    super.setSkin(createSkin(Objects.requireNonNull(style, "style cannot be null")));
   }
 
   @Override
   protected Skin<?> createDefaultSkin() {
-    switch (skinStyle) {
+    return createSkin(skinStyle);
+  }
+
+  private Skin<?> createSkin(SkinStyle style) {
+    switch (style) {
       case LINE:
-        break;
+        return new LineScaleBarSkin(this);
       case BAR:
-        break;
+        return new BarScalebarSkin(this);
       case GRADUATED_LINE:
-        break;
+        return new GraduatedLineScalebarSkin(this);
       case ALTERNATING_BAR_LINE:
-        break;
+        return new AlternatingBarScalebarSkin(this);
       case DUAL_UNIT_LINE:
-        break;
+        return new DualUnitScalebarSkin(this);
     }
     return super.createDefaultSkin();
   }

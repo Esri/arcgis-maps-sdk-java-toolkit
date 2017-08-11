@@ -16,5 +16,15 @@
 
 package toolkit.skin;
 
+import toolkit.Scalebar;
+
 public final class AlternatingBarScalebarSkin extends ScalebarSkin {
+
+  public AlternatingBarScalebarSkin(Scalebar scalebar) {
+    super(scalebar);
+  }
+
+  @Override
+  protected void update(double width, double height) {
+  }
 }

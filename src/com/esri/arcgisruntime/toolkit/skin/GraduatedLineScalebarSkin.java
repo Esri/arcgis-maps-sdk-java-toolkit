@@ -16,5 +16,15 @@
 
 package toolkit.skin;
 
+import toolkit.Scalebar;
+
 public final class GraduatedLineScalebarSkin extends ScalebarSkin {
+
+  public GraduatedLineScalebarSkin(Scalebar scalebar) {
+    super(scalebar);
+  }
+
+  @Override
+  protected void update(double width, double height) {
+  }
 }

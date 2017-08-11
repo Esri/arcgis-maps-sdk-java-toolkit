@@ -16,5 +16,39 @@
 
 package toolkit.skin;
 
-public class ScalebarSkin {
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.control.SkinBase;
+import javafx.scene.layout.StackPane;
+import toolkit.Scalebar;
+
+public abstract class ScalebarSkin extends SkinBase<Scalebar> {
+
+  private boolean invalid = true;
+  private final StackPane scalebarStackPane = new StackPane();
+
+  ScalebarSkin(Scalebar control) {
+    super(control);
+
+    control.widthProperty().addListener(observable -> invalid = true);
+    control.heightProperty().addListener(observable -> invalid = true);
+
+    getChildren().add(scalebarStackPane);
+  }
+
+  protected abstract void update(double width, double height);
+
+  @Override
+  protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
+    if (invalid) {
+      update(contentWidth, contentHeight);
+      invalid = false;
+    }
+
+    getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
+  }
+
+  protected StackPane getScalebarStackPane() {
+    return scalebarStackPane;
+  }
 }
