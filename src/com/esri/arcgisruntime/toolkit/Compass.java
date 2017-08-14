@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package toolkit;
+package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Camera;
@@ -30,7 +30,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import toolkit.skin.CompassSkin;
 
 /**
  * A compass control which shows the direction of north for the view. Clicking on the compass will return the view to
@@ -113,7 +112,7 @@ public final class Compass extends Control {
 
   @Override
   protected Skin<?> createDefaultSkin() {
-    return new CompassSkin(this);
+    return new com.esri.arcgisruntime.toolkit.skins.CompassSkin(this);
   }
 
   /**

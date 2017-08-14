@@ -17,4 +17,4 @@
 /**
  * Toolkit skins.
  */
-package toolkit.skin;
+package com.esri.arcgisruntime.toolkit.skins;

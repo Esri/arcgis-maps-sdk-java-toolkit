@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package toolkit.skin;
+package com.esri.arcgisruntime.toolkit.skins;
 
+import com.esri.arcgisruntime.toolkit.Compass;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -33,7 +34,6 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import javafx.scene.shape.VLineTo;
 import javafx.util.Duration;
-import toolkit.Compass;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,7 +57,7 @@ public final class CompassSkin extends SkinBase<Compass> {
    *
    * @param control the {@link Compass} control this skin represents
    */
-  public CompassSkin(Compass control) {
+  public CompassSkin(com.esri.arcgisruntime.toolkit.Compass control) {
     super(control);
 
     control.widthProperty().addListener(observable -> invalid = true);

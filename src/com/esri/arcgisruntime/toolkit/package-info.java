@@ -17,4 +17,4 @@
 /**
  * Toolkit.
  */
-package toolkit;
+package com.esri.arcgisruntime.toolkit;
