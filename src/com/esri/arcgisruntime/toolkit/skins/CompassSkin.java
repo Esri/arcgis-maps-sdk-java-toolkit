@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 public final class CompassSkin extends SkinBase<Compass> {
 
   private boolean invalid = true;
-  private final StackPane compassStackPane = new StackPane();
+  private final StackPane stackPane = new StackPane();
 
   // duration used for fading the compass
   private static final long TIMER_DURATION = 500;
@@ -68,7 +68,7 @@ public final class CompassSkin extends SkinBase<Compass> {
     control.heightProperty().addListener(observable -> invalid = true);
 
     // bind to the heading but also subtract rotation of the control to ensure north stays pointing up
-    compassStackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
+    stackPane.rotateProperty().bind(control.headingProperty().negate().subtract(control.rotateProperty()));
 
     // hide the compass when the heading is close to north if the auto hide property is enabled
     hiddenProperty.bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()));
@@ -76,7 +76,7 @@ public final class CompassSkin extends SkinBase<Compass> {
       // when the hidden property changes schedule to execute a fade in/out - having a delay prevents the compass from
       // starting to fade if it momentarily passes through north
       scheduledExecutor.schedule(() -> Platform.runLater(() -> {
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TIMER_DURATION), compassStackPane);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TIMER_DURATION), stackPane);
         if (hiddenProperty.get()) {
           fadeTransition.setToValue(0.0);
         } else {
@@ -88,12 +88,12 @@ public final class CompassSkin extends SkinBase<Compass> {
 
     // initial opacity based on the auto-hide property
     if (control.isAutoHide()) {
-      compassStackPane.setOpacity(0.0);
+      stackPane.setOpacity(0.0);
     } else {
-      compassStackPane.setOpacity(1.0);
+      stackPane.setOpacity(1.0);
     }
 
-    getChildren().add(compassStackPane);
+    getChildren().add(stackPane);
   }
 
   @Override
@@ -102,7 +102,7 @@ public final class CompassSkin extends SkinBase<Compass> {
       update(contentWidth, contentHeight);
       invalid = false;
     }
-    layoutInArea(compassStackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
+    layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
   }
 
   /**
@@ -112,7 +112,7 @@ public final class CompassSkin extends SkinBase<Compass> {
    * @param height the height of the control
    */
   private void update(double width, double height) {
-    compassStackPane.getChildren().clear();
+    stackPane.getChildren().clear();
 
     double radius = Math.min(height, width) / 2.0;
     double triangleHeight = radius * (3.0 / 5.0);
@@ -159,10 +159,10 @@ public final class CompassSkin extends SkinBase<Compass> {
     circle.setStroke(Color.rgb(0x80, 0x80, 0x80));
     circle.setStrokeWidth(0.1 * radius);
 
-    compassStackPane.getChildren().addAll(circle, northEastTriangle, northWestTriangle,
+    stackPane.getChildren().addAll(circle, northEastTriangle, northWestTriangle,
       southEastTriangle, southWestTriangle, pivot);
 
     // fire action event if any of the compass elements are clicked
-    compassStackPane.getChildren().forEach(c -> c.setOnMouseClicked(e -> getSkinnable().fireEvent(new ActionEvent())));
+    stackPane.getChildren().forEach(c -> c.setOnMouseClicked(e -> getSkinnable().fireEvent(new ActionEvent())));
   }
 }
