@@ -35,8 +35,9 @@ import javafx.scene.shape.PathElement;
 import javafx.scene.shape.VLineTo;
 import javafx.util.Duration;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Implements a skin for the {@link Compass} control.
@@ -51,6 +52,9 @@ public final class CompassSkin extends SkinBase<Compass> {
 
   // property that will be true when the compass is hidden
   private final SimpleBooleanProperty hiddenProperty = new SimpleBooleanProperty(true);
+
+  // a scheduled executor used to execute a delayed fade in/out if auto-hide is enabled
+  private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(0);
 
   /**
    * Creates an instance of the skin.
@@ -69,26 +73,25 @@ public final class CompassSkin extends SkinBase<Compass> {
     // hide the compass when the heading is close to north if the auto hide property is enabled
     hiddenProperty.bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()));
     hiddenProperty.addListener(observable -> {
-      // use a timer to wait and see if the compass has stayed at north before fading it
-      Timer timer = new Timer();
-      timer.schedule(new TimerTask() {
-        @Override
-        public void run() {
-          Platform.runLater(() -> {
-            FadeTransition fadeTransition = new FadeTransition(Duration.millis(TIMER_DURATION), compassStackPane);
-            if (hiddenProperty.get()) {
-              fadeTransition.setToValue(0.0);
-            } else {
-              fadeTransition.setToValue(1.0);
-            }
-            fadeTransition.play();
-          });
+      // when the hidden property changes schedule to execute a fade in/out - having a delay prevents the compass from
+      // starting to fade if it momentarily passes through north
+      scheduledExecutor.schedule(() -> Platform.runLater(() -> {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TIMER_DURATION), compassStackPane);
+        if (hiddenProperty.get()) {
+          fadeTransition.setToValue(0.0);
+        } else {
+          fadeTransition.setToValue(1.0);
         }
-      }, TIMER_DURATION);
+        fadeTransition.play();
+      }), TIMER_DURATION, TimeUnit.MILLISECONDS);
     });
 
     // initial opacity based on the auto-hide property
-    compassStackPane.setOpacity(control.autoHideProperty().get() == true ? 0.0 : 1.0);
+    if (control.isAutoHide()) {
+      compassStackPane.setOpacity(0.0);
+    } else {
+      compassStackPane.setOpacity(1.0);
+    }
 
     getChildren().add(compassStackPane);
   }

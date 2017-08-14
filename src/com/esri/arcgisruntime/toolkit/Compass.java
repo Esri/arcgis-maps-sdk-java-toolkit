@@ -33,8 +33,8 @@ import javafx.scene.control.Skin;
 
 /**
  * A compass control which shows the direction of north for the view. Clicking on the compass will return the view to
- * north. The compass can be set to make itself invisible when its heading is north. The size of the compass is the
- * smaller of its width and height values.
+ * north. The compass can be set to fade out when its heading is north and fade in when the heading changes. The size of
+ * the compass is the smaller of its width and height values.
  */
 public final class Compass extends Control {
 
@@ -200,7 +200,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * A property to hold the action to execute when the compass is clicked.
+   * A property to hold the action to execute when the compass is clicked or tapped.
    *
    * @return the action property
    */
@@ -209,7 +209,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * Sets the action to execute when the compass is clicked.
+   * Sets the action to execute when the compass is clicked or tapped.
    *
    * @param value the action
    */
@@ -218,7 +218,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * Returns the action that is set to execute when the compass is clicked.
+   * Returns the action that is set to execute when the compass is clicked or tapped.
    *
    * @return the action
    */
