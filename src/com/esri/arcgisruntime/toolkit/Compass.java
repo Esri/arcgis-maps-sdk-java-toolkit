@@ -185,7 +185,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * A property controlling if the compass automatically hides when the heading is north.
+   * A property controlling if the compass automatically hides when its heading is north.
    *
    * @return the auto hide property
    */
