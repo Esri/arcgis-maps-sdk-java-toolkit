@@ -77,7 +77,7 @@ public final class Compass extends Control {
     }
   };
 
-  // handler for heading changes
+  // handler for viewpoint changes
   private final ViewpointChangedListener viewpointChangedListener = v -> {
     if (view != null) {
       if (view instanceof MapView) {
@@ -108,6 +108,27 @@ public final class Compass extends Control {
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
     setGeoView(geoView);
+
+    // add a listener that will handle programmatic heading changes e.g. changes compass.headingProperty().set(newHeading);
+    headingProperty.addListener((observable, oldValue, newValue) -> {
+      if (view != null) {
+        // heading changes can be ignored unless the view's heading doesn't match the new heading value in which case
+        // we need to change the view to match the compass
+        double newHeading = newValue.doubleValue();
+        if (view instanceof MapView) {
+          if (newHeading != ((MapView) view).getMapRotation()) {
+            ((MapView) view).setViewpointRotationAsync(newValue.doubleValue());
+          }
+        } else if (view instanceof SceneView) {
+          if (newHeading != ((SceneView) view).getCurrentViewpointCamera().getHeading()) {
+            SceneView sceneView = (SceneView) view;
+            Camera camera = sceneView.getCurrentViewpointCamera();
+            camera = new Camera(camera.getLocation(), newHeading, camera.getPitch(), camera.getRoll());
+            sceneView.setViewpointAsync(new Viewpoint(camera.getLocation(), 1, camera), 0.25f);
+          }
+        }
+      }
+    });
   }
 
   @Override
@@ -160,16 +181,6 @@ public final class Compass extends Control {
    */
   public void setHeading(double heading) {
     headingProperty.set(heading);
-    if (view != null) {
-      if (view instanceof MapView) {
-        ((MapView) view).setViewpointRotationAsync(heading);
-      } else if (view instanceof SceneView) {
-        SceneView sceneView = (SceneView) view;
-        Camera camera = sceneView.getCurrentViewpointCamera();
-        camera = new Camera(camera.getLocation(), 0.0, camera.getPitch(), camera.getRoll());
-        sceneView.setViewpointAsync(new Viewpoint(camera.getLocation(), 1, camera), 0.25f);
-      }
-    }
   }
 
   /**
