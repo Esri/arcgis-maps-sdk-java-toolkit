@@ -14,13 +14,13 @@
  email: contracts@esri.com
  */
 
-package toolkit.skin;
+package com.esri.arcgisruntime.toolkit.skins;
 
-import toolkit.Scalebar;
+import com.esri.arcgisruntime.toolkit.Scalebar;
 
-public final class GraduatedLineScalebarSkin extends ScalebarSkin {
+public final class LineScaleBarSkin extends ScalebarSkin {
 
-  public GraduatedLineScalebarSkin(Scalebar scalebar) {
+  public LineScaleBarSkin(Scalebar scalebar) {
     super(scalebar);
   }
 

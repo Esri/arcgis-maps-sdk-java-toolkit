@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package toolkit;
+package com.esri.arcgisruntime.toolkit;
 
+import com.esri.arcgisruntime.toolkit.skins.AlternatingBarScalebarSkin;
+import com.esri.arcgisruntime.toolkit.skins.BarScalebarSkin;
+import com.esri.arcgisruntime.toolkit.skins.DualUnitScalebarSkin;
+import com.esri.arcgisruntime.toolkit.skins.GraduatedLineScalebarSkin;
+import com.esri.arcgisruntime.toolkit.skins.LineScaleBarSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import toolkit.skin.AlternatingBarScalebarSkin;
-import toolkit.skin.BarScalebarSkin;
-import toolkit.skin.DualUnitScalebarSkin;
-import toolkit.skin.GraduatedLineScalebarSkin;
-import toolkit.skin.LineScaleBarSkin;
 
 import java.util.Objects;
 

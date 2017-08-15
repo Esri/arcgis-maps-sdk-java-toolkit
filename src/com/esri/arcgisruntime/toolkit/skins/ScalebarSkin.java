@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package toolkit.skin;
+package com.esri.arcgisruntime.toolkit.skins;
 
+import com.esri.arcgisruntime.toolkit.Scalebar;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.StackPane;
-import toolkit.Scalebar;
 
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
