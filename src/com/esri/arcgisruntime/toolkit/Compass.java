@@ -22,6 +22,7 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
+import com.esri.arcgisruntime.toolkit.skins.CompassSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -133,7 +134,7 @@ public final class Compass extends Control {
 
   @Override
   protected Skin<?> createDefaultSkin() {
-    return new com.esri.arcgisruntime.toolkit.skins.CompassSkin(this);
+    return new CompassSkin(this);
   }
 
   /**
