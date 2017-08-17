@@ -42,6 +42,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE.txt](LICENSE) file.
-
-[](Esri Tags: ArcGIS Runtime Java)
-[](Esri Language: Java)​
