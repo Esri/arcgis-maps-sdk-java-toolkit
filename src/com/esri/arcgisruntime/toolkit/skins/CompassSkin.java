@@ -67,7 +67,7 @@ public final class CompassSkin extends SkinBase<Compass> {
     control.widthProperty().addListener(observable -> invalid = true);
     control.heightProperty().addListener(observable -> invalid = true);
 
-    // bind to the heading but also subtract rotation of the control to ensure north stays pointing up
+    // bind to the control's heading property
     stackPane.rotateProperty().bind(control.headingProperty().negate());
 
     // hide the compass when the heading is close to north if the auto hide property is enabled
