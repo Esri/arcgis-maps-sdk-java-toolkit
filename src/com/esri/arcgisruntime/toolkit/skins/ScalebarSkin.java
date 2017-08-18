@@ -25,7 +25,9 @@ import javafx.scene.layout.StackPane;
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   private boolean invalid = true;
-  private final StackPane scalebarStackPane = new StackPane();
+  private final StackPane stackPane = new StackPane();
+
+  private static final double LINE_WIDTH = 5.0;
 
   ScalebarSkin(Scalebar control) {
     super(control);
@@ -33,7 +35,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     control.widthProperty().addListener(observable -> invalid = true);
     control.heightProperty().addListener(observable -> invalid = true);
 
-    getChildren().add(scalebarStackPane);
+    getChildren().add(stackPane);
   }
 
   protected abstract void update(double width, double height);
@@ -48,7 +50,11 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
-  protected StackPane getScalebarStackPane() {
-    return scalebarStackPane;
+  protected StackPane getStackPane() {
+    return stackPane;
+  }
+
+  protected double getLineWidth() {
+    return LINE_WIDTH;
   }
 }

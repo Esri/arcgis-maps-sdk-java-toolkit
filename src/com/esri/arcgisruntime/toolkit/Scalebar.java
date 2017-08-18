@@ -46,16 +46,26 @@ public final class Scalebar extends Control {
     IMPERIAL,
   }
 
+  private static final double WIDTH = 100.0;
+
   private SkinStyle skinStyle;
-  private SimpleObjectProperty<HPos> alignmentProperty;
+  private SimpleObjectProperty<HPos> alignmentProperty = new SimpleObjectProperty<>();
 
   public Scalebar() {
-    this(SkinStyle.LINE, HPos.LEFT);
+    this(SkinStyle.LINE, HPos.CENTER);
+  }
+
+  public Scalebar(SkinStyle style) {
+    this(style, HPos.CENTER);
   }
 
   public Scalebar(SkinStyle style, HPos alignment) {
     skinStyle = Objects.requireNonNull(style,"style cannot be null");
     alignmentProperty.set(Objects.requireNonNull(alignment, "alignment cannot be null"));
+
+    setPrefWidth(WIDTH);
+    setMaxHeight(USE_PREF_SIZE);
+    setMaxWidth(USE_PREF_SIZE);
   }
 
   public SimpleObjectProperty<HPos> alignmentProperty() {
