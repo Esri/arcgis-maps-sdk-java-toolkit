@@ -16,11 +16,13 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.skins.AlternatingBarScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.BarScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.DualUnitScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.GraduatedLineScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.LineScaleBarSkin;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.scene.control.Control;
@@ -49,17 +51,20 @@ public final class Scalebar extends Control {
   private static final double WIDTH = 100.0;
 
   private SkinStyle skinStyle;
-  private SimpleObjectProperty<HPos> alignmentProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<HPos> alignmentProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<Units> unitsProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<MapView> mapViewProperty = new SimpleObjectProperty<>();
 
-  public Scalebar() {
-    this(SkinStyle.LINE, HPos.CENTER);
+  public Scalebar(MapView mapView) {
+    this(mapView, SkinStyle.LINE, HPos.CENTER);
   }
 
-  public Scalebar(SkinStyle style) {
-    this(style, HPos.CENTER);
+  public Scalebar(MapView mapView, SkinStyle style) {
+    this(mapView, style, HPos.CENTER);
   }
 
-  public Scalebar(SkinStyle style, HPos alignment) {
+  public Scalebar(MapView mapView, SkinStyle style, HPos alignment) {
+    mapViewProperty.set(Objects.requireNonNull(mapView, "mapView cannot be null"));
     skinStyle = Objects.requireNonNull(style,"style cannot be null");
     alignmentProperty.set(Objects.requireNonNull(alignment, "alignment cannot be null"));
 
@@ -86,6 +91,26 @@ public final class Scalebar extends Control {
 
   public void setSkinStyle(SkinStyle style) {
     super.setSkin(createSkin(Objects.requireNonNull(style, "style cannot be null")));
+  }
+
+  public ReadOnlyObjectProperty<MapView> mapViewProperty() {
+    return mapViewProperty;
+  }
+
+  public MapView getMapView() {
+    return mapViewProperty.get();
+  }
+
+  public SimpleObjectProperty<Units> unitsProperty() {
+    return unitsProperty;
+  }
+
+  public void setUnits(Units units) {
+    unitsProperty.set(Objects.requireNonNull(units, "units cannot be null"));
+  }
+
+  public Units getUnits() {
+    return unitsProperty.get();
   }
 
   @Override
