@@ -27,4 +27,14 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
   }
+
+  @Override
+  protected void recalculate() {
+
+  }
+
+  @Override
+  protected double calculateMaximumScalebarWidth() {
+    return 0;
+  }
 }

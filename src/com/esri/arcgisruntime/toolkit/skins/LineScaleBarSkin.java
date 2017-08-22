@@ -44,4 +44,14 @@ public final class LineScaleBarSkin extends ScalebarSkin {
 
     getStackPane().getChildren().addAll(line);
   }
+
+  @Override
+  protected void recalculate() {
+
+  }
+
+  @Override
+  protected double calculateMaximumScalebarWidth() {
+    return 0;
+  }
 }

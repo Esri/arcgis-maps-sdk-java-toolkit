@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.skins.AlternatingBarScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.BarScalebarSkin;
@@ -43,16 +44,11 @@ public final class Scalebar extends Control {
     DUAL_UNIT_LINE,
   }
 
-  public enum Units {
-    METRIC,
-    IMPERIAL,
-  }
-
   private static final double WIDTH = 100.0;
 
   private SkinStyle skinStyle;
   final private SimpleObjectProperty<HPos> alignmentProperty = new SimpleObjectProperty<>();
-  final private SimpleObjectProperty<Units> unitsProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<UnitSystem> unitSystemProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<MapView> mapViewProperty = new SimpleObjectProperty<>();
 
   public Scalebar(MapView mapView) {
@@ -67,6 +63,8 @@ public final class Scalebar extends Control {
     mapViewProperty.set(Objects.requireNonNull(mapView, "mapView cannot be null"));
     skinStyle = Objects.requireNonNull(style,"style cannot be null");
     alignmentProperty.set(Objects.requireNonNull(alignment, "alignment cannot be null"));
+
+    unitSystemProperty.set(UnitSystem.METRIC);
 
     setPrefWidth(WIDTH);
     setMaxHeight(USE_PREF_SIZE);
@@ -101,16 +99,16 @@ public final class Scalebar extends Control {
     return mapViewProperty.get();
   }
 
-  public SimpleObjectProperty<Units> unitsProperty() {
-    return unitsProperty;
+  public SimpleObjectProperty<UnitSystem> unitSystemProperty() {
+    return unitSystemProperty;
   }
 
-  public void setUnits(Units units) {
-    unitsProperty.set(Objects.requireNonNull(units, "units cannot be null"));
+  public void setUnitSystem(UnitSystem units) {
+    unitSystemProperty.set(Objects.requireNonNull(units, "units cannot be null"));
   }
 
-  public Units getUnits() {
-    return unitsProperty.get();
+  public UnitSystem getUnitSystem() {
+    return unitSystemProperty.get();
   }
 
   @Override

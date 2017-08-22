@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.LinearUnit;
@@ -25,6 +26,7 @@ import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import com.esri.arcgisruntime.toolkit.Scalebar;
+import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
@@ -45,20 +47,9 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   private LinearUnit baseUnit;
 
-  private final ViewpointChangedListener viewpointChangedListener =
-    v -> calculateDistance(getSkinnable().mapViewProperty().get(),
-      baseUnit, getSkinnable().getWidth());
+  private final ViewpointChangedListener viewpointChangedListener = v -> recalculate();
 
-  private final ChangeListener<Scalebar.Units> unitsChangedListener = (observable, oldValue, newValue) -> {
-    switch (newValue) {
-      case METRIC:
-        baseUnit = new LinearUnit(LinearUnitId.METERS);
-        break;
-      case IMPERIAL:
-        baseUnit = new LinearUnit(LinearUnitId.FEET);
-        break;
-    }
-  };
+  private final ChangeListener<UnitSystem> unitsChangedListener = (observable, oldValue, newValue) -> updateBaseUnit(newValue);
 
   ScalebarSkin(Scalebar control) {
     super(control);
@@ -66,7 +57,9 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     control.widthProperty().addListener(this::invalidated);
     control.heightProperty().addListener(this::invalidated);
     control.mapViewProperty().get().addViewpointChangedListener(viewpointChangedListener);
-    control.unitsProperty().addListener(unitsChangedListener);
+    control.unitSystemProperty().addListener(unitsChangedListener);
+
+    updateBaseUnit(control.getUnitSystem());
 
     getChildren().add(stackPane);
   }
@@ -76,10 +69,30 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getSkinnable().widthProperty().removeListener(this::invalidated);
     getSkinnable().heightProperty().removeListener(this::invalidated);
     getSkinnable().mapViewProperty().get().removeViewpointChangedListener(viewpointChangedListener);
-    getSkinnable().unitsProperty().removeListener(unitsChangedListener);
+    getSkinnable().unitSystemProperty().removeListener(unitsChangedListener);
   }
 
+  /**
+   * Called during layout if the control's width or height have changed.
+   *
+   * @param width the width
+   * @param height the height
+   */
   protected abstract void update(double width, double height);
+
+  /**
+   * Called when the scale bar needs to be recalulated. This method will calculate the correct scalebar display size
+   * and unit etc.
+   */
+  protected abstract void recalculate();
+
+  /**
+   * The maxmimum width that a scalebar can have. This could be the full control width or less if the salebar
+   * has a label at the end.
+   *
+   * @return the maximum possible width
+   */
+  protected abstract double calculateMaximumScalebarWidth();
 
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
@@ -97,6 +110,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   protected double getLineWidth() {
     return LINE_WIDTH;
+  }
+
+  protected LinearUnit getBaseUnit() {
+    return baseUnit;
   }
 
   /**
@@ -139,11 +156,22 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
       distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
     }
 
-    System.out.println(distance);
+    System.out.println(distance + unit.getAbbreviation());
     return distance;
   }
 
   private void invalidated(Observable observable) {
     invalid = true;
+  }
+
+  private void updateBaseUnit(UnitSystem unitSystem) {
+    switch (unitSystem) {
+      case METRIC:
+        baseUnit = new LinearUnit(LinearUnitId.METERS);
+        break;
+      case IMPERIAL:
+        baseUnit = new LinearUnit(LinearUnitId.FEET);
+        break;
+    }
   }
 }
