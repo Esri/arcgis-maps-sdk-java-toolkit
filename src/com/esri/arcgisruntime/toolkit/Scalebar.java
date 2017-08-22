@@ -67,6 +67,7 @@ public final class Scalebar extends Control {
     unitSystemProperty.set(UnitSystem.METRIC);
 
     setPrefWidth(WIDTH);
+    setPrefHeight(USE_COMPUTED_SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
   }

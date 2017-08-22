@@ -26,7 +26,6 @@ import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import com.esri.arcgisruntime.toolkit.Scalebar;
-import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
