@@ -16,42 +16,70 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
+import com.esri.arcgisruntime.toolkit.ScalebarUtil;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeType;
 
 public final class LineScaleBarSkin extends ScalebarSkin {
 
+  private final VBox vBox = new VBox();
+  private final Label distanceLabel = new Label();
+  private final Path line = new Path();
+
   public LineScaleBarSkin(Scalebar scalebar) {
     super(scalebar);
+
+    // create the nodes for the bar and label
+
+    // use a vbox to arrange the bar above the label
+    vBox.setAlignment(Pos.CENTER);
+    vBox.getChildren().addAll(line, distanceLabel);
+    StackPane.setAlignment(vBox, Pos.CENTER);
+
+    // the line
+    line.setManaged(false);
+    line.setStroke(Color.WHITE);
+    line.setStrokeWidth(3.0);
+    line.setStrokeLineCap(StrokeLineCap.ROUND);
+    line.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+
+    getStackPane().getChildren().addAll(vBox);
   }
 
   @Override
   protected void update(double width, double height) {
-    getStackPane().getChildren().clear();
+    // work out the scalebar width, the distance it represents and the correct unit label
+    double maxScalebarWidth = calculateMaximumScalebarWidth();
+    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
+      getBaseUnit(), maxScalebarWidth);
+    double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
+    double displayWidth = (maxScalebarWidth / maxDistance) * displayDistance;
+    LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
+    if (displayUnits != getBaseUnit()) {
+      displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
+    }
 
-    Line line = new Line();
-    line.setStartX(0.0);
-    line.setEndX(width);
-    line.setStroke(Color.rgb(0xFF, 0xFF, 0xFF));
-    line.setStrokeWidth(getLineWidth());
-    line.setStrokeLineCap(StrokeLineCap.SQUARE);
-    line.setStrokeType(StrokeType.CENTERED);
-    line.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+    // update the line
+    line.getElements().clear();
+    line.setTranslateX((maxScalebarWidth - displayWidth) / 2.0);
+    line.getElements().addAll(new MoveTo(0.0, -8.0), new LineTo(0.0, 0.0), new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -8.0));
 
-    getStackPane().getChildren().addAll(line);
-  }
-
-  @Override
-  protected void recalculate() {
-
+    // update the label
+    distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
   }
 
   @Override
   protected double calculateMaximumScalebarWidth() {
-    return 0;
+    return getSkinnable().getWidth();
   }
 }

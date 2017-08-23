@@ -29,11 +29,6 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
   }
 
   @Override
-  protected void recalculate() {
-
-  }
-
-  @Override
   protected double calculateMaximumScalebarWidth() {
     return 0;
   }

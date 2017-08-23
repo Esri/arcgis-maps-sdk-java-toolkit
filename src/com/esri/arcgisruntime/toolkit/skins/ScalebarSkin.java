@@ -46,9 +46,12 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   private LinearUnit baseUnit;
 
-  private final ViewpointChangedListener viewpointChangedListener = v -> recalculate();
+  private final ViewpointChangedListener viewpointChangedListener = v -> invalidated();
 
-  private final ChangeListener<UnitSystem> unitsChangedListener = (observable, oldValue, newValue) -> updateBaseUnit(newValue);
+  private final ChangeListener<UnitSystem> unitsChangedListener = (observable, oldValue, newValue) -> {
+    updateBaseUnit(newValue);
+    invalidated();
+  };
 
   ScalebarSkin(Scalebar control) {
     super(control);
@@ -56,6 +59,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     control.widthProperty().addListener(this::invalidated);
     control.heightProperty().addListener(this::invalidated);
     control.mapViewProperty().get().addViewpointChangedListener(viewpointChangedListener);
+    control.mapViewProperty().get().widthProperty().addListener(this::invalidated);
+    control.mapViewProperty().get().heightProperty().addListener(this::invalidated);
     control.unitSystemProperty().addListener(unitsChangedListener);
 
     updateBaseUnit(control.getUnitSystem());
@@ -68,11 +73,13 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getSkinnable().widthProperty().removeListener(this::invalidated);
     getSkinnable().heightProperty().removeListener(this::invalidated);
     getSkinnable().mapViewProperty().get().removeViewpointChangedListener(viewpointChangedListener);
+    getSkinnable().mapViewProperty().get().widthProperty().removeListener(this::invalidated);
+    getSkinnable().mapViewProperty().get().heightProperty().removeListener(this::invalidated);
     getSkinnable().unitSystemProperty().removeListener(unitsChangedListener);
   }
 
   /**
-   * Called during layout if the control's width or height have changed.
+   * Called during layout when the control needs to be redrawn e.g. the size has changed or the units have been changed.
    *
    * @param width the width
    * @param height the height
@@ -80,13 +87,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   protected abstract void update(double width, double height);
 
   /**
-   * Called when the scale bar needs to be recalulated. This method will calculate the correct scalebar display size
-   * and unit etc.
-   */
-  protected abstract void recalculate();
-
-  /**
-   * The maxmimum width that a scalebar can have. This could be the full control width or less if the salebar
+   * The maxmimum width that a scalebar can have. This could be the full control width or less if the scalebar
    * has a label at the end.
    *
    * @return the maximum possible width
@@ -144,6 +145,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     double distance = 0.0;
 
+    // TODO - consider map view insets
     Point point1 = mapView.screenToLocation(new Point2D(centerX - halfWidth, centerY));
     Point point2 = mapView.screenToLocation(new Point2D(centerX + halfWidth, centerY));
 
@@ -155,12 +157,16 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
       distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
     }
 
-    System.out.println(distance + unit.getAbbreviation());
     return distance;
   }
 
   private void invalidated(Observable observable) {
+    invalidated();
+  }
+
+  private void invalidated() {
     invalid = true;
+    getSkinnable().requestLayout();
   }
 
   private void updateBaseUnit(UnitSystem unitSystem) {

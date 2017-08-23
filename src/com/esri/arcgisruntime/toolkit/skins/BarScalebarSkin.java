@@ -29,43 +29,43 @@ import javafx.scene.shape.Rectangle;
 
 public final class BarScalebarSkin extends ScalebarSkin {
 
+  private final VBox vBox = new VBox();
+  private final Label distanceLabel = new Label();
+  private final StackPane barStackPane = new StackPane();
+  private final Rectangle innerBar = new Rectangle();
+  private final Rectangle outerBar = new Rectangle();
+
   public BarScalebarSkin(Scalebar scalebar) {
     super(scalebar);
-  }
 
-  @Override
-  protected void update(double width, double height) {
-    getStackPane().getChildren().clear();
+    // create the nodes for the bar and label
 
-    VBox vBox = new VBox();
+    // use a vbox to arrange the bar above the label
     vBox.setAlignment(Pos.CENTER);
+    vBox.getChildren().addAll(barStackPane, distanceLabel);
+    StackPane.setAlignment(vBox, Pos.CENTER);
 
-    Rectangle innerBar = new Rectangle();
-    innerBar.setWidth(width - 4);
-    innerBar.setHeight(8.0);
-    innerBar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
-
-    Rectangle outerBar = new Rectangle();
-    outerBar.setWidth(width);
-    outerBar.setHeight(12.0);
+    // outline of the bar
     outerBar.setFill(Color.rgb(0xFF, 0xFF, 0xFF));
+    outerBar.setHeight(12.0);
     outerBar.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
     outerBar.setArcWidth(5);
     outerBar.setArcHeight(5);
 
-    barStackPane.getChildren().addAll(outerBar, innerBar);
+    // the bar
+    innerBar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
+    innerBar.setHeight(8.0);
+    innerBar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
 
-    vBox.getChildren().addAll(barStackPane, distanceLabel);
-    StackPane.setAlignment(vBox, Pos.CENTER);
+    // combine bar and outline in a stack to get the right effect
+    barStackPane.getChildren().addAll(outerBar, innerBar);
 
     getStackPane().getChildren().addAll(vBox);
   }
 
-  private Label distanceLabel = new Label();
-  private StackPane barStackPane = new StackPane();
-
   @Override
-  protected void recalculate() {
+  protected void update(double width, double height) {
+    // work out the scalebar width, the distance it represents and the correct unit label
     double maxScalebarWidth = calculateMaximumScalebarWidth();
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
       getBaseUnit(), maxScalebarWidth);
@@ -76,10 +76,12 @@ public final class BarScalebarSkin extends ScalebarSkin {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
     }
 
-//    System.out.println(maxScalebarWidth + " " + displayWidth + " " + maxDistance + " " + displayDistance + " " + displayUnits.getAbbreviation());
+    // update the bar size
+    innerBar.setWidth(displayWidth - 4);
+    outerBar.setWidth(displayWidth);
 
-    distanceLabel.setText(displayDistance + displayUnits.getAbbreviation());
-    barStackPane.setScaleX(displayWidth / maxScalebarWidth);
+    // update the label
+    distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
   }
 
   @Override
