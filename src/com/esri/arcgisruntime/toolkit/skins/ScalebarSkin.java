@@ -45,11 +45,17 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   private static final double LINE_WIDTH = 5.0;
 
   private LinearUnit baseUnit;
+  private HPos alignment = HPos.CENTER;
 
   private final ViewpointChangedListener viewpointChangedListener = v -> invalidated();
 
   private final ChangeListener<UnitSystem> unitsChangedListener = (observable, oldValue, newValue) -> {
     updateBaseUnit(newValue);
+    invalidated();
+  };
+
+  private final ChangeListener<HPos> alignmentChangedListener = (observable, oldValue, newValue) -> {
+    alignment = newValue;
     invalidated();
   };
 
@@ -62,8 +68,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     control.mapViewProperty().get().widthProperty().addListener(this::invalidated);
     control.mapViewProperty().get().heightProperty().addListener(this::invalidated);
     control.unitSystemProperty().addListener(unitsChangedListener);
+    control.alignmentProperty().addListener(alignmentChangedListener);
 
     updateBaseUnit(control.getUnitSystem());
+    alignment = control.getAlignment();
 
     getChildren().add(stackPane);
   }
@@ -76,6 +84,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getSkinnable().mapViewProperty().get().widthProperty().removeListener(this::invalidated);
     getSkinnable().mapViewProperty().get().heightProperty().removeListener(this::invalidated);
     getSkinnable().unitSystemProperty().removeListener(unitsChangedListener);
+    getSkinnable().alignmentProperty().removeListener(alignmentChangedListener);
   }
 
   /**
@@ -114,6 +123,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   protected LinearUnit getBaseUnit() {
     return baseUnit;
+  }
+
+  protected HPos getAlignment() {
+    return alignment;
   }
 
   /**
@@ -158,6 +171,27 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     }
 
     return distance;
+  }
+
+  /**
+   * Calculates the X translation required to move a scalbar to the correct alighment - left or right. No translation is
+   * required for center alignment.
+   *
+   * @param width the width of the area containing the scalebar
+   * @param actualWidth the actual width of the scalebar
+   * @return the X translation required
+   */
+  protected double calculateAlignmentTranslationX(double width, double actualWidth) {
+    double translate = 0.0;
+    switch (getAlignment()) {
+      case LEFT:
+        translate = -((width - actualWidth) / 2.0);
+        break;
+      case RIGHT:
+        translate = (width - actualWidth) / 2.0;
+        break;
+    }
+    return translate;
   }
 
   private void invalidated(Observable observable) {

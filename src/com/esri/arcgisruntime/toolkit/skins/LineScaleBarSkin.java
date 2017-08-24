@@ -59,11 +59,10 @@ public final class LineScaleBarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
-    double maxScalebarWidth = calculateMaximumScalebarWidth();
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), maxScalebarWidth);
+      getBaseUnit(), width);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-    double displayWidth = (maxScalebarWidth / maxDistance) * displayDistance;
+    double displayWidth = (width / maxDistance) * displayDistance;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
@@ -71,11 +70,17 @@ public final class LineScaleBarSkin extends ScalebarSkin {
 
     // update the line
     line.getElements().clear();
-    line.setTranslateX((maxScalebarWidth - displayWidth) / 2.0);
+    line.setTranslateX((width - displayWidth) / 2.0);
     line.getElements().addAll(new MoveTo(0.0, -8.0), new LineTo(0.0, 0.0), new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -8.0));
 
     // update the label
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
+
+    // adjust for left/right/center alignment
+    double translateX = calculateAlignmentTranslationX(width, displayWidth);
+    line.setTranslateX(line.getTranslateX() + translateX);
+    distanceLabel.setTranslateX(translateX);
+    distanceLabel.setVisible(displayDistance > 0); // hide the label if the distance is zero
   }
 
   @Override

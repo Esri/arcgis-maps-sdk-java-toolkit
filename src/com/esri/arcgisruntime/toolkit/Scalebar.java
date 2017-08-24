@@ -76,7 +76,7 @@ public final class Scalebar extends Control {
     return alignmentProperty;
   }
 
-  public HPos getAlignmentProperty() {
+  public HPos getAlignment() {
     return alignmentProperty.get();
   }
 

@@ -43,7 +43,6 @@ public final class BarScalebarSkin extends ScalebarSkin {
     // use a vbox to arrange the bar above the label
     vBox.setAlignment(Pos.CENTER);
     vBox.getChildren().addAll(barStackPane, distanceLabel);
-    StackPane.setAlignment(vBox, Pos.CENTER);
 
     // outline of the bar
     outerBar.setFill(Color.rgb(0xFF, 0xFF, 0xFF));
@@ -66,11 +65,10 @@ public final class BarScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
-    double maxScalebarWidth = calculateMaximumScalebarWidth();
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), maxScalebarWidth);
+      getBaseUnit(), width);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-    double displayWidth = (maxScalebarWidth / maxDistance) * displayDistance;
+    double displayWidth = (width / maxDistance) * displayDistance;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
@@ -82,6 +80,12 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
     // update the label
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
+
+    // adjust for left/right/center alignment
+    double translateX = calculateAlignmentTranslationX(width, displayWidth);
+    barStackPane.setTranslateX(translateX);
+    distanceLabel.setTranslateX(translateX);
+    distanceLabel.setVisible(displayDistance > 0); // hide the label if the distance is zero
   }
 
   @Override
