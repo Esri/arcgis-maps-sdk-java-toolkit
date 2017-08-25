@@ -79,15 +79,7 @@ public final class Compass extends Control {
   };
 
   // handler for viewpoint changes
-  private final ViewpointChangedListener viewpointChangedListener = v -> {
-    if (view != null) {
-      if (view instanceof MapView) {
-        headingProperty.set(((MapView) view).getMapRotation());
-      } else if (view instanceof SceneView) {
-        headingProperty.set(((SceneView) view).getCurrentViewpointCamera().getHeading());
-      }
-    }
-  };
+  private final ViewpointChangedListener viewpointChangedListener = v -> updateHeading();
 
   /**
    * Creates an instance of a compass control. The compass control will show the direction of north when a non-null
@@ -149,6 +141,7 @@ public final class Compass extends Control {
     view = geoView;
     if (view != null) {
       view.addViewpointChangedListener(viewpointChangedListener);
+      updateHeading();
       setOnAction(compassClickedAction);
     } else {
       headingProperty.set(0.0);
@@ -209,6 +202,19 @@ public final class Compass extends Control {
    */
   public void setAutoHide(boolean autoHide) {
     autoHideProperty.set(autoHide);
+  }
+
+  /**
+   * Updates the heading property based on map rotation or camera heading.
+   */
+  private void updateHeading() {
+    if (view != null) {
+      if (view instanceof MapView) {
+        headingProperty.set(((MapView) view).getMapRotation());
+      } else if (view instanceof SceneView) {
+        headingProperty.set(((SceneView) view).getCurrentViewpointCamera().getHeading());
+      }
+    }
   }
 
   /**
