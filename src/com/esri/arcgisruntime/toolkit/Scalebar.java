@@ -70,6 +70,8 @@ public final class Scalebar extends Control {
     setPrefHeight(USE_COMPUTED_SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
+    setMinHeight(USE_PREF_SIZE);
+    setMinWidth(USE_PREF_SIZE);
   }
 
   public SimpleObjectProperty<HPos> alignmentProperty() {
