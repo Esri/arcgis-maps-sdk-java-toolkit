@@ -20,6 +20,10 @@ import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.geometry.LinearUnitId;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Utility methods used by Scalebar.
  */
@@ -28,20 +32,37 @@ public class ScalebarUtil {
   // Array containing the multipliers that may be used for a scalebar and arrays of segment options appropriate for each
   // multiplier
   private static final MultiplierData[] MULTIPLIER_DATA_ARRAY = {
-    new MultiplierData(1.0, new int[] {1, 2, 4, 5}),
+//    new MultiplierData(1.0, new int[] {1, 2, 4, 5}),
+//    new MultiplierData(1.2, new int[] {1, 2, 3, 4}),
+//    new MultiplierData(1.5, new int[] {1, 2, 3, 5}),
+//    new MultiplierData(1.6, new int[] {1, 2, 4}),
+//    new MultiplierData(2.0, new int[] {1, 2, 4, 5}),
+//    new MultiplierData(2.4, new int[] {1, 2, 3, 4}),
+//    new MultiplierData(3.0, new int[] {1, 2, 3}),
+//    new MultiplierData(3.6, new int[] {1, 2, 3}),
+//    new MultiplierData(4.0, new int[] {1, 2, 4}),
+//    new MultiplierData(5.0, new int[] {1, 2, 5}),
+//    new MultiplierData(6.0, new int[] {1, 2, 3}),
+//    new MultiplierData(8.0, new int[] {1, 2, 4}),
+//    new MultiplierData(9.0, new int[] {1, 2, 3}),
+//    new MultiplierData(10.0, new int[] {1, 2, 5})
+    new MultiplierData(1, new int[] {1, 2, 4, 5}),
     new MultiplierData(1.2, new int[] {1, 2, 3, 4}),
+    new MultiplierData(1.25, new int[] {1, 2}),
     new MultiplierData(1.5, new int[] {1, 2, 3, 5}),
-    new MultiplierData(1.6, new int[] {1, 2, 4}),
+    new MultiplierData(1.75, new int[] {1, 2}),
     new MultiplierData(2.0, new int[] {1, 2, 4, 5}),
-    new MultiplierData(2.4, new int[] {1, 2, 3, 4}),
-    new MultiplierData(3.0, new int[] {1, 2, 3}),
-    new MultiplierData(3.6, new int[] {1, 2, 3}),
-    new MultiplierData(4.0, new int[] {1, 2, 4}),
-    new MultiplierData(5.0, new int[] {1, 2, 5}),
-    new MultiplierData(6.0, new int[] {1, 2, 3}),
+    new MultiplierData(2.4, new int[] {1, 2, 3}),
+    new MultiplierData(2.5, new int[] {1, 2, 5}),
+    new MultiplierData(3, new int[] {1, 2, 3}),
+    new MultiplierData(3.75, new int[] {1, 3}),
+    new MultiplierData(4, new int[] {1, 2, 4}),
+    new MultiplierData(5, new int[] {1, 2, 5}),
+    new MultiplierData(6, new int[] {1, 2, 3}),
+    new MultiplierData(7.5, new int[] {1, 2}),
     new MultiplierData(8.0, new int[] {1, 2, 4}),
     new MultiplierData(9.0, new int[] {1, 2, 3}),
-    new MultiplierData(10.0, new int[] {1, 2, 5})
+    new MultiplierData(10.0, new int[] {1, 2, 5}),
   };
 
   /**
@@ -181,14 +202,21 @@ public class ScalebarUtil {
     double residual = distance / magnitude;
 
     // Select the largest multiplier that's <= residual
-    MultiplierData multiplierData = MULTIPLIER_DATA_ARRAY[0];
-    for (int i = 0; i < MULTIPLIER_DATA_ARRAY.length; i++) {
-      if (MULTIPLIER_DATA_ARRAY[i].getMultiplier() > residual) {
-        break;
-      }
-      multiplierData = MULTIPLIER_DATA_ARRAY[i];
+    List<MultiplierData> multipliers = Arrays.stream(MULTIPLIER_DATA_ARRAY).filter(m -> m.getMultiplier() <= residual).collect(Collectors.toList());
+    if (multipliers.isEmpty()) {
+      return MULTIPLIER_DATA_ARRAY[0];
+    } else {
+      return multipliers.get(multipliers.size() - 1);
     }
-    return multiplierData;
+
+//    MultiplierData multiplierData = MULTIPLIER_DATA_ARRAY[0];
+//    for (int i = 0; i < MULTIPLIER_DATA_ARRAY.length; i++) {
+//      if (MULTIPLIER_DATA_ARRAY[i].getMultiplier() > residual) {
+//        break;
+//      }
+//      multiplierData = MULTIPLIER_DATA_ARRAY[i];
+//    }
+//    return multiplierData;
   }
 
   /**

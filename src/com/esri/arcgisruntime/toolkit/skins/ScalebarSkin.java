@@ -36,8 +36,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
+
+  Rectangle rect = new Rectangle();
 
   private boolean invalid = true;
   private final StackPane stackPane = new StackPane();
@@ -73,6 +77,13 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     updateBaseUnit(control.getUnitSystem());
     alignment = control.getAlignment();
 
+    rect.widthProperty().bind(control.widthProperty());
+    rect.heightProperty().bind(control.heightProperty());
+    rect.setFill(Color.rgb(0xFF, 0x00, 0x00, 0.5));
+
+    getChildren().add(rect);
+
+    //stackPane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     getChildren().add(stackPane);
   }
 
@@ -154,13 +165,26 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   protected double calculateDistance(MapView mapView, LinearUnit unit, double width) {
     double centerX = mapView.getWidth() / 2.0;
     double centerY = mapView.getHeight() / 2.0;
-    double halfWidth = width / 2.0;
+    double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
+    //double halfWidth = width / 2.0;
 
     double distance = 0.0;
+    Point mapCenter = mapView.getVisibleArea().getExtent().getCenter();
+
+    if (mapCenter.isEmpty()) {
+      return 0.0;
+    }
+
+    Point point1 = new Point(mapCenter.getX() - (maxPlanarWidth / 2.0), mapCenter.getY());
+    Point point2 = new Point(mapCenter.getX() + (maxPlanarWidth / 2.0), mapCenter.getY());
 
     // TODO - consider map view insets
-    Point point1 = mapView.screenToLocation(new Point2D(centerX - halfWidth, centerY));
-    Point point2 = mapView.screenToLocation(new Point2D(centerX + halfWidth, centerY));
+//    Point point1 = mapView.screenToLocation(new Point2D(centerX - halfWidth, centerY));
+//    Point point2 = mapView.screenToLocation(new Point2D(centerX + halfWidth, centerY));
+
+//    Point point1 = mapView.screenToLocation(new Point2D(centerX - 0.5, centerY));
+//    Point point2 = mapView.screenToLocation(new Point2D(centerX + 0.5, centerY));
+
 
     if (point1 != null && point2 != null) {
       PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
