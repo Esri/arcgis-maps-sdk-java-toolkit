@@ -82,6 +82,8 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
     // adjust for left/right/center alignment
     getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
-    distanceLabel.setVisible(displayDistance > 0); // hide the label if the distance is zero
+
+    // set invisible if distance is zero
+    getStackPane().setVisible(displayDistance > 0);
   }
 }

@@ -67,6 +67,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
     maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
+
     double displayWidth = displayDistance / maxDistance * availableWidth;
     //double displayWidth = displayDistance / maxDistance * width;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
@@ -98,21 +99,23 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     labelPane.setMaxWidth(displayWidth);
 
     // update the line and labels
-    Label label = new Label("0");
-    label.setAlignment(Pos.CENTER_LEFT);
-    labelPane.getChildren().add(label);
-
     line.getElements().clear();
     line.getElements().add(new MoveTo(0.0, -HEIGHT));
     line.getElements().add(new LineTo(0.0, 0.0));
-    for (int i = 1; i < bestNumberOfSegments; ++i) {
+
+    Label label;
+    for (int i = 0; i < bestNumberOfSegments; ++i) {
       label = new Label(ScalebarUtil.labelString(i * segmentDistance));
       label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
       labelPane.getChildren().add(label);
-      line.getElements().add(new LineTo(i * segmentWidth, 0.0));
-      line.getElements().add(new LineTo(i * segmentWidth, -TICK_HEIGHT));
-      line.getElements().add(new MoveTo(i * segmentWidth, 0.0));
+      // we've already drawn the first part of the line so only draw ticks for the intermediate values
+      if (i > 0) {
+        line.getElements().add(new LineTo(i * segmentWidth, 0.0));
+        line.getElements().add(new LineTo(i * segmentWidth, -TICK_HEIGHT));
+        line.getElements().add(new MoveTo(i * segmentWidth, 0.0));
+      }
     }
+    // the last label is aligned so its end is at the end of the line
     label = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
     label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegionWidth(label));
@@ -124,11 +127,13 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     line.getElements().add(new LineTo(displayWidth, 0.0));
     line.getElements().add(new LineTo(displayWidth, -HEIGHT));
 
-    //line.getElements().add(new LineTo(displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation())), -HEIGHT));
     line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
     labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
 
+    // adjust for left/right/center alignment
     getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
-    labelPane.setVisible(displayDistance > 0); // hide the label if the distance is zero
+
+    // set invisible if distance is zero
+    getStackPane().setVisible(displayDistance > 0);
   }
 }
