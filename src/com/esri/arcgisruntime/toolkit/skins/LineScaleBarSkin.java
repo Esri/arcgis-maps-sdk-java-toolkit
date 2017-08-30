@@ -50,8 +50,6 @@ public final class LineScaleBarSkin extends ScalebarSkin {
     StackPane.setAlignment(vBox, Pos.CENTER);
 
     // the line
-    //line.setManaged(false);
-    //line.setStrokeType(StrokeType.INSIDE);
     line.setStroke(Color.WHITE);
     line.setStrokeWidth(3.0);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -71,27 +69,17 @@ public final class LineScaleBarSkin extends ScalebarSkin {
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
-      System.out.println("Line: " + getBaseUnit().convertTo(displayUnits, maxDistance) + displayUnits.getAbbreviation());
     }
 
     // update the line
     line.getElements().clear();
-    //line.setTranslateX((width - displayWidth) / 2.0);
     line.getElements().addAll(new MoveTo(0.0, -HEIGHT), new LineTo(0.0, 0.0), new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -HEIGHT));
 
     // update the label
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
 
     // adjust for left/right/center alignment
-//    double translateX = calculateAlignmentTranslationX(width, displayWidth);
-//    line.setTranslateX(line.getTranslateX() + translateX);
-//    distanceLabel.setTranslateX(translateX);
     getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
     distanceLabel.setVisible(displayDistance > 0); // hide the label if the distance is zero
-  }
-
-  @Override
-  protected double calculateMaximumScalebarWidth() {
-    return getSkinnable().getWidth();
   }
 }

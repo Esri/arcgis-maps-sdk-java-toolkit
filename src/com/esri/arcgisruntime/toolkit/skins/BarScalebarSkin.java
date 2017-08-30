@@ -67,7 +67,6 @@ public final class BarScalebarSkin extends ScalebarSkin {
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
       getBaseUnit(), width);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-    //double displayWidth = (width / maxDistance) * displayDistance;
     double displayWidth = displayDistance / maxDistance * width;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
@@ -82,15 +81,7 @@ public final class BarScalebarSkin extends ScalebarSkin {
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
 
     // adjust for left/right/center alignment
-//    double translateX = calculateAlignmentTranslationX(width, displayWidth);
-//    barStackPane.setTranslateX(translateX);
-//    distanceLabel.setTranslateX(translateX);
     getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
     distanceLabel.setVisible(displayDistance > 0); // hide the label if the distance is zero
-  }
-
-  @Override
-  protected double calculateMaximumScalebarWidth() {
-    return getSkinnable().getWidth();
   }
 }

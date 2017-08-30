@@ -29,7 +29,6 @@ import com.esri.arcgisruntime.toolkit.Scalebar;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
-import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -105,14 +104,6 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @param height the height
    */
   protected abstract void update(double width, double height);
-
-  /**
-   * The maxmimum width that a scalebar can have. This could be the full control width or less if the scalebar
-   * has a label at the end.
-   *
-   * @return the maximum possible width
-   */
-  protected abstract double calculateMaximumScalebarWidth();
 
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {

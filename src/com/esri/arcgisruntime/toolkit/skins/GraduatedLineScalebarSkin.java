@@ -19,10 +19,11 @@ package com.esri.arcgisruntime.toolkit.skins;
 import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -37,7 +38,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
   private final static double TICK_HEIGHT = 0.75 * HEIGHT;
 
   private final VBox vBox = new VBox();
-  private final HBox hBox = new HBox();
+  private final Pane labelPane = new Pane();
   private final Path line = new Path();
 
   public GraduatedLineScalebarSkin(Scalebar scalebar) {
@@ -45,7 +46,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
     // use a vbox to arrange the bar above the labels
     vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(line, hBox);
+    vBox.getChildren().addAll(line, labelPane);
     StackPane.setAlignment(vBox, Pos.CENTER);
 
     // the line
@@ -60,23 +61,20 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
+    double availableWidth = width - (calculateRegionWidth(new Label("mm"))); // TODO - use correct font
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
       getBaseUnit(), width);
-    double availableWidth = width - calculateRegionWidth(new Label("mm")); // TODO - use correct font
+
     maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
     double displayWidth = displayDistance / maxDistance * availableWidth;
+    //double displayWidth = displayDistance / maxDistance * width;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
     }
 
-//    // update the line
-//    line.getElements().clear();
-//    //line.setTranslateX((width - displayWidth) / 2.0);
-//    //line.getElements().addAll(new MoveTo(0.0, -HEIGHT), new LineTo(0.0, 0.0), new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -HEIGHT));
-//    line.getElements().add(new MoveTo(0.0, -HEIGHT));
-//    line.getElements().add(new LineTo(0.0, 0.0));
+    //getStackPane().setTranslateX(-calculateRegionWidth(new Label("mm")) / 2.0);
 
     // create a label to use to work out how many labels can fit in the scale bar width
     String sampleLabelString = ScalebarUtil.labelString(displayDistance);
@@ -86,6 +84,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
       sampleLabelString = "9.9";
     }
     Label sampleLabel = new Label(sampleLabelString);
+    sampleLabel.setPadding(new Insets(0.0, 10.0, 0.0, 10.0));
 
     double widthOfLabel = calculateRegionWidth(sampleLabel);
     int maximumNumberOfSegments = (int) (displayWidth / widthOfLabel);
@@ -95,31 +94,41 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     double segmentWidth = displayWidth / bestNumberOfSegments;
     double segmentDistance = displayDistance / bestNumberOfSegments;
 
-    hBox.getChildren().clear();
-
-    Label l = new Label("0");
-    hBox.getChildren().add(l);
+    labelPane.getChildren().clear();
+    labelPane.setMaxWidth(displayWidth);
 
     // update the line and labels
+    Label label = new Label("0");
+    label.setAlignment(Pos.CENTER_LEFT);
+    labelPane.getChildren().add(label);
 
     line.getElements().clear();
     line.getElements().add(new MoveTo(0.0, -HEIGHT));
     line.getElements().add(new LineTo(0.0, 0.0));
     for (int i = 1; i < bestNumberOfSegments; ++i) {
-      l = new Label(ScalebarUtil.labelString(i * segmentDistance));
-      hBox.getChildren().add(l);
+      label = new Label(ScalebarUtil.labelString(i * segmentDistance));
+      label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
+      labelPane.getChildren().add(label);
       line.getElements().add(new LineTo(i * segmentWidth, 0.0));
-      line.getElements().add(new LineTo(i * segmentWidth, -HEIGHT * 0.75));
+      line.getElements().add(new LineTo(i * segmentWidth, -TICK_HEIGHT));
       line.getElements().add(new MoveTo(i * segmentWidth, 0.0));
     }
-    l = new Label(ScalebarUtil.labelString(displayDistance));
-    hBox.getChildren().add(l);
+    label = new Label(ScalebarUtil.labelString(displayDistance));
+    // translate it into the correct position
+    label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegionWidth(label));
+    // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
+    label.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
+    labelPane.getChildren().add(label);
+
+    // the last part of the line
     line.getElements().add(new LineTo(displayWidth, 0.0));
     line.getElements().add(new LineTo(displayWidth, -HEIGHT));
-  }
 
-  @Override
-  protected double calculateMaximumScalebarWidth() {
-    return getSkinnable().getWidth() - calculateRegionWidth(new Label("mm"));
+    //line.getElements().add(new LineTo(displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation())), -HEIGHT));
+    line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
+    labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
+
+    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    labelPane.setVisible(displayDistance > 0); // hide the label if the distance is zero
   }
 }
