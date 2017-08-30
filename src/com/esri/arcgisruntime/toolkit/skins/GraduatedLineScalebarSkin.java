@@ -75,8 +75,6 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
     }
 
-    //getStackPane().setTranslateX(-calculateRegionWidth(new Label("mm")) / 2.0);
-
     // create a label to use to work out how many labels can fit in the scale bar width
     String sampleLabelString = ScalebarUtil.labelString(displayDistance);
     // possibly the total distance string is shorter than the other labels if they have decimal parts so

@@ -78,10 +78,6 @@ public class ScalebarUtil {
     double magnitude = calculateMagnitude(maxLength);
     double multiplier = selectMultiplierData(maxLength, magnitude).getMultiplier();
 
-    // If the scalebar isn't segmented, force the multiplier to be an integer if it's > 2.0
-    if (!isSegmented && multiplier > 2.0) {
-      multiplier = Math.floor(multiplier);
-    }
     double bestLength = multiplier * magnitude;
 
     // If using imperial units, check if the number of feet is greater than the threshold for using feet
