@@ -154,10 +154,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @return the distance
    */
   protected double calculateDistance(MapView mapView, LinearUnit unit, double width) {
-    double centerX = mapView.getWidth() / 2.0;
-    double centerY = mapView.getHeight() / 2.0;
     double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
-    //double halfWidth = width / 2.0;
 
     double distance = 0.0;
     Point mapCenter = mapView.getVisibleArea().getExtent().getCenter();
@@ -168,13 +165,6 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     Point point1 = new Point(mapCenter.getX() - (maxPlanarWidth / 2.0), mapCenter.getY());
     Point point2 = new Point(mapCenter.getX() + (maxPlanarWidth / 2.0), mapCenter.getY());
-
-    // TODO - consider map view insets
-//    Point point1 = mapView.screenToLocation(new Point2D(centerX - halfWidth, centerY));
-//    Point point2 = mapView.screenToLocation(new Point2D(centerX + halfWidth, centerY));
-
-//    Point point1 = mapView.screenToLocation(new Point2D(centerX - 0.5, centerY));
-//    Point point2 = mapView.screenToLocation(new Point2D(centerX + 0.5, centerY));
 
 
     if (point1 != null && point2 != null) {

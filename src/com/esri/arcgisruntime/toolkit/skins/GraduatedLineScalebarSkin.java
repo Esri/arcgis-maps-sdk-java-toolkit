@@ -20,6 +20,7 @@ import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -113,7 +114,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
         line.getElements().add(new MoveTo(i * segmentWidth, 0.0));
       }
     }
-    // the last label is aligned so its end is at the end of the line
+    // the last label is aligned so its end is at the end of the line so it is done outside the loop
     label = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
     label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegionWidth(label));
@@ -125,6 +126,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     line.getElements().add(new LineTo(displayWidth, 0.0));
     line.getElements().add(new LineTo(displayWidth, -HEIGHT));
 
+    // move the line and labels into their final position - slightly off center due to the units
     line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
     labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
 

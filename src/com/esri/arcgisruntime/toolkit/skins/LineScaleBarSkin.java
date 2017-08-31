@@ -65,6 +65,7 @@ public final class LineScaleBarSkin extends ScalebarSkin {
       getBaseUnit(), width);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
     //double displayWidth = (width / maxDistance) * displayDistance;
+    System.out.println(maxDistance + " " + displayDistance);
     double displayWidth = displayDistance / maxDistance * width;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
