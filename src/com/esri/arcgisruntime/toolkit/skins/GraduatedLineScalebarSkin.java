@@ -97,20 +97,23 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
     // update the line and labels
     line.getElements().clear();
-    line.getElements().add(new MoveTo(0.0, -HEIGHT));
-    line.getElements().add(new LineTo(0.0, 0.0));
+    line.getElements().addAll(new MoveTo(0.0, -HEIGHT), new LineTo(0.0, 0.0));
 
     Label label;
+
     for (int i = 0; i < bestNumberOfSegments; ++i) {
       label = new Label(ScalebarUtil.labelString(i * segmentDistance));
-      label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
-      labelPane.getChildren().add(label);
-      // we've already drawn the first part of the line so only draw ticks for the intermediate values
+      // first label is aligned with its left to the edge of the bar while the intermediate
+      // labels are centered on the ticks
       if (i > 0) {
-        line.getElements().add(new LineTo(i * segmentWidth, 0.0));
-        line.getElements().add(new LineTo(i * segmentWidth, -TICK_HEIGHT));
-        line.getElements().add(new MoveTo(i * segmentWidth, 0.0));
+        label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
       }
+      labelPane.getChildren().add(label);
+
+      line.getElements().addAll(
+        new LineTo(i * segmentWidth, 0.0),
+        new LineTo(i * segmentWidth, -TICK_HEIGHT),
+        new MoveTo(i * segmentWidth, 0.0));
     }
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
     label = new Label(ScalebarUtil.labelString(displayDistance));
@@ -121,8 +124,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     labelPane.getChildren().add(label);
 
     // the last part of the line
-    line.getElements().add(new LineTo(displayWidth, 0.0));
-    line.getElements().add(new LineTo(displayWidth, -HEIGHT));
+    line.getElements().addAll(new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -HEIGHT));
 
     // move the line and labels into their final position - slightly off center due to the units
     line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);

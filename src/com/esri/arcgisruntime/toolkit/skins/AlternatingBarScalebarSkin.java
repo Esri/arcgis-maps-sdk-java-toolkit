@@ -41,7 +41,6 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
   private final Pane labelPane = new Pane();
   private final StackPane barStackPane = new StackPane();
   private final Rectangle outerBar = new Rectangle();
-  private final Rectangle innerBar = new Rectangle();
   private final Path dividerPath = new Path();
   private final Pane segmentPane = new Pane();
 
@@ -59,9 +58,6 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     outerBar.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
     outerBar.setArcWidth(5);
     outerBar.setArcHeight(5);
-
-    innerBar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
-    innerBar.setHeight(8.0);
 
     dividerPath.setStroke(Color.WHITE);
     dividerPath.setStrokeWidth(2.0);
@@ -106,6 +102,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     double segmentWidth = displayWidth / bestNumberOfSegments;
     double segmentDistance = displayDistance / bestNumberOfSegments;
 
+    // clear out all the labels, segments and dividers
     labelPane.getChildren().clear();
     labelPane.setMaxWidth(displayWidth);
 
@@ -120,9 +117,18 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     Label label;
     Rectangle segmentInner;
 
+    // first dividers at the start of the bar
+    dividerPath.getElements().add(new MoveTo(1.0, 0.0));
+    dividerPath.getElements().add(new LineTo(1.0, INNER_HEIGHT));
+
     for (int i = 0; i < bestNumberOfSegments; ++i) {
       label = new Label(ScalebarUtil.labelString(i * segmentDistance));
-      label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
+
+      // first label is aligned with its left to the edge of the bar while the intermediate
+      // labels are centered on the dividers
+      if (i > 0) {
+        label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
+      }
       labelPane.getChildren().add(label);
 
       segmentInner = new Rectangle();
@@ -144,9 +150,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       }
     }
 
-    // first and last dividers
-    dividerPath.getElements().add(new MoveTo(1.0, 0.0));
-    dividerPath.getElements().add(new LineTo(1.0, INNER_HEIGHT));
+    // last divider at the end of the bar
     dividerPath.getElements().add(new MoveTo(displayWidth - 1.0, 0.0));
     dividerPath.getElements().add(new LineTo(displayWidth - 1.0, INNER_HEIGHT));
 
