@@ -70,7 +70,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
 
     UnitSystem secondaryUnitSystem = getUnitSystem() == UnitSystem.METRIC ? UnitSystem.IMPERIAL : UnitSystem.METRIC;
-    LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? new LinearUnit(LinearUnitId.FEET) : new LinearUnit(LinearUnitId.METERS);
+    LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? new LinearUnit(LinearUnitId.METERS) : new LinearUnit(LinearUnitId.FEET);
     double secondaryMaxDistance = getBaseUnit().convertTo(secondaryBaseUnit, displayDistance);
 
     double displayWidth = displayDistance / maxDistance * availableWidth;
