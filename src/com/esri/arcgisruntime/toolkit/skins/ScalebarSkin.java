@@ -47,13 +47,14 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   private static final double LINE_WIDTH = 5.0;
 
+  private UnitSystem unitSystem;
   private LinearUnit baseUnit;
   private HPos alignment = HPos.CENTER;
 
   private final ViewpointChangedListener viewpointChangedListener = v -> invalidated();
 
   private final ChangeListener<UnitSystem> unitsChangedListener = (observable, oldValue, newValue) -> {
-    updateBaseUnit(newValue);
+    updateUnits(newValue);
     invalidated();
   };
 
@@ -73,7 +74,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     control.unitSystemProperty().addListener(unitsChangedListener);
     control.alignmentProperty().addListener(alignmentChangedListener);
 
-    updateBaseUnit(control.getUnitSystem());
+    updateUnits(control.getUnitSystem());
     alignment = control.getAlignment();
 
     rect.widthProperty().bind(control.widthProperty());
@@ -125,6 +126,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   protected LinearUnit getBaseUnit() {
     return baseUnit;
+  }
+
+  protected UnitSystem getUnitSystem() {
+    return unitSystem;
   }
 
   protected HPos getAlignment() {
@@ -208,7 +213,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getSkinnable().requestLayout();
   }
 
-  private void updateBaseUnit(UnitSystem unitSystem) {
+  private void updateUnits(UnitSystem unitSystem) {
+    this.unitSystem = unitSystem;
     switch (unitSystem) {
       case METRIC:
         baseUnit = new LinearUnit(LinearUnitId.METERS);

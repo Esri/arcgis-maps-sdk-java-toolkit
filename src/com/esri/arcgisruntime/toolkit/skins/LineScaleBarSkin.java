@@ -71,7 +71,11 @@ public final class LineScaleBarSkin extends ScalebarSkin {
 
     // update the line
     line.getElements().clear();
-    line.getElements().addAll(new MoveTo(0.0, -HEIGHT), new LineTo(0.0, 0.0), new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -HEIGHT));
+    line.getElements().addAll(
+      new MoveTo(0.0, -HEIGHT),
+      new LineTo(0.0, 0.0),
+      new LineTo(displayWidth, 0.0),
+      new LineTo(displayWidth, -HEIGHT));
 
     // update the label
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
