@@ -29,7 +29,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeType;
 
 public final class LineScaleBarSkin extends ScalebarSkin {
 
@@ -64,8 +63,6 @@ public final class LineScaleBarSkin extends ScalebarSkin {
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
       getBaseUnit(), width);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-    //double displayWidth = (width / maxDistance) * displayDistance;
-    System.out.println(maxDistance + " " + displayDistance);
     double displayWidth = displayDistance / maxDistance * width;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {

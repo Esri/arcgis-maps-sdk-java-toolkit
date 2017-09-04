@@ -40,7 +40,7 @@ public final class Scalebar extends Control {
     LINE,
     BAR,
     GRADUATED_LINE,
-    ALTERNATING_BAR_LINE,
+    ALTERNATING_BAR,
     DUAL_UNIT_LINE,
   }
 
@@ -127,7 +127,7 @@ public final class Scalebar extends Control {
         return new BarScalebarSkin(this);
       case GRADUATED_LINE:
         return new GraduatedLineScalebarSkin(this);
-      case ALTERNATING_BAR_LINE:
+      case ALTERNATING_BAR:
         return new AlternatingBarScalebarSkin(this);
       case DUAL_UNIT_LINE:
         return new DualUnitScalebarSkin(this);

@@ -20,7 +20,6 @@ import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
@@ -70,7 +69,6 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
 
     double displayWidth = displayDistance / maxDistance * availableWidth;
-    //double displayWidth = displayDistance / maxDistance * width;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getSkinnable().getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
