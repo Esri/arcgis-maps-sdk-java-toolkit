@@ -40,12 +40,12 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
+  protected final static double SHADOW_OFFSET = 1.5;
+
   Rectangle rect = new Rectangle();
 
   private boolean invalid = true;
   private final StackPane stackPane = new StackPane();
-
-  private static final double LINE_WIDTH = 5.0;
 
   private UnitSystem unitSystem;
   private LinearUnit baseUnit;
@@ -118,10 +118,6 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   protected StackPane getStackPane() {
     return stackPane;
-  }
-
-  protected double getLineWidth() {
-    return LINE_WIDTH;
   }
 
   protected LinearUnit getBaseUnit() {

@@ -36,6 +36,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
   private final static double HEIGHT = 8.0;
   private final static double TICK_HEIGHT = 0.75 * HEIGHT;
+  private final static double STROKE_WIDTH = 3.0;
 
   private final VBox vBox = new VBox();
   private final Pane labelPane = new Pane();
@@ -51,9 +52,9 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
     // the line
     line.setStroke(Color.WHITE);
-    line.setStrokeWidth(3.0);
+    line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
-    line.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+    line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
 
     getStackPane().getChildren().addAll(vBox);
   }
@@ -61,11 +62,11 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
-    double availableWidth = width - (calculateRegionWidth(new Label("mm"))); // TODO - use correct font
+    double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), width);
+      getBaseUnit(), /*width*/availableWidth);
 
-    maxDistance *= availableWidth / width;
+    //maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
 
     double displayWidth = displayDistance / maxDistance * availableWidth;
@@ -131,7 +132,8 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    getStackPane().setTranslateX(calculateAlignmentTranslationX(width,
+      displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);

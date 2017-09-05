@@ -55,7 +55,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     // outline of the bar
     outerBar.setFill(Color.rgb(0xFF, 0xFF, 0xFF));
     outerBar.setHeight(HEIGHT);
-    outerBar.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+    outerBar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
     outerBar.setArcWidth(5);
     outerBar.setArcHeight(5);
 
@@ -71,11 +71,11 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
-    double availableWidth = width - (calculateRegionWidth(new Label("mm"))); // TODO - use correct font
+    double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET; // TODO - use correct font
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), width);
+      getBaseUnit(), /*width*/availableWidth);
 
-    maxDistance *= availableWidth / width;
+    //maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
 
     double displayWidth = displayDistance / maxDistance * availableWidth;
@@ -169,7 +169,9 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    getStackPane().setTranslateX(
+      calculateAlignmentTranslationX(width,
+        displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);

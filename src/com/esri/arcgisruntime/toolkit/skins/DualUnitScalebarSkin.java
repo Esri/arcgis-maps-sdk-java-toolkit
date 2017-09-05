@@ -36,7 +36,7 @@ import javafx.scene.shape.StrokeLineCap;
 public final class DualUnitScalebarSkin extends ScalebarSkin {
 
   private final static double HEIGHT = 8.0;
-  private final static double TICK_HEIGHT = 0.75 * HEIGHT;
+  private final static double STROKE_WIDTH = 3.0;
 
   private final VBox vBox = new VBox();
   private final Pane primaryLabelPane = new Pane();
@@ -53,9 +53,9 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     // the line
     line.setStroke(Color.WHITE);
-    line.setStrokeWidth(3.0);
+    line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
-    line.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+    line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
 
     getStackPane().getChildren().addAll(vBox);
   }
@@ -63,10 +63,10 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
-    double availableWidth = width - (calculateRegionWidth(new Label("mm"))); // TODO - use correct font
-    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), width);
+    double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
+    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), /*width*/availableWidth);
 
-    maxDistance *= availableWidth / width;
+    //maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
 
     double displayWidth = displayDistance / maxDistance * availableWidth;
@@ -77,7 +77,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     UnitSystem secondaryUnitSystem = getUnitSystem() == UnitSystem.METRIC ? UnitSystem.IMPERIAL : UnitSystem.METRIC;
     LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? new LinearUnit(LinearUnitId.METERS) : new LinearUnit(LinearUnitId.FEET);
-    double secondaryMaxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), secondaryBaseUnit, displayWidth);
+    double secondaryMaxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), secondaryBaseUnit, displayWidth - STROKE_WIDTH);
 
     double secondaryDisplayDistance = ScalebarUtil.calculateBestScalebarLength(secondaryMaxDistance, secondaryBaseUnit, false);
     double secondaryDisplayWidth = secondaryDisplayDistance / secondaryMaxDistance * displayWidth;
@@ -126,7 +126,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(secondaryDisplayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    getStackPane().setTranslateX(calculateAlignmentTranslationX(width,displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);

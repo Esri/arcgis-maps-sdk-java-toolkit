@@ -33,6 +33,7 @@ import javafx.scene.shape.StrokeLineCap;
 public final class LineScaleBarSkin extends ScalebarSkin {
 
   private final static double HEIGHT = 8.0;
+  private final static double STROKE_WIDTH = 3.0;
 
   private final VBox vBox = new VBox();
   private final Label distanceLabel = new Label();
@@ -50,9 +51,9 @@ public final class LineScaleBarSkin extends ScalebarSkin {
 
     // the line
     line.setStroke(Color.WHITE);
-    line.setStrokeWidth(3.0);
+    line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
-    line.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+    line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
 
     getStackPane().getChildren().addAll(vBox);
   }
@@ -60,10 +61,11 @@ public final class LineScaleBarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
+    double availableWidth = width - STROKE_WIDTH - SHADOW_OFFSET;
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), width);
+      getBaseUnit(), availableWidth);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-    double displayWidth = displayDistance / maxDistance * width;
+    double displayWidth = displayDistance / maxDistance * availableWidth;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);

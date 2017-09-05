@@ -29,6 +29,9 @@ import javafx.scene.shape.Rectangle;
 
 public final class BarScalebarSkin extends ScalebarSkin {
 
+  private static final double HEIGHT = 12.0;
+  private static final double INNER_HEIGHT = 2 * (HEIGHT / 3.0);
+
   private final VBox vBox = new VBox();
   private final Label distanceLabel = new Label();
   private final StackPane barStackPane = new StackPane();
@@ -46,14 +49,14 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
     // outline of the bar
     outerBar.setFill(Color.rgb(0xFF, 0xFF, 0xFF));
-    outerBar.setHeight(12.0);
-    outerBar.setEffect(new DropShadow(1.0, 1.5, 1.5, Color.rgb(0x6E, 0x84, 0x8D)));
+    outerBar.setHeight(HEIGHT);
+    outerBar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
     outerBar.setArcWidth(5);
     outerBar.setArcHeight(5);
 
     // the bar
     innerBar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
-    innerBar.setHeight(8.0);
+    innerBar.setHeight(INNER_HEIGHT);
 
     // combine bar and outline in a stack to get the right effect
     barStackPane.getChildren().addAll(outerBar, innerBar);
@@ -64,10 +67,11 @@ public final class BarScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
+    double availableWidth = width - SHADOW_OFFSET;
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), width);
+      getBaseUnit(), availableWidth);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-    double displayWidth = displayDistance / maxDistance * width;
+    double displayWidth = displayDistance / maxDistance * availableWidth;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
