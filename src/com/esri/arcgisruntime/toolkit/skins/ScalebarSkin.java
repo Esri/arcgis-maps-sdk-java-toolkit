@@ -83,7 +83,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     getChildren().add(rect);
 
-    //stackPane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+//    stackPane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     getChildren().add(stackPane);
   }
 
@@ -171,6 +171,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     if (point1 != null && point2 != null) {
       PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
       polylineBuilder.addPoint(point1);
+      polylineBuilder.addPoint(mapCenter);
       polylineBuilder.addPoint(point2);
 
       distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
