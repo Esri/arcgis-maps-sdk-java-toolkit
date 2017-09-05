@@ -74,10 +74,10 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     UnitSystem secondaryUnitSystem = getUnitSystem() == UnitSystem.METRIC ? UnitSystem.IMPERIAL : UnitSystem.METRIC;
     LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? new LinearUnit(LinearUnitId.METERS) : new LinearUnit(LinearUnitId.FEET);
-    double secondaryMaxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), secondaryBaseUnit, displayWidth - STROKE_WIDTH);
+    double secondaryMaxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), secondaryBaseUnit, availableWidth);
 
     double secondaryDisplayDistance = ScalebarUtil.calculateBestScalebarLength(secondaryMaxDistance, secondaryBaseUnit, false);
-    double secondaryDisplayWidth = secondaryDisplayDistance / secondaryMaxDistance * displayWidth;
+    double secondaryDisplayWidth = secondaryDisplayDistance / secondaryMaxDistance * availableWidth;
     LinearUnit secondaryDisplayUnits = ScalebarUtil.selectLinearUnit(secondaryDisplayDistance, secondaryUnitSystem);
     if (secondaryDisplayUnits != secondaryBaseUnit) {
       secondaryDisplayDistance = secondaryBaseUnit.convertTo(secondaryDisplayUnits, secondaryDisplayDistance);
@@ -88,12 +88,16 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabelPane.getChildren().clear();
     secondaryLabelPane.setMaxWidth(displayWidth);
 
+    // the line width is the longest of the two display widths
+    double lineWidth = Math.max(displayWidth, secondaryDisplayWidth);
+
     // update the line
     line.getElements().clear();
     line.getElements().addAll(new MoveTo(0.0, -HEIGHT),
       new LineTo(0.0, HEIGHT),
       new MoveTo(0.0, 0.0),
-      new LineTo(displayWidth, 0.0),
+      new LineTo(lineWidth, 0.0),
+      new MoveTo(displayWidth, 0.0),
       new LineTo(displayWidth, -HEIGHT),
       new MoveTo(secondaryDisplayWidth, 0.0),
       new LineTo(secondaryDisplayWidth, HEIGHT));
