@@ -94,7 +94,6 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     // update the line
     line.getElements().clear();
     line.getElements().addAll(new MoveTo(0.0, -HEIGHT),
-      new LineTo(0.0, 0.0),
       new LineTo(0.0, HEIGHT),
       new MoveTo(0.0, 0.0),
       new LineTo(displayWidth, 0.0),
@@ -104,7 +103,6 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     // label the ticks
     Label primaryLabel;
-
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
     primaryLabel = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
