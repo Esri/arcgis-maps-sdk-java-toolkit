@@ -24,24 +24,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 
 public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
-  private static final double HEIGHT = 12.0;
-  private static final double INNER_HEIGHT = 2 * (HEIGHT / 3.0);
-
   private final VBox vBox = new VBox();
   private final Pane labelPane = new Pane();
-  private final StackPane barStackPane = new StackPane();
-  private final Rectangle outerBar = new Rectangle();
-  private final Path dividerPath = new Path();
   private final Pane segmentPane = new Pane();
 
   public AlternatingBarScalebarSkin(Scalebar scalebar) {
@@ -49,21 +39,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
     // use a vbox to arrange the bar above the labels
     vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(barStackPane, labelPane);
-    StackPane.setAlignment(vBox, Pos.CENTER);
-
-    // outline of the bar
-    outerBar.setFill(Color.rgb(0xFF, 0xFF, 0xFF));
-    outerBar.setHeight(HEIGHT);
-    outerBar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
-    outerBar.setArcWidth(5);
-    outerBar.setArcHeight(5);
-
-    dividerPath.setStroke(Color.WHITE);
-    dividerPath.setStrokeWidth(2.0);
-    dividerPath.setTranslateY(INNER_HEIGHT / 4.0);
-
-    barStackPane.getChildren().addAll(outerBar, segmentPane);
+    vBox.getChildren().addAll(segmentPane, labelPane);
 
     getStackPane().getChildren().add(vBox);
   }
@@ -75,7 +51,6 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
       getBaseUnit(), /*width*/availableWidth);
 
-    //maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
 
     double displayWidth = displayDistance / maxDistance * availableWidth;
@@ -109,17 +84,8 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     segmentPane.getChildren().clear();
     segmentPane.setMaxWidth(displayWidth);
 
-    dividerPath.getElements().clear();
-
-    // update the bar size
-    outerBar.setWidth(displayWidth);
-
     Label label;
-    Rectangle segmentInner;
-
-    // first dividers at the start of the bar
-    dividerPath.getElements().add(new MoveTo(1.0, 0.0));
-    dividerPath.getElements().add(new LineTo(1.0, INNER_HEIGHT));
+    Rectangle barSegment;
 
     for (int i = 0; i < bestNumberOfSegments; ++i) {
       label = new Label(ScalebarUtil.labelString(i * segmentDistance));
@@ -131,30 +97,24 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       }
       labelPane.getChildren().add(label);
 
-      segmentInner = new Rectangle();
-      segmentInner.setHeight(INNER_HEIGHT);
-      segmentInner.setWidth(segmentWidth);
-      segmentInner.setTranslateX(i * segmentWidth);
-      segmentInner.setTranslateY(INNER_HEIGHT / 4.0);
+      barSegment = new Rectangle();
+      barSegment.setHeight(HEIGHT);
+      barSegment.setWidth(segmentWidth);
+      barSegment.setTranslateX(i * segmentWidth);
+      barSegment.setTranslateY(HEIGHT / 4.0);
+      barSegment.setStroke(Color.rgb(0xFF, 0xFF, 0xFF));
+      barSegment.setStrokeWidth(STROKE_WIDTH);
+      barSegment.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
+      barSegment.setArcWidth(1.5);
+      barSegment.setArcHeight(1.5);
       if (i % 2 != 0) {
-        segmentInner.setFill(Color.BLACK);
+        barSegment.setFill(Color.BLACK);
       } else {
-        segmentInner.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
+        barSegment.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
       }
 
-      segmentPane.getChildren().add(segmentInner);
-
-      if (i > 0) {
-        dividerPath.getElements().add(new MoveTo(i * segmentWidth, 0.0));
-        dividerPath.getElements().add(new LineTo(i * segmentWidth, INNER_HEIGHT));
-      }
+      segmentPane.getChildren().add(barSegment);
     }
-
-    // last divider at the end of the bar
-    dividerPath.getElements().add(new MoveTo(displayWidth - 1.0, 0.0));
-    dividerPath.getElements().add(new LineTo(displayWidth - 1.0, INNER_HEIGHT));
-
-    segmentPane.getChildren().add(dividerPath);
 
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
     label = new Label(ScalebarUtil.labelString(displayDistance));
@@ -164,9 +124,10 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     label.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
     labelPane.getChildren().add(label);
 
-    // move the line and labels into their final position - slightly off center due to the units
-    barStackPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
-    labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
+    // move the bar and labels into their final position - slightly off center due to the units
+    Label abbreviationLabel = new Label(displayUnits.getAbbreviation());
+    segmentPane.setTranslateX(-calculateRegionWidth(abbreviationLabel) / 2.0);
+    labelPane.setTranslateX(-calculateRegionWidth(abbreviationLabel) / 2.0);
 
     // adjust for left/right/center alignment
     getStackPane().setTranslateX(

@@ -22,20 +22,15 @@ import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public final class BarScalebarSkin extends ScalebarSkin {
 
-  private static final double HEIGHT = 12.0;
-  private static final double INNER_HEIGHT = 2 * (HEIGHT / 3.0);
-
   private final VBox vBox = new VBox();
   private final Label distanceLabel = new Label();
-  private final StackPane barStackPane = new StackPane();
-  private final Rectangle innerBar = new Rectangle();
+  private final Rectangle bar = new Rectangle();
   private final Rectangle outerBar = new Rectangle();
 
   public BarScalebarSkin(Scalebar scalebar) {
@@ -45,21 +40,16 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
     // use a vbox to arrange the bar above the label
     vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(barStackPane, distanceLabel);
-
-    // outline of the bar
-    outerBar.setFill(Color.rgb(0xFF, 0xFF, 0xFF));
-    outerBar.setHeight(HEIGHT);
-    outerBar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
-    outerBar.setArcWidth(5);
-    outerBar.setArcHeight(5);
+    vBox.getChildren().addAll(bar, distanceLabel);
 
     // the bar
-    innerBar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
-    innerBar.setHeight(INNER_HEIGHT);
-
-    // combine bar and outline in a stack to get the right effect
-    barStackPane.getChildren().addAll(outerBar, innerBar);
+    bar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
+    bar.setHeight(HEIGHT);
+    bar.setStroke(Color.rgb(0xFF, 0xFF, 0xFF));
+    bar.setStrokeWidth(STROKE_WIDTH);
+    bar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
+    bar.setArcWidth(1.5);
+    bar.setArcHeight(1.5);
 
     getStackPane().getChildren().addAll(vBox);
   }
@@ -67,7 +57,7 @@ public final class BarScalebarSkin extends ScalebarSkin {
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
-    double availableWidth = width - SHADOW_OFFSET;
+    double availableWidth = width - STROKE_WIDTH - SHADOW_OFFSET;
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
       getBaseUnit(), availableWidth);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
@@ -78,7 +68,7 @@ public final class BarScalebarSkin extends ScalebarSkin {
     }
 
     // update the bar size
-    innerBar.setWidth(displayWidth - 4);
+    bar.setWidth(displayWidth);
     outerBar.setWidth(displayWidth);
 
     // update the label

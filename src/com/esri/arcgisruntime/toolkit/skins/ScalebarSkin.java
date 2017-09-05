@@ -40,7 +40,9 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
+  protected static final double HEIGHT = 10.0;
   protected final static double SHADOW_OFFSET = 1.5;
+  protected final static double STROKE_WIDTH = 3.0;
 
   Rectangle rect = new Rectangle();
 
@@ -79,11 +81,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     rect.widthProperty().bind(control.widthProperty());
     rect.heightProperty().bind(control.heightProperty());
-    rect.setFill(Color.rgb(0xFF, 0x00, 0x00, 0.5));
+    rect.setFill(Color.rgb(0xFF, 0xFF, 0x00, 0.5));
 
     getChildren().add(rect);
 
-//    stackPane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     getChildren().add(stackPane);
   }
 
@@ -96,6 +97,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getSkinnable().mapViewProperty().get().heightProperty().removeListener(this::invalidated);
     getSkinnable().unitSystemProperty().removeListener(unitsChangedListener);
     getSkinnable().alignmentProperty().removeListener(alignmentChangedListener);
+
+    stackPane.getChildren().clear();
   }
 
   /**
@@ -192,10 +195,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     double translate = 0.0;
     switch (getAlignment()) {
       case LEFT:
-        translate = -((width - actualWidth) / 2.0);
+        translate = -((width - actualWidth - STROKE_WIDTH) / 2.0);
         break;
       case RIGHT:
-        translate = (width - actualWidth) / 2.0;
+        translate = (width - actualWidth - STROKE_WIDTH - SHADOW_OFFSET) / 2.0;
         break;
     }
     return translate;

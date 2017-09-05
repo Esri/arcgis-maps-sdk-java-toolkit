@@ -35,9 +35,6 @@ import javafx.scene.shape.StrokeLineCap;
 
 public final class DualUnitScalebarSkin extends ScalebarSkin {
 
-  private final static double HEIGHT = 8.0;
-  private final static double STROKE_WIDTH = 3.0;
-
   private final VBox vBox = new VBox();
   private final Pane primaryLabelPane = new Pane();
   private final Pane secondaryLabelPane = new Pane();

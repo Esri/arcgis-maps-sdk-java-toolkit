@@ -34,9 +34,7 @@ import javafx.scene.shape.StrokeLineCap;
 
 public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
-  private final static double HEIGHT = 8.0;
   private final static double TICK_HEIGHT = 0.75 * HEIGHT;
-  private final static double STROKE_WIDTH = 3.0;
 
   private final VBox vBox = new VBox();
   private final Pane labelPane = new Pane();
@@ -64,11 +62,8 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     // work out the scalebar width, the distance it represents and the correct unit label
     double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), /*width*/availableWidth);
-
-    //maxDistance *= availableWidth / width;
+      getBaseUnit(), availableWidth);
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
-
     double displayWidth = displayDistance / maxDistance * availableWidth;
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
