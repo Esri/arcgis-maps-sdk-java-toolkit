@@ -83,23 +83,24 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
       secondaryDisplayDistance = secondaryBaseUnit.convertTo(secondaryDisplayUnits, secondaryDisplayDistance);
     }
 
-    primaryLabelPane.getChildren().clear();
-    primaryLabelPane.setMaxWidth(displayWidth);
-    secondaryLabelPane.getChildren().clear();
-    secondaryLabelPane.setMaxWidth(displayWidth);
-
     // the line width is the longest of the two display widths
     double lineWidth = Math.max(displayWidth, secondaryDisplayWidth);
 
+    primaryLabelPane.getChildren().clear();
+    primaryLabelPane.setMaxWidth(lineWidth);
+    secondaryLabelPane.getChildren().clear();
+    secondaryLabelPane.setMaxWidth(lineWidth);
+
     // update the line
     line.getElements().clear();
-    line.getElements().addAll(new MoveTo(0.0, -HEIGHT),
-      new LineTo(0.0, HEIGHT),
-      new MoveTo(0.0, 0.0),
-      new LineTo(lineWidth, 0.0),
-      new MoveTo(displayWidth, 0.0),
-      new LineTo(displayWidth, -HEIGHT),
-      new MoveTo(secondaryDisplayWidth, 0.0),
+    line.getElements().addAll(
+      new MoveTo(0.0, HEIGHT * 2.0),
+      new LineTo(0.0, 0.0),
+      new MoveTo(0.0, HEIGHT),
+      new LineTo(lineWidth, HEIGHT),
+      new MoveTo(displayWidth, HEIGHT),
+      new LineTo(displayWidth, 0.0),
+      new MoveTo(secondaryDisplayWidth, HEIGHT * 2.0),
       new LineTo(secondaryDisplayWidth, HEIGHT));
 
     // label the ticks
@@ -119,13 +120,16 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabel.setText(ScalebarUtil.labelString(secondaryDisplayDistance) + secondaryDisplayUnits.getAbbreviation());
     secondaryLabelPane.getChildren().add(secondaryLabel);
 
+    // the unit label that will be at the end of the line
+    Label endUnits = new Label(displayWidth >= secondaryDisplayWidth ? displayUnits.getAbbreviation() : secondaryDisplayUnits.getAbbreviation());
+
     // move the line and labels into their final position - slightly off center due to the units
-    line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
+    line.setTranslateX(-calculateRegionWidth(endUnits) / 2.0);
     primaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
     secondaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(secondaryDisplayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width,lineWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(endUnits)));
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);
