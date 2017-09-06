@@ -93,7 +93,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
     // update the line and labels
     line.getElements().clear();
-    line.getElements().addAll(new MoveTo(0.0, HEIGHT), new LineTo(0.0, 0.0));
+    line.getElements().addAll(new MoveTo(0.0, 0.0), new LineTo(0.0, HEIGHT));
 
     Label label;
 
