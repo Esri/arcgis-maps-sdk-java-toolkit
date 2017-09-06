@@ -44,6 +44,12 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   protected final static double SHADOW_OFFSET = 1.5;
   protected final static double STROKE_WIDTH = 3.0;
 
+  protected final static Color LINE_COLOR = Color.WHITE;
+  protected final static Color FILL_COLOR = Color.rgb(0xB7, 0xCB, 0xD3);
+  protected final static Color ALTERNATE_FILL_COLOR = Color.BLACK;
+  protected final static Color SHADOW_COLOR = Color.rgb(0x6E, 0x84, 0x8D);
+  protected final static Color TEXT_COLOR = Color.BLACK;
+
   Rectangle rect = new Rectangle();
 
   private boolean invalid = true;
