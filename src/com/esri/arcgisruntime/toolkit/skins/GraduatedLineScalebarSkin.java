@@ -93,7 +93,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
     // update the line and labels
     line.getElements().clear();
-    line.getElements().addAll(new MoveTo(0.0, -HEIGHT), new LineTo(0.0, 0.0));
+    line.getElements().addAll(new MoveTo(0.0, HEIGHT), new LineTo(0.0, 0.0));
 
     Label label;
 
@@ -107,9 +107,9 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
       labelPane.getChildren().add(label);
 
       line.getElements().addAll(
-        new LineTo(i * segmentWidth, 0.0),
-        new LineTo(i * segmentWidth, -TICK_HEIGHT),
-        new MoveTo(i * segmentWidth, 0.0));
+        new LineTo(i * segmentWidth, HEIGHT),
+        new LineTo(i * segmentWidth, HEIGHT - TICK_HEIGHT),
+        new MoveTo(i * segmentWidth, HEIGHT));
     }
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
     label = new Label(ScalebarUtil.labelString(displayDistance));
@@ -120,7 +120,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     labelPane.getChildren().add(label);
 
     // the last part of the line
-    line.getElements().addAll(new LineTo(displayWidth, 0.0), new LineTo(displayWidth, -HEIGHT));
+    line.getElements().addAll(new LineTo(displayWidth, HEIGHT), new LineTo(displayWidth, 0.0));
 
     // move the line and labels into their final position - slightly off center due to the units
     line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
