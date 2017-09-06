@@ -83,6 +83,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
       secondaryDisplayDistance = secondaryBaseUnit.convertTo(secondaryDisplayUnits, secondaryDisplayDistance);
     }
 
+    // the line width is the longest of the two display widths
     double lineWidth = Math.max(displayWidth, secondaryDisplayWidth);
 
     primaryLabelPane.getChildren().clear();
@@ -92,15 +93,6 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     // update the line
     line.getElements().clear();
-//    line.getElements().addAll(
-//      new MoveTo(0.0, -HEIGHT),
-//      new LineTo(0.0, HEIGHT),
-//      new MoveTo(0.0, 0.0),
-//      new LineTo(lineWidth, 0.0),
-//      new MoveTo(displayWidth, 0.0),
-//      new LineTo(displayWidth, -HEIGHT),
-//      new MoveTo(secondaryDisplayWidth, HEIGHT),
-//      new LineTo(secondaryDisplayWidth, 0.0));
     line.getElements().addAll(
       new MoveTo(0.0, HEIGHT * 2.0),
       new LineTo(0.0, 0.0),
@@ -134,7 +126,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(secondaryDisplayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width,lineWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);
