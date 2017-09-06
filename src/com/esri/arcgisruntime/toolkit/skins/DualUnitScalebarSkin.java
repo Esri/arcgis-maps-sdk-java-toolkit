@@ -120,13 +120,16 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabel.setText(ScalebarUtil.labelString(secondaryDisplayDistance) + secondaryDisplayUnits.getAbbreviation());
     secondaryLabelPane.getChildren().add(secondaryLabel);
 
+    // the unit label that will be at the end of the line
+    Label endUnits = new Label(displayWidth >= secondaryDisplayWidth ? displayUnits.getAbbreviation() : secondaryDisplayUnits.getAbbreviation());
+
     // move the line and labels into their final position - slightly off center due to the units
-    line.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
+    line.setTranslateX(-calculateRegionWidth(endUnits) / 2.0);
     primaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
     secondaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(secondaryDisplayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(endUnits)));
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);
