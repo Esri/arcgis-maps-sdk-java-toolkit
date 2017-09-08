@@ -27,7 +27,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -49,10 +48,10 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     StackPane.setAlignment(vBox, Pos.CENTER);
 
     // the line
-    line.setStroke(Color.WHITE);
+    line.setStroke(LINE_COLOR);
     line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
-    line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
+    line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
 
     getStackPane().getChildren().addAll(vBox);
   }
@@ -61,7 +60,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
     double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
-    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), /*width*/availableWidth);
+    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), availableWidth);
 
     //maxDistance *= availableWidth / width;
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);

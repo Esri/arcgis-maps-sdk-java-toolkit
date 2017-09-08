@@ -25,7 +25,6 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public final class AlternatingBarScalebarSkin extends ScalebarSkin {
@@ -49,7 +48,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     // work out the scalebar width, the distance it represents and the correct unit label
     double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET; // TODO - use correct font
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), /*width*/availableWidth);
+      getBaseUnit(), availableWidth);
 
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
 
@@ -102,15 +101,15 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       barSegment.setWidth(segmentWidth);
       barSegment.setTranslateX(i * segmentWidth);
       barSegment.setTranslateY(HEIGHT / 4.0);
-      barSegment.setStroke(Color.rgb(0xFF, 0xFF, 0xFF));
+      barSegment.setStroke(LINE_COLOR);
       barSegment.setStrokeWidth(STROKE_WIDTH);
-      barSegment.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
+      barSegment.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
       barSegment.setArcWidth(1.5);
       barSegment.setArcHeight(1.5);
       if (i % 2 != 0) {
-        barSegment.setFill(Color.BLACK);
+        barSegment.setFill(ALTERNATE_FILL_COLOR);
       } else {
-        barSegment.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
+        barSegment.setFill(FILL_COLOR);
       }
 
       segmentPane.getChildren().add(barSegment);

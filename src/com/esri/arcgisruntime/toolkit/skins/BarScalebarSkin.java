@@ -23,7 +23,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public final class BarScalebarSkin extends ScalebarSkin {
@@ -43,11 +42,11 @@ public final class BarScalebarSkin extends ScalebarSkin {
     vBox.getChildren().addAll(bar, distanceLabel);
 
     // the bar
-    bar.setFill(Color.rgb(0xB7, 0xCB, 0xD3));
+    bar.setFill(FILL_COLOR);
     bar.setHeight(HEIGHT);
-    bar.setStroke(Color.rgb(0xFF, 0xFF, 0xFF));
+    bar.setStroke(LINE_COLOR);
     bar.setStrokeWidth(STROKE_WIDTH);
-    bar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, Color.rgb(0x6E, 0x84, 0x8D)));
+    bar.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
     bar.setArcWidth(1.5);
     bar.setArcHeight(1.5);
 
