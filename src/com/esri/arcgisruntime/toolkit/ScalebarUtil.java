@@ -32,20 +32,6 @@ public class ScalebarUtil {
   // Array containing the multipliers that may be used for a scalebar and arrays of segment options appropriate for each
   // multiplier
   private static final MultiplierData[] MULTIPLIER_DATA_ARRAY = {
-//    new MultiplierData(1.0, new int[] {1, 2, 4, 5}),
-//    new MultiplierData(1.2, new int[] {1, 2, 3, 4}),
-//    new MultiplierData(1.5, new int[] {1, 2, 3, 5}),
-//    new MultiplierData(1.6, new int[] {1, 2, 4}),
-//    new MultiplierData(2.0, new int[] {1, 2, 4, 5}),
-//    new MultiplierData(2.4, new int[] {1, 2, 3, 4}),
-//    new MultiplierData(3.0, new int[] {1, 2, 3}),
-//    new MultiplierData(3.6, new int[] {1, 2, 3}),
-//    new MultiplierData(4.0, new int[] {1, 2, 4}),
-//    new MultiplierData(5.0, new int[] {1, 2, 5}),
-//    new MultiplierData(6.0, new int[] {1, 2, 3}),
-//    new MultiplierData(8.0, new int[] {1, 2, 4}),
-//    new MultiplierData(9.0, new int[] {1, 2, 3}),
-//    new MultiplierData(10.0, new int[] {1, 2, 5})
     new MultiplierData(1, new int[] {1, 2, 4, 5}),
     new MultiplierData(1.2, new int[] {1, 2, 3, 4}),
     new MultiplierData(1.25, new int[] {1, 2}),
@@ -72,7 +58,6 @@ public class ScalebarUtil {
    * @param unit indicates the unit of length being used: meters or feet
    * @param isSegmented true if the scalebar is segmented
    * @return the "best length", the highest "nice" number less than or equal to maxLength
-   * @since 100.1.0
    */
   public static double calculateBestScalebarLength(double maxLength, LinearUnit unit, boolean isSegmented) {
     double magnitude = calculateMagnitude(maxLength);
@@ -102,7 +87,6 @@ public class ScalebarUtil {
    * @param maxNumSegments the maximum number of segments to avoid the labels of the segments overwriting each other
    *                       (this is passed in by the caller to allow this method to be platform independent)
    * @return the optimal number of segments in the scalebar
-   * @since 100.1.0
    */
   public static int calculateOptimalNumberOfSegments(double distance, int maxNumSegments) {
     // Create an ordered array of options for the specified distance
@@ -127,7 +111,6 @@ public class ScalebarUtil {
    *                 scalebar; in feet if unitSystem is IMPERIAL or meters if unitSystem is METRIC
    * @param unitSystem the UnitSystem being used
    * @return the LinearUnit
-   * @since 100.1.0
    */
   public static LinearUnit selectLinearUnit(double distance, UnitSystem unitSystem) {
 
@@ -154,7 +137,6 @@ public class ScalebarUtil {
    *
    * @param distance the distance
    * @return the label string
-   * @since 100.1.0
    */
   public static String labelString(double distance) {
     // Format with 2 decimal places
@@ -178,7 +160,6 @@ public class ScalebarUtil {
    *
    * @param distance the distance represented by the scalebar
    * @return the magnitude, a power of 10
-   * @since 100.1.0
    */
   private static double calculateMagnitude(double distance) {
     return Math.pow(10, Math.floor(Math.log10(distance)));
@@ -192,7 +173,6 @@ public class ScalebarUtil {
    * @param magnitude the "magnitude" used when calculating the length of a scalebar or the number of segments
    * @return a MultiplierData object containing the multiplier, which will give the scalebar length when multiplied by
    * the magnitude
-   * @since 100.1.0
    */
   private static MultiplierData selectMultiplierData(double distance, double magnitude) {
     double residual = distance / magnitude;
@@ -204,15 +184,6 @@ public class ScalebarUtil {
     } else {
       return multipliers.get(multipliers.size() - 1);
     }
-
-//    MultiplierData multiplierData = MULTIPLIER_DATA_ARRAY[0];
-//    for (int i = 0; i < MULTIPLIER_DATA_ARRAY.length; i++) {
-//      if (MULTIPLIER_DATA_ARRAY[i].getMultiplier() > residual) {
-//        break;
-//      }
-//      multiplierData = MULTIPLIER_DATA_ARRAY[i];
-//    }
-//    return multiplierData;
   }
 
   /**
@@ -220,7 +191,6 @@ public class ScalebarUtil {
    *
    * @param distance the distance represented by the scalebar
    * @return the segment options; these are ints representing number of segments in the scalebar
-   * @since 100.1.0
    */
   private static int[] segmentOptionsForDistance(double distance) {
     return selectMultiplierData(distance, calculateMagnitude(distance)).getSegmentOptions();
@@ -229,13 +199,11 @@ public class ScalebarUtil {
   /**
    * Container for a "multiplier" and the array of segment options appropriate for that multiplier. The multiplier is
    * used when calculating the length of a scalebar or the number of segments in the scalebar.
-   *
-   * @since 100.1.0
    */
   private static class MultiplierData {
-    private final double mMultiplier;
+    private final double multiplier;
 
-    private final int[] mSegmentOptions;
+    private final int[] segmentOptions;
 
     /**
      * Constructs a MultiplierData.
@@ -243,31 +211,28 @@ public class ScalebarUtil {
      * @param multiplier the multiplier
      * @param segmentOptions the array of segment options appropriate for the multiplier; these are ints representing
      *                       number of segments in the scalebar; it's important that they are in ascending order
-     * @since 100.1.0
      */
     public MultiplierData(double multiplier, int[] segmentOptions) {
-      mMultiplier = multiplier;
-      mSegmentOptions = segmentOptions;
+      this.multiplier = multiplier;
+      this.segmentOptions = segmentOptions;
     }
 
     /**
      * Gets the multiplier.
      *
      * @return the multiplier
-     * @since 100.1.0
      */
     public double getMultiplier() {
-      return mMultiplier;
+      return multiplier;
     }
 
     /**
      * Gets the segment options.
      *
      * @return the segment options; these are ints representing number of segments in the scalebar
-     * @since 100.1.0
      */
     public int[] getSegmentOptions() {
-      return mSegmentOptions;
+      return segmentOptions;
     }
   }
 

@@ -35,7 +35,6 @@ import java.util.Objects;
  * Scalebar control that shows an accurate distance that can be used to visually gauge distances on a map view. The
  * measurement system used is controlled by {@link #unitSystemProperty}. The units used will be appropriate to the
  * distance being shown e.g. km for long distances and m for shorter distances. The scalebar can be visualized with
- * different styles as described in {@link SkinStyle}.
  */
 public final class Scalebar extends Control {
 
