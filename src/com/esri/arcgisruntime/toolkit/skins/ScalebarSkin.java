@@ -38,6 +38,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Base class for the skins that visualize the scalebar.
+ */
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   protected static final double HEIGHT = 10.0;
@@ -50,7 +53,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   protected final static Color SHADOW_COLOR = Color.rgb(0x6E, 0x84, 0x8D);
   protected final static Color TEXT_COLOR = Color.BLACK;
 
-  Rectangle rect = new Rectangle();
+  //Rectangle rect = new Rectangle();
 
   private boolean invalid = true;
   private final StackPane stackPane = new StackPane();
@@ -71,9 +74,15 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     invalidated();
   };
 
+  /**
+   * Constructs a skin.
+   *
+   * @param control the control this skin represents
+   */
   ScalebarSkin(Scalebar control) {
     super(control);
 
+    // add listeners for things that cause the scalebar to change
     control.widthProperty().addListener(this::invalidated);
     control.heightProperty().addListener(this::invalidated);
     control.mapViewProperty().get().addViewpointChangedListener(viewpointChangedListener);
@@ -85,17 +94,18 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     updateUnits(control.getUnitSystem());
     alignment = control.getAlignment();
 
-    rect.widthProperty().bind(control.widthProperty());
-    rect.heightProperty().bind(control.heightProperty());
-    rect.setFill(Color.rgb(0xFF, 0xFF, 0x00, 0.5));
-
-    getChildren().add(rect);
+//    rect.widthProperty().bind(control.widthProperty());
+//    rect.heightProperty().bind(control.heightProperty());
+//    rect.setFill(Color.rgb(0xFF, 0xFF, 0x00, 0.5));
+//
+//    getChildren().add(rect);
 
     getChildren().add(stackPane);
   }
 
   @Override
   public void dispose() {
+    // remove listeners when this skin is being disposed
     getSkinnable().widthProperty().removeListener(this::invalidated);
     getSkinnable().heightProperty().removeListener(this::invalidated);
     getSkinnable().mapViewProperty().get().removeViewpointChangedListener(viewpointChangedListener);
@@ -125,18 +135,34 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
+  /**
+   * Returns the stack pane that is used to contain all the scalebar nodes.
+   * @return the stack pane
+   */
   protected StackPane getStackPane() {
     return stackPane;
   }
 
+  /**
+   * Returns the base unit of the scalebar which is noramally either meters or feet.
+   * @return the base unit
+   */
   protected LinearUnit getBaseUnit() {
     return baseUnit;
   }
 
+  /**
+   * Returns the unit system of the scalebar which is normally metric or imperial.
+   * @return the unit system
+   */
   protected UnitSystem getUnitSystem() {
     return unitSystem;
   }
 
+  /**
+   * Returns the horizontal alignment of the scalebar.
+   * @return the horizontal alignment
+   */
   protected HPos getAlignment() {
     return alignment;
   }
@@ -190,8 +216,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   }
 
   /**
-   * Calculates the X translation required to move a scalbar to the correct alighment - left or right. No translation is
-   * required for center alignment.
+   * Calculates the X translation required to move a scalebar to the correct alignment - left or right. No translation
+   * is required for center alignment.
    *
    * @param width the width of the area containing the scalebar
    * @param actualWidth the actual width of the scalebar

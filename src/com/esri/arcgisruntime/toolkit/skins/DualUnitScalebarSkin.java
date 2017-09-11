@@ -32,6 +32,10 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.StrokeLineCap;
 
+/**
+ * A scalebar skin that displays the distance in both metric and imperial units. The line is the same as
+ * {@link LineScaleBarSkin} with the addition of an extra mark on the bottom for the alternate measurement.
+ */
 public final class DualUnitScalebarSkin extends ScalebarSkin {
 
   private final VBox vBox = new VBox();
@@ -39,6 +43,10 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
   private final Pane secondaryLabelPane = new Pane();
   private final Path line = new Path();
 
+  /**
+   * Creates a new skin instance.
+   * @param scalebar the scalebar this skin is for
+   */
   public DualUnitScalebarSkin(Scalebar scalebar) {
     super(scalebar);
 
@@ -110,6 +118,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     primaryLabel.setTranslateX(displayWidth - calculateRegionWidth(primaryLabel));
     // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
     primaryLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
+    primaryLabel.setTextFill(TEXT_COLOR);
     primaryLabelPane.getChildren().add(primaryLabel);
 
     Label secondaryLabel;
@@ -117,6 +126,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabel.setTranslateX(secondaryDisplayWidth - calculateRegionWidth(secondaryLabel));
     // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
     secondaryLabel.setText(ScalebarUtil.labelString(secondaryDisplayDistance) + secondaryDisplayUnits.getAbbreviation());
+    secondaryLabel.setTextFill(TEXT_COLOR);
     secondaryLabelPane.getChildren().add(secondaryLabel);
 
     // the unit label that will be at the end of the line

@@ -25,6 +25,9 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * A scalebar skin that displays the distance as a solid bar with a single label.
+ */
 public final class BarScalebarSkin extends ScalebarSkin {
 
   private final VBox vBox = new VBox();
@@ -32,6 +35,10 @@ public final class BarScalebarSkin extends ScalebarSkin {
   private final Rectangle bar = new Rectangle();
   private final Rectangle outerBar = new Rectangle();
 
+  /**
+   * Creates a new skin instance.
+   * @param scalebar the scalebar this skin is for
+   */
   public BarScalebarSkin(Scalebar scalebar) {
     super(scalebar);
 
@@ -50,17 +57,28 @@ public final class BarScalebarSkin extends ScalebarSkin {
     bar.setArcWidth(1.5);
     bar.setArcHeight(1.5);
 
+    distanceLabel.setTextFill(TEXT_COLOR);
+
     getStackPane().getChildren().addAll(vBox);
   }
 
   @Override
   protected void update(double width, double height) {
     // work out the scalebar width, the distance it represents and the correct unit label
+
+    // workout how much space is available
     double availableWidth = width - STROKE_WIDTH - SHADOW_OFFSET;
-    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), availableWidth);
+
+    // workout the maximum distance the scalebar coudl show
+    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), availableWidth);
+
+    // get a distance that is a nice looking number
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
+
+    // workout what the bar width is to match the distance we're going to display
     double displayWidth = displayDistance / maxDistance * availableWidth;
+
+    // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);

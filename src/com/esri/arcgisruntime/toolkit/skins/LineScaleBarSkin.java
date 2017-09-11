@@ -29,12 +29,20 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.StrokeLineCap;
 
+/**
+ * A scalebar skin that displays the distance as a line with vertical marks at the start and end and a single distance
+ * label.
+ */
 public final class LineScaleBarSkin extends ScalebarSkin {
 
   private final VBox vBox = new VBox();
   private final Label distanceLabel = new Label();
   private final Path line = new Path();
 
+  /**
+   * Creates a new skin instance.
+   * @param scalebar the scalebar this skin is for
+   */
   public LineScaleBarSkin(Scalebar scalebar) {
     super(scalebar);
 
@@ -50,6 +58,8 @@ public final class LineScaleBarSkin extends ScalebarSkin {
     line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
     line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
+
+    distanceLabel.setTextFill(TEXT_COLOR);
 
     getStackPane().getChildren().addAll(vBox);
   }

@@ -27,12 +27,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * A scalebar skin that displays the distance as an alternating color solid bar with labels on each segment.
+ */
 public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
   private final VBox vBox = new VBox();
   private final Pane labelPane = new Pane();
   private final Pane segmentPane = new Pane();
 
+  /**
+   * Creates a new skin instance.
+   * @param scalebar the scalebar this skin is for
+   */
   public AlternatingBarScalebarSkin(Scalebar scalebar) {
     super(scalebar);
 
@@ -88,6 +95,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
     for (int i = 0; i < bestNumberOfSegments; ++i) {
       label = new Label(ScalebarUtil.labelString(i * segmentDistance));
+      label.setTextFill(TEXT_COLOR);
 
       // first label is aligned with its left to the edge of the bar while the intermediate
       // labels are centered on the dividers
@@ -121,6 +129,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegionWidth(label));
     // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
     label.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
+    label.setTextFill(TEXT_COLOR);
     labelPane.getChildren().add(label);
 
     // move the bar and labels into their final position - slightly off center due to the units
