@@ -64,20 +64,15 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
   @Override
   protected void update(double width, double height) {
-    // work out the scalebar width, the distance it represents and the correct unit label
-
+    // workout the scalebar width, the distance it represents and the correct unit label
     // workout how much space is available
-    double availableWidth = width - STROKE_WIDTH - SHADOW_OFFSET;
-
-    // workout the maximum distance the scalebar coudl show
+    double availableWidth = calculateAvailableWidth(width);
+    // workout the maximum distance the scalebar could show
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), availableWidth);
-
     // get a distance that is a nice looking number
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-
     // workout what the bar width is to match the distance we're going to display
-    double displayWidth = displayDistance / maxDistance * availableWidth;
-
+    double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
     // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
@@ -96,5 +91,10 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);
+  }
+
+  @Override
+  protected double calculateAvailableWidth(double width) {
+    return width - STROKE_WIDTH - SHADOW_OFFSET;
   }
 }

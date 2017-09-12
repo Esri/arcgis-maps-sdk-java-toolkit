@@ -66,25 +66,28 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
   @Override
   protected void update(double width, double height) {
-    // work out the scalebar width, the distance it represents and the correct unit label
-    double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
+    // workout the scalebar width, the distance it represents and the correct unit label
+    // workout how much space is available
+    double availableWidth = calculateAvailableWidth(width);
+    // workout the maximum distance the scalebar could show
     double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), availableWidth);
-
-    //maxDistance *= availableWidth / width;
+    // get a distance that is a nice looking number
     double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
-
-    double displayWidth = displayDistance / maxDistance * availableWidth;
+    // workout what the bar width is to match the distance we're going to display
+    double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
+    // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
     }
 
+    // do the same calculations for the secondary units which will be on the bottom of the line
     UnitSystem secondaryUnitSystem = getUnitSystem() == UnitSystem.METRIC ? UnitSystem.IMPERIAL : UnitSystem.METRIC;
     LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? new LinearUnit(LinearUnitId.METERS) : new LinearUnit(LinearUnitId.FEET);
     double secondaryMaxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), secondaryBaseUnit, availableWidth);
 
     double secondaryDisplayDistance = ScalebarUtil.calculateBestScalebarLength(secondaryMaxDistance, secondaryBaseUnit, false);
-    double secondaryDisplayWidth = secondaryDisplayDistance / secondaryMaxDistance * availableWidth;
+    double secondaryDisplayWidth = calculateDisplayWidth(secondaryDisplayDistance, secondaryMaxDistance, availableWidth);
     LinearUnit secondaryDisplayUnits = ScalebarUtil.selectLinearUnit(secondaryDisplayDistance, secondaryUnitSystem);
     if (secondaryDisplayUnits != secondaryBaseUnit) {
       secondaryDisplayDistance = secondaryBaseUnit.convertTo(secondaryDisplayUnits, secondaryDisplayDistance);
@@ -142,5 +145,10 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);
+  }
+
+  @Override
+  protected double calculateAvailableWidth(double width) {
+    return width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
   }
 }

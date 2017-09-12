@@ -52,14 +52,16 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
   @Override
   protected void update(double width, double height) {
-    // work out the scalebar width, the distance it represents and the correct unit label
-    double availableWidth = width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET; // TODO - use correct font
-    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(),
-      getBaseUnit(), availableWidth);
-
-    double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), true);
-
-    double displayWidth = displayDistance / maxDistance * availableWidth;
+    // workout the scalebar width, the distance it represents and the correct unit label
+    // workout how much space is available
+    double availableWidth = calculateAvailableWidth(width);
+    // workout the maximum distance the scalebar could show
+    double maxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), getBaseUnit(), availableWidth);
+    // get a distance that is a nice looking number
+    double displayDistance = ScalebarUtil.calculateBestScalebarLength(maxDistance, getBaseUnit(), false);
+    // workout what the bar width is to match the distance we're going to display
+    double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
+    // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
     if (displayUnits != getBaseUnit()) {
       displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
@@ -73,6 +75,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       sampleLabelString = "9.9";
     }
     Label sampleLabel = new Label(sampleLabelString);
+    // apply some padding so the labels have some space around them
     sampleLabel.setPadding(new Insets(0.0, 10.0, 0.0, 10.0));
 
     double widthOfLabel = calculateRegionWidth(sampleLabel);
@@ -104,6 +107,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       }
       labelPane.getChildren().add(label);
 
+      // create a rectangle for the segment and translate it into the correct position
       barSegment = new Rectangle();
       barSegment.setHeight(HEIGHT);
       barSegment.setWidth(segmentWidth);
@@ -114,10 +118,10 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       barSegment.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
       barSegment.setArcWidth(1.5);
       barSegment.setArcHeight(1.5);
-      if (i % 2 != 0) {
-        barSegment.setFill(ALTERNATE_FILL_COLOR);
-      } else {
+      if (i % 2 == 0) {
         barSegment.setFill(FILL_COLOR);
+      } else {
+        barSegment.setFill(ALTERNATE_FILL_COLOR);
       }
 
       segmentPane.getChildren().add(barSegment);
@@ -144,5 +148,10 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
     // set invisible if distance is zero
     getStackPane().setVisible(displayDistance > 0);
+  }
+
+  @Override
+  protected double calculateAvailableWidth(double width) {
+    return width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET; // TODO - consider font
   }
 }

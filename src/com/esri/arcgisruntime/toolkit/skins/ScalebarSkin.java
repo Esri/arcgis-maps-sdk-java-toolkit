@@ -53,8 +53,6 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   protected final static Color SHADOW_COLOR = Color.rgb(0x6E, 0x84, 0x8D);
   protected final static Color TEXT_COLOR = Color.BLACK;
 
-  //Rectangle rect = new Rectangle();
-
   private boolean invalid = true;
   private final StackPane stackPane = new StackPane();
 
@@ -94,12 +92,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     updateUnits(control.getUnitSystem());
     alignment = control.getAlignment();
 
-//    rect.widthProperty().bind(control.widthProperty());
-//    rect.heightProperty().bind(control.heightProperty());
-//    rect.setFill(Color.rgb(0xFF, 0xFF, 0x00, 0.5));
-//
-//    getChildren().add(rect);
-
+    // subclasses will add their nodes into this stack pane which allows us to apply opacity, rotation etc without
+    // changing the user set values on the control
     getChildren().add(stackPane);
   }
 
@@ -134,6 +128,14 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
+
+  /**
+   * Returns the width that can be used for the scalebar e.g. some scalebars have labels at the end so they can't be
+   * as long as a scaleber with the label underneath.
+   * @param width the total width available
+   * @return the width that the scalebar line/bar can occupy
+   */
+  protected abstract double calculateAvailableWidth(double width);
 
   /**
    * Returns the stack pane that is used to contain all the scalebar nodes.
@@ -213,6 +215,17 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     }
 
     return distance;
+  }
+
+  /**
+   * Returns the width to draw the scalebar
+   * @param displayDistance the distance that the scalebar will actually be
+   * @param maximumDistance the distance the width of the control represents
+   * @param availableWidth the width actually available for the scalebar
+   * @return the final width
+   */
+  protected double calculateDisplayWidth(double displayDistance, double  maximumDistance, double availableWidth) {
+    return displayDistance / maximumDistance * availableWidth;
   }
 
   /**
