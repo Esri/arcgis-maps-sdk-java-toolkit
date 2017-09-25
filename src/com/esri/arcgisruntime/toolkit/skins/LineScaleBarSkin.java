@@ -41,6 +41,7 @@ public final class LineScaleBarSkin extends ScalebarSkin {
 
   /**
    * Creates a new skin instance.
+   *
    * @param scalebar the scalebar this skin is for
    */
   public LineScaleBarSkin(Scalebar scalebar) {

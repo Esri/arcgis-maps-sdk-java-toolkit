@@ -45,6 +45,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
   /**
    * Creates a new skin instance.
+   *
    * @param scalebar the scalebar this skin is for
    */
   public DualUnitScalebarSkin(Scalebar scalebar) {
@@ -114,9 +115,8 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
       new LineTo(secondaryDisplayWidth, HEIGHT));
 
     // label the ticks
-    Label primaryLabel;
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
-    primaryLabel = new Label(ScalebarUtil.labelString(displayDistance));
+    Label primaryLabel = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
     primaryLabel.setTranslateX(displayWidth - calculateRegionWidth(primaryLabel));
     // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
@@ -124,8 +124,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     primaryLabel.setTextFill(TEXT_COLOR);
     primaryLabelPane.getChildren().add(primaryLabel);
 
-    Label secondaryLabel;
-    secondaryLabel = new Label(ScalebarUtil.labelString(secondaryDisplayDistance));
+    Label secondaryLabel = new Label(ScalebarUtil.labelString(secondaryDisplayDistance));
     secondaryLabel.setTranslateX(secondaryDisplayWidth - calculateRegionWidth(secondaryLabel));
     // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
     secondaryLabel.setText(ScalebarUtil.labelString(secondaryDisplayDistance) + secondaryDisplayUnits.getAbbreviation());

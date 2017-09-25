@@ -44,6 +44,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
   /**
    * Creates a new skin instance.
+   *
    * @param scalebar the scalebar this skin is for
    */
   public GraduatedLineScalebarSkin(Scalebar scalebar) {

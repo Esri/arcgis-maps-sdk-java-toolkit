@@ -38,6 +38,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
   /**
    * Creates a new skin instance.
+   *
    * @param scalebar the scalebar this skin is for
    */
   public AlternatingBarScalebarSkin(Scalebar scalebar) {

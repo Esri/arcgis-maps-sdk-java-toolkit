@@ -82,6 +82,7 @@ public final class Scalebar extends Control {
 
   /**
    * Creates a scalebar with a {@link SkinStyle#ALTERNATING_BAR} style and an alignment of {@link HPos#CENTER}.
+   *
    * @param mapView the map view this scale bar is representing
    * @throws NullPointerException if map view is null
    */
@@ -91,6 +92,7 @@ public final class Scalebar extends Control {
 
   /**
    * Creates a scalebar with a specified style and an alignment of {@link HPos#CENTER}.
+   *
    * @param mapView the map view this scale bar is representing
    * @param style the skin style to use
    * @throws NullPointerException if map view is null
@@ -102,6 +104,7 @@ public final class Scalebar extends Control {
 
   /**
    * Creates a scalebar with a specified style and alignment.
+   *
    * @param mapView the map view this scale bar is representing
    * @param style the skin style to use
    * @param  alignment the alignment to use
@@ -137,6 +140,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns the current alignment.
+   *
    * @return the alignment
    * @see #alignmentProperty()
    */
@@ -146,6 +150,7 @@ public final class Scalebar extends Control {
 
   /**
    * Sets the alignment.
+   *
    * @param hPos the alignment
    * @see #alignmentProperty()
    */
@@ -155,6 +160,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns the current skin style.
+   *
    * @return the style
    * @see SkinStyle
    */
@@ -175,6 +181,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns a readonly property containing the map view that this scalebar is measuring.
+   *
    * @return the property
    */
   public ReadOnlyObjectProperty<MapView> mapViewProperty() {
@@ -183,6 +190,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns the map view that this scalebar is measuring.
+   *
    * @return the map view
    */
   public MapView getMapView() {
@@ -191,6 +199,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns a property containing the measurement system being used by the scalebar.
+   *
    * @return the property
    * @see UnitSystem
    */
@@ -200,6 +209,7 @@ public final class Scalebar extends Control {
 
   /**
    * Sets the measurement system for the scalebar to use.
+   *
    * @param units the measurement system
    * @see UnitSystem
    */
@@ -209,6 +219,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns the measurement system being used by the scalebar.
+   *
    * @return the measurement system
    * @see UnitSystem
    */
@@ -223,6 +234,7 @@ public final class Scalebar extends Control {
 
   /**
    * Creates a skin based upon the {@link SkinStyle}.
+   *
    * @param style the style
    * @return a new skin
    */

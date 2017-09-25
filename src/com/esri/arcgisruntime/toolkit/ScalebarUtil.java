@@ -22,6 +22,7 @@ import com.esri.arcgisruntime.geometry.LinearUnitId;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -111,9 +112,10 @@ public class ScalebarUtil {
    *                 scalebar; in feet if unitSystem is IMPERIAL or meters if unitSystem is METRIC
    * @param unitSystem the UnitSystem being used
    * @return the LinearUnit
+   * @throws NullPointerException if unitSystem is null
    */
   public static LinearUnit selectLinearUnit(double distance, UnitSystem unitSystem) {
-
+    Objects.requireNonNull(unitSystem, "unitSystem cannot be null");
     switch (unitSystem) {
       case IMPERIAL:
         // use MILES if at least half a mile
@@ -178,7 +180,8 @@ public class ScalebarUtil {
     double residual = distance / magnitude;
 
     // Select the largest multiplier that's <= residual
-    List<MultiplierData> multipliers = Arrays.stream(MULTIPLIER_DATA_ARRAY).filter(m -> m.getMultiplier() <= residual).collect(Collectors.toList());
+    List<MultiplierData> multipliers = Arrays.stream(MULTIPLIER_DATA_ARRAY).filter(
+      m -> m.getMultiplier() <= residual).collect(Collectors.toList());
     if (multipliers.isEmpty()) {
       return MULTIPLIER_DATA_ARRAY[0];
     } else {
