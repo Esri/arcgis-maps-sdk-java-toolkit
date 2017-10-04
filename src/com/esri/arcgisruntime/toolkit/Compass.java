@@ -100,6 +100,8 @@ public final class Compass extends Control {
     setPrefWidth(SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
+    setMinHeight(USE_PREF_SIZE);
+    setMinWidth(USE_PREF_SIZE);
     setGeoView(geoView);
 
     // add a listener that will handle programmatic heading changes e.g. changes compass.headingProperty().set(newHeading);

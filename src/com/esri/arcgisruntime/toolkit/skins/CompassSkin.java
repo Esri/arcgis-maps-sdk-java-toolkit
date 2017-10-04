@@ -32,6 +32,7 @@ import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.shape.VLineTo;
 import javafx.util.Duration;
 
@@ -157,6 +158,7 @@ public final class CompassSkin extends SkinBase<Compass> {
     circle.setRadius(radius);
     circle.setFill(Color.rgb(0xE1, 0xF1, 0xF5, 0.25));
     circle.setStroke(Color.rgb(0x80, 0x80, 0x80));
+    circle.setStrokeType(StrokeType.INSIDE);
     circle.setStrokeWidth(0.1 * radius);
 
     stackPane.getChildren().addAll(circle, northEastTriangle, northWestTriangle,
