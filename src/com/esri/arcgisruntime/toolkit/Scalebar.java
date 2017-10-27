@@ -154,8 +154,10 @@ public final class Scalebar extends Control {
    *
    * @param hPos the alignment
    * @see #alignmentProperty()
+   * @throws NullPointerException if hPos is null
    */
   public void setAlignment(HPos hPos) {
+    Objects.requireNonNull(hPos, "hPos cannot be null");
     alignmentProperty.set(hPos);
   }
 
