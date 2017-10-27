@@ -133,6 +133,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   /**
    * Returns the width that can be used for the scalebar e.g. some scalebars have labels at the end so they can't be
    * as long as a scaleber with the label underneath.
+   *
    * @param width the total width available
    * @return the width that the scalebar line/bar can occupy
    */
@@ -140,6 +141,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     /**
    * Returns the VBox that is used to contain all the scalebar nodes.
+     *
    * @return the VBox
    */
   protected VBox getVBox() {
@@ -148,6 +150,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   /**
    * Returns the base unit of the scalebar which is noramally either meters or feet.
+   *
    * @return the base unit
    */
   protected LinearUnit getBaseUnit() {
@@ -156,6 +159,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   /**
    * Returns the unit system of the scalebar which is normally metric or imperial.
+   *
    * @return the unit system
    */
   protected UnitSystem getUnitSystem() {
@@ -164,6 +168,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   /**
    * Returns the horizontal alignment of the scalebar.
+   *
    * @return the horizontal alignment
    */
   protected HPos getAlignment() {
@@ -219,7 +224,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   }
 
   /**
-   * Returns the width to draw the scalebar
+   * Returns the width to draw the scalebar.
+   *
    * @param displayDistance the distance that the scalebar will actually be
    * @param maximumDistance the distance the width of the control represents
    * @param availableWidth the width actually available for the scalebar
@@ -250,15 +256,28 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     return translate;
   }
 
+  /**
+   * Requests layout when the control's layout has been invalidated.
+   *
+   * @param observable the observable
+   */
   private void invalidated(Observable observable) {
     invalidated();
   }
 
+  /**
+   * Requests layout when the control's layout has been invalidated.
+   */
   private void invalidated() {
     invalid = true;
     getSkinnable().requestLayout();
   }
 
+  /**
+   * Updates the unit system when the control has its unit system changed.
+   *
+   * @param unitSystem the new unit system
+   */
   private void updateUnits(UnitSystem unitSystem) {
     this.unitSystem = unitSystem;
     switch (unitSystem) {
