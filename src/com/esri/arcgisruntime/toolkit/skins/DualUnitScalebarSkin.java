@@ -50,19 +50,13 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
    */
   public DualUnitScalebarSkin(Scalebar scalebar) {
     super(scalebar);
-
-    // use a vbox to arrange the bar above the labels
-    vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(primaryLabelPane, line, secondaryLabelPane);
-    StackPane.setAlignment(vBox, Pos.CENTER);
-
-    // the line
+    
     line.setStroke(LINE_COLOR);
     line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
     line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
 
-    getStackPane().getChildren().addAll(vBox);
+    getVBox().getChildren().addAll(primaryLabelPane, line, secondaryLabelPane);
   }
 
   @Override
@@ -140,10 +134,10 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     secondaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(secondaryDisplayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(endUnits)));
+    getVBox().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(endUnits)));
 
     // set invisible if distance is zero
-    getStackPane().setVisible(displayDistance > 0);
+    getVBox().setVisible(displayDistance > 0);
   }
 
   @Override

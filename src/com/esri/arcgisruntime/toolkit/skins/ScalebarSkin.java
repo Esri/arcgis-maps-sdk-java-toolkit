@@ -29,12 +29,13 @@ import com.esri.arcgisruntime.toolkit.Scalebar;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
@@ -53,7 +54,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   protected final static Color TEXT_COLOR = Color.BLACK;
 
   private boolean invalid = true;
-  private final StackPane stackPane = new StackPane();
+  private final VBox vBox = new VBox();
 
   private UnitSystem unitSystem;
   private LinearUnit baseUnit;
@@ -91,9 +92,10 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     updateUnits(control.getUnitSystem());
     alignment = control.getAlignment();
 
-    // subclasses will add their nodes into this stack pane which allows us to apply opacity, rotation etc without
-    // changing the user set values on the control
-    getChildren().add(stackPane);
+    // Subclasses will add their nodes into this VBox. A VBox is used since each scalebar type consists of vertically
+    // arranged elements e.g. a line with a distance label below.
+    vBox.setAlignment(Pos.CENTER);
+    getChildren().add(vBox);
   }
 
   @Override
@@ -107,7 +109,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     getSkinnable().unitSystemProperty().removeListener(unitsChangedListener);
     getSkinnable().alignmentProperty().removeListener(alignmentChangedListener);
 
-    stackPane.getChildren().clear();
+    vBox.getChildren().clear();
   }
 
   /**
@@ -136,12 +138,12 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    */
   protected abstract double calculateAvailableWidth(double width);
 
-  /**
-   * Returns the stack pane that is used to contain all the scalebar nodes.
-   * @return the stack pane
+    /**
+   * Returns the VBox that is used to contain all the scalebar nodes.
+   * @return the VBox
    */
-  protected StackPane getStackPane() {
-    return stackPane;
+  protected VBox getVBox() {
+    return vBox;
   }
 
   /**

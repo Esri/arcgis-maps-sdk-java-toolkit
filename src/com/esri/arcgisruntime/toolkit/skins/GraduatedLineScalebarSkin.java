@@ -20,11 +20,9 @@ import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -49,19 +47,13 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
    */
   public GraduatedLineScalebarSkin(Scalebar scalebar) {
     super(scalebar);
-
-    // use a vbox to arrange the bar above the labels
-    vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(line, labelPane);
-    StackPane.setAlignment(vBox, Pos.CENTER);
-
-    // the line
+    
     line.setStroke(LINE_COLOR);
     line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
     line.setEffect(new DropShadow(1.0, SHADOW_OFFSET, SHADOW_OFFSET, SHADOW_COLOR));
 
-    getStackPane().getChildren().addAll(vBox);
+    getVBox().getChildren().addAll(line, labelPane);
   }
 
   @Override
@@ -140,11 +132,11 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     labelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width,
+    getVBox().setTranslateX(calculateAlignmentTranslationX(width,
       displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
 
     // set invisible if distance is zero
-    getStackPane().setVisible(displayDistance > 0);
+    getVBox().setVisible(displayDistance > 0);
   }
 
   @Override

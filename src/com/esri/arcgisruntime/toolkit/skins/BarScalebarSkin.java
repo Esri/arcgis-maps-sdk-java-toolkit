@@ -43,13 +43,6 @@ public final class BarScalebarSkin extends ScalebarSkin {
   public BarScalebarSkin(Scalebar scalebar) {
     super(scalebar);
 
-    // create the nodes for the bar and label
-
-    // use a vbox to arrange the bar above the label
-    vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(bar, distanceLabel);
-
-    // the bar
     bar.setFill(FILL_COLOR);
     bar.setHeight(HEIGHT);
     bar.setStroke(LINE_COLOR);
@@ -60,7 +53,7 @@ public final class BarScalebarSkin extends ScalebarSkin {
 
     distanceLabel.setTextFill(TEXT_COLOR);
 
-    getStackPane().getChildren().addAll(vBox);
+    getVBox().getChildren().addAll(bar, distanceLabel);
   }
 
   @Override
@@ -88,10 +81,10 @@ public final class BarScalebarSkin extends ScalebarSkin {
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
+    getVBox().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
 
     // set invisible if distance is zero
-    getStackPane().setVisible(displayDistance > 0);
+    getVBox().setVisible(displayDistance > 0);
   }
 
   @Override

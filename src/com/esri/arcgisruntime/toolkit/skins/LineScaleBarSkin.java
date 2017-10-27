@@ -46,15 +46,7 @@ public final class LineScaleBarSkin extends ScalebarSkin {
    */
   public LineScaleBarSkin(Scalebar scalebar) {
     super(scalebar);
-
-    // create the nodes for the bar and label
-
-    // use a vbox to arrange the bar above the label
-    vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(line, distanceLabel);
-    StackPane.setAlignment(vBox, Pos.CENTER);
-
-    // the line
+    
     line.setStroke(LINE_COLOR);
     line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -62,7 +54,7 @@ public final class LineScaleBarSkin extends ScalebarSkin {
 
     distanceLabel.setTextFill(TEXT_COLOR);
 
-    getStackPane().getChildren().addAll(vBox);
+    getVBox().getChildren().addAll(line, distanceLabel);
   }
 
   @Override
@@ -95,10 +87,10 @@ public final class LineScaleBarSkin extends ScalebarSkin {
     distanceLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
+    getVBox().setTranslateX(calculateAlignmentTranslationX(width, displayWidth));
 
     // set invisible if distance is zero
-    getStackPane().setVisible(displayDistance > 0);
+    getVBox().setVisible(displayDistance > 0);
   }
 
   @Override

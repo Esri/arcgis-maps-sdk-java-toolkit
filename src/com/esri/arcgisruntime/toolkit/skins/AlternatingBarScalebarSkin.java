@@ -44,11 +44,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
   public AlternatingBarScalebarSkin(Scalebar scalebar) {
     super(scalebar);
 
-    // use a vbox to arrange the bar above the labels
-    vBox.setAlignment(Pos.CENTER);
-    vBox.getChildren().addAll(segmentPane, labelPane);
-
-    getStackPane().getChildren().add(vBox);
+    getVBox().getChildren().addAll(segmentPane, labelPane);
   }
 
   @Override
@@ -143,12 +139,12 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     labelPane.setTranslateX(-calculateRegionWidth(abbreviationLabel) / 2.0);
 
     // adjust for left/right/center alignment
-    getStackPane().setTranslateX(
+    getVBox().setTranslateX(
       calculateAlignmentTranslationX(width,
         displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
 
     // set invisible if distance is zero
-    getStackPane().setVisible(displayDistance > 0);
+    getVBox().setVisible(displayDistance > 0);
   }
 
   @Override
