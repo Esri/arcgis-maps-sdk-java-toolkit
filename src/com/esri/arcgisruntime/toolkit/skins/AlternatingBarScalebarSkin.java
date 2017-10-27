@@ -20,7 +20,6 @@ import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -60,9 +59,8 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
     // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
-    if (displayUnits != getBaseUnit()) {
-      displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
-    }
+    // get the distance to be displayed in that unit
+    displayDistance = ScalebarUtil.calculateDistanceInDisplayUnits(displayDistance, getBaseUnit(), displayUnits);
 
     // create a label to use to work out how many labels can fit in the scale bar width
     String sampleLabelString = ScalebarUtil.labelString(displayDistance);

@@ -19,10 +19,8 @@ package com.esri.arcgisruntime.toolkit.skins;
 import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -70,9 +68,8 @@ public final class LineScaleBarSkin extends ScalebarSkin {
     double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
     // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
-    if (displayUnits != getBaseUnit()) {
-      displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
-    }
+    // get the distance to be displayed in that unit
+    displayDistance = ScalebarUtil.calculateDistanceInDisplayUnits(displayDistance, getBaseUnit(), displayUnits);
 
     // update the line
     line.getElements().clear();

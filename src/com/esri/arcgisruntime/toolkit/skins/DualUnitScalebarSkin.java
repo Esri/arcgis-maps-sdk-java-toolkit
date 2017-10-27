@@ -21,11 +21,9 @@ import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.geometry.LinearUnitId;
 import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -72,9 +70,8 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
     // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
-    if (displayUnits != getBaseUnit()) {
-      displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
-    }
+    // get the distance to be displayed in that unit
+    displayDistance = ScalebarUtil.calculateDistanceInDisplayUnits(displayDistance, getBaseUnit(), displayUnits);
 
     // do the same calculations for the secondary units which will be on the bottom of the line
     UnitSystem secondaryUnitSystem = getUnitSystem() == UnitSystem.METRIC ? UnitSystem.IMPERIAL : UnitSystem.METRIC;
@@ -84,9 +81,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     double secondaryDisplayDistance = ScalebarUtil.calculateBestScalebarLength(secondaryMaxDistance, secondaryBaseUnit, false);
     double secondaryDisplayWidth = calculateDisplayWidth(secondaryDisplayDistance, secondaryMaxDistance, availableWidth);
     LinearUnit secondaryDisplayUnits = ScalebarUtil.selectLinearUnit(secondaryDisplayDistance, secondaryUnitSystem);
-    if (secondaryDisplayUnits != secondaryBaseUnit) {
-      secondaryDisplayDistance = secondaryBaseUnit.convertTo(secondaryDisplayUnits, secondaryDisplayDistance);
-    }
+    secondaryDisplayDistance = ScalebarUtil.calculateDistanceInDisplayUnits(secondaryDisplayDistance, secondaryBaseUnit, secondaryDisplayUnits);
 
     // the line width is the longest of the two display widths
     double lineWidth = Math.max(displayWidth, secondaryDisplayWidth);

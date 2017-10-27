@@ -135,6 +135,26 @@ public class ScalebarUtil {
   }
 
   /**
+   * Calculates the distance value to display in the correct units.
+   *
+   * @param distance the distance in the base unit
+   * @param baseUnit the base unit
+   * @param displayUnit the display unit
+   * @return the distance to display
+   * @throws NullPointerException if baseUnit is null
+   * @throws NullPointerException if displayUnit is null
+   */
+  public static double calculateDistanceInDisplayUnits(double distance, LinearUnit baseUnit, LinearUnit displayUnit) {
+    Objects.requireNonNull(baseUnit, "baseUnit cannot be null");
+    Objects.requireNonNull(displayUnit, "displayUnit cannot be null");
+    double displayDistance = distance;
+    if (displayUnit != baseUnit) {
+      displayDistance = baseUnit.convertTo(displayUnit, displayDistance);
+    }
+    return displayDistance;
+  }
+
+  /**
    * Creates a string to display as a scalebar label corresponding to a given distance.
    *
    * @param distance the distance

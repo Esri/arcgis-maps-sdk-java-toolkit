@@ -69,9 +69,8 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     double displayWidth = calculateDisplayWidth(displayDistance, maxDistance, availableWidth);
     // decide on the actual unit e.g. km or m
     LinearUnit displayUnits = ScalebarUtil.selectLinearUnit(displayDistance, getUnitSystem());
-    if (displayUnits != getBaseUnit()) {
-      displayDistance = getBaseUnit().convertTo(displayUnits, displayDistance);
-    }
+    // get the distance to be displayed in that unit
+    displayDistance = ScalebarUtil.calculateDistanceInDisplayUnits(displayDistance, getBaseUnit(), displayUnits);
 
     // create a label to use to work out how many labels can fit in the scale bar width
     String sampleLabelString = ScalebarUtil.labelString(displayDistance);
