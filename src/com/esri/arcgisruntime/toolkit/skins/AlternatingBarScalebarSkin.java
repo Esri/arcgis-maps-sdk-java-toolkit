@@ -126,7 +126,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     label = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
     label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegionWidth(label));
-    // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
+    // then add the units on so the end of the number aligns with the end of the bar and the unit is off the end
     label.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
     label.setTextFill(TEXT_COLOR);
     labelPane.getChildren().add(label);

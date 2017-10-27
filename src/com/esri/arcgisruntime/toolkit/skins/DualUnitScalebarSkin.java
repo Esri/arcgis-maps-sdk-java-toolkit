@@ -108,14 +108,14 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     Label primaryLabel = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
     primaryLabel.setTranslateX(displayWidth - calculateRegionWidth(primaryLabel));
-    // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
+    // then add the units on so the end of the number aligns with the end of the bar and the unit is off the end
     primaryLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
     primaryLabel.setTextFill(TEXT_COLOR);
     primaryLabelPane.getChildren().add(primaryLabel);
 
     Label secondaryLabel = new Label(ScalebarUtil.labelString(secondaryDisplayDistance));
     secondaryLabel.setTranslateX(secondaryDisplayWidth - calculateRegionWidth(secondaryLabel));
-    // then add the units on so the end of the number aligns with the end of the bar and the unit is of the end
+    // then add the units on so the end of the number aligns with the end of the bar and the unit is off the end
     secondaryLabel.setText(ScalebarUtil.labelString(secondaryDisplayDistance) + secondaryDisplayUnits.getAbbreviation());
     secondaryLabel.setTextFill(TEXT_COLOR);
     secondaryLabelPane.getChildren().add(secondaryLabel);
