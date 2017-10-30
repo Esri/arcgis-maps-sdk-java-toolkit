@@ -30,6 +30,11 @@ import java.util.stream.Collectors;
  */
 public class ScalebarUtil {
 
+  private static final LinearUnit METERS = new LinearUnit(LinearUnitId.METERS);
+  private static final LinearUnit FEET = new LinearUnit(LinearUnitId.FEET);
+  private static final LinearUnit KILOMETERS = new LinearUnit(LinearUnitId.KILOMETERS);
+  private static final LinearUnit MILES = new LinearUnit(LinearUnitId.MILES);
+
   // Array containing the multipliers that may be used for a scalebar and arrays of segment options appropriate for each
   // multiplier
   private static final MultiplierData[] MULTIPLIER_DATA_ARRAY = {
@@ -120,17 +125,17 @@ public class ScalebarUtil {
       case IMPERIAL:
         // use MILES if at least half a mile
         if (distance >= 2640) {
-          return new LinearUnit(LinearUnitId.MILES);
+          return MILES;
         }
-        return new LinearUnit(LinearUnitId.FEET);
+        return FEET;
 
       case METRIC:
       default:
         // use KILOMETERS if at least one kilometer
         if (distance >= 1000) {
-          return new LinearUnit(LinearUnitId.KILOMETERS);
+          return KILOMETERS;
         }
-        return new LinearUnit(LinearUnitId.METERS);
+        return METERS;
     }
   }
 
