@@ -42,6 +42,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Implements a skin for the {@link Compass} control.
+ *
+ * @since 100.2.0
  */
 public final class CompassSkin extends SkinBase<Compass> {
 
@@ -61,6 +63,7 @@ public final class CompassSkin extends SkinBase<Compass> {
    * Creates an instance of the skin.
    *
    * @param control the {@link Compass} control this skin represents
+   * @since 100.2.0
    */
   public CompassSkin(com.esri.arcgisruntime.toolkit.Compass control) {
     super(control);
@@ -111,6 +114,7 @@ public final class CompassSkin extends SkinBase<Compass> {
    *
    * @param width the width of the control
    * @param height the height of the control
+   * @since 100.2.0
    */
   private void update(double width, double height) {
     stackPane.getChildren().clear();
