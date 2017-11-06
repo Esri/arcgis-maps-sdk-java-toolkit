@@ -111,7 +111,7 @@ public final class Scalebar extends Control {
    * @param  alignment the alignment to use
    * @throws NullPointerException if map view is null
    * @throws NullPointerException if style is null
-   * @throws NullPointerException if alignemnt is null
+   * @throws NullPointerException if alignment is null
    */
   public Scalebar(MapView mapView, SkinStyle style, HPos alignment) {
     mapViewProperty.set(Objects.requireNonNull(mapView, "mapView cannot be null"));
