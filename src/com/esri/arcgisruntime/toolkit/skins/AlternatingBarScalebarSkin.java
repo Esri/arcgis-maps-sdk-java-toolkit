@@ -147,6 +147,6 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
   @Override
   protected double calculateAvailableWidth(double width) {
-    return width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET; // TODO - consider font
+    return width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET;
   }
 }

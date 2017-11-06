@@ -140,6 +140,6 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
   @Override
   protected double calculateAvailableWidth(double width) {
-    return width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
+    return width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET;
   }
 }

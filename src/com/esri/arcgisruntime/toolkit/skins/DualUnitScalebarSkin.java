@@ -41,6 +41,9 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
   private final Pane secondaryLabelPane = new Pane();
   private final Path line = new Path();
 
+  private static final LinearUnit METERS = new LinearUnit(LinearUnitId.METERS);
+  private static final LinearUnit FEET = new LinearUnit(LinearUnitId.FEET);
+
   /**
    * Creates a new skin instance.
    *
@@ -75,7 +78,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
     // do the same calculations for the secondary units which will be on the bottom of the line
     UnitSystem secondaryUnitSystem = getUnitSystem() == UnitSystem.METRIC ? UnitSystem.IMPERIAL : UnitSystem.METRIC;
-    LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? new LinearUnit(LinearUnitId.METERS) : new LinearUnit(LinearUnitId.FEET);
+    LinearUnit secondaryBaseUnit = secondaryUnitSystem == UnitSystem.METRIC ? METERS : FEET;
     double secondaryMaxDistance = calculateDistance(getSkinnable().mapViewProperty().get(), secondaryBaseUnit, availableWidth);
 
     double secondaryDisplayDistance = ScalebarUtil.calculateBestScalebarLength(secondaryMaxDistance, secondaryBaseUnit, false);
@@ -137,6 +140,6 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
   @Override
   protected double calculateAvailableWidth(double width) {
-    return width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET; // TODO - use correct font
+    return width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET;
   }
 }
