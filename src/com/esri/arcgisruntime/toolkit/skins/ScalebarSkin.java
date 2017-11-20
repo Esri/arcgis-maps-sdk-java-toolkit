@@ -40,6 +40,8 @@ import javafx.scene.paint.Color;
 
 /**
  * Base class for the skins that visualize the scalebar.
+ *
+ * @since 100.2.0
  */
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
@@ -76,6 +78,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * Constructs a skin.
    *
    * @param control the control this skin represents
+   * @since 100.2.0
    */
   ScalebarSkin(Scalebar control) {
     super(control);
@@ -117,6 +120,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    *
    * @param width the width
    * @param height the height
+   * @since 100.2.0
    */
   protected abstract void update(double width, double height);
 
@@ -136,13 +140,15 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    *
    * @param width the total width available
    * @return the width that the scalebar line/bar can occupy
+   * @since 100.2.0
    */
   protected abstract double calculateAvailableWidth(double width);
 
-    /**
+  /**
    * Returns the VBox that is used to contain all the scalebar nodes.
-     *
+   *
    * @return the VBox
+   * @since 100.2.0
    */
   protected VBox getVBox() {
     return vBox;
@@ -152,6 +158,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * Returns the base unit of the scalebar which is noramally either meters or feet.
    *
    * @return the base unit
+   * @since 100.2.0
    */
   protected LinearUnit getBaseUnit() {
     return baseUnit;
@@ -161,6 +168,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * Returns the unit system of the scalebar which is normally metric or imperial.
    *
    * @return the unit system
+   * @since 100.2.0
    */
   protected UnitSystem getUnitSystem() {
     return unitSystem;
@@ -170,6 +178,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * Returns the horizontal alignment of the scalebar.
    *
    * @return the horizontal alignment
+   * @since 100.2.0
    */
   protected HPos getAlignment() {
     return alignment;
@@ -180,6 +189,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    *
    * @param region the region
    * @return the width
+   * @since 100.2.0
    */
   protected double calculateRegionWidth(Region region) {
     Group root = new Group();
@@ -196,6 +206,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    *
    * @param width the width
    * @return the distance
+   * @since 100.2.0
    */
   protected double calculateDistance(MapView mapView, LinearUnit unit, double width) {
     double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
@@ -230,6 +241,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @param maximumDistance the distance the width of the control represents
    * @param availableWidth the width actually available for the scalebar
    * @return the final width
+   * @since 100.2.0
    */
   protected double calculateDisplayWidth(double displayDistance, double  maximumDistance, double availableWidth) {
     return displayDistance / maximumDistance * availableWidth;
@@ -242,6 +254,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @param width the width of the area containing the scalebar
    * @param actualWidth the actual width of the scalebar
    * @return the X translation required
+   * @since 100.2.0
    */
   protected double calculateAlignmentTranslationX(double width, double actualWidth) {
     double translate = 0.0;
@@ -260,6 +273,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * Requests layout when the control's layout has been invalidated.
    *
    * @param observable the observable
+   * @since 100.2.0
    */
   private void invalidated(Observable observable) {
     invalidated();
@@ -267,6 +281,8 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   /**
    * Requests layout when the control's layout has been invalidated.
+   *
+   * @since 100.2.0
    */
   private void invalidated() {
     invalid = true;
@@ -277,6 +293,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * Updates the unit system when the control has its unit system changed.
    *
    * @param unitSystem the new unit system
+   * @since 100.2.0
    */
   private void updateUnits(UnitSystem unitSystem) {
     this.unitSystem = unitSystem;

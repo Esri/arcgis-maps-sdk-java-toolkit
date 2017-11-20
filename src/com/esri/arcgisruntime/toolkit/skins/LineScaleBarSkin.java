@@ -30,6 +30,8 @@ import javafx.scene.shape.StrokeLineCap;
 /**
  * A scalebar skin that displays the distance as a line with vertical marks at the start and end and a single distance
  * label.
+ *
+ * @since 100.2.0
  */
 public final class LineScaleBarSkin extends ScalebarSkin {
 
@@ -41,6 +43,7 @@ public final class LineScaleBarSkin extends ScalebarSkin {
    * Creates a new skin instance.
    *
    * @param scalebar the scalebar this skin is for
+   * @since 100.2.0
    */
   public LineScaleBarSkin(Scalebar scalebar) {
     super(scalebar);
