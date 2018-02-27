@@ -26,6 +26,8 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * A scalebar skin that displays the distance as a solid bar with a single label.
+ *
+ * @since 100.2.0
  */
 public final class BarScalebarSkin extends ScalebarSkin {
 
@@ -38,6 +40,7 @@ public final class BarScalebarSkin extends ScalebarSkin {
    * Creates a new skin instance.
    *
    * @param scalebar the scalebar this skin is for
+   * @since 100.2.0
    */
   public BarScalebarSkin(Scalebar scalebar) {
     super(scalebar);

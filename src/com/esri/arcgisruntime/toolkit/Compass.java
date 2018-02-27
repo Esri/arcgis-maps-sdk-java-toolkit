@@ -36,6 +36,8 @@ import javafx.scene.control.Skin;
  * A compass control which shows the direction of north for the view. Clicking on the compass will return the view to
  * north. The compass can be set to fade out when its heading is north and fade in when the heading changes. The size of
  * the compass is the smaller of its width and height values.
+ *
+ * @since 100.2.0
  */
 public final class Compass extends Control {
 
@@ -84,6 +86,8 @@ public final class Compass extends Control {
   /**
    * Creates an instance of a compass control. The compass control will show the direction of north when a non-null
    * {@link GeoView} has been set using {@link #setGeoView(GeoView)}.
+   *
+   * @since 100.2.0
    */
   public Compass() {
     this(null);
@@ -94,6 +98,7 @@ public final class Compass extends Control {
    * {@link GeoView} has been set.
    *
    * @param geoView the GeoView to link with this compass
+   * @since 100.2.0
    */
   public Compass(GeoView geoView) {
     setPrefHeight(SIZE);
@@ -135,6 +140,7 @@ public final class Compass extends Control {
    * Sets the {@link GeoView} which this compass is representing.
    *
    * @param geoView the GeoView
+   * @since 100.2.0
    */
   public void setGeoView(GeoView geoView) {
     if (view != null) {
@@ -155,6 +161,7 @@ public final class Compass extends Control {
    * A property containing the current compass heading in degrees.
    *
    * @return the compass heading property
+   * @since 100.2.0
    */
   public SimpleDoubleProperty headingProperty() {
     return headingProperty;
@@ -164,6 +171,7 @@ public final class Compass extends Control {
    * Returns the compass heading in degrees.
    *
    * @return the compass heading
+   * @since 100.2.0
    */
   public double getHeading() {
     return headingProperty.get();
@@ -174,6 +182,7 @@ public final class Compass extends Control {
    * that view will rotate to match the heading set.
    *
    * @param heading the compass heading
+   * @since 100.2.0
    */
   public void setHeading(double heading) {
     headingProperty.set(heading);
@@ -183,6 +192,7 @@ public final class Compass extends Control {
    * A property controlling if the compass automatically hides when its heading is north.
    *
    * @return the auto hide property
+   * @since 100.2.0
    */
   public SimpleBooleanProperty autoHideProperty() {
     return autoHideProperty;
@@ -192,6 +202,7 @@ public final class Compass extends Control {
    * Returns true if the compass automatically hides when its heading is north.
    *
    * @return true if enabled, false otherwise
+   * @since 100.2.0
    */
   public boolean isAutoHide() {
     return autoHideProperty.get();
@@ -201,6 +212,7 @@ public final class Compass extends Control {
    * Enables or disables automatically hiding the compass when its heading is north.
    *
    * @param autoHide true to enable, false to disable
+   * @since 100.2.0
    */
   public void setAutoHide(boolean autoHide) {
     autoHideProperty.set(autoHide);
@@ -208,6 +220,8 @@ public final class Compass extends Control {
 
   /**
    * Updates the heading property based on map rotation or camera heading.
+   *
+   * @since 100.2.0
    */
   private void updateHeading() {
     if (view != null) {
@@ -223,6 +237,7 @@ public final class Compass extends Control {
    * A property to hold the action to execute when the compass is clicked or tapped.
    *
    * @return the action property
+   * @since 100.2.0
    */
   private ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
     return onAction;
@@ -232,6 +247,7 @@ public final class Compass extends Control {
    * Sets the action to execute when the compass is clicked or tapped.
    *
    * @param value the action
+   * @since 100.2.0
    */
   private void setOnAction(EventHandler<ActionEvent> value) {
     onActionProperty().set(value);
@@ -241,6 +257,7 @@ public final class Compass extends Control {
    * Returns the action that is set to execute when the compass is clicked or tapped.
    *
    * @return the action
+   * @since 100.2.0
    */
   private EventHandler<ActionEvent> getOnAction() {
     return onActionProperty().get();
