@@ -201,6 +201,9 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
 
     double distance = 0.0;
+    if (mapView.getVisibleArea() == null) {
+      return 0.0;
+    }
     Point mapCenter = mapView.getVisibleArea().getExtent().getCenter();
 
     if (mapCenter.isEmpty()) {
