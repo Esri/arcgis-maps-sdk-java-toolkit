@@ -212,6 +212,9 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
     double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
 
     double distance = 0.0;
+    if (mapView.getVisibleArea() == null) {
+      return 0.0;
+    }
     Point mapCenter = mapView.getVisibleArea().getExtent().getCenter();
 
     if (mapCenter.isEmpty()) {
@@ -220,7 +223,6 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
     Point point1 = new Point(mapCenter.getX() - (maxPlanarWidth / 2.0), mapCenter.getY());
     Point point2 = new Point(mapCenter.getX() + (maxPlanarWidth / 2.0), mapCenter.getY());
-
 
     if (point1 != null && point2 != null) {
       PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
