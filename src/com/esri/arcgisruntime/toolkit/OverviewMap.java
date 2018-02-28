@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.toolkit.skins.OverviewMapSkin;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -27,7 +28,7 @@ import javafx.scene.control.Skin;
 public class OverviewMap  extends Control {
 
   private static final double WIDTH = 200.0;
-  private static final double HEIGHT = 130.0;
+  private static final double HEIGHT = 132.0;
 
   final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
 
@@ -45,5 +46,9 @@ public class OverviewMap  extends Control {
   @Override
   protected Skin<?> createDefaultSkin() {
     return new OverviewMapSkin(this);
+  }
+
+  public ReadOnlyObjectProperty<GeoView> geoViewPropertyProperty() {
+    return geoViewProperty;
   }
 }
