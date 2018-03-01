@@ -22,6 +22,7 @@ import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.LinearUnit;
 import com.esri.arcgisruntime.geometry.LinearUnitId;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
@@ -198,29 +199,25 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @return the distance
    */
   protected double calculateDistance(MapView mapView, LinearUnit unit, double width) {
-    double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
-
     double distance = 0.0;
-    if (mapView.getVisibleArea() == null) {
-      return 0.0;
-    }
-    Point mapCenter = mapView.getVisibleArea().getExtent().getCenter();
 
-    if (mapCenter.isEmpty()) {
-      return 0.0;
-    }
+    Polygon visibleArea = mapView.getVisibleArea();
+    if (visibleArea != null) {
+      Point mapCenter = visibleArea.getExtent().getCenter();
+      if (!mapCenter.isEmpty()) {
+        double maxPlanarWidth = mapView.getUnitsPerDensityIndependentPixel() * width;
+        Point point1 = new Point(mapCenter.getX() - (maxPlanarWidth / 2.0), mapCenter.getY());
+        Point point2 = new Point(mapCenter.getX() + (maxPlanarWidth / 2.0), mapCenter.getY());
 
-    Point point1 = new Point(mapCenter.getX() - (maxPlanarWidth / 2.0), mapCenter.getY());
-    Point point2 = new Point(mapCenter.getX() + (maxPlanarWidth / 2.0), mapCenter.getY());
+        if (point1 != null && point2 != null) {
+          PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
+          polylineBuilder.addPoint(point1);
+          polylineBuilder.addPoint(mapCenter);
+          polylineBuilder.addPoint(point2);
 
-
-    if (point1 != null && point2 != null) {
-      PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
-      polylineBuilder.addPoint(point1);
-      polylineBuilder.addPoint(mapCenter);
-      polylineBuilder.addPoint(point2);
-
-      distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
+          distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
+        }
+      }
     }
 
     return distance;
