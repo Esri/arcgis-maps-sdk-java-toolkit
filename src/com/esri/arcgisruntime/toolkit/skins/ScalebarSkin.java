@@ -209,14 +209,12 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
         Point point1 = new Point(mapCenter.getX() - (maxPlanarWidth / 2.0), mapCenter.getY());
         Point point2 = new Point(mapCenter.getX() + (maxPlanarWidth / 2.0), mapCenter.getY());
 
-        if (point1 != null && point2 != null) {
-          PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
-          polylineBuilder.addPoint(point1);
-          polylineBuilder.addPoint(mapCenter);
-          polylineBuilder.addPoint(point2);
+        PolylineBuilder polylineBuilder = new PolylineBuilder(mapView.getSpatialReference());
+        polylineBuilder.addPoint(point1);
+        polylineBuilder.addPoint(mapCenter);
+        polylineBuilder.addPoint(point2);
 
-          distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
-        }
+        distance = GeometryEngine.lengthGeodetic(polylineBuilder.toGeometry(), unit, GeodeticCurveType.GEODESIC);
       }
     }
 
