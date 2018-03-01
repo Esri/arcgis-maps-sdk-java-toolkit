@@ -27,21 +27,13 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.toolkit.OverviewMap;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Implements a skin for the {@link OverviewMap} control.
+ */
 public class OverviewMapSkin extends SkinBase<OverviewMap> {
-
-  private boolean invalid;
-  private final StackPane stackPane = new StackPane();
-
-  private final MapView mapView = new MapView();
-  private final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-
-  private final Graphic indicatorGraphic = new Graphic();
-  private final GraphicsOverlay indicatorOverlay = new GraphicsOverlay();
 
   /**
    * Creates an instance of the skin.
@@ -51,50 +43,41 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
   public OverviewMapSkin(OverviewMap control) {
     super(control);
 
-    control.widthProperty().addListener(observable -> invalid = true);
-    control.heightProperty().addListener(observable -> invalid = true);
-    control.insetsProperty().addListener(observable -> invalid = true);
+    // create a stack pane holding an map view
+    MapView overviewMapView = new MapView();
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    overviewMapView.setMap(map);
+    StackPane stackPane = new StackPane();
+    stackPane.getChildren().add(overviewMapView);
+    getChildren().add(stackPane);
 
+    // add a listener for changes in the geo view's view point that will update the indicator
+    // graphic
+    final Graphic indicatorGraphic = new Graphic();
     GeoView geoView = control.geoViewPropertyProperty().get();
     geoView.addViewpointChangedListener(v -> {
       if (geoView instanceof MapView) {
-        Viewpoint viewpoint = geoView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY);
-        indicatorGraphic.setGeometry(viewpoint.getTargetGeometry());
+        indicatorGraphic.setGeometry(((MapView) geoView).getVisibleArea());
       } else {
         Viewpoint viewpoint = geoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);
         indicatorGraphic.setGeometry(viewpoint.getTargetGeometry());
       }
     });
 
-    mapView.setMap(map);
-    stackPane.getChildren().add(mapView);
-    getChildren().add(stackPane);
-
-    // add indicator graphic
+    // add the indicator graphic to the map view
     if (geoView instanceof MapView) {
       indicatorGraphic.setSymbol(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0x7F000000, null));
     } else {
       indicatorGraphic.setSymbol(new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0x7F000000, 20));
     }
+    GraphicsOverlay indicatorOverlay = new GraphicsOverlay();
     indicatorOverlay.getGraphics().add(indicatorGraphic);
-    mapView.getGraphicsOverlays().add(indicatorOverlay);
+    overviewMapView.getGraphicsOverlays().add(indicatorOverlay);
 
     // disable map view interaction
-    mapView.setInteractionListener(new InteractionListener() {});
+    overviewMapView.setInteractionListener(new InteractionListener() {});
 
     // hide attribution
-    mapView.setAttributionTextVisible(false);
-  }
-
-  @Override
-  protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-    if (invalid) {
-      update(contentWidth, contentHeight);
-      invalid = false;
-    }
-    layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
-  }
-
-  private void update(double width, double height) {
+    overviewMapView.setAttributionTextVisible(false);
   }
 }
