@@ -17,15 +17,12 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.InteractionListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.toolkit.OverviewMap;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.StackPane;
@@ -45,7 +42,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
 
     // create a stack pane holding an map view
     MapView overviewMapView = new MapView();
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(control.basemapProperty().get());
     overviewMapView.setMap(map);
     StackPane stackPane = new StackPane();
     stackPane.getChildren().add(overviewMapView);
@@ -54,7 +51,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     // add a listener for changes in the geo view's view point that will update the indicator
     // graphic
     final Graphic indicatorGraphic = new Graphic();
-    GeoView geoView = control.geoViewPropertyProperty().get();
+    GeoView geoView = control.geoViewProperty().get();
     geoView.addViewpointChangedListener(v -> {
       if (geoView instanceof MapView) {
         indicatorGraphic.setGeometry(((MapView) geoView).getVisibleArea());
@@ -65,11 +62,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     });
 
     // add the indicator graphic to the map view
-    if (geoView instanceof MapView) {
-      indicatorGraphic.setSymbol(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0x7F000000, null));
-    } else {
-      indicatorGraphic.setSymbol(new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0x7F000000, 20));
-    }
+    indicatorGraphic.setSymbol(control.symbolProperty().get());
     GraphicsOverlay indicatorOverlay = new GraphicsOverlay();
     indicatorOverlay.getGraphics().add(indicatorGraphic);
     overviewMapView.getGraphicsOverlays().add(indicatorOverlay);
