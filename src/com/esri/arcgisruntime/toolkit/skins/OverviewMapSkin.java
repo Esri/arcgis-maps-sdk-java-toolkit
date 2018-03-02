@@ -48,8 +48,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     stackPane.getChildren().add(overviewMapView);
     getChildren().add(stackPane);
 
-    // add a listener for changes in the geo view's view point that will update the indicator
-    // graphic
+    // add a listener for changes in the geo view's view point that will update the indicator graphic
     final Graphic indicatorGraphic = new Graphic();
     GeoView geoView = control.geoViewProperty().get();
     geoView.addViewpointChangedListener(v -> {
@@ -72,5 +71,9 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
 
     // hide attribution
     overviewMapView.setAttributionTextVisible(false);
+
+    // listen for property changes
+    control.basemapProperty().addListener((observable, oldValue, newValue) -> overviewMapView.getMap().setBasemap(newValue));
+    control.symbolProperty().addListener((observable, oldValue, newValue) -> indicatorGraphic.setSymbol(newValue));
   }
 }

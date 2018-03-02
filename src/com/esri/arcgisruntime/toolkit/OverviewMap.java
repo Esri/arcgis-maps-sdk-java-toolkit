@@ -75,9 +75,7 @@ public class OverviewMap  extends Control {
    * Creates an overview map with default a basemap and supplied indicator symbol.
    *
    * @param geoView the geo view to connect to this overview map
-   * @param symbol the symbol to use
-   * @throws IllegalArgumentException if the symbol is not compatible with the geo view. For a map view the symbol must
-   * be a fill symbol and for a scene view it must be a marker symbol
+   * @param symbol the symbol to use, for a mapview use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if symbol is null
    */
@@ -91,24 +89,14 @@ public class OverviewMap  extends Control {
    * @param geoView the geo view to connect to this overview map
    * @param basemap the basemap
    * @param symbol the symbol to use
-   * @throws IllegalArgumentException if the symbol is not compatible with the geo view
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if basemap is null
    * @throws NullPointerException if symbol is null
    */
   public OverviewMap(GeoView geoView, Basemap basemap, Symbol symbol) {
     geoViewProperty.set(Objects.requireNonNull(geoView, "geoView cannot be null"));
-    basemapProperty.set(Objects.requireNonNull(basemap, "basemap cannot be null"));
-    symbolProperty.set(Objects.requireNonNull(symbol, "symbol cannot be null"));
-    if (geoView instanceof MapView) {
-      if (!(symbol instanceof FillSymbol)) {
-        throw new IllegalArgumentException("MapView overviews only support FillSymbol");
-      }
-    } else {
-      if (!(symbol instanceof MarkerSymbol)) {
-        throw new IllegalArgumentException("SceneView overviews only support MarkerSymbol");
-      }
-    }
+    basemapProperty.set(Objects.requireNonNull(basemap));
+    symbolProperty.set(Objects.requireNonNull(symbol));
 
     setPrefHeight(HEIGHT);
     setPrefWidth(WIDTH);
@@ -142,7 +130,8 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Gets the basemap being used
+   * Gets the basemap being used.
+   *
    * @return the basemap
    */
   public Basemap getBasemap() {
@@ -150,16 +139,26 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * A readonly property containing the basemap being used in this overview map.
+   * Sets the basemap to use.
+   *
+   * @param basemap the basemap to use
+   */
+  public void setBasemap(Basemap basemap) {
+    basemapProperty.set(basemap);
+  }
+
+  /**
+   * A property containing the basemap being used in this overview map.
    *
    * @return the basemap
    */
-  public ReadOnlyObjectProperty<Basemap> basemapProperty() {
+  public SimpleObjectProperty<Basemap> basemapProperty() {
     return basemapProperty;
   }
 
   /**
-   * Gets the symbol being used to indicate the viewpoint
+   * Gets the symbol being used to indicate the viewpoint.
+   *
    * @return the symbol
    */
   public Symbol getSymbol() {
@@ -167,11 +166,20 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * A readonly property containing the symbol being used in this overview map.
+   * Sets the symbol to use to indicate the viewpoint.
+   *
+   * @param symbol the symbol
+   */
+  public void setSymbol(Symbol symbol) {
+    symbolProperty.set(symbol);
+  }
+
+  /**
+   * A property containing the symbol being used in this overview map.
    *
    * @return the symbol property
    */
-  public ReadOnlyObjectProperty<Symbol> symbolProperty() {
+  public SimpleObjectProperty<Symbol> symbolProperty() {
     return symbolProperty;
   }
 }
