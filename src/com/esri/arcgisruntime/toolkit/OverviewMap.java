@@ -50,7 +50,7 @@ public class OverviewMap  extends Control {
     new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0x7F000000, 20);
 
   /**
-   * Creates an overview map with a default basemap and indicator symbol.
+   * Creates an overview map for a geoview with a default basemap and indicator symbol.
    *
    * @param geoView the geo view to connect to this overview map
    * @throws NullPointerException if geoView is null
@@ -60,7 +60,7 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Creates an overview map with default a symbol and a basemap.
+   * Creates an overview map for a geo view with default a symbol and a basemap.
    *
    * @param geoView the geo view to connect to this overview map
    * @param basemap the basemap
@@ -72,7 +72,7 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Creates an overview map with default a basemap and supplied indicator symbol.
+   * Creates an overview map for a geo view with a default basemap and supplied indicator symbol.
    *
    * @param geoView the geo view to connect to this overview map
    * @param symbol the symbol to use, for a mapview use a fill symbol and for a scene view use a marker symbol
@@ -84,7 +84,7 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Creates an overview map.
+   * Creates an overview map for a geo view with a basemap and symbol.
    *
    * @param geoView the geo view to connect to this overview map
    * @param basemap the basemap
