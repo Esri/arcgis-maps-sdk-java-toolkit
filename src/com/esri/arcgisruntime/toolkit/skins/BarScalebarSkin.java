@@ -21,7 +21,6 @@ import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -29,7 +28,6 @@ import javafx.scene.shape.Rectangle;
  */
 public final class BarScalebarSkin extends ScalebarSkin {
 
-  private final VBox vBox = new VBox();
   private final Label distanceLabel = new Label();
   private final Rectangle bar = new Rectangle();
   private final Rectangle outerBar = new Rectangle();
@@ -88,5 +86,11 @@ public final class BarScalebarSkin extends ScalebarSkin {
   @Override
   protected double calculateAvailableWidth(double width) {
     return width - STROKE_WIDTH - SHADOW_OFFSET;
+  }
+
+  @Override
+  protected double computePrefHeight(
+    double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    return topInset + bottomInset + HEIGHT + STROKE_WIDTH + calculateRegion(new Label()).getHeight();
   }
 }

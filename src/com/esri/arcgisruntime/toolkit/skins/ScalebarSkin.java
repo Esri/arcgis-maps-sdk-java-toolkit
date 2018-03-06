@@ -44,15 +44,15 @@ import javafx.scene.paint.Color;
  */
 public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
-  protected static final double HEIGHT = 10.0;
-  protected final static double SHADOW_OFFSET = 1.5;
-  protected final static double STROKE_WIDTH = 3.0;
+  static final double HEIGHT = 10.0;
+  final static double SHADOW_OFFSET = 1.5;
+  final static double STROKE_WIDTH = 3.0;
 
-  protected final static Color LINE_COLOR = Color.WHITE;
-  protected final static Color FILL_COLOR = Color.rgb(0xB7, 0xCB, 0xD3);
-  protected final static Color ALTERNATE_FILL_COLOR = Color.BLACK;
-  protected final static Color SHADOW_COLOR = Color.rgb(0x6E, 0x84, 0x8D);
-  protected final static Color TEXT_COLOR = Color.BLACK;
+  final static Color LINE_COLOR = Color.WHITE;
+  final static Color FILL_COLOR = Color.rgb(0xB7, 0xCB, 0xD3);
+  final static Color ALTERNATE_FILL_COLOR = Color.BLACK;
+  final static Color SHADOW_COLOR = Color.rgb(0x6E, 0x84, 0x8D);
+  final static Color TEXT_COLOR = Color.BLACK;
 
   private boolean invalid = true;
   private final VBox vBox = new VBox();
@@ -127,7 +127,6 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
       update(contentWidth, contentHeight);
       invalid = false;
     }
-
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
@@ -150,11 +149,11 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   }
 
   /**
-   * Returns the base unit of the scalebar which is noramally either meters or feet.
+   * Returns the base unit of the scalebar which is normally either meters or feet.
    *
    * @return the base unit
    */
-  protected LinearUnit getBaseUnit() {
+  LinearUnit getBaseUnit() {
     return baseUnit;
   }
 
@@ -163,7 +162,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    *
    * @return the unit system
    */
-  protected UnitSystem getUnitSystem() {
+  UnitSystem getUnitSystem() {
     return unitSystem;
   }
 
@@ -177,19 +176,19 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
   }
 
   /**
-   * Calculates the width of a region. Used when we need to know the width before layout.
+   * Calculates the actual size of a region. Used when we need to know the size before layout.
    *
    * @param region the region
-   * @return the width
+   * @return a region with the true size
    */
-  protected double calculateRegionWidth(Region region) {
+  Region calculateRegion(Region region) {
     Group root = new Group();
     Scene dummyScene = new Scene(root);
     root.getChildren().add(region);
     root.applyCss();
     root.layout();
 
-    return region.getWidth();
+    return region;
   }
 
   /**
@@ -198,7 +197,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @param width the width
    * @return the distance
    */
-  protected double calculateDistance(MapView mapView, LinearUnit unit, double width) {
+  double calculateDistance(MapView mapView, LinearUnit unit, double width) {
     double distance = 0.0;
 
     Polygon visibleArea = mapView.getVisibleArea();
@@ -229,7 +228,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @param availableWidth the width actually available for the scalebar
    * @return the final width
    */
-  protected double calculateDisplayWidth(double displayDistance, double  maximumDistance, double availableWidth) {
+  double calculateDisplayWidth(double displayDistance, double  maximumDistance, double availableWidth) {
     return displayDistance / maximumDistance * availableWidth;
   }
 
@@ -241,7 +240,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    * @param actualWidth the actual width of the scalebar
    * @return the X translation required
    */
-  protected double calculateAlignmentTranslationX(double width, double actualWidth) {
+  double calculateAlignmentTranslationX(double width, double actualWidth) {
     double translate = 0.0;
     switch (getAlignment()) {
       case LEFT:
