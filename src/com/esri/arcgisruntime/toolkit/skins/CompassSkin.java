@@ -67,6 +67,7 @@ public final class CompassSkin extends SkinBase<Compass> {
 
     control.widthProperty().addListener(observable -> invalid = true);
     control.heightProperty().addListener(observable -> invalid = true);
+    control.insetsProperty().addListener(observable -> invalid = true);
 
     // bind to the control's heading property
     stackPane.rotateProperty().bind(control.headingProperty().negate());
