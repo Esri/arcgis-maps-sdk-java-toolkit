@@ -286,4 +286,34 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
         break;
     }
   }
+
+  @Override
+  protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return getSkinnable().getMapView().getWidth() / 4.0;
+  }
+
+  @Override
+  protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
 }
