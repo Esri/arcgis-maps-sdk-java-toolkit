@@ -39,8 +39,6 @@ import javafx.scene.control.Skin;
  */
 public final class Compass extends Control {
 
-  private static final double SIZE = 100.0;
-
   private GeoView view;
 
   private final SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
@@ -96,8 +94,6 @@ public final class Compass extends Control {
    * @param geoView the GeoView to link with this compass
    */
   public Compass(GeoView geoView) {
-    setPrefHeight(SIZE);
-    setPrefWidth(SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
     setMinHeight(USE_PREF_SIZE);
