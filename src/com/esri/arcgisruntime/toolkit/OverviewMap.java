@@ -37,9 +37,6 @@ import javafx.scene.control.Skin;
  */
 public class OverviewMap  extends Control {
 
-  private static final double WIDTH = 200.0;
-  private static final double HEIGHT = 132.0;
-
   final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
@@ -98,8 +95,6 @@ public class OverviewMap  extends Control {
     basemapProperty.set(Objects.requireNonNull(basemap));
     symbolProperty.set(Objects.requireNonNull(symbol));
 
-    setPrefHeight(HEIGHT);
-    setPrefWidth(WIDTH);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
     setMinHeight(USE_PREF_SIZE);

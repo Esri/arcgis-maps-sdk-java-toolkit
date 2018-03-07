@@ -32,6 +32,9 @@ import javafx.scene.layout.StackPane;
  */
 public class OverviewMapSkin extends SkinBase<OverviewMap> {
 
+  private static final double PREF_WIDTH = 200.0;
+  private static final double PREF_HEIGHT = 132.0;
+
   /**
    * Creates an instance of the skin.
    *
@@ -75,5 +78,41 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     // listen for property changes
     control.basemapProperty().addListener((observable, oldValue, newValue) -> overviewMapView.getMap().setBasemap(newValue));
     control.symbolProperty().addListener((observable, oldValue, newValue) -> indicatorGraphic.setSymbol(newValue));
+  }
+
+  @Override
+  protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_WIDTH;
+  }
+
+  @Override
+  protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_HEIGHT;
   }
 }
