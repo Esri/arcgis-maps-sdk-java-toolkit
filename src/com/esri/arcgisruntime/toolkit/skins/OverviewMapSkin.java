@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.GeoView;
@@ -56,10 +58,21 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     GeoView geoView = control.geoViewProperty().get();
     geoView.addViewpointChangedListener(v -> {
       if (geoView instanceof MapView) {
-        indicatorGraphic.setGeometry(((MapView) geoView).getVisibleArea());
+        MapView mapView = (MapView) geoView;
+        Polygon visibleArea = mapView.getVisibleArea();
+        if (visibleArea != null) {
+          indicatorGraphic.setGeometry(visibleArea);
+          // keep overview centered on the map view's visible area
+          overviewMapView.setViewpoint(new Viewpoint(visibleArea.getExtent().getCenter(), overviewMapView.getMapScale()));
+        }
       } else {
         Viewpoint viewpoint = geoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);
-        indicatorGraphic.setGeometry(viewpoint.getTargetGeometry());
+        Point target = (Point) viewpoint.getTargetGeometry();
+        if (target != null) {
+          indicatorGraphic.setGeometry(target);
+          // keep overview centered on the scene view's target
+          overviewMapView.setViewpoint(new Viewpoint(target, overviewMapView.getMapScale()));
+        }
       }
     });
 
