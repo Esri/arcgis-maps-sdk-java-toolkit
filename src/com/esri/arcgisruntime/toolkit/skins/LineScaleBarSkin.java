@@ -21,7 +21,6 @@ import com.esri.arcgisruntime.toolkit.Scalebar;
 import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -33,7 +32,6 @@ import javafx.scene.shape.StrokeLineCap;
  */
 public final class LineScaleBarSkin extends ScalebarSkin {
 
-  private final VBox vBox = new VBox();
   private final Label distanceLabel = new Label();
   private final Path line = new Path();
 
@@ -93,5 +91,11 @@ public final class LineScaleBarSkin extends ScalebarSkin {
   @Override
   protected double calculateAvailableWidth(double width) {
     return width - STROKE_WIDTH - SHADOW_OFFSET;
+  }
+
+  @Override
+  protected double computePrefHeight(
+    double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    return topInset + bottomInset + HEIGHT + STROKE_WIDTH + calculateRegion(new Label()).getHeight();
   }
 }

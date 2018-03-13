@@ -45,6 +45,8 @@ import java.util.concurrent.TimeUnit;
  */
 public final class CompassSkin extends SkinBase<Compass> {
 
+  private static final double PREF_SIZE = 100.0;
+
   private boolean invalid = true;
   private final StackPane stackPane = new StackPane();
 
@@ -167,5 +169,41 @@ public final class CompassSkin extends SkinBase<Compass> {
 
     // fire action event if any of the compass elements are clicked
     stackPane.getChildren().forEach(c -> c.setOnMouseClicked(e -> getSkinnable().fireEvent(new ActionEvent())));
+  }
+
+  @Override
+  protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return computePrefHeight(width, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_SIZE;
+  }
+
+  @Override
+  protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_SIZE;
   }
 }

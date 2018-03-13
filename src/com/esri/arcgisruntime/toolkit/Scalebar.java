@@ -82,7 +82,8 @@ public final class Scalebar extends Control {
   final private SimpleObjectProperty<MapView> mapViewProperty = new SimpleObjectProperty<>();
 
   /**
-   * Creates a scalebar with a {@link SkinStyle#ALTERNATING_BAR} style and an alignment of {@link HPos#CENTER}.
+   * Creates a scalebar with a {@link SkinStyle#ALTERNATING_BAR} style and an alignment of {@link HPos#CENTER}. By
+   * default the width of the control will be 1/4 the map view width.
    *
    * @param mapView the map view this scale bar is representing
    * @throws NullPointerException if map view is null
@@ -92,7 +93,8 @@ public final class Scalebar extends Control {
   }
 
   /**
-   * Creates a scalebar with a specified style and an alignment of {@link HPos#CENTER}.
+   * Creates a scalebar with a specified style and an alignment of {@link HPos#CENTER}. By default the width of the
+   * control will be 1/4 the map view width.
    *
    * @param mapView the map view this scale bar is representing
    * @param style the skin style to use
@@ -104,7 +106,8 @@ public final class Scalebar extends Control {
   }
 
   /**
-   * Creates a scalebar with a specified style and alignment.
+   * Creates a scalebar with a specified style and alignment. By default the width of the control will be 1/4 the map
+   * view width.
    *
    * @param mapView the map view this scale bar is representing
    * @param style the skin style to use
@@ -120,8 +123,6 @@ public final class Scalebar extends Control {
 
     unitSystemProperty.set(UnitSystem.METRIC);
 
-    setPrefWidth(WIDTH);
-    setPrefHeight(USE_COMPUTED_SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
     setMinHeight(USE_PREF_SIZE);
