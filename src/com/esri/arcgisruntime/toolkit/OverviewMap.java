@@ -47,7 +47,7 @@ public class OverviewMap  extends Control {
     new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0x7F000000, 20);
 
   /**
-   * Creates an overview map for a geoview with a default basemap and indicator symbol.
+   * Creates an overview map for a geoview using default values for the basemap and indicator symbol.
    *
    * @param geoView the geo view to connect to this overview map
    * @throws NullPointerException if geoView is null
@@ -57,7 +57,7 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Creates an overview map for a geo view with default a symbol and a basemap.
+   * Creates an overview map for a geo view using a default indicator symbol.
    *
    * @param geoView the geo view to connect to this overview map
    * @param basemap the basemap
@@ -69,8 +69,7 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Creates an overview map for a geo view with a default basemap and supplied indicator symbol.For an overview of a
-   * map view the symbol should be a fill symbol and for an overview of a scene view it should be a marker symbol.
+   * Creates an overview map for a geo view using a default basemap.
    *
    * @param geoView the geo view to connect to this overview map
    * @param symbol the symbol to use, for a mapview use a fill symbol and for a scene view use a marker symbol
@@ -82,12 +81,11 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Creates an overview map for a geo view with a basemap and symbol. For an overview of a map view the symbol should
-   * be a fill symbol and for an overview of a scene view it should be a marker symbol.
+   * Creates an overview map for a geo view.
    *
    * @param geoView the geo view to connect to this overview map
    * @param basemap the basemap
-   * @param symbol the symbol to use
+   * @param symbol the symbol to use, for a mapview use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if basemap is null
    * @throws NullPointerException if symbol is null
@@ -154,8 +152,7 @@ public class OverviewMap  extends Control {
   }
 
   /**
-   * Gets the symbol being used to indicate the viewpoint. For an overview of a map view the symbol should be a fill
-   * symbol and for an overview of a scene view it should be a marker symbol.
+   * Gets the symbol being used to indicate the viewpoint.
    *
    * @return the symbol
    */
@@ -166,7 +163,7 @@ public class OverviewMap  extends Control {
   /**
    * Sets the symbol to use to indicate the viewpoint.
    *
-   * @param symbol the symbol
+   * @param symbol the symbol, for a mapview use a fill symbol and for a scene view use a marker symbol
    */
   public void setSymbol(Symbol symbol) {
     symbolProperty.set(symbol);
