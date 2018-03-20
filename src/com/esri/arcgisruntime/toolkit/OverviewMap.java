@@ -35,16 +35,16 @@ import javafx.scene.control.Skin;
 /**
  * An overview map control that indicates the viewpoint of another map or scene view.
  */
-public class OverviewMap  extends Control {
-
-  final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
-  final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>();
-  final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
+public class OverviewMap extends Control {
 
   final static private FillSymbol sFillSymbol =
     new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0x7F000000, null);
   final static private MarkerSymbol sMarkerSymbol =
     new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0x7F000000, 20);
+
+  final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
 
   /**
    * Creates an overview map for a geoview using default values for the basemap and indicator symbol.
@@ -92,8 +92,8 @@ public class OverviewMap  extends Control {
    */
   public OverviewMap(GeoView geoView, Basemap basemap, Symbol symbol) {
     geoViewProperty.set(Objects.requireNonNull(geoView, "geoView cannot be null"));
-    basemapProperty.set(Objects.requireNonNull(basemap));
-    symbolProperty.set(Objects.requireNonNull(symbol));
+    basemapProperty.set(Objects.requireNonNull(basemap, "basemap cannot be null"));
+    symbolProperty.set(Objects.requireNonNull(symbol, "symbol cannot be null"));
 
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
