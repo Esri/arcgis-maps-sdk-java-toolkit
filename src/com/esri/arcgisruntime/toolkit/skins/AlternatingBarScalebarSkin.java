@@ -23,7 +23,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -31,7 +30,6 @@ import javafx.scene.shape.Rectangle;
  */
 public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
-  private final VBox vBox = new VBox();
   private final Pane labelPane = new Pane();
   private final Pane segmentPane = new Pane();
 
@@ -73,7 +71,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     // apply some padding so the labels have some space around them
     sampleLabel.setPadding(new Insets(0.0, 10.0, 0.0, 10.0));
 
-    double widthOfLabel = calculateRegionWidth(sampleLabel);
+    double widthOfLabel = calculateRegion(sampleLabel).getWidth();
     int maximumNumberOfSegments = (int) (displayWidth / widthOfLabel);
 
     int bestNumberOfSegments = ScalebarUtil.calculateOptimalNumberOfSegments(displayDistance, maximumNumberOfSegments);
@@ -98,7 +96,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
       // first label is aligned with its left to the edge of the bar while the intermediate
       // labels are centered on the dividers
       if (i > 0) {
-        label.setTranslateX((i * segmentWidth) - (calculateRegionWidth(label) / 2.0));
+        label.setTranslateX((i * segmentWidth) - (calculateRegion(label).getWidth() / 2.0));
       }
       labelPane.getChildren().add(label);
 
@@ -125,7 +123,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
     label = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
-    label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegionWidth(label));
+    label.setTranslateX((bestNumberOfSegments * segmentWidth) - calculateRegion(label).getWidth());
     // then add the units on so the end of the number aligns with the end of the bar and the unit is off the end
     label.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
     label.setTextFill(TEXT_COLOR);
@@ -133,13 +131,13 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
     // move the bar and labels into their final position - slightly off center due to the units
     Label abbreviationLabel = new Label(displayUnits.getAbbreviation());
-    segmentPane.setTranslateX(-calculateRegionWidth(abbreviationLabel) / 2.0);
-    labelPane.setTranslateX(-calculateRegionWidth(abbreviationLabel) / 2.0);
+    segmentPane.setTranslateX(-calculateRegion(abbreviationLabel).getWidth() / 2.0);
+    labelPane.setTranslateX(-calculateRegion(abbreviationLabel).getWidth() / 2.0);
 
     // adjust for left/right/center alignment
     getVBox().setTranslateX(
       calculateAlignmentTranslationX(width,
-        displayWidth + calculateRegionWidth(new Label(displayUnits.getAbbreviation()))));
+        displayWidth + calculateRegion(new Label(displayUnits.getAbbreviation())).getWidth()));
 
     // set invisible if distance is zero
     getVBox().setVisible(displayDistance > 0);
@@ -147,6 +145,12 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
   @Override
   protected double calculateAvailableWidth(double width) {
-    return width - (calculateRegionWidth(new Label("mm"))) - SHADOW_OFFSET;
+    return width - (calculateRegion(new Label("mm")).getWidth()) - SHADOW_OFFSET;
+  }
+
+  @Override
+  protected double computePrefHeight(
+    double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    return topInset + bottomInset + HEIGHT + STROKE_WIDTH + calculateRegion(new Label()).getHeight();
   }
 }

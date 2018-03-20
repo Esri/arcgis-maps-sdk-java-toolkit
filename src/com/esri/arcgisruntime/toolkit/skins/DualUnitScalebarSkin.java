@@ -24,7 +24,6 @@ import com.esri.arcgisruntime.toolkit.ScalebarUtil;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -36,7 +35,6 @@ import javafx.scene.shape.StrokeLineCap;
  */
 public final class DualUnitScalebarSkin extends ScalebarSkin {
 
-  private final VBox vBox = new VBox();
   private final Pane primaryLabelPane = new Pane();
   private final Pane secondaryLabelPane = new Pane();
   private final Path line = new Path();
@@ -110,14 +108,14 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     // the last label is aligned so its end is at the end of the line so it is done outside the loop
     Label primaryLabel = new Label(ScalebarUtil.labelString(displayDistance));
     // translate it into the correct position
-    primaryLabel.setTranslateX(displayWidth - calculateRegionWidth(primaryLabel));
+    primaryLabel.setTranslateX(displayWidth - calculateRegion(primaryLabel).getWidth());
     // then add the units on so the end of the number aligns with the end of the bar and the unit is off the end
     primaryLabel.setText(ScalebarUtil.labelString(displayDistance) + displayUnits.getAbbreviation());
     primaryLabel.setTextFill(TEXT_COLOR);
     primaryLabelPane.getChildren().add(primaryLabel);
 
     Label secondaryLabel = new Label(ScalebarUtil.labelString(secondaryDisplayDistance));
-    secondaryLabel.setTranslateX(secondaryDisplayWidth - calculateRegionWidth(secondaryLabel));
+    secondaryLabel.setTranslateX(secondaryDisplayWidth - calculateRegion(secondaryLabel).getWidth());
     // then add the units on so the end of the number aligns with the end of the bar and the unit is off the end
     secondaryLabel.setText(ScalebarUtil.labelString(secondaryDisplayDistance) + secondaryDisplayUnits.getAbbreviation());
     secondaryLabel.setTextFill(TEXT_COLOR);
@@ -127,12 +125,12 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
     Label endUnits = new Label(displayWidth >= secondaryDisplayWidth ? displayUnits.getAbbreviation() : secondaryDisplayUnits.getAbbreviation());
 
     // move the line and labels into their final position - slightly off center due to the units
-    line.setTranslateX(-calculateRegionWidth(endUnits) / 2.0);
-    primaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(displayUnits.getAbbreviation())) / 2.0);
-    secondaryLabelPane.setTranslateX(-calculateRegionWidth(new Label(secondaryDisplayUnits.getAbbreviation())) / 2.0);
+    line.setTranslateX(-calculateRegion(endUnits).getWidth() / 2.0);
+    primaryLabelPane.setTranslateX(-calculateRegion(new Label(displayUnits.getAbbreviation())).getWidth() / 2.0);
+    secondaryLabelPane.setTranslateX(-calculateRegion(new Label(secondaryDisplayUnits.getAbbreviation())).getWidth() / 2.0);
 
     // adjust for left/right/center alignment
-    getVBox().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegionWidth(endUnits)));
+    getVBox().setTranslateX(calculateAlignmentTranslationX(width, lineWidth + calculateRegion(endUnits).getWidth()));
 
     // set invisible if distance is zero
     getVBox().setVisible(displayDistance > 0);
@@ -140,6 +138,12 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
 
   @Override
   protected double calculateAvailableWidth(double width) {
-    return width - (calculateRegionWidth(new Label("mm"))) - STROKE_WIDTH - SHADOW_OFFSET;
+    return width - (calculateRegion(new Label("mm")).getWidth()) - STROKE_WIDTH - SHADOW_OFFSET;
+  }
+
+  @Override
+  protected double computePrefHeight(
+    double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+    return topInset + bottomInset + (HEIGHT * 2.0) + STROKE_WIDTH + (calculateRegion(new Label()).getHeight() * 2.0);
   }
 }
