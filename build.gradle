@@ -21,6 +21,11 @@ dependencies {
   implementation "com.esri.arcgisruntime:arcgis-java:100.2.1"
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
 task wrapper(type: Wrapper) {
   gradleVersion = '4.6'
 }
