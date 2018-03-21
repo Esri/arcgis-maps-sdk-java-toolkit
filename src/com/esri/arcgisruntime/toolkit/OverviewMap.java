@@ -47,7 +47,7 @@ public class OverviewMap extends Control {
   final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
 
   /**
-   * Creates an overview map for a geoview using default values for the basemap and indicator symbol.
+   * Creates an overview map for a geo view using default values for the basemap and indicator symbol.
    *
    * @param geoView the geo view to connect to this overview map
    * @throws NullPointerException if geoView is null
@@ -72,7 +72,7 @@ public class OverviewMap extends Control {
    * Creates an overview map for a geo view using a default basemap.
    *
    * @param geoView the geo view to connect to this overview map
-   * @param symbol the symbol to use, for a mapview use a fill symbol and for a scene view use a marker symbol
+   * @param symbol the symbol to use, for a map view use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if symbol is null
    */
@@ -85,7 +85,7 @@ public class OverviewMap extends Control {
    *
    * @param geoView the geo view to connect to this overview map
    * @param basemap the basemap
-   * @param symbol the symbol to use, for a mapview use a fill symbol and for a scene view use a marker symbol
+   * @param symbol the symbol to use, for a map view use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if basemap is null
    * @throws NullPointerException if symbol is null
