@@ -1,0 +1,31 @@
+group "com.esri.arcgisruntime"
+version "1.0.0-SNAPSHOT"
+
+apply plugin: 'java-library'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+idea.module.downloadJavadoc = true
+eclipse.classpath.downloadJavadoc = true
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+  jcenter()
+  maven {
+    url 'https://esri.bintray.com/arcgis'
+  }
+}
+
+dependencies {
+  implementation "com.esri.arcgisruntime:arcgis-java:100.2.1"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.4'
+}
