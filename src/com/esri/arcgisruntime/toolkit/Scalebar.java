@@ -131,7 +131,7 @@ public final class Scalebar extends Control {
 
   /**
    * Returns a property that holds the scalebar's alignment. The alignment controls how the scalebar will grow e.g. if
-   * alignment is {@link HPos#CENTER} the scalebar will grow in both directions whereas if the aligment is
+   * alignment is {@link HPos#CENTER} the scalebar will grow in both directions whereas if the alignment is
    * {@link HPos#LEFT} the scalebar will only grow towards the right.
    *
    * @return the property
