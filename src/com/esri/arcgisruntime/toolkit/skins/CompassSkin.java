@@ -20,6 +20,7 @@ import com.esri.arcgisruntime.toolkit.Compass;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -46,6 +47,9 @@ import java.util.concurrent.TimeUnit;
 public final class CompassSkin extends SkinBase<Compass> {
 
   private static final double PREF_SIZE = 100.0;
+
+  // how close to north the compass has to be to auto-hide
+  private static final double HEADING_TOLERANCE = 0.25;
 
   private boolean invalid = true;
   private final StackPane stackPane = new StackPane();
@@ -75,7 +79,10 @@ public final class CompassSkin extends SkinBase<Compass> {
     stackPane.rotateProperty().bind(control.headingProperty().negate());
 
     // hide the compass when the heading is close to north if the auto hide property is enabled
-    hiddenProperty.bind(control.headingProperty().isEqualTo(0.0, 0.25).and(control.autoHideProperty()));
+    SimpleDoubleProperty controlHeadingProperty = control.headingProperty();
+    hiddenProperty.bind(control.autoHideProperty()
+      .and(controlHeadingProperty.isEqualTo(0.0, HEADING_TOLERANCE)
+        .or(controlHeadingProperty.isEqualTo(360.0, HEADING_TOLERANCE))));
     hiddenProperty.addListener(observable -> {
       // when the hidden property changes schedule to execute a fade in/out - having a delay prevents the compass from
       // starting to fade if it momentarily passes through north
