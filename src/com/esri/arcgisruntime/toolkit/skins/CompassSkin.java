@@ -82,7 +82,7 @@ public final class CompassSkin extends SkinBase<Compass> {
     SimpleDoubleProperty controlHeadingProperty = control.headingProperty();
     hiddenProperty.bind(control.autoHideProperty()
       .and(controlHeadingProperty.isEqualTo(0.0, HEADING_TOLERANCE)
-        .or(controlHeadingProperty.isEqualTo(360.0, HEADING_TOLERANCE))));
+      .or(controlHeadingProperty.isEqualTo(360.0, HEADING_TOLERANCE))));
     hiddenProperty.addListener(observable -> {
       // when the hidden property changes schedule to execute a fade in/out - having a delay prevents the compass from
       // starting to fade if it momentarily passes through north
