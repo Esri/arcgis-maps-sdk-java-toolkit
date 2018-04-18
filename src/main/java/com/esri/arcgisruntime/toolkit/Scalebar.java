@@ -180,7 +180,8 @@ public final class Scalebar extends Control {
    * @throws NullPointerException if style is null
    */
   public void setSkinStyle(SkinStyle style) {
-    super.setSkin(createSkin(Objects.requireNonNull(style, "style cannot be null")));
+    skinStyle = Objects.requireNonNull(style, "style cannot be null");
+    super.setSkin(createSkin(skinStyle));
   }
 
   /**
