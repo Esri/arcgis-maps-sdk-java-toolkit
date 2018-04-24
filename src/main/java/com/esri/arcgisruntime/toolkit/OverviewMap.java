@@ -34,6 +34,8 @@ import javafx.scene.control.Skin;
 
 /**
  * An overview map control that indicates the viewpoint of another map or scene view.
+ *
+ * @since 100.2.1
  */
 public class OverviewMap extends Control {
 
@@ -51,6 +53,7 @@ public class OverviewMap extends Control {
    *
    * @param geoView the geo view to connect to this overview map
    * @throws NullPointerException if geoView is null
+   * @since 100.2.1
    */
   public OverviewMap(GeoView geoView) {
     this(geoView, Basemap.createTopographic(), geoView instanceof MapView ? sFillSymbol : sMarkerSymbol);
@@ -63,6 +66,7 @@ public class OverviewMap extends Control {
    * @param basemap the basemap
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if basemap is null
+   * @since 100.2.1
    */
   public OverviewMap(GeoView geoView, Basemap basemap) {
     this(geoView, basemap, geoView instanceof MapView ? sFillSymbol : sMarkerSymbol);
@@ -75,6 +79,7 @@ public class OverviewMap extends Control {
    * @param symbol the symbol to use, for a map view use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if symbol is null
+   * @since 100.2.1
    */
   public OverviewMap(GeoView geoView, Symbol symbol) {
     this(geoView, Basemap.createTopographic(), symbol);
@@ -89,6 +94,7 @@ public class OverviewMap extends Control {
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if basemap is null
    * @throws NullPointerException if symbol is null
+   * @since 100.2.1
    */
   public OverviewMap(GeoView geoView, Basemap basemap, Symbol symbol) {
     geoViewProperty.set(Objects.requireNonNull(geoView, "geoView cannot be null"));
@@ -110,6 +116,7 @@ public class OverviewMap extends Control {
    * Gets the geo view that this overview map is linked to.
    *
    * @return the geo view
+   * @since 100.2.1
    */
   public GeoView getGeoView() {
     return geoViewProperty.get();
@@ -119,6 +126,7 @@ public class OverviewMap extends Control {
    * A readonly property containing the geo view linked to this overview map.
    *
    * @return the geo view property
+   * @since 100.2.1
    */
   public ReadOnlyObjectProperty<GeoView> geoViewProperty() {
     return geoViewProperty;
@@ -128,6 +136,7 @@ public class OverviewMap extends Control {
    * Gets the basemap being used.
    *
    * @return the basemap
+   * @since 100.2.1
    */
   public Basemap getBasemap() {
     return basemapProperty.get();
@@ -137,6 +146,7 @@ public class OverviewMap extends Control {
    * Sets the basemap to use.
    *
    * @param basemap the basemap to use
+   * @since 100.2.1
    */
   public void setBasemap(Basemap basemap) {
     basemapProperty.set(basemap);
@@ -146,6 +156,7 @@ public class OverviewMap extends Control {
    * A property containing the basemap being used in this overview map.
    *
    * @return the basemap
+   * @since 100.2.1
    */
   public SimpleObjectProperty<Basemap> basemapProperty() {
     return basemapProperty;
@@ -155,6 +166,7 @@ public class OverviewMap extends Control {
    * Gets the symbol being used to indicate the viewpoint.
    *
    * @return the symbol
+   * @since 100.2.1
    */
   public Symbol getSymbol() {
     return symbolProperty.get();
@@ -164,6 +176,7 @@ public class OverviewMap extends Control {
    * Sets the symbol to use to indicate the viewpoint.
    *
    * @param symbol the symbol, for a mapview use a fill symbol and for a scene view use a marker symbol
+   * @since 100.2.1
    */
   public void setSymbol(Symbol symbol) {
     symbolProperty.set(symbol);
@@ -173,6 +186,7 @@ public class OverviewMap extends Control {
    * A property containing the symbol being used in this overview map.
    *
    * @return the symbol property
+   * @since 100.2.1
    */
   public SimpleObjectProperty<Symbol> symbolProperty() {
     return symbolProperty;
