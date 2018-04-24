@@ -27,6 +27,8 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * A scalebar skin that displays the distance as an alternating color solid bar with labels on each segment.
+ *
+ * @since 100.2.1
  */
 public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
@@ -37,6 +39,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
    * Creates a new skin instance.
    *
    * @param scalebar the scalebar this skin is for
+   * @since 100.2.1
    */
   public AlternatingBarScalebarSkin(Scalebar scalebar) {
     super(scalebar);

@@ -32,6 +32,8 @@ import javafx.scene.shape.StrokeLineCap;
 /**
  * A scalebar skin that displays the distance in both metric and imperial units. The line is the same as
  * {@link LineScaleBarSkin} with the addition of an extra mark on the bottom for the alternate measurement.
+ *
+ * @since 100.2.1
  */
 public final class DualUnitScalebarSkin extends ScalebarSkin {
 
@@ -46,6 +48,7 @@ public final class DualUnitScalebarSkin extends ScalebarSkin {
    * Creates a new skin instance.
    *
    * @param scalebar the scalebar this skin is for
+   * @since 100.2.1
    */
   public DualUnitScalebarSkin(Scalebar scalebar) {
     super(scalebar);
