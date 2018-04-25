@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Esri
+ * Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,32 +36,46 @@ import java.util.Objects;
  * measurement system used is controlled by {@link #unitSystemProperty}. The units used will be appropriate to the
  * distance being shown e.g. km for long distances and m for shorter distances. The scalebar can be visualized with
  * different skins e.g. an alternating bar or a graduated line.
+ *
+ * @since 100.2.1
  */
 public final class Scalebar extends Control {
 
   /**
    * Scalebar styles - different visualizations of the distance.
+   *
+   * @since 100.2.1
    */
   public enum SkinStyle {
     /**
      * A line with end ticks and a single central distance label.
+     *
+     * @since 100.2.1
      */
     LINE,
     /**
      * A solid bar with a single central distance label.
+     *
+     * @since 100.2.1
      */
     BAR,
     /**
      * A line with ticks and distance labels.
+     *
+     * @since 100.2.1
      */
     GRADUATED_LINE,
     /**
      * A bar with alternating color segments with a distance label at each.
+     *
+     * @since 100.2.1
      */
     ALTERNATING_BAR,
     /**
      * A line with both Metric system and Imperial system distances shown. The upper measurement reflects the
      * {@link #unitSystemProperty}.
+     *
+     * @since 100.2.1
      */
     DUAL_UNIT_LINE,
   }
@@ -87,6 +101,7 @@ public final class Scalebar extends Control {
    *
    * @param mapView the map view this scale bar is representing
    * @throws NullPointerException if map view is null
+   * @since 100.2.1
    */
   public Scalebar(MapView mapView) {
     this(mapView, SkinStyle.ALTERNATING_BAR, HPos.CENTER);
@@ -100,6 +115,7 @@ public final class Scalebar extends Control {
    * @param style the skin style to use
    * @throws NullPointerException if map view is null
    * @throws NullPointerException if style is null
+   * @since 100.2.1
    */
   public Scalebar(MapView mapView, SkinStyle style) {
     this(mapView, style, HPos.CENTER);
@@ -115,6 +131,7 @@ public final class Scalebar extends Control {
    * @throws NullPointerException if map view is null
    * @throws NullPointerException if style is null
    * @throws NullPointerException if alignment is null
+   * @since 100.2.1
    */
   public Scalebar(MapView mapView, SkinStyle style, HPos alignment) {
     mapViewProperty.set(Objects.requireNonNull(mapView, "mapView cannot be null"));
@@ -135,6 +152,7 @@ public final class Scalebar extends Control {
    * {@link HPos#LEFT} the scalebar will only grow towards the right.
    *
    * @return the property
+   * @since 100.2.1
    */
   public SimpleObjectProperty<HPos> alignmentProperty() {
     return alignmentProperty;
@@ -145,6 +163,7 @@ public final class Scalebar extends Control {
    *
    * @return the alignment
    * @see #alignmentProperty()
+   * @since 100.2.1
    */
   public HPos getAlignment() {
     return alignmentProperty.get();
@@ -156,6 +175,7 @@ public final class Scalebar extends Control {
    * @param hPos the alignment
    * @see #alignmentProperty()
    * @throws NullPointerException if hPos is null
+   * @since 100.2.1
    */
   public void setAlignment(HPos hPos) {
     Objects.requireNonNull(hPos, "hPos cannot be null");
@@ -167,6 +187,7 @@ public final class Scalebar extends Control {
    *
    * @return the style
    * @see SkinStyle
+   * @since 100.2.1
    */
   public SkinStyle getSkinStyle() {
     return skinStyle;
@@ -178,6 +199,7 @@ public final class Scalebar extends Control {
    * @param style the style
    * @see SkinStyle
    * @throws NullPointerException if style is null
+   * @since 100.2.1
    */
   public void setSkinStyle(SkinStyle style) {
     skinStyle = Objects.requireNonNull(style, "style cannot be null");
@@ -188,6 +210,7 @@ public final class Scalebar extends Control {
    * Returns a readonly property containing the map view that this scalebar is measuring.
    *
    * @return the property
+   * @since 100.2.1
    */
   public ReadOnlyObjectProperty<MapView> mapViewProperty() {
     return mapViewProperty;
@@ -197,6 +220,7 @@ public final class Scalebar extends Control {
    * Returns the map view that this scalebar is measuring.
    *
    * @return the map view
+   * @since 100.2.1
    */
   public MapView getMapView() {
     return mapViewProperty.get();
@@ -207,6 +231,7 @@ public final class Scalebar extends Control {
    *
    * @return the property
    * @see UnitSystem
+   * @since 100.2.1
    */
   public SimpleObjectProperty<UnitSystem> unitSystemProperty() {
     return unitSystemProperty;
@@ -217,6 +242,7 @@ public final class Scalebar extends Control {
    *
    * @param units the measurement system
    * @see UnitSystem
+   * @since 100.2.1
    */
   public void setUnitSystem(UnitSystem units) {
     unitSystemProperty.set(Objects.requireNonNull(units, "units cannot be null"));
@@ -227,6 +253,7 @@ public final class Scalebar extends Control {
    *
    * @return the measurement system
    * @see UnitSystem
+   * @since 100.2.1
    */
   public UnitSystem getUnitSystem() {
     return unitSystemProperty.get();
@@ -242,6 +269,7 @@ public final class Scalebar extends Control {
    *
    * @param style the style
    * @return a new skin
+   * @since 100.2.1
    */
   private Skin<?> createSkin(SkinStyle style) {
     switch (style) {

@@ -31,6 +31,8 @@ import javafx.scene.layout.StackPane;
 
 /**
  * Implements a skin for the {@link OverviewMap} control.
+ *
+ * @since 100.2.1
  */
 public class OverviewMapSkin extends SkinBase<OverviewMap> {
 
@@ -41,6 +43,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
    * Creates an instance of the skin.
    *
    * @param control the {@link OverviewMap} control this skin represents
+   * @since 100.2.1
    */
   public OverviewMapSkin(OverviewMap control) {
     super(control);

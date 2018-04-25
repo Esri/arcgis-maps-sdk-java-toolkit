@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Esri
+ * Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * A scalebar skin that displays the distance as a solid bar with a single label.
+ *
+ * @since 100.2.1
  */
 public final class BarScalebarSkin extends ScalebarSkin {
 
@@ -36,6 +38,7 @@ public final class BarScalebarSkin extends ScalebarSkin {
    * Creates a new skin instance.
    *
    * @param scalebar the scalebar this skin is for
+   * @since 100.2.1
    */
   public BarScalebarSkin(Scalebar scalebar) {
     super(scalebar);

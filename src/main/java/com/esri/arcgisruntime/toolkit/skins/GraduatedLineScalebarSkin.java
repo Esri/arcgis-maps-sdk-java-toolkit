@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Esri
+ * Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import javafx.scene.shape.StrokeLineCap;
 
 /**
  * A scalebar skin that displays the distance as a line with vertical marks and labels evenly spaced along the line.
+ *
+ * @since 100.2.1
  */
 public final class GraduatedLineScalebarSkin extends ScalebarSkin {
 
@@ -42,6 +44,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
    * Creates a new skin instance.
    *
    * @param scalebar the scalebar this skin is for
+   * @since 100.2.1
    */
   public GraduatedLineScalebarSkin(Scalebar scalebar) {
     super(scalebar);
