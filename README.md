@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.esri.arcgisruntime:arcgis-runtime-toolkit-java:100.2.1'
+  compile 'com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1'
 }
 ```
 
