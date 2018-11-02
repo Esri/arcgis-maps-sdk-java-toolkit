@@ -103,11 +103,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     for (int i = 0; i < bestNumberOfSegments; ++i) {
       label = new Label(ScalebarUtil.labelString(i * segmentDistance));
       label.setTextFill(TEXT_COLOR);
-      // first label is aligned with its left to the edge of the bar while the intermediate
-      // labels are centered on the ticks
-      if (i > 0) {
-        label.setTranslateX((i * segmentWidth) - (calculateRegion(label).getWidth() / 2.0));
-      }
+      label.setTranslateX((i * segmentWidth) - (calculateRegion(label).getWidth() / 2.0));
       labelPane.getChildren().add(label);
 
       line.getElements().addAll(
