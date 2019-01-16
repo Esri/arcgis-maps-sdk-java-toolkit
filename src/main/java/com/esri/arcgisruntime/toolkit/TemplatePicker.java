@@ -24,12 +24,15 @@ import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.toolkit.skins.TemplatePickerSkin;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
 public class TemplatePicker extends Control {
+
+  private final SimpleStringProperty titleProperty = new SimpleStringProperty();
 
   private final ObservableList<FeatureTemplate> templateList = FXCollections.observableList(new ArrayList<>());
   private final SimpleListProperty<FeatureTemplate> templateListProperty = new SimpleListProperty<>(templateList);
@@ -38,25 +41,38 @@ public class TemplatePicker extends Control {
   private final SimpleObjectProperty<Renderer> rendererProperty = new SimpleObjectProperty<>();
 
   public TemplatePicker() {
-    this(null, null);
+    //this(null, null);
   }
 
-  public TemplatePicker(Renderer renderer) {
-    this(null, renderer);
-  }
-
-  public TemplatePicker(ArcGISFeatureTable featureTable) {
-    this(featureTable, null);
-  }
+//  public TemplatePicker(Renderer renderer) {
+//    this(null, renderer);
+//  }
+//
+//  public TemplatePicker(ArcGISFeatureTable featureTable) {
+//    this(featureTable, null);
+//  }
 
   public TemplatePicker(ArcGISFeatureTable featureTable, Renderer renderer) {
     if (featureTable != null) {
       featureTable.addDoneLoadingListener(() -> {
+        titleProperty.set(featureTable.getDisplayName());
         templateList.addAll(featureTable.getFeatureTemplates());
         featureTable.getFeatureTypes().forEach(featureType -> templateList.addAll(featureType.getTemplates()));
       });
     }
     rendererProperty.set(renderer);
+  }
+
+  public SimpleStringProperty titleProperty() {
+    return titleProperty;
+  }
+
+  public String getTitle() {
+    return titleProperty.get();
+  }
+
+  public void setTitle(String title) {
+    titleProperty.set(title);
   }
 
   public SimpleListProperty<FeatureTemplate> templateListProperty() {

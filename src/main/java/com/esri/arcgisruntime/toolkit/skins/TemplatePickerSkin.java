@@ -24,13 +24,20 @@ import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.VBox;
 
 public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
+  private final VBox vBox = new VBox();
+  private final Label titleLabel = new Label();
   private final ListView<FeatureTemplate> listView = new ListView<>();
   private final SimpleObjectProperty<Renderer> rendererProperty = new SimpleObjectProperty<>();
 
@@ -38,16 +45,21 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     super(control);
 
     listView.itemsProperty().bind(control.templateListProperty());
+    listView.setCellFactory(c -> new TemplateListCell());
+
+    titleLabel.textProperty().bind(control.titleProperty());
+    titleLabel.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+
+    vBox.setAlignment(Pos.TOP_CENTER);
+    vBox.getChildren().addAll(titleLabel, listView);
+    vBox.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
 
     control.selectedItemProperty().bind(listView.getSelectionModel().selectedItemProperty());
     rendererProperty.bind(control.rendererProperty());
-
-    getChildren().addAll(listView);
-
-    listView.setCellFactory(c -> new TemplateListCell());
-
     //refresh if the renderer is changed
     rendererProperty.addListener(o -> listView.refresh());
+
+    getChildren().addAll(vBox);
   }
 
   class TemplateListCell extends ListCell<FeatureTemplate> {
