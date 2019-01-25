@@ -17,14 +17,17 @@
 package com.esri.arcgisruntime.toolkit;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
-import com.esri.arcgisruntime.symbology.Renderer;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.TemplatePickerSkin;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
@@ -32,83 +35,48 @@ import javafx.scene.control.Skin;
 
 public class TemplatePicker extends Control {
 
-  private final SimpleStringProperty titleProperty = new SimpleStringProperty();
-
-  private final ObservableList<FeatureTemplate> templateList = FXCollections.observableList(new ArrayList<>());
-  private final SimpleListProperty<FeatureTemplate> templateListProperty = new SimpleListProperty<>(templateList);
-
-  private final SimpleObjectProperty<FeatureTemplate> selectedItemProperty = new SimpleObjectProperty<>();
-  private final SimpleObjectProperty<Renderer> rendererProperty = new SimpleObjectProperty<>();
-
-  public TemplatePicker() {
-    //this(null, null);
-  }
-
-//  public TemplatePicker(Renderer renderer) {
-//    this(null, renderer);
-//  }
-//
-//  public TemplatePicker(ArcGISFeatureTable featureTable) {
-//    this(featureTable, null);
-//  }
-
-  public TemplatePicker(ArcGISFeatureTable featureTable, Renderer renderer) {
-    if (featureTable != null) {
-      featureTable.addDoneLoadingListener(() -> {
-        titleProperty.set(featureTable.getDisplayName());
-        templateList.addAll(featureTable.getFeatureTemplates());
-        featureTable.getFeatureTypes().forEach(featureType -> templateList.addAll(featureType.getTemplates()));
-      });
-    }
-    rendererProperty.set(renderer);
-  }
-
-  public SimpleStringProperty titleProperty() {
-    return titleProperty;
-  }
-
-  public String getTitle() {
-    return titleProperty.get();
-  }
-
-  public void setTitle(String title) {
-    titleProperty.set(title);
-  }
-
-  public SimpleListProperty<FeatureTemplate> templateListProperty() {
-    return templateListProperty;
-  }
-
-  public void setTemplateList(ObservableList<FeatureTemplate> templateList) {
-    templateListProperty.set(templateList);
-  }
-
-  public ObservableList<FeatureTemplate> getTemplateList() {
-    return templateListProperty.get();
-  }
-
-  public SimpleObjectProperty<Renderer> rendererProperty() {
-    return rendererProperty;
-  }
-
-  public void setRenderer(Renderer renderer) {
-    rendererProperty.set(renderer);
-  }
-
-  public Renderer getRenderer() {
-    return rendererProperty.get();
-  }
-
-  public SimpleObjectProperty<FeatureTemplate> selectedItemProperty() {
-    return selectedItemProperty;
-  }
-
-  public FeatureTemplate getSelecteditem() {
-    return selectedItemProperty.get();
-  }
+  ObservableList<FeatureLayer> featureLayers = FXCollections.observableList(new ArrayList<>());
+  SimpleListProperty<FeatureLayer> featureLayerListProperty = new SimpleListProperty<>(featureLayers);
+  SimpleObjectProperty<Template> selectedTemplateProperty = new SimpleObjectProperty<>();
+  SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty(50);
+  SimpleBooleanProperty displayNamesProperty = new SimpleBooleanProperty(true);
 
   @Override
   protected Skin<?> createDefaultSkin() {
     return new TemplatePickerSkin(this);
+  }
+
+  public SimpleListProperty<FeatureLayer> featureLayerListProperty() {
+    return featureLayerListProperty;
+  }
+
+  public SimpleObjectProperty<Template> selectedTemplateProperty() {
+    return selectedTemplateProperty;
+  }
+
+  public SimpleIntegerProperty symbolSizeProperty() {
+    return symbolSizeProperty;
+  }
+
+  public SimpleBooleanProperty displayNamesProperty() {
+    return displayNamesProperty;
+  }
+
+  public static class Template {
+    private FeatureLayer featureLayer;
+    private FeatureTemplate featureTemplate;
+
+    public Template(FeatureLayer featureLayer, FeatureTemplate featureTemplate) {
+      this.featureLayer = Objects.requireNonNull(featureLayer);
+      this.featureTemplate = Objects.requireNonNull(featureTemplate);
+    }
+
+    public FeatureLayer getFeatureLayer() {
+      return featureLayer;
+    }
+
+    public FeatureTemplate getFeatureTemplate() {
+      return featureTemplate;
+    }
   }
 }

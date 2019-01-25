@@ -16,74 +16,144 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SkinBase;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
+  private final SimpleListProperty<FeatureLayer> featureLayers = new SimpleListProperty<>();
+  private final SimpleDoubleProperty maxLabelWidthProperty = new SimpleDoubleProperty();
+
+  private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
+  private final SimpleBooleanProperty displayNamesProperty = new SimpleBooleanProperty();
+
+  private final ArrayList<Label> labels = new ArrayList<>();
+
   private final VBox vBox = new VBox();
-  private final Label titleLabel = new Label();
-  private final ListView<FeatureTemplate> listView = new ListView<>();
-  private final SimpleObjectProperty<Renderer> rendererProperty = new SimpleObjectProperty<>();
+  private final ScrollPane scrollPane = new ScrollPane(vBox);
 
   public TemplatePickerSkin(TemplatePicker control) {
     super(control);
 
-    listView.itemsProperty().bind(control.templateListProperty());
-    listView.setCellFactory(c -> new TemplateListCell());
+    vBox.prefWidthProperty().bind(maxLabelWidthProperty);
+    scrollPane.prefViewportWidthProperty().bind(vBox.prefWidthProperty());
 
-    titleLabel.textProperty().bind(control.titleProperty());
-    titleLabel.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+    getChildren().add(scrollPane);
 
-    vBox.setAlignment(Pos.TOP_CENTER);
-    vBox.getChildren().addAll(titleLabel, listView);
-    vBox.setPadding(new Insets(5.0, 5.0, 5.0, 5.0));
+    featureLayers.bind(control.featureLayerListProperty());
 
-    control.selectedItemProperty().bind(listView.getSelectionModel().selectedItemProperty());
-    rendererProperty.bind(control.rendererProperty());
-    //refresh if the renderer is changed
-    rendererProperty.addListener(o -> listView.refresh());
+    featureLayers.addListener((InvalidationListener) observable -> refresh());
 
-    getChildren().addAll(vBox);
+    symbolSizeProperty.bind(control.symbolSizeProperty());
+    symbolSizeProperty.addListener(observable -> refresh());
+
+    displayNamesProperty.bind(control.displayNamesProperty());
+    displayNamesProperty.addListener(observable -> refresh());
+
+    maxLabelWidthProperty.addListener(observable -> System.out.println(maxLabelWidthProperty.get()));
+
+    refresh();
   }
 
-  class TemplateListCell extends ListCell<FeatureTemplate> {
-    @Override
-    protected void updateItem(FeatureTemplate item, boolean empty) {
-      super.updateItem(item, empty);
-      if (item != null) {
-        Renderer renderer = rendererProperty.get();
-        if (renderer != null) {
-          Graphic graphic = new Graphic();
-          graphic.getAttributes().putAll(item.getPrototypeAttributes());
-          Symbol symbol = rendererProperty.get().getSymbol(graphic);
-          try {
-            setGraphic(new ImageView(symbol.createSwatchAsync(0x00).get()));
-          } catch (InterruptedException | ExecutionException e) {
-            setGraphic(null);
-          }
-        }
-        setText(item.getName());
-      } else {
-        // make sure to clear any empty entries
-        setText(null);
-        setGraphic(null);
-      }
+  private void refresh() {
+    vBox.getChildren().clear();
+    labels.clear();
+    maxLabelWidthProperty.set(0.0);
+    getSkinnable().selectedTemplateProperty().set(null);
+
+    featureLayers.stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
+      .forEach(featureLayer -> {
+        // add feature layer title
+        Label titleLabel = new Label(featureLayer.getName());
+        maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(titleLabel).getWidth()));
+
+        vBox.getChildren().add(titleLabel);
+
+        ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
+        Renderer renderer = featureLayer.getRenderer();
+        featureTable.getFeatureTemplates()
+          .forEach(featureTemplate -> {
+            Label label = createTemplateLabel(featureTemplate, featureLayer);
+            vBox.getChildren().add(label);
+            labels.add(label);
+          });
+        featureTable.getFeatureTypes()
+          .forEach(featureType -> featureType.getTemplates()
+            .forEach(featureTemplate -> {
+              Label label = createTemplateLabel(featureTemplate, featureLayer);
+              label.prefWidthProperty().bind(vBox.widthProperty());
+              vBox.getChildren().add(label);
+              labels.add(label);
+            }));
+        vBox.getChildren().add(new Separator());
+      });
+  }
+
+  Region calculateRegion(Region region) {
+    Group root = new Group();
+    Scene dummyScene = new Scene(root);
+    root.getChildren().add(region);
+    root.applyCss();
+    root.layout();
+
+    return region;
+  }
+
+  private Label createTemplateLabel(FeatureTemplate featureTemplate, FeatureLayer featureLayer) {
+    Label label = new Label();
+    if (displayNamesProperty.get()) {
+      label.setText(featureTemplate.getName());
     }
+    Graphic graphic = new Graphic();
+    graphic.getAttributes().putAll(featureTemplate.getPrototypeAttributes());
+    Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
+    try {
+      int size = symbolSizeProperty.get();
+      label.setGraphic(new ImageView(symbol.createSwatchAsync(size, size, 1.0f, 0x00).get()));
+    } catch (InterruptedException | ExecutionException e) {
+      label.setGraphic(null);
+      e.printStackTrace();
+    }
+
+    maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(label).getWidth()));
+
+    label.setOnMouseClicked(e -> {
+      getSkinnable().selectedTemplateProperty().set(new TemplatePicker.Template(featureLayer, featureTemplate));
+      // TODO - work out how to use accent color from theme
+      Background background = new Background(new BackgroundFill(Color.rgb(9, 150, 201), null, Insets.EMPTY));
+      labels.forEach(l -> l.setBackground(null));
+      label.setBackground(background);
+    });
+
+    label.setTooltip(new Tooltip(featureTemplate.getDrawingTool().toString()));
+
+    return label;
   }
 }
