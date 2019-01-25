@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.Symbol;
@@ -90,29 +91,39 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
     featureLayers.stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
       .forEach(featureLayer -> {
-        // add feature layer title
-        Label titleLabel = new Label(featureLayer.getName());
-        maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(titleLabel).getWidth()));
+        switch (featureLayer.getLoadStatus()) {
+          case NOT_LOADED:
+            // refresh list once the layer us loaded
+            featureLayer.addDoneLoadingListener(() -> refresh());
+            break;
+          case FAILED_TO_LOAD:
+            // do nothing - layer is ignored
+            break;
+          case LOADED:
+            // layer is loaded so add labels for each template
+            Label titleLabel = new Label(featureLayer.getName());
+            maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(titleLabel).getWidth()));
 
-        vBox.getChildren().add(titleLabel);
+            vBox.getChildren().add(titleLabel);
 
-        ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
-        Renderer renderer = featureLayer.getRenderer();
-        featureTable.getFeatureTemplates()
-          .forEach(featureTemplate -> {
-            Label label = createTemplateLabel(featureTemplate, featureLayer);
-            vBox.getChildren().add(label);
-            labels.add(label);
-          });
-        featureTable.getFeatureTypes()
-          .forEach(featureType -> featureType.getTemplates()
-            .forEach(featureTemplate -> {
-              Label label = createTemplateLabel(featureTemplate, featureLayer);
-              label.prefWidthProperty().bind(vBox.widthProperty());
-              vBox.getChildren().add(label);
-              labels.add(label);
-            }));
-        vBox.getChildren().add(new Separator());
+            ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
+            Renderer renderer = featureLayer.getRenderer();
+            featureTable.getFeatureTemplates()
+              .forEach(featureTemplate -> {
+                Label label = createTemplateLabel(featureTemplate, featureLayer);
+                vBox.getChildren().add(label);
+                labels.add(label);
+              });
+            featureTable.getFeatureTypes()
+              .forEach(featureType -> featureType.getTemplates()
+                .forEach(featureTemplate -> {
+                  Label label = createTemplateLabel(featureTemplate, featureLayer);
+                  label.prefWidthProperty().bind(vBox.widthProperty());
+                  vBox.getChildren().add(label);
+                  labels.add(label);
+                }));
+            vBox.getChildren().add(new Separator());
+        }
       });
   }
 
