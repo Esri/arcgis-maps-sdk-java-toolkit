@@ -17,22 +17,24 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.geometry.Insets;
+import javafx.css.PseudoClass;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -41,11 +43,8 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
@@ -55,7 +54,7 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
   private final SimpleBooleanProperty displayNamesProperty = new SimpleBooleanProperty();
 
-  private final ArrayList<Label> labels = new ArrayList<>();
+  private final ArrayList<TemplateCell> cells = new ArrayList<>();
 
   private final VBox vBox = new VBox();
   private final ScrollPane scrollPane = new ScrollPane(vBox);
@@ -85,7 +84,7 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   private void refresh() {
     vBox.getChildren().clear();
-    labels.clear();
+    cells.clear();
     maxLabelWidthProperty.set(0.0);
     getSkinnable().selectedTemplateProperty().set(null);
 
@@ -100,7 +99,7 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             // do nothing - layer is ignored
             break;
           case LOADED:
-            // layer is loaded so add labels for each template
+            // layer is loaded so add cells for each template
             Label titleLabel = new Label(featureLayer.getName());
             maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(titleLabel).getWidth()));
 
@@ -110,17 +109,17 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             Renderer renderer = featureLayer.getRenderer();
             featureTable.getFeatureTemplates()
               .forEach(featureTemplate -> {
-                Label label = createTemplateLabel(featureTemplate, featureLayer);
-                vBox.getChildren().add(label);
-                labels.add(label);
+                TemplateCell cell = createTemplateLabel(featureTemplate, featureLayer);
+                vBox.getChildren().add(cell);
+                cells.add(cell);
               });
             featureTable.getFeatureTypes()
               .forEach(featureType -> featureType.getTemplates()
                 .forEach(featureTemplate -> {
-                  Label label = createTemplateLabel(featureTemplate, featureLayer);
-                  label.prefWidthProperty().bind(vBox.widthProperty());
-                  vBox.getChildren().add(label);
-                  labels.add(label);
+                  TemplateCell cell = createTemplateLabel(featureTemplate, featureLayer);
+                  cell.prefWidthProperty().bind(vBox.widthProperty());
+                  vBox.getChildren().add(cell);
+                  cells.add(cell);
                 }));
             vBox.getChildren().add(new Separator());
         }
@@ -137,34 +136,84 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     return region;
   }
 
-  private Label createTemplateLabel(FeatureTemplate featureTemplate, FeatureLayer featureLayer) {
-    Label label = new Label();
-    if (displayNamesProperty.get()) {
-      label.setText(featureTemplate.getName());
-    }
-    Graphic graphic = new Graphic();
-    graphic.getAttributes().putAll(featureTemplate.getPrototypeAttributes());
-    Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
-    try {
-      int size = symbolSizeProperty.get();
-      label.setGraphic(new ImageView(symbol.createSwatchAsync(size, size, 1.0f, 0x00).get()));
-    } catch (InterruptedException | ExecutionException e) {
-      label.setGraphic(null);
-      e.printStackTrace();
-    }
+  private TemplateCell createTemplateLabel(FeatureTemplate featureTemplate, FeatureLayer featureLayer) {
+    TemplateCell cell = new TemplateCell(new TemplatePicker.Template(featureLayer, featureTemplate), this);
 
-    maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(label).getWidth()));
+    maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(cell).getWidth()));
 
-    label.setOnMouseClicked(e -> {
-      getSkinnable().selectedTemplateProperty().set(new TemplatePicker.Template(featureLayer, featureTemplate));
-      // TODO - work out how to use accent color from theme
-      Background background = new Background(new BackgroundFill(Color.rgb(9, 150, 201), null, Insets.EMPTY));
-      labels.forEach(l -> l.setBackground(null));
-      label.setBackground(background);
+    cell.setOnMouseClicked(e -> {
+      getSkinnable().selectedTemplateProperty().set(cell.getTemplate());
+      cells.forEach(c -> c.setSelected(false));
+      cell.setSelected(true);
     });
 
-    label.setTooltip(new Tooltip(featureTemplate.getDrawingTool().toString()));
+    return cell;
+  }
 
-    return label;
+  static class TemplateCell extends Label {
+    private final TemplatePicker.Template template;
+
+    private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
+    private BooleanProperty selectedProperty;
+
+    TemplateCell(TemplatePicker.Template template, TemplatePickerSkin templatePickerSkin) {
+      this.template = Objects.requireNonNull(template);
+
+      getStyleClass().add("template-cell");
+      String styleSheet = getClass().getResource("template-cell.css").toExternalForm();
+      getStylesheets().add(styleSheet);
+
+      FeatureTemplate featureTemplate = template.getFeatureTemplate();
+      FeatureLayer featureLayer = template.getFeatureLayer();
+
+      if (templatePickerSkin.displayNamesProperty.get()) {
+        setText(featureTemplate.getName());
+      }
+      Graphic graphic = new Graphic();
+      graphic.getAttributes().putAll(featureTemplate.getPrototypeAttributes());
+      Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
+      try {
+        int size = templatePickerSkin.symbolSizeProperty.get();
+        setGraphic(new ImageView(symbol.createSwatchAsync(size, size, 1.0f, 0x00).get()));
+      } catch (InterruptedException | ExecutionException e) {
+        setGraphic(null);
+        e.printStackTrace();
+      }
+      setTooltip(new Tooltip(featureTemplate.getDrawingTool().toString()));
+    }
+
+    public TemplatePicker.Template getTemplate() {
+      return template;
+    }
+
+    public final void setSelected(boolean selected) {
+      selectedProperty().set(selected);
+    }
+
+    public final boolean isSelected() {
+      return selectedProperty != null && selectedProperty.get();
+    }
+
+    public final BooleanProperty selectedProperty() {
+      if (selectedProperty == null) {
+        selectedProperty = new BooleanPropertyBase(false) {
+          @Override
+          protected void invalidated() {
+            pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, get());
+          }
+
+          @Override
+          public Object getBean() {
+            return TemplateCell.this;
+          }
+
+          @Override
+          public String getName() {
+            return "selected";
+          }
+        };
+      }
+      return selectedProperty;
+    }
   }
 }
