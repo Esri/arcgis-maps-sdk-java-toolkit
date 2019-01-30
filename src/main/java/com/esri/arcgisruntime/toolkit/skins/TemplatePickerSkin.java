@@ -30,7 +30,6 @@ import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.css.PseudoClass;
@@ -43,13 +42,12 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   private final SimpleListProperty<FeatureLayer> featureLayers = new SimpleListProperty<>();
-  private final SimpleDoubleProperty maxLabelWidthProperty = new SimpleDoubleProperty();
-
   private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
 
   private final ArrayList<TemplateCell> cells = new ArrayList<>();
@@ -67,7 +65,6 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     getChildren().add(scrollPane);
 
     featureLayers.bind(control.featureLayerListProperty());
-
     featureLayers.addListener((InvalidationListener) observable -> refresh());
 
     symbolSizeProperty.bind(control.symbolSizeProperty());
@@ -78,7 +75,6 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private void refresh() {
     vBox.getChildren().clear();
     cells.clear();
-    maxLabelWidthProperty.set(0.0);
     getSkinnable().selectedTemplateProperty().set(null);
 
     featureLayers.stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
@@ -95,17 +91,21 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             // layer is loaded so add cells for each template
             ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
             Renderer renderer = featureLayer.getRenderer();
+            TilePane tilePane = new TilePane();
+            tilePane.setPrefColumns(3);
+            vBox.getChildren().add(tilePane);
+
             featureTable.getFeatureTemplates()
               .forEach(featureTemplate -> {
                 TemplateCell cell = createTemplateLabel(featureTemplate, featureLayer);
-                vBox.getChildren().add(cell);
+                tilePane.getChildren().add(cell);
                 cells.add(cell);
               });
             featureTable.getFeatureTypes()
               .forEach(featureType -> featureType.getTemplates()
                 .forEach(featureTemplate -> {
                   TemplateCell cell = createTemplateLabel(featureTemplate, featureLayer);
-                  vBox.getChildren().add(cell);
+                  tilePane.getChildren().add(cell);
                   cells.add(cell);
                 }));
         }
