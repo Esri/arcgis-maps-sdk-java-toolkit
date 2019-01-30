@@ -30,16 +30,15 @@ import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.css.PseudoClass;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -52,7 +51,6 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private final SimpleDoubleProperty maxLabelWidthProperty = new SimpleDoubleProperty();
 
   private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
-  private final SimpleBooleanProperty displayNamesProperty = new SimpleBooleanProperty();
 
   private final ArrayList<TemplateCell> cells = new ArrayList<>();
 
@@ -62,8 +60,9 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   public TemplatePickerSkin(TemplatePicker control) {
     super(control);
 
-    vBox.prefWidthProperty().bind(maxLabelWidthProperty);
-    scrollPane.prefViewportWidthProperty().bind(vBox.prefWidthProperty());
+    scrollPane.prefViewportWidthProperty().bind(vBox.widthProperty());
+    scrollPane.prefViewportHeightProperty().bind(vBox.heightProperty());
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
     getChildren().add(scrollPane);
 
@@ -72,12 +71,6 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     featureLayers.addListener((InvalidationListener) observable -> refresh());
 
     symbolSizeProperty.bind(control.symbolSizeProperty());
-    symbolSizeProperty.addListener(observable -> refresh());
-
-    displayNamesProperty.bind(control.displayNamesProperty());
-    displayNamesProperty.addListener(observable -> refresh());
-
-    maxLabelWidthProperty.addListener(observable -> System.out.println(maxLabelWidthProperty.get()));
 
     refresh();
   }
@@ -100,11 +93,6 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             break;
           case LOADED:
             // layer is loaded so add cells for each template
-            Label titleLabel = new Label(featureLayer.getName());
-            maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(titleLabel).getWidth()));
-
-            vBox.getChildren().add(titleLabel);
-
             ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
             Renderer renderer = featureLayer.getRenderer();
             featureTable.getFeatureTemplates()
@@ -117,11 +105,9 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
               .forEach(featureType -> featureType.getTemplates()
                 .forEach(featureTemplate -> {
                   TemplateCell cell = createTemplateLabel(featureTemplate, featureLayer);
-                  cell.prefWidthProperty().bind(vBox.widthProperty());
                   vBox.getChildren().add(cell);
                   cells.add(cell);
                 }));
-            vBox.getChildren().add(new Separator());
         }
       });
   }
@@ -139,8 +125,6 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private TemplateCell createTemplateLabel(FeatureTemplate featureTemplate, FeatureLayer featureLayer) {
     TemplateCell cell = new TemplateCell(new TemplatePicker.Template(featureLayer, featureTemplate), this);
 
-    maxLabelWidthProperty.set(Math.max(maxLabelWidthProperty.get(), calculateRegion(cell).getWidth()));
-
     cell.setOnMouseClicked(e -> {
       getSkinnable().selectedTemplateProperty().set(cell.getTemplate());
       cells.forEach(c -> c.setSelected(false));
@@ -152,23 +136,31 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   static class TemplateCell extends Label {
     private final TemplatePicker.Template template;
+    private final TemplatePickerSkin templatePickerSkin;
 
     private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
     private BooleanProperty selectedProperty;
 
     TemplateCell(TemplatePicker.Template template, TemplatePickerSkin templatePickerSkin) {
       this.template = Objects.requireNonNull(template);
+      this.templatePickerSkin = Objects.requireNonNull(templatePickerSkin);
 
       getStyleClass().add("template-cell");
       String styleSheet = getClass().getResource("template-cell.css").toExternalForm();
       getStylesheets().add(styleSheet);
 
+      setMaxWidth(Double.MAX_VALUE);
+      setPadding(new Insets(5.0));
+
+      templatePickerSkin.symbolSizeProperty.addListener(observable -> update());
+
+      update();
+    }
+
+    private void update() {
       FeatureTemplate featureTemplate = template.getFeatureTemplate();
       FeatureLayer featureLayer = template.getFeatureLayer();
 
-      if (templatePickerSkin.displayNamesProperty.get()) {
-        setText(featureTemplate.getName());
-      }
       Graphic graphic = new Graphic();
       graphic.getAttributes().putAll(featureTemplate.getPrototypeAttributes());
       Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
@@ -177,9 +169,8 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
         setGraphic(new ImageView(symbol.createSwatchAsync(size, size, 1.0f, 0x00).get()));
       } catch (InterruptedException | ExecutionException e) {
         setGraphic(null);
-        e.printStackTrace();
       }
-      setTooltip(new Tooltip(featureTemplate.getDrawingTool().toString()));
+      setTooltip(new Tooltip(featureLayer.getName() + " : " + featureTemplate.getName()));
     }
 
     public TemplatePicker.Template getTemplate() {

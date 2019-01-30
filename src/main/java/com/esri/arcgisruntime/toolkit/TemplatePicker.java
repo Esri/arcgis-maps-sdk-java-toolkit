@@ -22,7 +22,6 @@ import java.util.Objects;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.TemplatePickerSkin;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,7 +36,6 @@ public class TemplatePicker extends Control {
   SimpleListProperty<FeatureLayer> featureLayerListProperty = new SimpleListProperty<>(featureLayers);
   SimpleObjectProperty<Template> selectedTemplateProperty = new SimpleObjectProperty<>();
   SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty(50);
-  SimpleBooleanProperty displayNamesProperty = new SimpleBooleanProperty(true);
 
   @Override
   protected Skin<?> createDefaultSkin() {
@@ -54,10 +52,6 @@ public class TemplatePicker extends Control {
 
   public SimpleIntegerProperty symbolSizeProperty() {
     return symbolSizeProperty;
-  }
-
-  public SimpleBooleanProperty displayNamesProperty() {
-    return displayNamesProperty;
   }
 
   public static class Template {
