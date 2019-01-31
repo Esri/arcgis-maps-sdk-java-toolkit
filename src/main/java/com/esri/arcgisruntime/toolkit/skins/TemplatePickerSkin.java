@@ -118,8 +118,8 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
           vBox.getChildren().add(new Label(featureLayer.getName()));
         }
         TilePane tilePane = new TilePane();
-        vBox.getChildren().add(tilePane);
         tilePane.getChildren().addAll(templateCells);
+        vBox.getChildren().add(tilePane);
         if (showSeparatorsPropetry.get()) {
           vBox.getChildren().add(new Separator());
         }
@@ -130,6 +130,14 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     getChildren().forEach(child -> layoutInArea(child, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
+  @Override
+  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+    if (cellMap.isEmpty()) {
+      return 0.0;
+    }
+    return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
   /**
    * Updates the skin whenever the feature layer list is changed.
    *
@@ -137,7 +145,6 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
    */
   private void populate() {
     cellMap.clear();
-
     getSkinnable().selectedTemplateProperty().set(null);
 
     featureLayers.stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
@@ -151,23 +158,16 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             // do nothing - layer is ignored
             break;
           case LOADED:
-            ArrayList<TemplateCell> templateCells = new ArrayList<>();
-
             // layer is loaded so add cells for each template
             ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
             Renderer renderer = featureLayer.getRenderer();
+            ArrayList<TemplateCell> templateCells = new ArrayList<>();
 
             featureTable.getFeatureTemplates()
-              .forEach(featureTemplate -> {
-                TemplateCell cell = createTemplateCell(featureTemplate, featureLayer);
-                templateCells.add(cell);
-              });
+              .forEach(featureTemplate -> templateCells.add(createTemplateCell(featureTemplate, featureLayer)));
             featureTable.getFeatureTypes()
               .forEach(featureType -> featureType.getTemplates()
-                .forEach(featureTemplate -> {
-                  TemplateCell cell = createTemplateCell(featureTemplate, featureLayer);
-                  templateCells.add(cell);
-                }));
+                .forEach(featureTemplate -> templateCells.add(createTemplateCell(featureTemplate, featureLayer))));
             cellMap.put(featureLayer, templateCells);
             break;
         }
