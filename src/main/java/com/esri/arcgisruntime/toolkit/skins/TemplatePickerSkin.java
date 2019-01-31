@@ -54,7 +54,7 @@ import javafx.scene.layout.VBox;
  *
  * @since 100.5
  */
-public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
+public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   private final SimpleListProperty<FeatureLayer> featureLayers = new SimpleListProperty<>();
   private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
@@ -123,8 +123,8 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
         if (showSeparatorsPropetry.get()) {
           vBox.getChildren().add(new Separator());
         }
-        invalid = false;
       }));
+      invalid = false;
     }
 
     getChildren().forEach(child -> layoutInArea(child, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
@@ -206,7 +206,7 @@ public class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     private final TemplatePicker.Template template;
     private final TemplatePickerSkin templatePickerSkin;
 
-    // define a psuedo calss that will highlight the control if it is selected
+    // define a psuedo class that will highlight the control if it is selected
     private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
     private BooleanProperty selectedProperty;
 
