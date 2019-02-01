@@ -45,6 +45,7 @@ public final class TemplatePicker extends Control {
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty(true);
+  private final SimpleBooleanProperty disableCannotAddFeaturelayersProperty = new SimpleBooleanProperty(true);
 
   @Override
   protected Skin<?> createDefaultSkin() {
@@ -106,6 +107,10 @@ public final class TemplatePicker extends Control {
    */
   public SimpleBooleanProperty showSeparatorsProperty() {
     return showSeparatorsProperty;
+  }
+
+  public SimpleBooleanProperty disableCannotAddFeaturelayersProperty() {
+    return disableCannotAddFeaturelayersProperty;
   }
 
   /**

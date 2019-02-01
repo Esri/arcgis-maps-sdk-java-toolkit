@@ -60,7 +60,8 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty();
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty();
-  private final SimpleBooleanProperty showSeparatorsPropetry = new SimpleBooleanProperty();
+  private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty();
+  private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty();
 
   private final VBox vBox = new VBox();
   private final ScrollPane scrollPane = new ScrollPane(vBox);
@@ -85,6 +86,9 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
     getChildren().add(scrollPane);
 
+    control.widthProperty().addListener(observable -> invalid = true);
+    control.heightProperty().addListener(observable -> invalid = true);
+
     featureLayers.bind(control.featureLayerListProperty());
     featureLayers.addListener((InvalidationListener) observable -> populate());
 
@@ -100,8 +104,14 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       control.requestLayout();
     });
 
-    showSeparatorsPropetry.bind(control.showSeparatorsProperty());
-    showSeparatorsPropetry.addListener(observable -> {
+    showSeparatorsProperty.bind(control.showSeparatorsProperty());
+    showSeparatorsProperty.addListener(observable -> {
+      invalid = true;
+      control.requestLayout();
+    });
+
+    disableCannotAddFeatureLayersProperty.bind(control.disableCannotAddFeaturelayersProperty());
+    disableCannotAddFeatureLayersProperty.addListener(observable -> {
       invalid = true;
       control.requestLayout();
     });
@@ -119,21 +129,24 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
         }
         TilePane tilePane = new TilePane();
         tilePane.getChildren().addAll(templateCells);
+        if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
+          tilePane.setDisable(true);
+        }
         vBox.getChildren().add(tilePane);
-        if (showSeparatorsPropetry.get()) {
+        if (showSeparatorsProperty.get()) {
           vBox.getChildren().add(new Separator());
         }
       }));
       invalid = false;
     }
 
-    getChildren().forEach(child -> layoutInArea(child, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
+    layoutInArea(scrollPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
   }
 
   @Override
   protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
     if (cellMap.isEmpty()) {
-      return 0.0;
+      return leftInset + rightInset;
     }
     return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
   }
@@ -258,7 +271,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       try {
         int size = templatePickerSkin.symbolSizeProperty.get();
         setGraphic(new ImageView(symbol.createSwatchAsync(size, size, 1.0f, 0x00).get()));
-      } catch (InterruptedException | ExecutionException e) {
+      } catch (Exception e) {
         setGraphic(null);
       }
       setTooltip(new Tooltip(featureLayer.getName() + " : " + featureTemplate.getName()));
