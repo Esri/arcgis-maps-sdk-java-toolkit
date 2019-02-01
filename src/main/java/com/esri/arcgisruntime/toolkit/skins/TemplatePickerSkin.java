@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
@@ -33,11 +32,13 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -46,8 +47,10 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 
 /**
  * A skin for {@link TemplatePicker}.
@@ -65,6 +68,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   private final VBox vBox = new VBox();
   private final ScrollPane scrollPane = new ScrollPane(vBox);
+  private final StackPane stackPane = new StackPane();
 
   private boolean invalid = true;
 
@@ -82,9 +86,8 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
     vBox.setPadding(new Insets(10.0));
 
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-    getChildren().add(scrollPane);
+    stackPane.getChildren().add(scrollPane);
+    getChildren().add(stackPane);
 
     control.widthProperty().addListener(observable -> invalid = true);
     control.heightProperty().addListener(observable -> invalid = true);
@@ -119,15 +122,21 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     populate();
   }
 
+  private SimpleDoubleProperty maxWidth = new SimpleDoubleProperty();
+
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
     if (invalid) {
       vBox.getChildren().clear();
+
+      stackPane.setMaxSize(contentWidth, contentHeight);
+
       cellMap.forEach(((featureLayer, templateCells) -> {
         if (showFeatureLayerNamesProperty.get()) {
           vBox.getChildren().add(new Label(featureLayer.getName()));
         }
         TilePane tilePane = new TilePane();
+        tilePane.setAlignment(Pos.TOP_LEFT);
         tilePane.getChildren().addAll(templateCells);
         if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
           tilePane.setDisable(true);
@@ -140,7 +149,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       invalid = false;
     }
 
-    layoutInArea(scrollPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
+    layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
   }
 
   @Override
@@ -148,7 +157,17 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     if (cellMap.isEmpty()) {
       return leftInset + rightInset;
     }
+
     return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
+
+  @Override
+  protected double computePrefHeight(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+    if (cellMap.isEmpty()) {
+      return topInset + bottomInset;
+    }
+
+    return super.computePrefHeight(height, topInset, rightInset, bottomInset, leftInset);
   }
 
   /**
@@ -270,7 +289,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
       try {
         int size = templatePickerSkin.symbolSizeProperty.get();
-        setGraphic(new ImageView(symbol.createSwatchAsync(size, size, 1.0f, 0x00).get()));
+        setGraphic(new ImageView(symbol.createSwatchAsync(size, size, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get()));
       } catch (Exception e) {
         setGraphic(null);
       }
