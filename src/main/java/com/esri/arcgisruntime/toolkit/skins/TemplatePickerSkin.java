@@ -86,6 +86,9 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
     vBox.setPadding(new Insets(10.0));
 
+    scrollPane.setFitToWidth(true);
+    scrollPane.setFitToHeight(true);
+
     stackPane.getChildren().add(scrollPane);
     getChildren().add(stackPane);
 
@@ -129,14 +132,18 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     if (invalid) {
       vBox.getChildren().clear();
 
-      stackPane.setMaxSize(contentWidth, contentHeight);
+      stackPane.setMaxSize(contentWidth , contentHeight);
+
+      System.out.println("Layers: " + cellMap.size());
 
       cellMap.forEach(((featureLayer, templateCells) -> {
+        System.out.println("Cells: " + templateCells.size());
         if (showFeatureLayerNamesProperty.get()) {
           vBox.getChildren().add(new Label(featureLayer.getName()));
         }
         TilePane tilePane = new TilePane();
         tilePane.setAlignment(Pos.TOP_LEFT);
+        tilePane.setMaxSize(contentWidth, contentHeight);
         tilePane.getChildren().addAll(templateCells);
         if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
           tilePane.setDisable(true);
@@ -184,7 +191,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
         switch (featureLayer.getLoadStatus()) {
           case NOT_LOADED:
             // populate list once the layer us loaded
-            featureLayer.addDoneLoadingListener(() -> populate());
+            featureLayer.addDoneLoadingListener(this::populate);
             break;
           case FAILED_TO_LOAD:
             // do nothing - layer is ignored
