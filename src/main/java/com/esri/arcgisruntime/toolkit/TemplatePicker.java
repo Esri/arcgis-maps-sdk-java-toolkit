@@ -47,6 +47,13 @@ public final class TemplatePicker extends Control {
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty disableCannotAddFeaturelayersProperty = new SimpleBooleanProperty(true);
 
+  public TemplatePicker() {
+    setMaxWidth(USE_PREF_SIZE);
+    setMaxWidth(USE_PREF_SIZE);
+    setMaxHeight(USE_COMPUTED_SIZE);
+    setMaxHeight(USE_COMPUTED_SIZE);
+  }
+
   @Override
   protected Skin<?> createDefaultSkin() {
     return new TemplatePickerSkin(this);

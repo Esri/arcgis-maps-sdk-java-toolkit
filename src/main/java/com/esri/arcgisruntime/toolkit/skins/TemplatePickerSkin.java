@@ -32,7 +32,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.css.PseudoClass;
@@ -70,7 +69,8 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private final ScrollPane scrollPane = new ScrollPane(vBox);
   private final StackPane stackPane = new StackPane();
 
-  private boolean invalid = true;
+  private boolean contentInvalid = true;
+  private boolean sizeInvalid = true;
 
   private final LinkedHashMap<FeatureLayer, List<TemplateCell>> cellMap = new LinkedHashMap<>();
 
@@ -84,76 +84,84 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   public TemplatePickerSkin(TemplatePicker control) {
     super(Objects.requireNonNull(control));
 
-    vBox.setPadding(new Insets(10.0));
-
     scrollPane.setFitToWidth(true);
     scrollPane.setFitToHeight(true);
 
     stackPane.getChildren().add(scrollPane);
     getChildren().add(stackPane);
 
-    control.widthProperty().addListener(observable -> invalid = true);
-    control.heightProperty().addListener(observable -> invalid = true);
+    control.widthProperty().addListener(observable -> sizeInvalid = true);
+    control.heightProperty().addListener(observable -> sizeInvalid = true);
+    control.insetsProperty().addListener(observable -> sizeInvalid = true);
 
     featureLayers.bind(control.featureLayerListProperty());
     featureLayers.addListener((InvalidationListener) observable -> populate());
 
     symbolSizeProperty.bind(control.symbolSizeProperty());
-    symbolSizeProperty.addListener(observable -> invalid = true);
+    symbolSizeProperty.addListener(observable -> contentInvalid = true);
 
     showTemplateNamesProperty.bind(control.showTemplateNamesProperty());
-    showTemplateNamesProperty.addListener(observable -> invalid = true);
+    showTemplateNamesProperty.addListener(observable -> contentInvalid = true);
 
     showFeatureLayerNamesProperty.bind(control.showFeatureLayerNamesProperty());
     showFeatureLayerNamesProperty.addListener(observable -> {
-      invalid = true;
+      contentInvalid = true;
       control.requestLayout();
     });
 
     showSeparatorsProperty.bind(control.showSeparatorsProperty());
     showSeparatorsProperty.addListener(observable -> {
-      invalid = true;
+      contentInvalid = true;
       control.requestLayout();
     });
 
     disableCannotAddFeatureLayersProperty.bind(control.disableCannotAddFeaturelayersProperty());
     disableCannotAddFeatureLayersProperty.addListener(observable -> {
-      invalid = true;
+      contentInvalid = true;
       control.requestLayout();
     });
 
     populate();
   }
 
-  private SimpleDoubleProperty maxWidth = new SimpleDoubleProperty();
+  private void update(double width, double height) {
+    vBox.getChildren().clear();
+
+    stackPane.setMaxSize(width, height);
+
+    System.out.println("Layers: " + cellMap.size());
+
+    cellMap.forEach(((featureLayer, templateCells) -> {
+      System.out.println("Cells: " + templateCells.size());
+      if (showFeatureLayerNamesProperty.get()) {
+        vBox.getChildren().add(new Label(featureLayer.getName()));
+      }
+      TilePane tilePane = new TilePane();
+      tilePane.setAlignment(Pos.TOP_LEFT);
+      tilePane.setMaxSize(width, height);
+      tilePane.getChildren().addAll(templateCells);
+      if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
+        tilePane.setDisable(true);
+      }
+      vBox.getChildren().add(tilePane);
+      if (showSeparatorsProperty.get()) {
+        vBox.getChildren().add(new Separator());
+      }
+    }));
+  }
 
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-    if (invalid) {
-      vBox.getChildren().clear();
+    if (sizeInvalid) {
+      stackPane.setMaxSize(contentWidth, contentHeight);
+      vBox.getChildren().stream().filter(child -> child instanceof TilePane)
+        .forEach(child -> ((TilePane) child).setMaxSize(contentWidth, contentHeight));
+      sizeInvalid = false;
+    }
 
-      stackPane.setMaxSize(contentWidth , contentHeight);
-
-      System.out.println("Layers: " + cellMap.size());
-
-      cellMap.forEach(((featureLayer, templateCells) -> {
-        System.out.println("Cells: " + templateCells.size());
-        if (showFeatureLayerNamesProperty.get()) {
-          vBox.getChildren().add(new Label(featureLayer.getName()));
-        }
-        TilePane tilePane = new TilePane();
-        tilePane.setAlignment(Pos.TOP_LEFT);
-        tilePane.setMaxSize(contentWidth, contentHeight);
-        tilePane.getChildren().addAll(templateCells);
-        if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
-          tilePane.setDisable(true);
-        }
-        vBox.getChildren().add(tilePane);
-        if (showSeparatorsProperty.get()) {
-          vBox.getChildren().add(new Separator());
-        }
-      }));
-      invalid = false;
+    if (contentInvalid) {
+      update(contentWidth, contentHeight);
+      contentInvalid = false;
     }
 
     layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
@@ -161,20 +169,17 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   @Override
   protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-    if (cellMap.isEmpty()) {
-      return leftInset + rightInset;
-    }
-
-    return super.computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+    return leftInset + rightInset + 200;
   }
 
   @Override
-  protected double computePrefHeight(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-    if (cellMap.isEmpty()) {
-      return topInset + bottomInset;
-    }
+  protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
+  }
 
-    return super.computePrefHeight(height, topInset, rightInset, bottomInset, leftInset);
+  @Override
+  protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
   }
 
   /**
@@ -211,7 +216,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             break;
         }
       });
-    invalid = true;
+    contentInvalid = true;
     getSkinnable().requestLayout();
   }
 
