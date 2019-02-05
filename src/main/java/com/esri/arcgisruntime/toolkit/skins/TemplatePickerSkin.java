@@ -73,6 +73,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private boolean sizeInvalid = true;
 
   private final LinkedHashMap<FeatureLayer, List<TemplateCell>> cellMap = new LinkedHashMap<>();
+  private final ArrayList<TilePane> tilePanes = new ArrayList<>();
 
   /**
    * Creates a new skin instance.
@@ -86,6 +87,9 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
     scrollPane.setFitToWidth(true);
     scrollPane.setFitToHeight(true);
+
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
     stackPane.getChildren().add(scrollPane);
     getChildren().add(stackPane);
@@ -115,7 +119,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       control.requestLayout();
     });
 
-    disableCannotAddFeatureLayersProperty.bind(control.disableCannotAddFeaturelayersProperty());
+    disableCannotAddFeatureLayersProperty.bind(control.disableCannotAddFeatureLayersProperty());
     disableCannotAddFeatureLayersProperty.addListener(observable -> {
       contentInvalid = true;
       control.requestLayout();
@@ -125,25 +129,30 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   }
 
   private void update(double width, double height) {
+    tilePanes.clear();
+
     vBox.getChildren().clear();
 
     stackPane.setMaxSize(width, height);
 
-    System.out.println("Layers: " + cellMap.size());
+    //System.out.println("Layers: " + cellMap.size());
 
     cellMap.forEach(((featureLayer, templateCells) -> {
-      System.out.println("Cells: " + templateCells.size());
+      //System.out.println("Cells: " + templateCells.size());
+      VBox tileBox = new VBox();
+      vBox.getChildren().add(tileBox);
       if (showFeatureLayerNamesProperty.get()) {
-        vBox.getChildren().add(new Label(featureLayer.getName()));
+        tileBox.getChildren().add(new Label(featureLayer.getName()));
       }
       TilePane tilePane = new TilePane();
+      tilePanes.add(tilePane);
       tilePane.setAlignment(Pos.TOP_LEFT);
       tilePane.setMaxSize(width, height);
       tilePane.getChildren().addAll(templateCells);
       if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
         tilePane.setDisable(true);
       }
-      vBox.getChildren().add(tilePane);
+      tileBox.getChildren().add(tilePane);
       if (showSeparatorsProperty.get()) {
         vBox.getChildren().add(new Separator());
       }
@@ -152,34 +161,19 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-    if (sizeInvalid) {
-      stackPane.setMaxSize(contentWidth, contentHeight);
-      vBox.getChildren().stream().filter(child -> child instanceof TilePane)
-        .forEach(child -> ((TilePane) child).setMaxSize(contentWidth, contentHeight));
-      sizeInvalid = false;
-    }
-
     if (contentInvalid) {
       update(contentWidth, contentHeight);
       contentInvalid = false;
+      sizeInvalid = false;
+    }
+
+    if (sizeInvalid) {
+      stackPane.setMaxSize(contentWidth, contentHeight);
+      tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
+      sizeInvalid = false;
     }
 
     layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
-  }
-
-  @Override
-  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-    return leftInset + rightInset + 200;
-  }
-
-  @Override
-  protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
-  }
-
-  @Override
-  protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-    return computePrefWidth(height, topInset, rightInset, bottomInset, leftInset);
   }
 
   /**

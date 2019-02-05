@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.toolkit;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.TemplatePickerSkin;
@@ -45,13 +46,10 @@ public final class TemplatePicker extends Control {
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty(true);
-  private final SimpleBooleanProperty disableCannotAddFeaturelayersProperty = new SimpleBooleanProperty(true);
+  private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty(true);
 
   public TemplatePicker() {
-    setMaxWidth(USE_PREF_SIZE);
-    setMaxWidth(USE_PREF_SIZE);
-    setMaxHeight(USE_COMPUTED_SIZE);
-    setMaxHeight(USE_COMPUTED_SIZE);
+    setPrefSize(200, 200);
   }
 
   @Override
@@ -116,8 +114,14 @@ public final class TemplatePicker extends Control {
     return showSeparatorsProperty;
   }
 
-  public SimpleBooleanProperty disableCannotAddFeaturelayersProperty() {
-    return disableCannotAddFeaturelayersProperty;
+  /**
+   * Specifies if feature layers based on tables that don't support {@link FeatureTable#canAdd()} should have their
+   * templates disabled.
+   * @return the property
+   * @since 100.5
+   */
+  public SimpleBooleanProperty disableCannotAddFeatureLayersProperty() {
+    return disableCannotAddFeatureLayersProperty;
   }
 
   /**
