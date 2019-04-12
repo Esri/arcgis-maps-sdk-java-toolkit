@@ -16,18 +16,15 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.InvalidationListener;
@@ -36,9 +33,6 @@ import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -65,7 +59,8 @@ import javafx.stage.Screen;
 public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   private final SimpleListProperty<FeatureLayer> featureLayers = new SimpleListProperty<>();
-  private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty();
+  private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty();
+  private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty();
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty();
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty();
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty();
@@ -107,8 +102,11 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     featureLayers.bind(control.featureLayerListProperty());
     featureLayers.addListener((InvalidationListener) observable -> populate());
 
-    symbolSizeProperty.bind(control.symbolSizeProperty());
-    symbolSizeProperty.addListener(observable -> contentInvalid = true);
+    symbolWidthProperty.bind(control.symbolWidthProperty());
+    symbolWidthProperty.addListener(observable -> contentInvalid = true);
+
+    symbolHeightProperty.bind(control.symbolHeightProperty());
+    symbolHeightProperty.addListener(observable -> contentInvalid = true);
 
     showTemplateNamesProperty.bind(control.showTemplateNamesProperty());
     showTemplateNamesProperty.addListener(observable -> contentInvalid = true);
@@ -271,7 +269,9 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       setPadding(new Insets(5.0));
       setContentDisplay(ContentDisplay.LEFT);
 
-      templatePickerSkin.symbolSizeProperty.addListener(observable -> update());
+      templatePickerSkin.symbolWidthProperty.addListener(observable -> update());
+      templatePickerSkin.symbolHeightProperty.addListener(observable -> update());
+
       templatePickerSkin.showTemplateNamesProperty.addListener(observable -> update());
 
       update();
@@ -296,9 +296,10 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       graphic.getAttributes().putAll(featureTemplate.getPrototypeAttributes());
       Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
       try {
-        int size = templatePickerSkin.symbolSizeProperty.get();
-        Image image = symbol.createSwatchAsync(size, size, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
-        setGraphic(new ImageView(/*symbol.createSwatchAsync(size, size, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get()*/image));
+        int width = templatePickerSkin.symbolWidthProperty.get();
+        int height = templatePickerSkin.symbolHeightProperty.get();
+        Image image = symbol.createSwatchAsync(width, height, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
+        setGraphic(new ImageView(image));
       } catch (Exception e) {
         e.printStackTrace();
         setGraphic(null);

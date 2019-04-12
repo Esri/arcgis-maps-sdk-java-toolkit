@@ -42,7 +42,8 @@ public final class TemplatePicker extends Control {
   private final ObservableList<FeatureLayer> featureLayers = FXCollections.observableList(new ArrayList<>());
   private final SimpleListProperty<FeatureLayer> featureLayerListProperty = new SimpleListProperty<>(featureLayers);
   private final SimpleObjectProperty<Template> selectedTemplateProperty = new SimpleObjectProperty<>();
-  private final SimpleIntegerProperty symbolSizeProperty = new SimpleIntegerProperty(50);
+  private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty(50);
+  private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty(50);
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty(true);
@@ -84,12 +85,21 @@ public final class TemplatePicker extends Control {
   }
 
   /**
-   * Specifies the symbol size for the template's graphic.
+   * Specifies the symbol width for the template's graphic.
    * @return the property
    * @since 100.5
    */
-  public SimpleIntegerProperty symbolSizeProperty() {
-    return symbolSizeProperty;
+  public SimpleIntegerProperty symbolWidthProperty() {
+    return symbolWidthProperty;
+  }
+
+  /**
+   * Specifies the symbol height for the template's graphic.
+   * @return the property
+   * @since 100.5
+   */
+  public SimpleIntegerProperty symbolHeightProperty() {
+    return symbolHeightProperty;
   }
 
   /**
