@@ -16,11 +16,13 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -34,6 +36,9 @@ import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -45,6 +50,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
@@ -130,15 +136,10 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   private void update(double width, double height) {
     tilePanes.clear();
-
     vBox.getChildren().clear();
-
     stackPane.setMaxSize(width, height);
 
-    //System.out.println("Layers: " + cellMap.size());
-
     cellMap.forEach(((featureLayer, templateCells) -> {
-      //System.out.println("Cells: " + templateCells.size());
       VBox tileBox = new VBox();
       vBox.getChildren().add(tileBox);
       if (showFeatureLayerNamesProperty.get()) {
@@ -184,12 +185,14 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
   private void populate() {
     cellMap.clear();
     getSkinnable().selectedTemplateProperty().set(null);
+    contentInvalid = true;
 
     featureLayers.stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
       .forEach(featureLayer -> {
         switch (featureLayer.getLoadStatus()) {
           case NOT_LOADED:
-            // populate list once the layer us loaded
+            // populate list once the layer is loaded
+            featureLayer.removeDoneLoadingListener(this::populate); // avoid adding multiple instances of listener
             featureLayer.addDoneLoadingListener(this::populate);
             break;
           case FAILED_TO_LOAD:
@@ -198,7 +201,6 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
           case LOADED:
             // layer is loaded so add cells for each template
             ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
-            Renderer renderer = featureLayer.getRenderer();
             ArrayList<TemplateCell> templateCells = new ArrayList<>();
 
             featureTable.getFeatureTemplates()
@@ -210,7 +212,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
             break;
         }
       });
-    contentInvalid = true;
+
     getSkinnable().requestLayout();
   }
 
@@ -253,9 +255,9 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
      *
      * @param template the feature template
      * @param templatePickerSkin the skin that this control will be associated with
-     * @since 100.5
      * @throws NullPointerException if template is null
      * @throws NullPointerException if templatePickerSkin is null
+     * @since 100.5
      */
     TemplateCell(TemplatePicker.Template template, TemplatePickerSkin templatePickerSkin) {
       this.template = Objects.requireNonNull(template);
@@ -295,15 +297,17 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
       try {
         int size = templatePickerSkin.symbolSizeProperty.get();
-        setGraphic(new ImageView(symbol.createSwatchAsync(size, size, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get()));
+        Image image = symbol.createSwatchAsync(size, size, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
+        setGraphic(new ImageView(/*symbol.createSwatchAsync(size, size, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get()*/image));
       } catch (Exception e) {
+        e.printStackTrace();
         setGraphic(null);
       }
       setTooltip(new Tooltip(featureLayer.getName() + " : " + featureTemplate.getName()));
     }
 
     /**
-     * Gets the template assocaited with this control.
+     * Gets the template associated with this control.
      *
      * @return the template
      */

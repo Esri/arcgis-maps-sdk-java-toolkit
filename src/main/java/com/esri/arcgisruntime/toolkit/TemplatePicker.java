@@ -48,6 +48,11 @@ public final class TemplatePicker extends Control {
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty(true);
 
+  /**
+   * Creates an instance with default preferred height and width of 200.
+   *
+   * @since 100.5.0
+   */
   public TemplatePicker() {
     setPrefSize(200, 200);
   }
