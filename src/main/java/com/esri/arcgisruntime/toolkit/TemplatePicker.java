@@ -140,6 +140,16 @@ public final class TemplatePicker extends Control {
   }
 
   /**
+   * Clears any selection.
+   *
+   * @since 100.5
+   */
+  public void clearSelection() {
+    ((TemplatePickerSkin)getSkin()).clearSelection();
+    selectedTemplateProperty.set(null);
+  }
+
+  /**
    * A template which consists of a {@link FeatureTemplate} and the {@link FeatureLayer} to which the template is
    * associated.
    *

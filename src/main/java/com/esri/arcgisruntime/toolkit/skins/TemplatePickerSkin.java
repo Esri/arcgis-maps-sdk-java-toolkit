@@ -132,10 +132,27 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
     populate();
   }
 
-  private void update(double width, double height) {
+  /**
+   * Clears any selection.
+   *
+   * @since 100.5
+   */
+  public void clearSelection() {
+    cellMap.forEach(((featureLayer, templateCells) ->
+      templateCells.stream().filter(TemplateCell::isSelected).findFirst().ifPresent(t -> t.setSelected(false))));
+  }
+
+  /**
+   * Updates the skin when the templates change.
+   *
+   * @param contentWidth the content width
+   * @param contentHeight the content height
+   * @since 100.5
+   */
+  private void update(double contentWidth, double contentHeight) {
     tilePanes.clear();
     vBox.getChildren().clear();
-    stackPane.setMaxSize(width, height);
+    stackPane.setMaxSize(contentWidth, contentHeight);
 
     cellMap.forEach(((featureLayer, templateCells) -> {
       VBox tileBox = new VBox();
@@ -146,7 +163,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       TilePane tilePane = new TilePane();
       tilePanes.add(tilePane);
       tilePane.setAlignment(Pos.TOP_LEFT);
-      tilePane.setMaxSize(width, height);
+      tilePane.setMaxSize(contentWidth, contentHeight);
       tilePane.getChildren().addAll(templateCells);
       if (disableCannotAddFeatureLayersProperty.get() && !featureLayer.getFeatureTable().canAdd()) {
         tilePane.setDisable(true);
