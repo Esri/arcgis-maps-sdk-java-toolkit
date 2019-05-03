@@ -315,7 +315,7 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
       try {
         int width = templatePickerSkin.symbolWidthProperty.get();
         int height = templatePickerSkin.symbolHeightProperty.get();
-        Image image = symbol.createSwatchAsync(width, height, (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
+        Image image = symbol.createSwatchAsync(width, height, 1.0f / (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
         setGraphic(new ImageView(image));
       } catch (Exception e) {
         e.printStackTrace();
