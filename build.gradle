@@ -23,6 +23,13 @@ dependencies {
   implementation "com.esri.arcgisruntime:arcgis-java:100.2.1"
 }
 
+sourceSets {
+  main {
+    resources.srcDirs = ['src/main/java']
+  }
+}
+
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
   from javadoc.destinationDir
