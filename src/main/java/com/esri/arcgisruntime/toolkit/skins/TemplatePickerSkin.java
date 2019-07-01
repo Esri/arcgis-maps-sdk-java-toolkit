@@ -177,17 +177,23 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-    if (contentInvalid) {
-      update(contentWidth, contentHeight);
-      contentInvalid = false;
-      sizeInvalid = false;
-    }
+//    if (contentInvalid) {
+//      System.out.println("content invalid " + cellMap.size());
+//      update(contentWidth, contentHeight);
+//      contentInvalid = false;
+//      sizeInvalid = false;
+//    }
+//
+//    if (sizeInvalid) {
+//      System.out.println("size invalid");
+//      stackPane.setMaxSize(contentWidth, contentHeight);
+//      tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
+//      sizeInvalid = false;
+//    }
 
-    if (sizeInvalid) {
-      stackPane.setMaxSize(contentWidth, contentHeight);
-      tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
-      sizeInvalid = false;
-    }
+    update(contentWidth, contentHeight);
+    stackPane.setMaxSize(contentWidth, contentHeight);
+    tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
 
     layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
   }
