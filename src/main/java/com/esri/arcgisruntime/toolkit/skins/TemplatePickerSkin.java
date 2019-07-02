@@ -190,10 +190,14 @@ public final class TemplatePickerSkin extends SkinBase<TemplatePicker> {
 //      tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
 //      sizeInvalid = false;
 //    }
-
-    update(contentWidth, contentHeight);
-    stackPane.setMaxSize(contentWidth, contentHeight);
-    tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
+//
+    if (contentInvalid || sizeInvalid) {
+      update(contentWidth, contentHeight);
+//      stackPane.setMaxSize(contentWidth, contentHeight);
+//      tilePanes.forEach(tilePane -> tilePane.setMaxSize(contentWidth, contentHeight));
+      contentInvalid = false;
+      sizeInvalid = false;
+    }
 
     layoutInArea(stackPane, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER);
   }
