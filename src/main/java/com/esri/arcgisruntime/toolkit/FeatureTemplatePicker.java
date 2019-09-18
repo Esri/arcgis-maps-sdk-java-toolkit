@@ -20,12 +20,14 @@ import java.util.ArrayList;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerSkin;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
@@ -40,8 +42,12 @@ public class FeatureTemplatePicker extends Control {
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showSeparatorsProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty(true);
+  private final SimpleObjectProperty<Orientation> orientationProperty = new SimpleObjectProperty<>(Orientation.HORIZONTAL);
 
-  public SimpleListProperty<FeatureLayer> featureLayerListProperty() {
+  public FeatureTemplatePicker() {
+  }
+
+  public ListProperty<FeatureLayer> featureLayerListProperty() {
     return featureLayerListProperty;
   }
 
@@ -71,6 +77,14 @@ public class FeatureTemplatePicker extends Control {
 
   public SimpleBooleanProperty disableCannotAddFeatureLayersProperty() {
     return disableCannotAddFeatureLayersProperty;
+  }
+
+  public SimpleObjectProperty<Orientation> orientationProperty() {
+    return orientationProperty;
+  }
+
+  public void clearSelection() {
+    selectedTemplateProperty.set(null);
   }
 
   @Override

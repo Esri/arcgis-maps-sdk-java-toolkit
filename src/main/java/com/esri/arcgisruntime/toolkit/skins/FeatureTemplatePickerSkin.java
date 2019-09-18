@@ -24,19 +24,25 @@ import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SkinBase;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
   private VBox vBox = new VBox();
-  private ScrollPane scrollpane = new ScrollPane(vBox);
+  private ScrollPane scrollPane = new ScrollPane();
   private boolean invalid = true;
 
-  private List<FeatureTemplateList> templateLists = new ArrayList<>();
+  private final List<FeatureTemplateList> templateLists = new ArrayList<>();
+
+  private final SimpleObjectProperty<TemplatePicker.Template> selectedTemplate = new SimpleObjectProperty<>();
 
   public FeatureTemplatePickerSkin(FeatureTemplatePicker control) {
     super(control);
@@ -46,7 +52,40 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
       invalid = true;
     });
 
-    getChildren().addAll(scrollpane);
+    control.widthProperty().addListener(observable -> invalid = true);
+    control.heightProperty().addListener(observable -> invalid = true);
+    control.insetsProperty().addListener(observable -> invalid = true);
+
+    control.selectedTemplateProperty().bindBidirectional(selectedTemplate);
+
+    selectedTemplate.addListener(observable -> {
+      if (selectedTemplate.get() == null) {
+        templateLists.forEach(t -> t.clearSelection());
+      }
+    });
+
+    populate();
+
+//    scrollPane.setFitToWidth(true);
+//    scrollPane.setFitToHeight(true);
+
+    //scrollPane.setFitToWidth(true);
+    //scrollPane.setFitToHeight(true);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+    vBox.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+//    getChildren().addAll(/*new ScrollPane(vBox)*/vBox/*scrollPane*//*vBox*/);
+    getChildren().addAll(scrollPane);
+
+    Rectangle rectangle = new Rectangle();
+    rectangle.setFill(Color.rgb(0xFF, 0x00, 0x00, 0.5));
+    rectangle.widthProperty().bind(vBox.widthProperty());
+    rectangle.heightProperty().bind(vBox.heightProperty());
+
+    //getChildren().add(rectangle);
+    scrollPane.setContent(vBox);
   }
 
   @Override
@@ -70,16 +109,16 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
         featureTemplateList.selectedTemplateProperty().addListener(observable -> {
           if (featureTemplateList.selectedTemplateProperty().get() != null) {
             TemplatePicker.Template template = new TemplatePicker.Template(featureTemplateList.featureTableProperty().get().getFeatureLayer(), featureTemplateList.selectedTemplateProperty().get());
-            getSkinnable().selectedTemplateProperty().set(template);
+            selectedTemplate.set(template);
 
             templateLists.stream().filter(t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
           }
         });
 
         templateLists.add(featureTemplateList);
-        vBox.getChildren().add(featureTemplateList);
       });
 
+    vBox.getChildren().addAll(templateLists);
     getSkinnable().requestLayout();
   }
 

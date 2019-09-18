@@ -21,22 +21,28 @@ import java.util.List;
 import java.util.Objects;
 
 import com.esri.arcgisruntime.data.FeatureTemplate;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 public class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>  {
 
+  private StackPane stackPane = new StackPane();
   private VBox vBox = new VBox();
   private boolean invalid = true;
   private boolean populated = false;
+  private boolean loaded = false;
 
   private TilePane tilePane = new TilePane();
 
@@ -58,17 +64,36 @@ public class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>  {
 
     control.selectedTemplateProperty().bindBidirectional(selectedFeatureTemplateProperty);
 
-    getChildren().addAll(vBox);
+    selectedFeatureTemplateProperty.addListener(observable -> {
+      if (selectedFeatureTemplateProperty.get() == null) {
+        clearSelection();
+      }
+    });
+
+    var featureTable = control.featureTableProperty().get();
+    featureTable.addDoneLoadingListener(() -> {
+      System.out.println(featureTable.getLoadStatus());
+      if (featureTable.getLoadStatus() == LoadStatus.LOADED) {
+        loaded = true;
+        invalid = true;
+        control.requestLayout();
+      }
+    });
+
+    tilePane.setAlignment(Pos.TOP_LEFT);
+    //tilePane.setOrientation(Orientation.VERTICAL);
+
+    getChildren().addAll(vBox/*stackPane*/);
   }
 
-  public void clearSelection() {
+  private void clearSelection() {
     templateCells.forEach(featureTemplateCell ->
       templateCells.stream().filter(FeatureTemplateCell::isSelected).findFirst().ifPresent(t -> t.setSelected(false)));
   }
 
   @Override
   protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-    if (!populated) {
+    if (loaded && !populated) {
       populate();
       populated = true;
     }
@@ -105,6 +130,8 @@ public class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>  {
   private void update(double contentWidth, double contentHeight) {
     var control = getSkinnable();
 
+    //stackPane.setMaxSize(contentWidth, contentHeight);
+
     vBox.getChildren().clear();
     tilePane.getChildren().clear();
 
@@ -118,8 +145,10 @@ public class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>  {
     if (control.showLayerNameProperty().get()) {
       vBox.getChildren().add(new Label(control.featureTableProperty().get().getTableName()));
     }
-    //vBox.getChildren().addAll(templateCells);
+
+    //tilePane.setPrefColumns(3);
+
     tilePane.getChildren().addAll(templateCells);
-    vBox.getChildren().add(tilePane);
+    vBox.getChildren().addAll(tilePane/*, new Separator()*/);
   }
 }

@@ -22,6 +22,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
@@ -56,8 +57,6 @@ public class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
       control.requestLayout();
     });
 
-    //label.setOnMouseClicked(a -> control.setSelected(!control.isSelected()));
-
     getChildren().add(label);
   }
 
@@ -90,9 +89,10 @@ public class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
       Image image = symbol.createSwatchAsync(control.imageWidthProperty().get(),
         control.imageHeightProperty().get(), 1.0f / (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
       var imageView = new ImageView(image);
-      imageView.setFitHeight(control.imageHeightProperty().get());
-      imageView.setFitWidth(control.imageWidthProperty().get());
+      //imageView.setFitHeight(control.imageHeightProperty().get());
+      //imageView.setFitWidth(control.imageWidthProperty().get());
       label.setGraphic(imageView);
+      //label.setPadding(new Insets(5.0));
     } catch (InterruptedException | ExecutionException e) {
       label.setGraphic(null);
     }

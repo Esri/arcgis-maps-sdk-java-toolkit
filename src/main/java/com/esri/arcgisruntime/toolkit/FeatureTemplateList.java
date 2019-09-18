@@ -67,7 +67,6 @@ public class FeatureTemplateList extends Control {
   }
 
   public void clearSelection() {
-    ((FeatureTemplateListSkin) getSkin()).clearSelection();
     selectedTemplateProperty.set(null);
   }
 
