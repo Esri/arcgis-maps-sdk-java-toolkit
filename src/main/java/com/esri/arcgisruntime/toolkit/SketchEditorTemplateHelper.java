@@ -120,10 +120,12 @@ public final class SketchEditorTemplateHelper {
       if (symbol instanceof MultilayerPolylineSymbol) {
         sketchStyle.setMultilayerLineSymbol((MultilayerPolylineSymbol) symbol);
         sketchStyle.setMultilayerFeedbackLineSymbol(sketchStyle.getMultilayerLineSymbol());
+        sketchStyle.setFeedbackVertexSymbol(sketchStyle.getVertexSymbol());
       }
       if (symbol instanceof MultilayerPolygonSymbol) {
         sketchStyle.setMultilayerFillSymbol((MultilayerPolygonSymbol) symbol);
         sketchStyle.setMultilayerFeedbackFillSymbol(sketchStyle.getMultilayerFillSymbol());
+        sketchStyle.setFeedbackVertexSymbol(sketchStyle.getVertexSymbol());
       }
     } else {
       if (symbol instanceof MarkerSymbol) {
@@ -134,10 +136,12 @@ public final class SketchEditorTemplateHelper {
       if (symbol instanceof LineSymbol) {
         sketchStyle.setLineSymbol((LineSymbol) symbol);
         sketchStyle.setFeedbackLineSymbol(sketchStyle.getLineSymbol());
+        sketchStyle.setFeedbackVertexSymbol(sketchStyle.getVertexSymbol());
       }
       if (symbol instanceof FillSymbol) {
         sketchStyle.setFillSymbol((FillSymbol) symbol);
         sketchStyle.setFeedbackFillSymbol(sketchStyle.getFillSymbol());
+        sketchStyle.setFeedbackVertexSymbol(sketchStyle.getVertexSymbol());
       }
     }
 

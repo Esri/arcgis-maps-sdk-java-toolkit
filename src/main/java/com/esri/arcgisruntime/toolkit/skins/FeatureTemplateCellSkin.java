@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2019 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2019 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit.skins;
@@ -22,7 +22,6 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
@@ -31,10 +30,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
-public class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
+public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
 
   private boolean invalid = true;
-  private Label label = new Label();
+  private final Label label = new Label();
 
   public FeatureTemplateCellSkin(FeatureTemplateCell control) {
     super(control);
@@ -87,12 +86,12 @@ public class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
     var symbol = template.getFeatureLayer().getRenderer().getSymbol(graphic);
     try {
       Image image = symbol.createSwatchAsync(control.imageWidthProperty().get(),
-        control.imageHeightProperty().get(), 1.0f / (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
+        control.imageHeightProperty().get(), (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
       var imageView = new ImageView(image);
-      //imageView.setFitHeight(control.imageHeightProperty().get());
-      //imageView.setFitWidth(control.imageWidthProperty().get());
+      imageView.setFitWidth(control.imageWidthProperty().get());
+      imageView.setFitHeight(control.imageHeightProperty().get());
+
       label.setGraphic(imageView);
-      //label.setPadding(new Insets(5.0));
     } catch (InterruptedException | ExecutionException e) {
       label.setGraphic(null);
     }

@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2019 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2019 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit;
@@ -26,12 +26,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
-public class FeatureTemplateList extends Control {
+public final class FeatureTemplateList extends Control {
 
   private final SimpleObjectProperty<ArcGISFeatureTable> featureTableProperty = new SimpleObjectProperty<>();
 
   private final SimpleBooleanProperty showLayerNameProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showTemplateNameProperty = new SimpleBooleanProperty(false);
+  private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty(false);
 
   private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty(50);
   private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty(50);
@@ -64,6 +65,10 @@ public class FeatureTemplateList extends Control {
 
   public SimpleObjectProperty<FeatureTemplate> selectedTemplateProperty() {
     return selectedTemplateProperty;
+  }
+
+  public SimpleBooleanProperty disableCannotAddFeatureLayersProperty() {
+    return disableCannotAddFeatureLayersProperty;
   }
 
   public void clearSelection() {

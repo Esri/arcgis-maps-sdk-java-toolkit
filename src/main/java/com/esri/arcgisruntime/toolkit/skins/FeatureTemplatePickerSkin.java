@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2019 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2019 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit.skins;
@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
@@ -52,6 +54,25 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
       invalid = true;
     });
 
+    control.featureLayerListProperty().addListener((ListChangeListener<? super FeatureLayer>) change -> {
+      while (change.next()) {
+        if (change.wasPermutated()) {
+          for (int i = change.getFrom(); i < change.getTo(); ++i) {
+            //permutate
+          }
+        } else if (change.wasUpdated()) {
+          //update item
+        } else {
+          for (FeatureLayer featureLayer : change.getRemoved()) {
+            System.out.println("Removed " + featureLayer.getFeatureTable().getTableName() + " from  " + change.getFrom());
+          }
+          for (FeatureLayer featureLayer : change.getAddedSubList()) {
+            System.out.println("Added " + featureLayer.getFeatureTable().getTableName() + " at " + change.getFrom());
+          }
+        }
+      }
+    });
+
     control.widthProperty().addListener(observable -> invalid = true);
     control.heightProperty().addListener(observable -> invalid = true);
     control.insetsProperty().addListener(observable -> invalid = true);
@@ -66,17 +87,11 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
     populate();
 
-//    scrollPane.setFitToWidth(true);
-//    scrollPane.setFitToHeight(true);
-
-    //scrollPane.setFitToWidth(true);
-    //scrollPane.setFitToHeight(true);
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
     vBox.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
-//    getChildren().addAll(/*new ScrollPane(vBox)*/vBox/*scrollPane*//*vBox*/);
     getChildren().addAll(scrollPane);
 
     Rectangle rectangle = new Rectangle();
@@ -106,6 +121,12 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
       .forEach(featureLayer -> {
         ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
         FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureTable);
+        featureTemplateList.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
+        featureTemplateList.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
+        featureTemplateList.showTemplateNameProperty().bind(getSkinnable().showTemplateNamesProperty());
+        featureTemplateList.showLayerNameProperty().bind(getSkinnable().showFeatureLayerNamesProperty());
+        featureTemplateList.disableCannotAddFeatureLayersProperty().bind(getSkinnable().disableCannotAddFeatureLayersProperty());
+
         featureTemplateList.selectedTemplateProperty().addListener(observable -> {
           if (featureTemplateList.selectedTemplateProperty().get() != null) {
             TemplatePicker.Template template = new TemplatePicker.Template(featureTemplateList.featureTableProperty().get().getFeatureLayer(), featureTemplateList.selectedTemplateProperty().get());
