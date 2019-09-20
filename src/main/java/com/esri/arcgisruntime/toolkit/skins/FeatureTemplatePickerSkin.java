@@ -31,6 +31,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SkinBase;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,7 +40,8 @@ import javafx.scene.shape.Rectangle;
 
 public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
-  private VBox vBox = new VBox();
+  private Pane pane = new VBox();
+  //private VBox vBox = new VBox();
   private ScrollPane scrollPane = new ScrollPane();
   private boolean invalid = true;
 
@@ -79,6 +82,22 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
     control.selectedTemplateProperty().bindBidirectional(selectedTemplate);
 
+    control.orientationProperty().addListener((observableValue, oldValue, newValue) -> {
+      System.out.println(oldValue + " " + newValue);
+      switch (newValue) {
+        case HORIZONTAL:
+          pane = new HBox();
+          break;
+        case VERTICAL:
+          pane = new VBox();
+          break;
+      }
+      pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+      pane.getChildren().addAll(templateLists);
+      scrollPane.setContent(pane);
+      invalid = true;
+    });
+
     selectedTemplate.addListener(observable -> {
       if (selectedTemplate.get() == null) {
         templateLists.forEach(t -> t.clearSelection());
@@ -90,17 +109,19 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-    vBox.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+//    vBox.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+    pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
     getChildren().addAll(scrollPane);
 
-    Rectangle rectangle = new Rectangle();
-    rectangle.setFill(Color.rgb(0xFF, 0x00, 0x00, 0.5));
-    rectangle.widthProperty().bind(vBox.widthProperty());
-    rectangle.heightProperty().bind(vBox.heightProperty());
+//    Rectangle rectangle = new Rectangle();
+//    rectangle.setFill(Color.rgb(0xFF, 0x00, 0x00, 0.5));
+//    rectangle.widthProperty().bind(vBox.widthProperty());
+//    rectangle.heightProperty().bind(vBox.heightProperty());
 
     //getChildren().add(rectangle);
-    scrollPane.setContent(vBox);
+//    scrollPane.setContent(vBox);
+    scrollPane.setContent(pane);
   }
 
   @Override
@@ -114,7 +135,8 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
   }
 
   private void populate() {
-    vBox.getChildren().clear();
+    pane.getChildren().clear();
+//    vBox.getChildren().clear();
     templateLists.clear();
 
     getSkinnable().featureLayerListProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
@@ -139,7 +161,8 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
         templateLists.add(featureTemplateList);
       });
 
-    vBox.getChildren().addAll(templateLists);
+    pane.getChildren().addAll(templateLists);
+//    vBox.getChildren().addAll(templateLists);
     getSkinnable().requestLayout();
   }
 

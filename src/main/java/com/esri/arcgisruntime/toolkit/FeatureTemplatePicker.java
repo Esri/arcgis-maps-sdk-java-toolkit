@@ -41,7 +41,7 @@ public class FeatureTemplatePicker extends Control {
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty(true);
-  private final SimpleObjectProperty<Orientation> orientationProperty = new SimpleObjectProperty<>(Orientation.HORIZONTAL);
+  private final SimpleObjectProperty<Orientation> orientationProperty = new SimpleObjectProperty<>(Orientation.VERTICAL);
 
   public FeatureTemplatePicker() {
   }
