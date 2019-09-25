@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
@@ -45,17 +46,18 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
   private ScrollPane scrollPane = new ScrollPane();
   private boolean invalid = true;
 
-  private final List<FeatureTemplateList> templateLists = new ArrayList<>();
+  //private final List<FeatureTemplateList> templateLists = new ArrayList<>();
+  private final LinkedHashMap<FeatureLayer, FeatureTemplateList> featureLayerMap = new LinkedHashMap<>();
 
   private final SimpleObjectProperty<TemplatePicker.Template> selectedTemplate = new SimpleObjectProperty<>();
 
   public FeatureTemplatePickerSkin(FeatureTemplatePicker control) {
     super(control);
 
-    control.featureLayerListProperty().addListener((InvalidationListener) observable -> {
-      populate();
-      invalid = true;
-    });
+//    control.featureLayerListProperty().addListener((InvalidationListener) observable -> {
+//      populate();
+//      invalid = true;
+//    });
 
     control.featureLayerListProperty().addListener((ListChangeListener<? super FeatureLayer>) change -> {
       while (change.next()) {
@@ -68,9 +70,11 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
         } else {
           for (FeatureLayer featureLayer : change.getRemoved()) {
             System.out.println("Removed " + featureLayer.getFeatureTable().getTableName() + " from  " + change.getFrom());
+            removeTemplateList(featureLayer);
           }
           for (FeatureLayer featureLayer : change.getAddedSubList()) {
             System.out.println("Added " + featureLayer.getFeatureTable().getTableName() + " at " + change.getFrom());
+            addTemplateList(featureLayer);
           }
         }
       }
@@ -83,7 +87,6 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
     control.selectedTemplateProperty().bindBidirectional(selectedTemplate);
 
     control.orientationProperty().addListener((observableValue, oldValue, newValue) -> {
-      System.out.println(oldValue + " " + newValue);
       switch (newValue) {
         case HORIZONTAL:
           pane = new HBox();
@@ -93,18 +96,22 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
           break;
       }
       pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      pane.getChildren().addAll(templateLists);
+      pane.getChildren().setAll(featureLayerMap.values());
       scrollPane.setContent(pane);
       invalid = true;
     });
 
     selectedTemplate.addListener(observable -> {
       if (selectedTemplate.get() == null) {
-        templateLists.forEach(t -> t.clearSelection());
+        //templateLists.forEach(t -> t.clearSelection());
+        featureLayerMap.values().forEach(FeatureTemplateList::clearSelection);
       }
     });
 
-    populate();
+    //populate();
+    // build template list for any feature layers already in the feature layers property
+    getSkinnable().featureLayerListProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
+      .forEach(this::addTemplateList);
 
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -134,38 +141,76 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
-  private void populate() {
-    pane.getChildren().clear();
-//    vBox.getChildren().clear();
-    templateLists.clear();
-
-    getSkinnable().featureLayerListProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
-      .forEach(featureLayer -> {
-        ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
-        FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureTable);
-        featureTemplateList.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
-        featureTemplateList.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
-        featureTemplateList.showTemplateNameProperty().bind(getSkinnable().showTemplateNamesProperty());
-        featureTemplateList.showLayerNameProperty().bind(getSkinnable().showFeatureLayerNamesProperty());
-        featureTemplateList.disableCannotAddFeatureLayersProperty().bind(getSkinnable().disableCannotAddFeatureLayersProperty());
-
-        featureTemplateList.selectedTemplateProperty().addListener(observable -> {
-          if (featureTemplateList.selectedTemplateProperty().get() != null) {
-            TemplatePicker.Template template = new TemplatePicker.Template(featureTemplateList.featureTableProperty().get().getFeatureLayer(), featureTemplateList.selectedTemplateProperty().get());
-            selectedTemplate.set(template);
-
-            templateLists.stream().filter(t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
-          }
-        });
-
-        templateLists.add(featureTemplateList);
-      });
-
-    pane.getChildren().addAll(templateLists);
-//    vBox.getChildren().addAll(templateLists);
-    getSkinnable().requestLayout();
-  }
+//  private void populate() {
+//    pane.getChildren().clear();
+////    vBox.getChildren().clear();
+//    templateLists.clear();
+//
+//    getSkinnable().featureLayerListProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
+//      .forEach(this::addTemplateList);
+//
+////    getSkinnable().featureLayerListProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
+////      .forEach(featureLayer -> {
+////        ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
+////        FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureTable);
+////        featureTemplateList.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
+////        featureTemplateList.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
+////        featureTemplateList.showTemplateNameProperty().bind(getSkinnable().showTemplateNamesProperty());
+////        featureTemplateList.showLayerNameProperty().bind(getSkinnable().showFeatureLayerNamesProperty());
+////        featureTemplateList.disableCannotAddFeatureLayersProperty().bind(getSkinnable().disableCannotAddFeatureLayersProperty());
+////
+////        featureTemplateList.selectedTemplateProperty().addListener(observable -> {
+////          if (featureTemplateList.selectedTemplateProperty().get() != null) {
+////            TemplatePicker.Template template = new TemplatePicker.Template(featureTemplateList.featureTableProperty().get().getFeatureLayer(), featureTemplateList.selectedTemplateProperty().get());
+////            selectedTemplate.set(template);
+////
+////            templateLists.stream().filter(t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
+////          }
+////        });
+////
+////        templateLists.add(featureTemplateList);
+////      });
+//
+////    pane.getChildren().addAll(templateLists);
+////    vBox.getChildren().addAll(templateLists);
+//    getSkinnable().requestLayout();
+//  }
 
   private void update(double contentWidth, double contentHeight) {
+  }
+
+  private void addTemplateList(FeatureLayer featureLayer) {
+    ArcGISFeatureTable featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
+    FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureTable);
+    featureTemplateList.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
+    featureTemplateList.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
+    featureTemplateList.showTemplateNameProperty().bind(getSkinnable().showTemplateNamesProperty());
+    featureTemplateList.showLayerNameProperty().bind(getSkinnable().showFeatureLayerNamesProperty());
+    featureTemplateList.disableCannotAddFeatureLayersProperty().bind(getSkinnable().disableCannotAddFeatureLayersProperty());
+
+    featureTemplateList.selectedTemplateProperty().addListener(observable -> {
+      if (featureTemplateList.selectedTemplateProperty().get() != null) {
+        TemplatePicker.Template template = new TemplatePicker.Template(featureTemplateList.featureTableProperty().get().getFeatureLayer(), featureTemplateList.selectedTemplateProperty().get());
+        selectedTemplate.set(template);
+
+        featureLayerMap.values().stream().filter(t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
+        //templateLists.stream().filter(t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
+      }
+    });
+
+    //templateLists.add(featureTemplateList);
+    featureLayerMap.put(featureLayer, featureTemplateList);
+
+    pane.getChildren().setAll(featureLayerMap.values());
+  }
+
+  private void removeTemplateList(FeatureLayer featureLayer) {
+    var featureTemplateList = featureLayerMap.remove(featureLayer);
+    if (featureTemplateList != null) {
+      if (featureTemplateList.selectedTemplateProperty().get() != null) {
+        selectedTemplate.set(null);
+      }
+      pane.getChildren().setAll(featureLayerMap.values());
+    }
   }
 }
