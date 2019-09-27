@@ -103,7 +103,7 @@ public class FeatureTemplatePicker extends Control {
      * @param featureLayer the feature layer
      * @param featureTemplate the feature template
      * @throws NullPointerException if featureLayer is null
-     * @throws NullPointerException if featuretemplate is null
+     * @throws NullPointerException if featureTemplate is null
      */
     public Template(FeatureLayer featureLayer, FeatureTemplate featureTemplate) {
       this.featureLayer = Objects.requireNonNull(featureLayer);
