@@ -92,7 +92,7 @@ public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell>
       imageView.setFitHeight(control.symbolHeightProperty().get());
 
       label.setGraphic(imageView);
-    } catch (InterruptedException | ExecutionException e) {
+    } catch (InterruptedException | ExecutionException | IllegalArgumentException e) {
       label.setGraphic(null);
     }
   }

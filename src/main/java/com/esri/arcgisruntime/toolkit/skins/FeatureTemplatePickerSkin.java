@@ -66,18 +66,20 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
     control.selectedTemplateProperty().bindBidirectional(selectedTemplate);
 
     control.orientationProperty().addListener((observableValue, oldValue, newValue) -> {
-      switch (newValue) {
-        case HORIZONTAL:
-          pane = new HBox();
-          break;
-        case VERTICAL:
-          pane = new VBox();
-          break;
+      if (newValue != null) {
+        switch (newValue) {
+          case HORIZONTAL:
+            pane = new HBox();
+            break;
+          case VERTICAL:
+            pane = new VBox();
+            break;
+        }
+        pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        pane.getChildren().setAll(featureLayerMap.values());
+        scrollPane.setContent(pane);
+        invalid = true;
       }
-      pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      pane.getChildren().setAll(featureLayerMap.values());
-      scrollPane.setContent(pane);
-      invalid = true;
     });
 
     selectedTemplate.addListener(observable -> {

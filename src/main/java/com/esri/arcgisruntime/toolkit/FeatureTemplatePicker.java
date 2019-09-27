@@ -56,28 +56,80 @@ public class FeatureTemplatePicker extends Control {
     return selectedTemplateProperty;
   }
 
+  public Template getSelectedTemplate() {
+    return selectedTemplateProperty.get();
+  }
+
   public SimpleIntegerProperty symbolWidthProperty() {
     return symbolWidthProperty;
+  }
+
+  public int getSymbolWidth() {
+    return symbolWidthProperty.get();
+  }
+
+  public void setSymbolWidth(int width) {
+    symbolWidthProperty.set(width);
   }
 
   public SimpleIntegerProperty symbolHeightProperty() {
     return symbolHeightProperty;
   }
 
+  public int getSymbolHeight() {
+    return symbolHeightProperty.get();
+  }
+
+  public void setSymbolHeight(int height) {
+    symbolHeightProperty.set(height);
+  }
+
   public SimpleBooleanProperty showTemplateNamesProperty() {
     return showTemplateNamesProperty;
+  }
+
+  public boolean isShowTemplateNames() {
+    return showTemplateNamesProperty.get();
+  }
+
+  public void setShowTemplateNames(boolean show) {
+    showTemplateNamesProperty.set(show);
   }
 
   public SimpleBooleanProperty showFeatureLayerNamesProperty() {
     return showFeatureLayerNamesProperty;
   }
 
+  public boolean isShowFeatureLayerNames() {
+    return showFeatureLayerNamesProperty.get();
+  }
+
+  public void setShowFeatureLayerNames(boolean show) {
+    showFeatureLayerNamesProperty.set(show);
+  }
+
   public SimpleBooleanProperty disableCannotAddFeatureLayersProperty() {
     return disableCannotAddFeatureLayersProperty;
   }
 
+  public boolean isDisableCannotAddFeatureLayers() {
+    return disableCannotAddFeatureLayersProperty.get();
+  }
+
+  public void setDisableCannotAddFeatureLayers(boolean disable) {
+    disableCannotAddFeatureLayersProperty.set(disable);
+  }
+
   public SimpleObjectProperty<Orientation> orientationProperty() {
     return orientationProperty;
+  }
+
+  public Orientation getOrientation() {
+    return orientationProperty.get();
+  }
+
+  public void setOrientation(Orientation orientation) {
+    orientationProperty.set(orientation);
   }
 
   public void clearSelection() {
