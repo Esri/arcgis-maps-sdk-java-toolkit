@@ -42,11 +42,11 @@ public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell>
     control.heightProperty().addListener(observable -> invalid = true);
     control.insetsProperty().addListener(observable -> invalid = true);
 
-    control.imageHeightProperty().addListener(observable -> {
+    control.symbolHeightProperty().addListener(observable -> {
       invalid = true;
       control.requestLayout();
     });
-    control.imageWidthProperty().addListener(observable -> {
+    control.symbolWidthProperty().addListener(observable -> {
       invalid = true;
       control.requestLayout();
     });
@@ -85,11 +85,11 @@ public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell>
     graphic.getAttributes().putAll(template.getFeatureTemplate().getPrototypeAttributes());
     var symbol = template.getFeatureLayer().getRenderer().getSymbol(graphic);
     try {
-      Image image = symbol.createSwatchAsync(control.imageWidthProperty().get(),
-        control.imageHeightProperty().get(), (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
+      Image image = symbol.createSwatchAsync(control.symbolWidthProperty().get(),
+        control.symbolHeightProperty().get(), (float) Screen.getPrimary().getOutputScaleX(), 0x00).get();
       var imageView = new ImageView(image);
-      imageView.setFitWidth(control.imageWidthProperty().get());
-      imageView.setFitHeight(control.imageHeightProperty().get());
+      imageView.setFitWidth(control.symbolWidthProperty().get());
+      imageView.setFitHeight(control.symbolHeightProperty().get());
 
       label.setGraphic(imageView);
     } catch (InterruptedException | ExecutionException e) {

@@ -18,8 +18,8 @@ package com.esri.arcgisruntime.toolkit.skins;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
@@ -64,7 +64,8 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     control.symbolWidthProperty().addListener(observable -> invalid = true);
     control.symbolHeightProperty().addListener(observable -> invalid = true);
 
-    var featureTable = control.featureTableProperty().get();
+    var featureTable = //control.featureTableProperty().get();
+      control.featureLayerProperty().get().getFeatureTable();
 
     control.disableCannotAddFeatureLayersProperty().addListener((observableValue, oldValue, newValue) -> {
       tilePane.setDisable(newValue && !featureTable.canAdd());
@@ -105,8 +106,10 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
   }
 
   private void populate() {
-    var featureTable = Objects.requireNonNull(getSkinnable().featureTableProperty().get());
-    var featureLayer = featureTable.getFeatureLayer();
+    //var featureTable = Objects.requireNonNull(getSkinnable().featureTableProperty().get());
+    //var featureLayer = featureTable.getFeatureLayer();
+    var featureLayer = getSkinnable().featureLayerProperty().get();
+    var featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
 
     featureTable.getFeatureTemplates()
       .forEach(featureTemplate -> templateCells.add(new FeatureTemplateCell(featureLayer, featureTemplate)));
@@ -115,8 +118,8 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
         .forEach(featureTemplate -> templateCells.add(new FeatureTemplateCell(featureLayer, featureTemplate))));
 
     templateCells.forEach(t -> {
-      t.imageWidthProperty().bind(getSkinnable().symbolWidthProperty());
-      t.imageHeightProperty().bind(getSkinnable().symbolHeightProperty());
+      t.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
+      t.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
     });
 
     templateCells.forEach(t -> t.setOnMouseClicked(a -> {
@@ -142,7 +145,8 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     });
 
     if (control.showLayerNameProperty().get()) {
-      vBox.getChildren().add(new Label(control.featureTableProperty().get().getTableName()));
+      ArcGISFeatureTable featureTable = (ArcGISFeatureTable) control.featureLayerProperty().get().getFeatureTable();
+      vBox.getChildren().add(new Label(featureTable.getTableName()));
     }
 
     tilePane.getChildren().addAll(templateCells);

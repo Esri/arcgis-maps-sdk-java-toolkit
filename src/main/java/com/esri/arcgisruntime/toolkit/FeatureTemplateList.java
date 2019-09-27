@@ -16,8 +16,11 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import java.util.Objects;
+
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.FeatureTemplateListSkin;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,7 +31,7 @@ import javafx.scene.control.Skin;
 
 public final class FeatureTemplateList extends Control {
 
-  private final SimpleObjectProperty<ArcGISFeatureTable> featureTableProperty = new SimpleObjectProperty<>();
+  private final SimpleObjectProperty<FeatureLayer> featureLayerProperty = new SimpleObjectProperty<>();
 
   private final SimpleBooleanProperty showLayerNameProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showTemplateNameProperty = new SimpleBooleanProperty(false);
@@ -39,12 +42,15 @@ public final class FeatureTemplateList extends Control {
 
   private final SimpleObjectProperty<FeatureTemplate> selectedTemplateProperty = new SimpleObjectProperty<>();
 
-  public FeatureTemplateList(ArcGISFeatureTable featureTable) {
-    featureTableProperty.set(featureTable);
+  public FeatureTemplateList(FeatureLayer featureLayer) {
+    featureLayerProperty.set(Objects.requireNonNull(featureLayer));
+    if (!(featureLayer.getFeatureTable() instanceof ArcGISFeatureTable)) {
+      throw new IllegalArgumentException("FeatureLayer's table must be an ArcGISFeatureTable");
+    }
   }
 
-  public ReadOnlyObjectProperty<ArcGISFeatureTable> featureTableProperty() {
-    return featureTableProperty;
+  public ReadOnlyObjectProperty<FeatureLayer> featureLayerProperty() {
+    return featureLayerProperty;
   }
 
   public SimpleBooleanProperty showLayerNameProperty() {

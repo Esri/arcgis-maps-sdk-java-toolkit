@@ -32,8 +32,8 @@ import javafx.scene.control.Skin;
 public final class FeatureTemplateCell extends Control {
 
   private final SimpleObjectProperty<TemplatePicker.Template> templateProperty = new SimpleObjectProperty<>();
-  private final SimpleIntegerProperty imageWidthProperty = new SimpleIntegerProperty(50);
-  private final SimpleIntegerProperty imageHeightProperty = new SimpleIntegerProperty(50);
+  private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty(50);
+  private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty(50);
 
   private final SimpleBooleanProperty showNameProperty = new SimpleBooleanProperty(false);
 
@@ -53,12 +53,12 @@ public final class FeatureTemplateCell extends Control {
     return templateProperty;
   }
 
-  public SimpleIntegerProperty imageWidthProperty() {
-    return imageWidthProperty;
+  public SimpleIntegerProperty symbolWidthProperty() {
+    return symbolWidthProperty;
   }
 
-  public SimpleIntegerProperty imageHeightProperty() {
-    return imageHeightProperty;
+  public SimpleIntegerProperty symbolHeightProperty() {
+    return symbolHeightProperty;
   }
 
   public SimpleBooleanProperty showNameProperty() {
