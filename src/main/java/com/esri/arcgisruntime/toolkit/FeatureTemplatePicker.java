@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.toolkit;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.esri.arcgisruntime.data.FeatureTemplate;
@@ -36,7 +37,7 @@ import javafx.scene.control.Skin;
 public class FeatureTemplatePicker extends Control {
 
   private final ObservableList<FeatureLayer> featureLayers = FXCollections.observableList(new ArrayList<>());
-  private final SimpleListProperty<FeatureLayer> featureLayerListProperty = new SimpleListProperty<>(featureLayers);
+  private final SimpleListProperty<FeatureLayer> featureLayersProperty = new SimpleListProperty<>(featureLayers);
   private final SimpleObjectProperty<Template> selectedTemplateProperty = new SimpleObjectProperty<>();
   private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty(50);
   private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty(50);
@@ -48,8 +49,16 @@ public class FeatureTemplatePicker extends Control {
   public FeatureTemplatePicker() {
   }
 
-  public ListProperty<FeatureLayer> featureLayerListProperty() {
-    return featureLayerListProperty;
+  public ListProperty<FeatureLayer> featureLayersProperty() {
+    return featureLayersProperty;
+  }
+
+  public List<FeatureLayer> getFeatureLayer() {
+    return featureLayersProperty.get();
+  }
+
+  public void setFeatureLayers(List<FeatureLayer> featureLayers) {
+    featureLayersProperty.setAll(featureLayers);
   }
 
   public SimpleObjectProperty<Template> selectedTemplateProperty() {

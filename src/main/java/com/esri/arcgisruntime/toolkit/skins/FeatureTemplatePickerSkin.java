@@ -46,7 +46,7 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
   public FeatureTemplatePickerSkin(FeatureTemplatePicker control) {
     super(control);
 
-    control.featureLayerListProperty().addListener((ListChangeListener<? super FeatureLayer>) change -> {
+    control.featureLayersProperty().addListener((ListChangeListener<? super FeatureLayer>) change -> {
       while (change.next()) {
         for (FeatureLayer featureLayer : change.getRemoved()) {
           System.out.println("Removed " + featureLayer.getFeatureTable().getTableName() + " from  " + change.getFrom());
@@ -89,7 +89,7 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
     });
 
     // build template list for any feature layers already in the feature layers property
-    getSkinnable().featureLayerListProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
+    getSkinnable().featureLayersProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
       .forEach(this::addTemplateList);
 
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
