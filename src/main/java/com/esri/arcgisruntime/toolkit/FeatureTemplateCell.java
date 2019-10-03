@@ -45,8 +45,6 @@ public final class FeatureTemplateCell extends Control {
     templateProperty.set(new TemplatePicker.Template(featureLayer, featureTemplate));
 
     getStyleClass().add("template-cell");
-    String styleSheet = getClass().getResource("skins/template-cell.css").toExternalForm();
-    getStylesheets().add(styleSheet);
   }
 
   public ReadOnlyObjectProperty<TemplatePicker.Template> templateProperty() {
@@ -93,6 +91,11 @@ public final class FeatureTemplateCell extends Control {
       };
     }
     return selectedProperty;
+  }
+
+  @Override
+  public String getUserAgentStylesheet() {
+    return FeatureTemplateCell.class.getResource("skins/template-cell.css").toExternalForm();
   }
 
   @Override
