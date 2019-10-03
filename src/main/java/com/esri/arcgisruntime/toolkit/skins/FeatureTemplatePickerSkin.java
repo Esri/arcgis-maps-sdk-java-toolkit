@@ -89,7 +89,7 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
     });
 
     // build template list for any feature layers already in the feature layers property
-    getSkinnable().featureLayersProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
+    control.featureLayersProperty().stream().filter(entry -> entry.getFeatureTable() instanceof ArcGISFeatureTable)
       .forEach(this::addTemplateList);
 
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -123,13 +123,14 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
       return;
     }
 
-    ArcGISFeatureTable featureTable = (ArcGISFeatureTable) table;
+    var control = getSkinnable();
+
     FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureLayer);
-    featureTemplateList.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
-    featureTemplateList.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
-    featureTemplateList.showTemplateNameProperty().bind(getSkinnable().showTemplateNamesProperty());
-    featureTemplateList.showLayerNameProperty().bind(getSkinnable().showFeatureLayerNamesProperty());
-    featureTemplateList.disableCannotAddFeatureLayersProperty().bind(getSkinnable().disableCannotAddFeatureLayersProperty());
+    featureTemplateList.symbolWidthProperty().bind(control.symbolWidthProperty());
+    featureTemplateList.symbolHeightProperty().bind(control.symbolHeightProperty());
+    featureTemplateList.showTemplateNameProperty().bind(control.showTemplateNamesProperty());
+    featureTemplateList.showLayerNameProperty().bind(control.showFeatureLayerNamesProperty());
+    featureTemplateList.disableCannotAddFeatureLayersProperty().bind(control.disableCannotAddFeatureLayersProperty());
 
     featureTemplateList.selectedTemplateProperty().addListener(observable -> {
       if (featureTemplateList.selectedTemplateProperty().get() != null) {

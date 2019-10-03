@@ -64,8 +64,7 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     control.symbolWidthProperty().addListener(observable -> invalid = true);
     control.symbolHeightProperty().addListener(observable -> invalid = true);
 
-    var featureTable = //control.featureTableProperty().get();
-      control.featureLayerProperty().get().getFeatureTable();
+    var featureTable = control.featureLayerProperty().get().getFeatureTable();
 
     control.disableCannotAddFeatureLayersProperty().addListener((observableValue, oldValue, newValue) -> {
       tilePane.setDisable(newValue && !featureTable.canAdd());
@@ -106,9 +105,8 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
   }
 
   private void populate() {
-    //var featureTable = Objects.requireNonNull(getSkinnable().featureTableProperty().get());
-    //var featureLayer = featureTable.getFeatureLayer();
-    var featureLayer = getSkinnable().featureLayerProperty().get();
+    var control = getSkinnable();
+    var featureLayer = control.featureLayerProperty().get();
     var featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
 
     featureTable.getFeatureTemplates()
@@ -118,8 +116,8 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
         .forEach(featureTemplate -> templateCells.add(new FeatureTemplateCell(featureLayer, featureTemplate))));
 
     templateCells.forEach(t -> {
-      t.symbolWidthProperty().bind(getSkinnable().symbolWidthProperty());
-      t.symbolHeightProperty().bind(getSkinnable().symbolHeightProperty());
+      t.symbolWidthProperty().bind(control.symbolWidthProperty());
+      t.symbolHeightProperty().bind(control.symbolHeightProperty());
     });
 
     templateCells.forEach(t -> t.setOnMouseClicked(a -> {
