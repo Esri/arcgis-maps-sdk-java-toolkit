@@ -23,6 +23,7 @@ import com.esri.arcgisruntime.toolkit.skins.BarScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.DualUnitScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.GraduatedLineScalebarSkin;
 import com.esri.arcgisruntime.toolkit.skins.LineScaleBarSkin;
+import javafx.beans.NamedArg;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
@@ -103,7 +104,7 @@ public final class Scalebar extends Control {
    * @throws NullPointerException if map view is null
    * @since 100.2.1
    */
-  public Scalebar(MapView mapView) {
+  public Scalebar(@NamedArg("mapView") MapView mapView) {
     this(mapView, SkinStyle.ALTERNATING_BAR, HPos.CENTER);
   }
 
