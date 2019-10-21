@@ -1,10 +1,15 @@
+plugins {
+  id "java-library"
+  id "idea"
+  id "eclipse"
+  id "com.google.osdetector" version "1.6.2"
+}
+
+ext {
+  platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+}
+
 group "com.esri.arcgisruntime"
-version VERSION
-
-apply plugin: 'java-library'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
@@ -19,22 +24,28 @@ repositories {
   }
 }
 
-dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:100.2.1"
-}
-
 sourceSets {
   main {
     resources.srcDirs = ['src/main/java']
   }
 }
 
+dependencies {
+  implementation "com.esri.arcgisruntime:arcgis-java:100.6.0"
+  implementation "org.openjfx:javafx-base:11:$platform"
+  implementation "org.openjfx:javafx-graphics:11:$platform"
+  implementation "org.openjfx:javafx-controls:11:$platform"
+  implementation "org.openjfx:javafx-fxml:11:$platform"
+  implementation "org.openjfx:javafx-web:11:$platform"
+  implementation "org.openjfx:javafx-media:11:$platform"
+}
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
+task javadocJar(type: Jar) {
+  dependsOn javadoc
+  archiveClassifier.set('javadoc')
   from javadoc.destinationDir
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.4'
+wrapper {
+  gradleVersion = '5.6'
 }
