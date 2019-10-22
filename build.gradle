@@ -28,6 +28,12 @@ sourceSets {
   main {
     resources.srcDirs = ['src/main/java']
   }
+  integrationTest {
+    java.srcDirs = ['src/integration-test/java']
+    compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+    resources.srcDirs = ["src/integration-test/resources"]
+    runtimeClasspath += output + compileClasspath
+  }
 }
 
 dependencies {
@@ -38,6 +44,22 @@ dependencies {
   implementation "org.openjfx:javafx-fxml:11:$platform"
   implementation "org.openjfx:javafx-web:11:$platform"
   implementation "org.openjfx:javafx-media:11:$platform"
+
+  testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"
+  testCompileOnly "junit:junit:4.12"
+  testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.1.0"
+
+  integrationTestImplementation "org.testfx:testfx-core:4.0.15-alpha"
+  integrationTestImplementation "org.testfx:testfx-junit:4.0.15-alpha"
+  integrationTestImplementation "org.hamcrest:hamcrest:2.1"
+}
+
+task integrationTest(type: Test) {
+  description = 'Runs the integration tests.'
+  group = 'verification'
+  testClassesDirs = sourceSets.integrationTest.output.classesDirs
+  classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
 task javadocJar(type: Jar) {
