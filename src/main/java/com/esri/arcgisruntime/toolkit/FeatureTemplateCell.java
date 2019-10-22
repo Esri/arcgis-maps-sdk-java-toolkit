@@ -55,20 +55,36 @@ public final class FeatureTemplateCell extends Control {
     return symbolWidthProperty;
   }
 
+  public void setSymbolWidth(int width) {
+    symbolWidthProperty().set(width);
+  }
+
+  public int getSymbolWidth() {
+    return symbolWidthProperty().get();
+  }
+
   public SimpleIntegerProperty symbolHeightProperty() {
     return symbolHeightProperty;
+  }
+
+  public void setSymbolHeight(int height) {
+    symbolHeightProperty().set(height);
+  }
+
+  public int getSymbolHeight() {
+    return symbolHeightProperty().get();
   }
 
   public SimpleBooleanProperty showNameProperty() {
     return showNameProperty;
   }
 
-  public final void setSelected(boolean selected) {
-    selectedProperty().set(selected);
+  public void setShowNameProperty(boolean showName) {
+    showNameProperty().set(showName);
   }
 
-  public final boolean isSelected() {
-    return selectedProperty != null && selectedProperty.get();
+  public boolean isShowName() {
+    return showNameProperty().get();
   }
 
   public final BooleanProperty selectedProperty() {
@@ -91,6 +107,14 @@ public final class FeatureTemplateCell extends Control {
       };
     }
     return selectedProperty;
+  }
+
+  public final void setSelected(boolean selected) {
+    selectedProperty().set(selected);
+  }
+
+  public final boolean isSelected() {
+    return selectedProperty != null && selectedProperty.get();
   }
 
   @Override
