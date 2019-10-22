@@ -35,7 +35,7 @@ public final class FeatureTemplateList extends Control {
 
   private final SimpleBooleanProperty showLayerNameProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty showTemplateNameProperty = new SimpleBooleanProperty(false);
-  private final SimpleBooleanProperty disableCannotAddFeatureLayersProperty = new SimpleBooleanProperty(false);
+  private final SimpleBooleanProperty disableIfCannotAddFeatureProperty = new SimpleBooleanProperty(false);
 
   private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty(50);
   private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty(50);
@@ -53,28 +53,76 @@ public final class FeatureTemplateList extends Control {
     return featureLayerProperty;
   }
 
+  public FeatureLayer getFeatureLayer() {
+    return featureLayerProperty().get();
+  }
+
   public SimpleBooleanProperty showLayerNameProperty() {
     return showLayerNameProperty;
+  }
+
+  public void setShowLayerName(boolean showLayername) {
+    showLayerNameProperty().set(showLayername);
+  }
+
+  public boolean isShowLayerName() {
+    return showLayerNameProperty().get();
   }
 
   public SimpleBooleanProperty showTemplateNameProperty() {
     return showTemplateNameProperty;
   }
 
+  public void setShowTemplateName(boolean showTemplateName) {
+    showTemplateNameProperty().set(showTemplateName);
+  }
+
+  public boolean isShowTemplateName() {
+    return showTemplateNameProperty().get();
+  }
+
   public SimpleIntegerProperty symbolWidthProperty() {
     return symbolWidthProperty;
+  }
+
+  public void setSymbolWidth(int width) {
+    symbolWidthProperty().set(width);
+  }
+
+  public int getSymbolWidth() {
+    return symbolWidthProperty().get();
   }
 
   public SimpleIntegerProperty symbolHeightProperty() {
     return symbolHeightProperty;
   }
 
+  public void setSymbolHeight(int height) {
+    symbolHeightProperty().set(height);
+  }
+
+  public int getSymbolHeight() {
+    return symbolHeightProperty().get();
+  }
+
   public SimpleObjectProperty<FeatureTemplate> selectedTemplateProperty() {
     return selectedTemplateProperty;
   }
 
-  public SimpleBooleanProperty disableCannotAddFeatureLayersProperty() {
-    return disableCannotAddFeatureLayersProperty;
+  public FeatureTemplate getSelectedTemplate() {
+    return selectedTemplateProperty().get();
+  }
+
+  public SimpleBooleanProperty disableIfCannotAddFeaturesProperty() {
+    return disableIfCannotAddFeatureProperty;
+  }
+
+  public void setDisableIfCannotAddFeatures(boolean disableCannotAdd) {
+    disableIfCannotAddFeaturesProperty().set(disableCannotAdd);
+  }
+
+  public boolean isDisableIfCannotAdds() {
+    return disableIfCannotAddFeaturesProperty().get();
   }
 
   public void clearSelection() {

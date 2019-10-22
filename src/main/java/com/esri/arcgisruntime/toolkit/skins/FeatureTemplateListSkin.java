@@ -66,7 +66,7 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
     var featureTable = control.featureLayerProperty().get().getFeatureTable();
 
-    control.disableCannotAddFeatureLayersProperty().addListener((observableValue, oldValue, newValue) -> {
+    control.disableIfCannotAddFeaturesProperty().addListener((observableValue, oldValue, newValue) -> {
       tilePane.setDisable(newValue && !featureTable.canAdd());
     });
 
