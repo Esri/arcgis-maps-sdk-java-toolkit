@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
+import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -71,7 +72,7 @@ public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell>
 
   private void update(double contentWidth, double contentHeight) {
     var control = getSkinnable();
-    TemplatePicker.Template template = control.templateProperty().get();
+    FeatureTemplatePicker.Template template = control.templateProperty().get();
 
     label.setTooltip(new Tooltip(template.getFeatureLayer().getName() + " : " + template.getFeatureTemplate().getName()));
 
