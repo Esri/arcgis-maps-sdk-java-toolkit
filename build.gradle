@@ -43,6 +43,8 @@ dependencies {
 
 task javadocJar(type: Jar) {
   dependsOn javadoc
+  description = "Creates a javadoc jar."
+  group = "Documentation"
   archiveClassifier.set('javadoc')
   from javadoc.destinationDir
 }
