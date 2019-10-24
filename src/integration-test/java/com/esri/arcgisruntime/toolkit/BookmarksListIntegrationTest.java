@@ -8,6 +8,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Scene;
@@ -64,7 +65,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         StackPane.setMargin(bookmarksList, new Insets(10));
         Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
 
-        sleep(10000);
+        sleep(3000);
 
         // every bookmark's name will be displayed in the view
         map.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
@@ -129,24 +130,20 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         StackPane.setMargin(bookmarksView, new Insets(10));
         Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
-        sleep(1000);
-
-        clickOn(bookmark.getName());
-
-        sleep(2000);
-
-        moveTo(mapView);
-        scroll(2, VerticalDirection.DOWN);
-        drag(mapView, MouseButton.PRIMARY);
-
         sleep(3000);
 
-        // when the bookmark is selected
-        clickOn(bookmark.getName());
+        // when the bookmark is selected, moved away from, and selected again
+        clickOn(bookmark.getName())
+                .moveTo(mapView)
+                .scroll(2, VerticalDirection.DOWN)
+                .drag(mapView, MouseButton.PRIMARY)
+                .moveTo(new Point2D(0, 0))
+                .release(MouseButton.PRIMARY)
+                .clickOn(bookmark.getName());
 
         sleep(4000);
 
-        // the geo view's viewpoint will be changed and the new viewpoint will equal that of the bookmark
+        // the geo view's viewpoint will be the same as the bookmark's viewpoint
         Assertions.assertTrue(bookmark.getViewpoint().getTargetGeometry().equals(
                 GeometryEngine.project(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry(),
                         bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 0.01));
