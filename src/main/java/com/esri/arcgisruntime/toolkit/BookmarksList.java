@@ -39,6 +39,12 @@ public class BookmarksList extends ListView<Bookmark> {
                 };
             }
         });
+        getSelectionModel().selectedItemProperty().addListener(listener -> {
+            Bookmark selectedBookmark = getSelectionModel().getSelectedItem();
+            if (selectedBookmark != null) {
+                geoView.setBookmarkAsync(selectedBookmark);
+            }
+        });
     }
 
 }
