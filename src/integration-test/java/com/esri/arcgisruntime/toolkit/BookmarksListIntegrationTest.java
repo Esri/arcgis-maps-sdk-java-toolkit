@@ -1,5 +1,6 @@
 package com.esri.arcgisruntime.toolkit;
 
+import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Bookmark;
@@ -68,9 +69,12 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         map.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
     }
 
+    /**
+     * Tests that clicking a bookmark updates the geo view's viewpoint.
+     */
     @Test
     public void clicking_item_switches_viewpoint() {
-        // given a map view containing a map with bookmarks
+        // given a bookmarks list with a bookmark
         MapView mapView = new MapView();
         Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
@@ -79,27 +83,28 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         map.getBookmarks().add(bookmark);
         mapView.setMap(map);
 
-        // when the bookmarks view is added with the map view
         BookmarksList bookmarksView = new BookmarksList(mapView);
         bookmarksView.setMaxSize(100, 100);
         StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
         StackPane.setMargin(bookmarksView, new Insets(10));
         Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
+        sleep(1000);
+
         AtomicBoolean eventFired = new AtomicBoolean(false);
         mapView.addViewpointChangedListener(viewpointChangedEvent -> {
             eventFired.set(true);
         });
 
-        // every bookmark's name will be displayed in the view
+        // when the bookmark is selected
         clickOn(bookmark.getName());
-
-        WaitForAsyncUtils.waitForFxEvents();
-
-        Assertions.assertTrue(eventFired.get());
 
         sleep(2000);
 
-        Assertions.assertEquals(bookmark.getViewpoint(), mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY));
+        // the geo view's viewpoint will be changed and the new viewpoint will equal that of the bookmark
+        Assertions.assertTrue(eventFired.get());
+        Assertions.assertTrue(bookmark.getViewpoint().getTargetGeometry().equals(
+                GeometryEngine.project(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry(),
+                        bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 1.0));
     }
 }
