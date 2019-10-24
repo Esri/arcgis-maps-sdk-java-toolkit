@@ -22,6 +22,23 @@ public class BookmarksList extends ListView<Bookmark> {
         if (geoView == null) {
             throw new IllegalArgumentException("geoView must not be null");
         }
+        if (geoView instanceof MapView) {
+            ArcGISMap map = ((MapView) geoView).getMap();
+            map.addDoneLoadingListener(() -> this.getItems().addAll(map.getBookmarks()));
+        }
+        setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<Bookmark> call(ListView<Bookmark> param) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Bookmark item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty ? null : item.getName());
+                        setGraphic(null);
+                    }
+                };
+            }
+        });
     }
 
 }
