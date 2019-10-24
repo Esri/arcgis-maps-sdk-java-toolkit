@@ -9,7 +9,9 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VerticalDirection;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.After;
@@ -17,7 +19,6 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
-import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -105,6 +106,49 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         Assertions.assertTrue(eventFired.get());
         Assertions.assertTrue(bookmark.getViewpoint().getTargetGeometry().equals(
                 GeometryEngine.project(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry(),
-                        bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 1.0));
+                        bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 0.01));
+    }
+
+    /**
+     * Tests that one can return to the previously selected bookmark viewpoint after panning/zooming.
+     */
+    @Test
+    public void can_return_to_boomark_after_move() {
+        // given a bookmarks list with a bookmark
+        MapView mapView = new MapView();
+        Platform.runLater(() -> stackPane.getChildren().add(mapView));
+
+        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+        Bookmark bookmark = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
+        map.getBookmarks().add(bookmark);
+        mapView.setMap(map);
+
+        BookmarksList bookmarksView = new BookmarksList(mapView);
+        bookmarksView.setMaxSize(100, 100);
+        StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
+        StackPane.setMargin(bookmarksView, new Insets(10));
+        Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
+
+        sleep(1000);
+
+        clickOn(bookmark.getName());
+
+        sleep(2000);
+
+        moveTo(mapView);
+        scroll(2, VerticalDirection.DOWN);
+        drag(mapView, MouseButton.PRIMARY);
+
+        sleep(3000);
+
+        // when the bookmark is selected
+        clickOn(bookmark.getName());
+
+        sleep(4000);
+
+        // the geo view's viewpoint will be changed and the new viewpoint will equal that of the bookmark
+        Assertions.assertTrue(bookmark.getViewpoint().getTargetGeometry().equals(
+                GeometryEngine.project(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry(),
+                        bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 0.01));
     }
 }
