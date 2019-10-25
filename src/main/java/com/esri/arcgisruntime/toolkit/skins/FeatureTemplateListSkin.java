@@ -101,7 +101,8 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
       invalid = false;
     }
 
-    getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
+    getChildren().forEach(c ->
+      layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
   private void populate() {

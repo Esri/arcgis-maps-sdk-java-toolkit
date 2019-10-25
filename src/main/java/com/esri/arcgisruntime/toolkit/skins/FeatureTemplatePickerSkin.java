@@ -33,10 +33,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
+public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
   private Pane pane = new VBox();
-  private ScrollPane scrollPane = new ScrollPane();
+  private final ScrollPane scrollPane = new ScrollPane();
   private boolean invalid = true;
 
   private final LinkedHashMap<FeatureLayer, FeatureTemplateList> featureLayerMap = new LinkedHashMap<>();
@@ -109,7 +109,8 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
       invalid = false;
     }
 
-    getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
+    getChildren().forEach(c ->
+      layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
   private void update(double contentWidth, double contentHeight) {
@@ -134,10 +135,13 @@ public class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
     featureTemplateList.selectedTemplateProperty().addListener(observable -> {
       if (featureTemplateList.selectedTemplateProperty().get() != null) {
-        FeatureTemplatePicker.Template template = new FeatureTemplatePicker.Template(featureTemplateList.featureLayerProperty().get(), featureTemplateList.selectedTemplateProperty().get());
+        FeatureTemplatePicker.Template template =
+          new FeatureTemplatePicker.Template(featureTemplateList.featureLayerProperty().get(),
+            featureTemplateList.selectedTemplateProperty().get());
         selectedTemplate.set(template);
 
-        featureLayerMap.values().stream().filter(t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
+        featureLayerMap.values().stream().filter(
+          t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
       }
     });
 

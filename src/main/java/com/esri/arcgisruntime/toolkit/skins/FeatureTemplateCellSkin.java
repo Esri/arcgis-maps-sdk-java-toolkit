@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutionException;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
-import com.esri.arcgisruntime.toolkit.TemplatePicker;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;

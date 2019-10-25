@@ -34,7 +34,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
-public class FeatureTemplatePicker extends Control {
+public final class FeatureTemplatePicker extends Control {
 
   private final ObservableList<FeatureLayer> featureLayers = FXCollections.observableList(new ArrayList<>());
   private final SimpleListProperty<FeatureLayer> featureLayersProperty = new SimpleListProperty<>(featureLayers);
@@ -155,8 +155,8 @@ public class FeatureTemplatePicker extends Control {
    * associated.
    */
   public final static class Template {
-    private FeatureLayer featureLayer;
-    private FeatureTemplate featureTemplate;
+    private final FeatureLayer featureLayer;
+    private final FeatureTemplate featureTemplate;
 
     /**
      * Creates a new instance.
