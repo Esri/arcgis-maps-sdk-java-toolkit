@@ -63,6 +63,8 @@ task integrationTest(type: Test) {
   classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
+check.dependsOn integrationTest
+
 task javadocJar(type: Jar) {
   dependsOn javadoc
   description = "Creates a javadoc jar."
