@@ -1,11 +1,9 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.geometry.GeometryEngine;
-import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Bookmark;
-import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -68,6 +66,33 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
 
         // every bookmark's name will be displayed in the view
         map.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
+    }
+
+    /**
+     * Tests that every bookmark in a scene has its name displayed in the view.
+     */
+    @Test
+    public void item_for_every_bookmark_in_scene() {
+        // given a scene view containing a scene with bookmarks
+        SceneView sceneView = new SceneView();
+        Platform.runLater(() -> stackPane.getChildren().add(sceneView));
+
+        ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+        scene.getBookmarks().add(new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4)));
+        scene.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
+        sceneView.setArcGISScene(scene);
+
+        // when the bookmarks view is added with the scene view
+        BookmarksList bookmarksList = new BookmarksList(sceneView);
+        bookmarksList.setMaxSize(100, 100);
+        StackPane.setAlignment(bookmarksList, Pos.TOP_RIGHT);
+        StackPane.setMargin(bookmarksList, new Insets(10));
+        Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
+
+        sleep(3000);
+
+        // every bookmark's name will be displayed in the view
+        scene.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
     }
 
     /**
