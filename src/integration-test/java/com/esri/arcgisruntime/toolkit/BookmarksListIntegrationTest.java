@@ -149,7 +149,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
      */
     @Test
     public void change_map() {
-        // given a map view containing a map with bookmarks and a bookmarks list
+        // given a map view containing a map with bookmarks
         MapView mapView = new MapView();
         Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
@@ -166,6 +166,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
 
         sleep(3000);
 
+        // when the map is changed to a different map with its own bookmarks
         ArcGISMap map2 = new ArcGISMap(Basemap.createImagery());
         map.getBookmarks().add(guitarShapedTreesBookmark);
         mapView.setMap(map);
@@ -178,7 +179,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
 
         sleep(3000);
 
-        // the bookmark to keep and the added one will be listed and the removed one will not
+        // only the new map's bookmarks will be in the list
         clickOn(strangeSymbolBookmark.getName());
         Assertions.assertThrows(FxRobotException.class, () -> clickOn(guitarShapedTreesBookmark.getName()));
     }
@@ -273,13 +274,13 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         map.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
         mapView.setMap(map);
 
-        // when the bookmarks view is added with the map view
         BookmarksList bookmarksList = new BookmarksList(mapView);
         bookmarksList.setMaxSize(100, 100);
         StackPane.setAlignment(bookmarksList, Pos.TOP_RIGHT);
         StackPane.setMargin(bookmarksList, new Insets(10));
         Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
 
+        // when the cell factory is set to one that shows an image and custom text
         bookmarksList.setCellFactory(new Callback<>() {
             private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
 
@@ -298,7 +299,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
 
         sleep(3000);
 
-        // every bookmark's name will be displayed in the view with an image and custom name
+        // every bookmark's name will be displayed in the view with an image and custom text
         Assertions.assertEquals(4, lookup(n -> n instanceof ImageView).queryAll().size(), "Two image views from " +
                 "mapView and 2 from the bookmarks list");
         map.getBookmarks().forEach(bookmark -> clickOn(formatBookmarkNameWithViewpointCoordinate(bookmark)));
