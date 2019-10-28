@@ -1,5 +1,6 @@
 package com.esri.arcgisruntime.toolkit;
 
+import javafx.application.Platform;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -10,6 +11,8 @@ public class BookmarksListTest {
      */
     @Test
     public void constructorGeoViewNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new BookmarksList(null));
+        Platform.startup(() ->
+            Assertions.assertThrows(IllegalArgumentException.class, () -> new BookmarksList(null))
+        );
     }
 }
