@@ -142,6 +142,45 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
     }
 
     /**
+     * Tests that the list updates when the map is changed on the map view.
+     */
+    @Test
+    public void change_map() {
+        // given a map view containing a map with bookmarks and a bookmarks list
+        MapView mapView = new MapView();
+        Platform.runLater(() -> stackPane.getChildren().add(mapView));
+
+        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+        Bookmark guitarShapedTreesBookmark = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
+        map.getBookmarks().add(guitarShapedTreesBookmark);
+        mapView.setMap(map);
+
+        BookmarksList bookmarksList = new BookmarksList(mapView);
+        bookmarksList.setMaxSize(100, 100);
+        StackPane.setAlignment(bookmarksList, Pos.TOP_RIGHT);
+        StackPane.setMargin(bookmarksList, new Insets(10));
+        Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
+
+        sleep(3000);
+
+        ArcGISMap map2 = new ArcGISMap(Basemap.createImagery());
+        map.getBookmarks().add(guitarShapedTreesBookmark);
+        mapView.setMap(map);
+
+        // after adding and removing some bookmarks
+        Bookmark strangeSymbolBookmark = new Bookmark("Strange Symbol", new Viewpoint(37.401573, -116.867808, 6e3));
+        map.getBookmarks().add(strangeSymbolBookmark);
+
+        mapView.setMap(map2);
+
+        sleep(3000);
+
+        // the bookmark to keep and the added one will be listed and the removed one will not
+        clickOn(strangeSymbolBookmark.getName());
+        Assertions.assertThrows(FxRobotException.class, () -> clickOn(guitarShapedTreesBookmark.getName()));
+    }
+
+    /**
      * Tests that clicking a bookmark updates the geo view's viewpoint.
      */
     @Test
