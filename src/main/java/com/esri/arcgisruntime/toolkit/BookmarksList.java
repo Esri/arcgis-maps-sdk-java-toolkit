@@ -28,24 +28,32 @@ public class BookmarksList extends ListView<Bookmark> {
         }
         if (geoView instanceof MapView) {
             ArcGISMap map = ((MapView) geoView).getMap();
-            map.addDoneLoadingListener(() -> {
-                BookmarkList bookmarkList = map.getBookmarks();
-                this.getItems().addAll(bookmarkList);
-                Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
-                    getItems().clear();
-                    getItems().addAll(bookmarkList);
-                }));
-            });
+            if (map != null) {
+                map.addDoneLoadingListener(() -> {
+                    BookmarkList bookmarkList = map.getBookmarks();
+                    this.getItems().addAll(bookmarkList);
+                    Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
+                        getItems().clear();
+                        getItems().addAll(bookmarkList);
+                    }));
+                });
+            } else {
+                throw new IllegalStateException("Map cannot be null");
+            }
         } else if (geoView instanceof SceneView) {
             ArcGISScene scene = ((SceneView) geoView).getArcGISScene();
-            scene.addDoneLoadingListener(() -> {
-                BookmarkList bookmarkList = scene.getBookmarks();
-                this.getItems().addAll(bookmarkList);
-                Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
-                    getItems().clear();
-                    getItems().addAll(bookmarkList);
-                }));
-            });
+            if (scene != null) {
+                scene.addDoneLoadingListener(() -> {
+                    BookmarkList bookmarkList = scene.getBookmarks();
+                    this.getItems().addAll(bookmarkList);
+                    Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
+                        getItems().clear();
+                        getItems().addAll(bookmarkList);
+                    }));
+                });
+            } else {
+                throw new IllegalStateException("Scene cannot be null");
+            }
         }
         setCellFactory(new Callback<>() {
             @Override
