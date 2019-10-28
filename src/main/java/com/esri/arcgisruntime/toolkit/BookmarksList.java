@@ -1,9 +1,11 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -25,6 +27,9 @@ public class BookmarksList extends ListView<Bookmark> {
         if (geoView instanceof MapView) {
             ArcGISMap map = ((MapView) geoView).getMap();
             map.addDoneLoadingListener(() -> this.getItems().addAll(map.getBookmarks()));
+        } else if (geoView instanceof SceneView) {
+            ArcGISScene scene = ((SceneView) geoView).getArcGISScene();
+            scene.addDoneLoadingListener(() -> this.getItems().addAll(scene.getBookmarks()));
         }
         setCellFactory(new Callback<>() {
             @Override
