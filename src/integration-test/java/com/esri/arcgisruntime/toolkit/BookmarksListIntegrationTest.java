@@ -1,6 +1,8 @@
 package com.esri.arcgisruntime.toolkit;
 
+import com.esri.arcgisruntime.geometry.CoordinateFormatter;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
@@ -10,9 +12,14 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Scene;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -171,5 +178,63 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         Assertions.assertTrue(bookmark.getViewpoint().getTargetGeometry().equals(
                 GeometryEngine.project(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry(),
                         bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 0.01));
+    }
+
+    /**
+     * Tests that a user can override the default cell factory to show an icon and custom text.
+     */
+    @Test
+    public void custom_cell_factory() {
+        // given a map view containing a map with bookmarks
+        MapView mapView = new MapView();
+        Platform.runLater(() -> stackPane.getChildren().add(mapView));
+
+        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+        map.getBookmarks().add(new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4)));
+        map.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
+        mapView.setMap(map);
+
+        // when the bookmarks view is added with the map view
+        BookmarksList bookmarksList = new BookmarksList(mapView);
+        bookmarksList.setMaxSize(100, 100);
+        StackPane.setAlignment(bookmarksList, Pos.TOP_RIGHT);
+        StackPane.setMargin(bookmarksList, new Insets(10));
+        Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
+
+        bookmarksList.setCellFactory(new Callback<>() {
+            private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
+
+            @Override
+            public ListCell<Bookmark> call(ListView<Bookmark> param) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Bookmark item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty ? null : formatBookmarkNameWithViewpointCoordinate(item));
+                        setGraphic(empty ? null : new ImageView(bookmarkIcon));
+                    }
+                };
+            }
+        });
+
+        sleep(3000);
+
+        // every bookmark's name will be displayed in the view with an image and custom name
+        Assertions.assertEquals(4, lookup(n -> n instanceof ImageView).queryAll().size(), "Two image views from " +
+                "mapView and 2 from the bookmarks list");
+        map.getBookmarks().forEach(bookmark -> clickOn(formatBookmarkNameWithViewpointCoordinate(bookmark)));
+    }
+
+    /**
+     * Creates a string to display the bookmark's name and viewpoint coordinate.
+     *
+     * @param bookmark bookmark to display
+     * @return string representation of bookmark, e.g. "Guitar-shaped trees (33.87S 063.98W)"
+     */
+    private String formatBookmarkNameWithViewpointCoordinate(Bookmark bookmark) {
+        Point point = (Point) bookmark.getViewpoint().getTargetGeometry();
+        String coordinateString = CoordinateFormatter.toLatitudeLongitude(point,
+                CoordinateFormatter.LatitudeLongitudeFormat.DECIMAL_DEGREES, 2);
+        return bookmark.getName() + " (" + coordinateString + ")";
     }
 }
