@@ -203,9 +203,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
         sleep(1000);
 
         AtomicBoolean eventFired = new AtomicBoolean(false);
-        mapView.addViewpointChangedListener(viewpointChangedEvent -> {
-            eventFired.set(true);
-        });
+        mapView.addViewpointChangedListener(viewpointChangedEvent -> eventFired.set(true));
 
         // when the bookmark is selected
         clickOn(bookmark.getName());
