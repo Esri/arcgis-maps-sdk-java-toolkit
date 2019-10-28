@@ -23,8 +23,10 @@ import javafx.util.Callback;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.testfx.api.FxRobotException;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -100,6 +102,43 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
 
         // every bookmark's name will be displayed in the view
         scene.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
+    }
+
+    /**
+     * Tests that adding and removing bookmarks from the map updates the list.
+     */
+    @Test
+    public void adding_and_removing_bookmarks() {
+        // given a map view containing a map with bookmarks and a bookmarks list
+        MapView mapView = new MapView();
+        Platform.runLater(() -> stackPane.getChildren().add(mapView));
+
+        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+        Bookmark bookmarkToKeep = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
+        Bookmark bookmarkToRemove = new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3));
+        map.getBookmarks().add(bookmarkToKeep);
+        map.getBookmarks().add(bookmarkToRemove);
+        mapView.setMap(map);
+
+        BookmarksList bookmarksList = new BookmarksList(mapView);
+        bookmarksList.setMaxSize(100, 100);
+        StackPane.setAlignment(bookmarksList, Pos.TOP_RIGHT);
+        StackPane.setMargin(bookmarksList, new Insets(10));
+        Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
+
+        sleep(3000);
+
+        // after adding and removing some bookmarks
+        Bookmark bookmarkToAdd = new Bookmark("Strange Symbol", new Viewpoint(37.401573, -116.867808, 6e3));
+        map.getBookmarks().remove(bookmarkToRemove);
+        map.getBookmarks().add(bookmarkToAdd);
+
+        WaitForAsyncUtils.waitForFxEvents();
+
+        // the bookmark to keep and the added one will be listed and the removed one will not
+        clickOn(bookmarkToKeep.getName());
+        clickOn(bookmarkToAdd.getName());
+        Assertions.assertThrows(FxRobotException.class, () -> clickOn(bookmarkToRemove.getName()));
     }
 
     /**
