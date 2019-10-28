@@ -25,13 +25,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BookmarksListIntegrationTest extends ApplicationTest {
 
-    private Scene fxScene;
     private StackPane stackPane;
 
     @Override
     public void start(Stage primaryStage) {
         stackPane = new StackPane();
-        fxScene = new Scene(stackPane);
+        Scene fxScene = new Scene(stackPane);
         primaryStage.setWidth(500);
         primaryStage.setHeight(500);
         primaryStage.setScene(fxScene);
@@ -114,7 +113,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
      * Tests that one can return to the previously selected bookmark viewpoint after panning/zooming.
      */
     @Test
-    public void can_return_to_boomark_after_move() {
+    public void can_return_to_bookmark_after_move() {
         // given a bookmarks list with a bookmark
         MapView mapView = new MapView();
         Platform.runLater(() -> stackPane.getChildren().add(mapView));
