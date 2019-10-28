@@ -30,6 +30,9 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Integration tests for BookmarksList.
+ */
 public class BookmarksListIntegrationTest extends ApplicationTest {
 
     private StackPane stackPane;
