@@ -7,16 +7,31 @@ import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.toolkit.skins.BookmarksListSkin;
 import javafx.application.Platform;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.util.Callback;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.control.Control;
+import javafx.scene.control.Skin;
 
 /**
  * A list of bookmarks from a map or scene. Selecting a bookmark item set's the geoView's
  * viewpoint to the selected bookmark's viewpoint.
  */
-public class BookmarksList extends ListView<Bookmark> {
+public class BookmarksList extends Control {
+
+  private final ReadOnlyListWrapper<Bookmark> bookmarks;
+
+  private final GeoView geoView;
+
+  private final ObjectProperty<EventHandler<BookmarkSelectedEvent>> onBookmarkSelected;
+
 
   /**
    * Creates an instance for the GeoView.
@@ -24,18 +39,23 @@ public class BookmarksList extends ListView<Bookmark> {
    * @param geoView A GeoView
    */
   public BookmarksList(GeoView geoView) {
+    this.geoView = geoView;
     if (geoView == null) {
       throw new IllegalArgumentException("geoView must not be null");
     }
+
+    // initialize the bookmarks property from the map or scene in the geo view
+    final ObservableList<Bookmark> bookmarksInternal = FXCollections.observableArrayList();
+    bookmarks = new ReadOnlyListWrapper<>(bookmarksInternal);
     if (geoView instanceof MapView) {
       ArcGISMap map = ((MapView) geoView).getMap();
       if (map != null) {
         map.addDoneLoadingListener(() -> {
           BookmarkList bookmarkList = map.getBookmarks();
-          this.getItems().addAll(bookmarkList);
+          bookmarksInternal.addAll(bookmarkList);
           Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
-            getItems().clear();
-            getItems().addAll(bookmarkList);
+            bookmarksInternal.clear();
+            bookmarksInternal.addAll(bookmarkList);
           }));
         });
       } else {
@@ -46,36 +66,107 @@ public class BookmarksList extends ListView<Bookmark> {
       if (scene != null) {
         scene.addDoneLoadingListener(() -> {
           BookmarkList bookmarkList = scene.getBookmarks();
-          this.getItems().addAll(bookmarkList);
+          bookmarksInternal.addAll(bookmarkList);
           Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
-            getItems().clear();
-            getItems().addAll(bookmarkList);
+            bookmarksInternal.clear();
+            bookmarksInternal.addAll(bookmarkList);
           }));
         });
       } else {
         throw new IllegalStateException("Scene cannot be null");
       }
     }
-    setCellFactory(new Callback<>() {
-      @Override
-      public ListCell<Bookmark> call(ListView<Bookmark> param) {
-        return new ListCell<>() {
-          @Override
-          protected void updateItem(Bookmark item, boolean empty) {
-            super.updateItem(item, empty);
-            setText(empty ? null : item.getName());
-            setGraphic(null);
-          }
-        };
-      }
-    });
-    getSelectionModel().selectedItemProperty().addListener(listener -> {
-      Bookmark selectedBookmark = getSelectionModel().getSelectedItem();
-      if (selectedBookmark != null) {
-        // unselect bookmark after changing viewpoint so it can be selected again
-        geoView.setBookmarkAsync(selectedBookmark).addDoneListener(() -> getSelectionModel().clearSelection());
-      }
-    });
+
+    // set this as null and leave it up to the skin
+    onBookmarkSelected = new SimpleObjectProperty<>();
   }
 
+  @Override
+  protected Skin<?> createDefaultSkin() {
+    return new BookmarksListSkin(this);
+  }
+
+  /**
+   * Get the GeoView used to create the control.
+   *
+   * @return geoView used to create the control
+   */
+  public GeoView getGeoView() {
+    return geoView;
+  }
+
+  /**
+   * Gets the bookmarks in the list.
+   *
+   * @return bookmarks in the list
+   */
+  public ObservableList<Bookmark> getBookmarks() {
+    return bookmarks.getReadOnlyProperty().get();
+  }
+
+  /**
+   * Gets the read-only bookmarks list property.
+   * @return read-only bookmarks list property
+   */
+  public ReadOnlyListProperty<Bookmark> bookmarksProperty() {
+    return bookmarks;
+  }
+
+  /**
+   * Returns the EventHandler called when a bookmark is selected. Defaults to null, in which case the geoView is
+   * navigated to the selected bookmark, and then the bookmark is deselected.
+   *
+   * @return event handler called when a bookmark is selected
+   */
+  public EventHandler<BookmarkSelectedEvent> getOnBookmarkSelected() {
+    return onBookmarkSelected.get();
+  }
+
+  /**
+   * Called when a bookmark is selected. Defaults to null, in which case the geoView is navigated to the selected
+   * bookmark, and then the bookmark is deselected.
+   *
+   * @return event handler property
+   */
+  public ObjectProperty<EventHandler<BookmarkSelectedEvent>> onBookmarkSelectedProperty() {
+    return onBookmarkSelected;
+  }
+
+  /**
+   * Sets the EventHandler called when a bookmark is selected.
+   *
+   * @param onBookmarkSelected the event handler
+   */
+  public void setOnBookmarkSelected(EventHandler<BookmarkSelectedEvent> onBookmarkSelected) {
+    this.onBookmarkSelected.set(onBookmarkSelected);
+  }
+
+
+
+  /**
+   * An Event created when a bookmark is selected from the list.
+   */
+  public static class BookmarkSelectedEvent extends Event {
+
+    private Bookmark selectedBookmark;
+
+    /**
+     * Creates an event based on a selected bookmark.
+     *
+     * @param selectedBookmark the selected bookmark which triggered the event
+     */
+    public BookmarkSelectedEvent(Bookmark selectedBookmark) {
+      super(ANY);
+      this.selectedBookmark = selectedBookmark;
+    }
+
+    /**
+     * Gets the selected bookmark which triggered the event.
+     *
+     * @return selected bookmark
+     */
+    public Bookmark getSelectedBookmark() {
+      return selectedBookmark;
+    }
+  }
 }

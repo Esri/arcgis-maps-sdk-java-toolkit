@@ -6,6 +6,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.toolkit.skins.BookmarksListSkin;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -281,20 +282,24 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(bookmarksList));
 
     // when the cell factory is set to one that shows an image and custom text
-    bookmarksList.setCellFactory(new Callback<>() {
-      private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
+    Platform.runLater(() -> {
+      BookmarksListSkin customListSkin = new BookmarksListSkin(bookmarksList);
+      customListSkin.setCellFactory(new Callback<>() {
+        private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
 
-      @Override
-      public ListCell<Bookmark> call(ListView<Bookmark> param) {
-        return new ListCell<>() {
-          @Override
-          protected void updateItem(Bookmark item, boolean empty) {
-            super.updateItem(item, empty);
-            setText(empty ? null : formatBookmarkNameWithViewpointCoordinate(item));
-            setGraphic(empty ? null : new ImageView(bookmarkIcon));
-          }
-        };
-      }
+        @Override
+        public ListCell<Bookmark> call(ListView<Bookmark> param) {
+          return new ListCell<>() {
+            @Override
+            protected void updateItem(Bookmark item, boolean empty) {
+              super.updateItem(item, empty);
+              setText(empty ? null : formatBookmarkNameWithViewpointCoordinate(item));
+              setGraphic(empty ? null : new ImageView(bookmarkIcon));
+            }
+          };
+        }
+      });
+      bookmarksList.setSkin(customListSkin);
     });
 
     sleep(3000);
