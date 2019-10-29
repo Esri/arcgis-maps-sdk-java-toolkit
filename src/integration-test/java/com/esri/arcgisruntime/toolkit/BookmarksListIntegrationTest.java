@@ -57,7 +57,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that every bookmark in a map has its name displayed in the view.
    */
   @Test
-  public void item_for_every_bookmark_in_map() {
+  public void itemForEveryBookmarkInMap() {
     // given a map view containing a map with bookmarks
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
@@ -84,7 +84,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that every bookmark in a scene has its name displayed in the view.
    */
   @Test
-  public void item_for_every_bookmark_in_scene() {
+  public void itemForEveryBookmarkInScene() {
     // given a scene view containing a scene with bookmarks
     SceneView sceneView = new SceneView();
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
@@ -111,7 +111,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that adding and removing bookmarks from the map updates the list.
    */
   @Test
-  public void adding_and_removing_bookmarks() {
+  public void addingAndRemovingBookmarks() {
     // given a map view containing a map with bookmarks and a bookmarks list
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
@@ -148,7 +148,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that the list updates when the map is changed on the map view.
    */
   @Test
-  public void change_map() {
+  public void changeMap() {
     // given a map view containing a map with bookmarks
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
@@ -188,7 +188,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that clicking a bookmark updates the geo view's viewpoint.
    */
   @Test
-  public void clicking_item_switches_viewpoint() {
+  public void selectingItemSwitchesViewpoint() {
     // given a bookmarks list with a bookmark
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
@@ -225,7 +225,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that one can return to the previously selected bookmark viewpoint after panning/zooming.
    */
   @Test
-  public void can_return_to_bookmark_after_move() {
+  public void canReturnToBookmarkAfterMove() {
     // given a bookmarks list with a bookmark
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
@@ -264,7 +264,7 @@ public class BookmarksListIntegrationTest extends ApplicationTest {
    * Tests that a user can override the default cell factory to show an icon and custom text.
    */
   @Test
-  public void custom_cell_factory() {
+  public void customCellFactory() {
     // given a map view containing a map with bookmarks
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
