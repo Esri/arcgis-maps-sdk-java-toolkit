@@ -80,7 +80,6 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
     featureTable.addDoneLoadingListener(() -> {
       if (featureTable.getLoadStatus() == LoadStatus.LOADED) {
-        System.out.println(featureTable.getLoadStatus() + " " + featureTable.getTableName());
         loaded = true;
         invalid = true;
         control.requestLayout();

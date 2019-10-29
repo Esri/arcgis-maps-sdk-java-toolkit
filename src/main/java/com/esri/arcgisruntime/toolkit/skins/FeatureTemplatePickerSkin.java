@@ -131,7 +131,7 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
     featureTemplateList.symbolHeightProperty().bind(control.symbolHeightProperty());
     featureTemplateList.showTemplateNameProperty().bind(control.showTemplateNamesProperty());
     featureTemplateList.showLayerNameProperty().bind(control.showFeatureLayerNamesProperty());
-    featureTemplateList.disableIfCannotAddFeaturesProperty().bind(control.disableCannotAddFeatureLayersProperty());
+    featureTemplateList.disableIfCannotAddFeaturesProperty().bind(control.disableIfCannotAddFeatureLayersProperty());
 
     featureTemplateList.selectedTemplateProperty().addListener(observable -> {
       if (featureTemplateList.selectedTemplateProperty().get() != null) {
