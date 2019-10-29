@@ -9,14 +9,14 @@ import org.testfx.framework.junit.ApplicationTest;
 /**
  * Unit tests for BookmarksList.
  */
-public class BookmarksListTest extends ApplicationTest {
+public class BookmarksWidgetTest extends ApplicationTest {
 
   /**
    * Tests IllegalArgumentException from null geoView constructor arg.
    */
   @Test
   public void constructorGeoViewNull() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new BookmarksList(null));
+    Assertions.assertThrows(IllegalArgumentException.class, () -> new BookmarksWidget(null));
   }
 
   /**
@@ -25,7 +25,7 @@ public class BookmarksListTest extends ApplicationTest {
   @Test
   public void mapViewWithoutMap() {
     MapView mapView = new MapView();
-    Assertions.assertThrows(IllegalStateException.class, () -> new BookmarksList(mapView));
+    Assertions.assertThrows(IllegalStateException.class, () -> new BookmarksWidget(mapView));
   }
 
   /**
@@ -34,6 +34,6 @@ public class BookmarksListTest extends ApplicationTest {
   @Test
   public void sceneViewWithoutScene() {
     SceneView sceneView = new SceneView();
-    Assertions.assertThrows(IllegalStateException.class, () -> new BookmarksList(sceneView));
+    Assertions.assertThrows(IllegalStateException.class, () -> new BookmarksWidget(sceneView));
   }
 }

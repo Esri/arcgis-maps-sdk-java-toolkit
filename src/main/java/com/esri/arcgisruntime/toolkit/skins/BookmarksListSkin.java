@@ -1,7 +1,7 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.mapping.Bookmark;
-import com.esri.arcgisruntime.toolkit.BookmarksList;
+import com.esri.arcgisruntime.toolkit.BookmarksWidget;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListCell;
@@ -10,9 +10,9 @@ import javafx.scene.control.SkinBase;
 import javafx.util.Callback;
 
 /**
- * A Skin to display the BookmarksList as a ListView.
+ * A Skin to display the BookmarksWidget as a ListView.
  */
-public class BookmarksListSkin extends SkinBase<BookmarksList> {
+public class BookmarksListSkin extends SkinBase<BookmarksWidget> {
 
   private final ListView<Bookmark> listView;
 
@@ -21,7 +21,7 @@ public class BookmarksListSkin extends SkinBase<BookmarksList> {
    *
    * @param control bookmarks list control to skin
    */
-  public BookmarksListSkin(BookmarksList control) {
+  public BookmarksListSkin(BookmarksWidget control) {
     super(control);
 
     // show the control as a list view
@@ -49,10 +49,10 @@ public class BookmarksListSkin extends SkinBase<BookmarksList> {
     // set a listener for when the selected item changes
     listView.getSelectionModel().selectedItemProperty().addListener(listener -> {
       Bookmark selectedBookmark = listView.getSelectionModel().getSelectedItem();
-      EventHandler<BookmarksList.BookmarkSelectedEvent> bookmarkSelectedEventHandler = control.getOnBookmarkSelected();
+      EventHandler<BookmarksWidget.BookmarkSelectedEvent> bookmarkSelectedEventHandler = control.getOnBookmarkSelected();
       if (bookmarkSelectedEventHandler != null) {
         // use the user-specified handler
-        bookmarkSelectedEventHandler.handle(new BookmarksList.BookmarkSelectedEvent(selectedBookmark));
+        bookmarkSelectedEventHandler.handle(new BookmarksWidget.BookmarkSelectedEvent(selectedBookmark));
       } else if (selectedBookmark != null) {
         // default to deselecting the bookmark after changing viewpoint so it can be selected again
         control.getGeoView().setBookmarkAsync(selectedBookmark).addDoneListener(() ->
