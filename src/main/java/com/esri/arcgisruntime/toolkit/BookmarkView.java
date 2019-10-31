@@ -20,8 +20,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
-import java.util.Objects;
-
 /**
  * A list of bookmarks from a map or scene. Selecting a bookmark item set's the geoView's viewpoint to the selected
  * bookmark's viewpoint.
@@ -40,8 +38,10 @@ public class BookmarkView extends Control {
    * @param geoView A GeoView
    */
   public BookmarkView(GeoView geoView) {
-    Objects.requireNonNull(geoView);
     this.geoView = geoView;
+    if (geoView == null) {
+      throw new IllegalArgumentException("geoView must not be null");
+    }
 
     // initialize the bookmarks property from the map or scene in the geo view
     final ObservableList<Bookmark> bookmarksInternal = FXCollections.observableArrayList();
