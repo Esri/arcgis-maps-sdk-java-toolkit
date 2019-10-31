@@ -8,10 +8,7 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.skins.BookmarksListSkin;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.ReadOnlyListWrapper;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -29,7 +26,7 @@ public class BookmarkView extends Control {
 
   private final ReadOnlyListWrapper<Bookmark> bookmarks;
 
-  private final GeoView geoView;
+  private final ReadOnlyObjectWrapper<GeoView> geoView;
 
   private final ObjectProperty<EventHandler<BookmarkSelectedEvent>> onBookmarkSelected;
 
@@ -39,7 +36,7 @@ public class BookmarkView extends Control {
    * @param geoView A GeoView
    */
   public BookmarkView(GeoView geoView) {
-    this.geoView = Objects.requireNonNull(geoView);
+    this.geoView = new ReadOnlyObjectWrapper<>(Objects.requireNonNull(geoView));
 
     // initialize the bookmarks property from the map or scene in the geo view
     final ObservableList<Bookmark> bookmarksInternal = FXCollections.observableArrayList();
@@ -84,12 +81,21 @@ public class BookmarkView extends Control {
   }
 
   /**
-   * Get the GeoView used to create the control.
+   * Gets the GeoView used to create the control.
    *
    * @return geoView used to create the control
    */
   public GeoView getGeoView() {
-    return geoView;
+    return geoViewProperty().get();
+  }
+
+  /**
+   * The GeoView used to create the control.
+   *
+   * @return geoView property
+   */
+  public ReadOnlyObjectProperty<GeoView> geoViewProperty() {
+    return geoView.getReadOnlyProperty();
   }
 
   /**
@@ -98,7 +104,7 @@ public class BookmarkView extends Control {
    * @return bookmarks in the list
    */
   public ObservableList<Bookmark> getBookmarks() {
-    return bookmarks.getReadOnlyProperty().get();
+    return bookmarksProperty().get();
   }
 
   /**
