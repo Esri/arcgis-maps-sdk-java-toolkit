@@ -21,8 +21,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
 /**
- * A list of bookmarks from a map or scene. Selecting a bookmark item set's the geoView's viewpoint to the selected
- * bookmark's viewpoint.
+ * A control for viewing bookmarks from a map or scene. Selecting a bookmark sets the geoView's viewpoint to the
+ * selected bookmark's viewpoint.
  */
 public class BookmarkView extends Control {
 
