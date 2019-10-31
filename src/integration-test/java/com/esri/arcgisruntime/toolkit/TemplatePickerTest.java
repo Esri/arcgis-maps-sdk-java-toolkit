@@ -65,7 +65,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that the title rendered for a template is updated when the layer's name changes.
      */
     @Test
-    public void testTemplateTitleUpdatesWhenLayerNameChanges() {
+    public void templateTitleUpdatesWhenLayerNameChanges() {
         sleep(5000);
 
         // given a template picker rendering a feature layer's name as the template's title
@@ -82,7 +82,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that clicking on a selected cell does not trigger a selection changed event.
      */
     @Test
-    public void testSubsequentClicksDoNotTriggerSelectionChanges() {
+    public void subsequentClicksDoNotTriggerSelectionChanges() {
         sleep(3000);
 
         // given a template which is selected
@@ -103,7 +103,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that clicking on a cell selects it.
      */
     @Test
-    public void testClickingOnCellSelectsIt() {
+    public void clickingOnCellSelectsIt() {
         sleep(3000);
 
         // given a template which is selected programmatically
@@ -125,7 +125,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that separators between templates can be shown and hidden.
      */
     @Test
-    public void testSeparatorsVisibility() {
+    public void separatorsVisibility() {
         sleep(2000);
 
         // given a template picker with separators showing
@@ -146,7 +146,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that template names can be hidden.
      */
     @Test
-    public void testTemplateNamesVisibility() {
+    public void templateNamesVisibility() {
         sleep(3000);
 
         // given a template picker with template names showing
@@ -165,7 +165,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that the template swatch sizes update when the symbolHeight and symbolWidth properties are changed.
      */
     @Test
-    public void testSymbolSize() {
+    public void symbolSize() {
         sleep(3000);
 
         int height = 10;
@@ -186,7 +186,7 @@ public class TemplatePickerTest extends ApplicationTest {
     }
 
     @Test
-    public void testOverrideCss() {
+    public void overrideCss() {
         scene.getStylesheets().add(getClass().getResource("/test.css").toExternalForm());
         sleep(3000);
 
