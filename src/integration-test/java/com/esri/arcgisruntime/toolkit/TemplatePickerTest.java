@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.testfx.api.FxRobotException;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.Set;
 
@@ -152,9 +153,9 @@ public class TemplatePickerTest extends ApplicationTest {
         clickOn(featureLayer.getName()); // should not fail
 
         // when showing template names is set to false
-        templatePicker.showTemplateNamesProperty().set(false);
+        Platform.runLater(() -> templatePicker.showTemplateNamesProperty().set(false));
 
-        sleep(1000);
+        WaitForAsyncUtils.waitForFxEvents();
 
         // then no name is shown
         assertThrows(FxRobotException.class, () -> clickOn(featureLayer.getName()), "Name should not be clickable.");
