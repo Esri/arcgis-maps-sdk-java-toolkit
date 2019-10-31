@@ -32,7 +32,7 @@ import org.testfx.util.WaitForAsyncUtils;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Integration tests for BookmarksList.
+ * Integration tests for BookmarkView.
  */
 public class BookmarkViewIntegrationTest extends ApplicationTest {
 

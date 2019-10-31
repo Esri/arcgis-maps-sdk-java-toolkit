@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.testfx.framework.junit.ApplicationTest;
 
 /**
- * Unit tests for BookmarksList.
+ * Unit tests for BookmarkView.
  */
 public class BookmarkViewTest extends ApplicationTest {
 
