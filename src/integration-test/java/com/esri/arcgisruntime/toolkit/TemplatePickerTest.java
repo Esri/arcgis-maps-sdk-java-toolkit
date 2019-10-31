@@ -6,6 +6,7 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
@@ -169,8 +170,10 @@ public class TemplatePickerTest extends ApplicationTest {
         int height = 10;
         int width = 500;
 
-        templatePicker.symbolHeightProperty().set(height);
-        templatePicker.symbolWidthProperty().set(width);
+        Platform.runLater(() -> {
+            templatePicker.symbolHeightProperty().set(height);
+            templatePicker.symbolWidthProperty().set(width);
+        });
 
         sleep(1000);
 
