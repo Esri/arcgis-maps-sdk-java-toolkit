@@ -1,7 +1,7 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.mapping.Bookmark;
-import com.esri.arcgisruntime.toolkit.BookmarksWidget;
+import com.esri.arcgisruntime.toolkit.BookmarkView;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListCell;
@@ -12,7 +12,7 @@ import javafx.util.Callback;
 /**
  * A Skin to display the BookmarksWidget as a ListView.
  */
-public class BookmarksListSkin extends SkinBase<BookmarksWidget> {
+public class BookmarksListSkin extends SkinBase<BookmarkView> {
 
   private final ListView<Bookmark> listView;
 
@@ -21,7 +21,7 @@ public class BookmarksListSkin extends SkinBase<BookmarksWidget> {
    *
    * @param control bookmarks list control to skin
    */
-  public BookmarksListSkin(BookmarksWidget control) {
+  public BookmarksListSkin(BookmarkView control) {
     super(control);
 
     // show the control as a list view
@@ -49,10 +49,10 @@ public class BookmarksListSkin extends SkinBase<BookmarksWidget> {
     // set a listener for when the selected item changes
     listView.getSelectionModel().selectedItemProperty().addListener(listener -> {
       Bookmark selectedBookmark = listView.getSelectionModel().getSelectedItem();
-      EventHandler<BookmarksWidget.BookmarkSelectedEvent> bookmarkSelectedEventHandler = control.getOnBookmarkSelected();
+      EventHandler<BookmarkView.BookmarkSelectedEvent> bookmarkSelectedEventHandler = control.getOnBookmarkSelected();
       if (bookmarkSelectedEventHandler != null) {
         // use the user-specified handler
-        bookmarkSelectedEventHandler.handle(new BookmarksWidget.BookmarkSelectedEvent(selectedBookmark));
+        bookmarkSelectedEventHandler.handle(new BookmarkView.BookmarkSelectedEvent(selectedBookmark));
       } else if (selectedBookmark != null) {
         // default to deselecting the bookmark after changing viewpoint so it can be selected again
         control.getGeoView().setBookmarkAsync(selectedBookmark).addDoneListener(() ->

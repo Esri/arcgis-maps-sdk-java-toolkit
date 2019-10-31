@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Integration tests for BookmarksList.
  */
-public class BookmarksWidgetIntegrationTest extends ApplicationTest {
+public class BookmarkViewIntegrationTest extends ApplicationTest {
 
   private StackPane stackPane;
 
@@ -69,11 +69,11 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     mapView.setMap(map);
 
     // when the bookmarks view is added with the map view
-    BookmarksWidget bookmarksWidget = new BookmarksWidget(mapView);
-    bookmarksWidget.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarksWidget, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarksWidget, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarksWidget));
+    BookmarkView bookmarkView = new BookmarkView(mapView);
+    bookmarkView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkView));
 
     sleep(3000);
 
@@ -96,11 +96,11 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     sceneView.setArcGISScene(scene);
 
     // when the bookmarks view is added with the scene view
-    BookmarksWidget bookmarksWidget = new BookmarksWidget(sceneView);
-    bookmarksWidget.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarksWidget, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarksWidget, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarksWidget));
+    BookmarkView bookmarkView = new BookmarkView(sceneView);
+    bookmarkView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkView));
 
     sleep(3000);
 
@@ -124,11 +124,11 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(bookmarkToRemove);
     mapView.setMap(map);
 
-    BookmarksWidget bookmarksWidget = new BookmarksWidget(mapView);
-    bookmarksWidget.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarksWidget, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarksWidget, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarksWidget));
+    BookmarkView bookmarkView = new BookmarkView(mapView);
+    bookmarkView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkView));
 
     sleep(3000);
 
@@ -159,11 +159,11 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(guitarShapedTreesBookmark);
     mapView.setMap(map);
 
-    BookmarksWidget bookmarksWidget = new BookmarksWidget(mapView);
-    bookmarksWidget.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarksWidget, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarksWidget, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarksWidget));
+    BookmarkView bookmarkView = new BookmarkView(mapView);
+    bookmarkView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkView));
 
     sleep(3000);
 
@@ -199,7 +199,7 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(bookmark);
     mapView.setMap(map);
 
-    BookmarksWidget bookmarksView = new BookmarksWidget(mapView);
+    BookmarkView bookmarksView = new BookmarkView(mapView);
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
@@ -236,7 +236,7 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(bookmark);
     mapView.setMap(map);
 
-    BookmarksWidget bookmarksView = new BookmarksWidget(mapView);
+    BookmarkView bookmarksView = new BookmarkView(mapView);
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
@@ -275,15 +275,15 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
     mapView.setMap(map);
 
-    BookmarksWidget bookmarksWidget = new BookmarksWidget(mapView);
-    bookmarksWidget.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarksWidget, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarksWidget, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarksWidget));
+    BookmarkView bookmarkView = new BookmarkView(mapView);
+    bookmarkView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkView));
 
     // when the cell factory is set to one that shows an image and custom text
     Platform.runLater(() -> {
-      BookmarksListSkin customListSkin = new BookmarksListSkin(bookmarksWidget);
+      BookmarksListSkin customListSkin = new BookmarksListSkin(bookmarkView);
       customListSkin.setCellFactory(new Callback<>() {
         private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
 
@@ -299,7 +299,7 @@ public class BookmarksWidgetIntegrationTest extends ApplicationTest {
           };
         }
       });
-      bookmarksWidget.setSkin(customListSkin);
+      bookmarkView.setSkin(customListSkin);
     });
 
     sleep(3000);
