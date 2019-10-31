@@ -12,11 +12,11 @@ import org.testfx.framework.junit.ApplicationTest;
 public class BookmarkViewTest extends ApplicationTest {
 
   /**
-   * Tests IllegalArgumentException from null geoView constructor arg.
+   * Tests NullPointerException from null geoView constructor arg.
    */
   @Test
   public void constructorGeoViewNull() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new BookmarkView(null));
+    Assertions.assertThrows(NullPointerException.class, () -> new BookmarkView(null));
   }
 
   /**
