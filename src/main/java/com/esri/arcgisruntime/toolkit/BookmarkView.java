@@ -8,7 +8,6 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.skins.BookmarksListSkin;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
@@ -51,10 +50,10 @@ public class BookmarkView extends Control {
         map.addDoneLoadingListener(() -> {
           BookmarkList bookmarkList = map.getBookmarks();
           bookmarksInternal.addAll(bookmarkList);
-          Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
+          bookmarkList.addListChangedListener(listChangedEvent -> {
             bookmarksInternal.clear();
             bookmarksInternal.addAll(bookmarkList);
-          }));
+          });
         });
       } else {
         throw new IllegalStateException("Map cannot be null");
@@ -65,10 +64,10 @@ public class BookmarkView extends Control {
         scene.addDoneLoadingListener(() -> {
           BookmarkList bookmarkList = scene.getBookmarks();
           bookmarksInternal.addAll(bookmarkList);
-          Platform.runLater(() -> bookmarkList.addListChangedListener(listChangedEvent -> {
+          bookmarkList.addListChangedListener(listChangedEvent -> {
             bookmarksInternal.clear();
             bookmarksInternal.addAll(bookmarkList);
-          }));
+          });
         });
       } else {
         throw new IllegalStateException("Scene cannot be null");

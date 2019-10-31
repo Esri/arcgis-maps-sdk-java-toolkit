@@ -134,8 +134,10 @@ public class BookmarkViewIntegrationTest extends ApplicationTest {
 
     // after adding and removing some bookmarks
     Bookmark bookmarkToAdd = new Bookmark("Strange Symbol", new Viewpoint(37.401573, -116.867808, 6e3));
-    map.getBookmarks().remove(bookmarkToRemove);
-    map.getBookmarks().add(bookmarkToAdd);
+    Platform.runLater(() -> {
+      map.getBookmarks().remove(bookmarkToRemove);
+      map.getBookmarks().add(bookmarkToAdd);
+    });
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -169,12 +171,12 @@ public class BookmarkViewIntegrationTest extends ApplicationTest {
 
     // when the map is changed to a different map with its own bookmarks
     ArcGISMap map2 = new ArcGISMap(Basemap.createImagery());
-    map.getBookmarks().add(guitarShapedTreesBookmark);
+    Platform.runLater(() -> map.getBookmarks().add(guitarShapedTreesBookmark));
     mapView.setMap(map);
 
     // after adding and removing some bookmarks
     Bookmark strangeSymbolBookmark = new Bookmark("Strange Symbol", new Viewpoint(37.401573, -116.867808, 6e3));
-    map.getBookmarks().add(strangeSymbolBookmark);
+    Platform.runLater(() -> map.getBookmarks().add(strangeSymbolBookmark));
 
     mapView.setMap(map2);
 
