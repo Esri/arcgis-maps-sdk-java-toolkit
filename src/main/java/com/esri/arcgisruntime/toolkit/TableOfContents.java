@@ -1,9 +1,11 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.mapping.view.GeoView;
+import com.esri.arcgisruntime.toolkit.skins.TableOfContentsTreeViewSkin;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.scene.control.Control;
+import javafx.scene.control.Skin;
 
 import java.util.Objects;
 
@@ -21,6 +23,11 @@ public class TableOfContents extends Control {
    */
   public TableOfContents(GeoView geoView) {
     this.geoView = new ReadOnlyObjectWrapper<>(Objects.requireNonNull(geoView));
+  }
+
+  @Override
+  protected Skin<?> createDefaultSkin() {
+    return new TableOfContentsTreeViewSkin(this);
   }
 
   /**
