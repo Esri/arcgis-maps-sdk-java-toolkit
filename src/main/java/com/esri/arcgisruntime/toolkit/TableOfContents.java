@@ -19,4 +19,13 @@ public class TableOfContents extends Control {
     Objects.requireNonNull(geoView);
   }
 
+  /**
+   * Gets the GeoView associated with this table of contents.
+   *
+   * @return geo view
+   */
+  public GeoView getGeoView() {
+    return null;
+  }
+
 }
