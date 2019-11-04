@@ -20,7 +20,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
 /**
- * Integration tests for BookmarkView.
+ * Integration tests for TableOfContents.
  */
 public class TableOfContentsIntegrationTest extends ApplicationTest {
 
@@ -47,7 +47,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
    */
   @Test
   public void itemForEveryOperationalLayerInMap() {
-    // given a map view containing a map with bookmarks
+    // given a map view containing a map with an operational layer
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
@@ -59,7 +59,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     map.getOperationalLayers().add(featureLayer);
     mapView.setMap(map);
 
-    // when the bookmarks view is added with the map view
+    // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(mapView);
     tableOfContents.setMaxSize(100, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
@@ -68,16 +68,16 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     sleep(6000);
 
-    // every bookmark's name will be displayed in the view
+    // every layer's name will be displayed in the view
     map.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
   }
 
   /**
-   * Tests that every operational layer in the map has its name displayed.
+   * Tests that every operational layer in the scene has its name displayed.
    */
   @Test
   public void itemForEveryOperationalLayerInScene() {
-    // given a map view containing a map with bookmarks
+    // given a scene view containing a scene with an operational layer
     SceneView sceneView = new SceneView();
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
 
@@ -89,7 +89,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     scene.getOperationalLayers().add(featureLayer);
     sceneView.setArcGISScene(scene);
 
-    // when the bookmarks view is added with the map view
+    // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(sceneView);
     tableOfContents.setMaxSize(100, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
@@ -98,7 +98,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     sleep(6000);
 
-    // every bookmark's name will be displayed in the view
+    // every layer's name will be displayed in the view
     scene.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
   }
 }
