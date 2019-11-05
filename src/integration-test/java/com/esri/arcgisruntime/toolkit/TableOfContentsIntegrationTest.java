@@ -2,6 +2,8 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.layers.ArcGISSublayer;
+import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
@@ -149,5 +151,37 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // the layer will be visible
     Assertions.assertTrue(featureLayer.isVisible());
+  }
+
+  /**
+   * Tests that the checkbox is disabled when visibility cannot be changed.
+   */
+  @Test
+  public void disableCheckboxWhenVisibilityCannotBeChanged() {
+    // given a map view containing a map with an operational layer
+    MapView mapView = new MapView();
+    Platform.runLater(() -> stackPane.getChildren().add(mapView));
+
+    ArcGISMap map = new ArcGISMap();
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("http://services.arcgisonline" +
+        ".com/ArcGIS/rest/services/World_Street_Map/MapServer");
+    map.getOperationalLayers().add(tiledLayer);
+    mapView.setMap(map);
+
+    TableOfContents tableOfContents = new TableOfContents(mapView);
+    tableOfContents.setMaxSize(100, 100);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setMargin(tableOfContents, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
+
+    sleep(6000);
+
+    ArcGISSublayer subLayer = tiledLayer.getSublayers().get(0);
+    Assertions.assertFalse(subLayer.canChangeVisibility());
+
+    // when the item's checkbox is deselected
+    Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
+    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
+    Assertions.assertTrue(checkBox.isDisable());
   }
 }
