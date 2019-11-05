@@ -26,4 +26,20 @@ public class TableOfContentsTest extends ApplicationTest  {
     TableOfContents tableOfContents = new TableOfContents(mapView);
     Assertions.assertEquals(mapView, tableOfContents.getGeoView());
   }
+
+  /**
+   * Tests that a TableOfContents with a MapView and null map throws a NullPointerException.
+   */
+  @Test
+  public void nullMapInMapView() {
+    Assertions.assertThrows(NullPointerException.class, () -> new TableOfContents(new MapView()));
+  }
+
+  /**
+   * Tests that a TableOfContents with a SceneView and null scene throws a NullPointerException.
+   */
+  @Test
+  public void nullSceneInSceneView() {
+    Assertions.assertThrows(NullPointerException.class, () -> new TableOfContents(new MapView()));
+  }
 }
