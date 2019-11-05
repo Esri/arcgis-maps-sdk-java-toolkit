@@ -12,12 +12,17 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
+
+import java.util.Set;
 
 /**
  * Integration tests for TableOfContents.
@@ -100,5 +105,49 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // every layer's name will be displayed in the view
     scene.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
+  }
+
+  /**
+   * Tests that every item which can change its visibility can have its visibility toggled via its checkbox.
+   */
+  @Test
+  public void toggleVisibilityWithCheckbox() throws InterruptedException {
+    // given a map view containing a map with an operational layer
+    MapView mapView = new MapView();
+    Platform.runLater(() -> stackPane.getChildren().add(mapView));
+
+    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
+        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+    FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+    map.getOperationalLayers().add(featureLayer);
+    mapView.setMap(map);
+
+    TableOfContents tableOfContents = new TableOfContents(mapView);
+    tableOfContents.setMaxSize(100, 100);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setMargin(tableOfContents, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
+
+    sleep(6000);
+
+    // when the item's checkbox is deselected
+    Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
+    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
+    Platform.runLater(() -> checkBox.setSelected(false));
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    // the layer will not be visible
+    Assertions.assertFalse(featureLayer.isVisible());
+
+    // when the item's checkbox is selected
+    Platform.runLater(() -> checkBox.setSelected(true));
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    // the layer will be visible
+    Assertions.assertTrue(featureLayer.isVisible());
   }
 }

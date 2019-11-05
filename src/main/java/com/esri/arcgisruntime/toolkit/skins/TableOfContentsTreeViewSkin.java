@@ -3,10 +3,7 @@ package com.esri.arcgisruntime.toolkit.skins;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.layers.LayerContent;
 import com.esri.arcgisruntime.toolkit.TableOfContents;
-import javafx.scene.control.SkinBase;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 
 /**
  * Skin for displaying a TableOfContents with a TreeView.
@@ -30,16 +27,26 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
 
       @Override
       protected void updateItem(LayerContent item, boolean empty) {
+
         if (empty) {
           setText(null);
           setGraphic(null);
         } else {
+          CheckBox visibilityToggleCheckBox = new CheckBox();
+          visibilityToggleCheckBox.setSelected(item.isVisible());
+          visibilityToggleCheckBox.selectedProperty().addListener(o ->
+              item.setVisible(visibilityToggleCheckBox.isSelected())
+          );
+
           setText(item.getName());
-        }
-        // handle type-specific behavior
-        if (item instanceof Layer) {
-          ((Layer) item).loadAsync();
-          ((Layer) item).addDoneLoadingListener(() -> setText(item.getName()));
+          setGraphic(visibilityToggleCheckBox);
+
+          // layer may need to be loaded before name is populated
+          if (item instanceof Layer) {
+            Layer layer = (Layer) item;
+            layer.loadAsync();
+            layer.addDoneLoadingListener(() -> setText(item.getName()));
+          }
         }
       }
     });
