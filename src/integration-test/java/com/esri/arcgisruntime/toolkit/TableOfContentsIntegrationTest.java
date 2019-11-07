@@ -2,12 +2,11 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.layers.ArcGISSublayer;
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
-import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.layers.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.application.Platform;
@@ -24,6 +23,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -68,7 +68,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(mapView);
-    tableOfContents.setMaxSize(100, 100);
+    tableOfContents.setMaxSize(150, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
@@ -98,7 +98,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(sceneView);
-    tableOfContents.setMaxSize(100, 100);
+    tableOfContents.setMaxSize(150, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
@@ -127,7 +127,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     mapView.setMap(map);
 
     TableOfContents tableOfContents = new TableOfContents(mapView);
-    tableOfContents.setMaxSize(100, 100);
+    tableOfContents.setMaxSize(150, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
@@ -137,17 +137,17 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the item's checkbox is deselected
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
     CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
-    Platform.runLater(() -> checkBox.setSelected(false));
+    checkBox.setSelected(false);
 
-    WaitForAsyncUtils.waitForFxEvents();
+    sleep(1000);
 
     // the layer will not be visible
     Assertions.assertFalse(featureLayer.isVisible());
 
     // when the item's checkbox is selected
-    Platform.runLater(() -> checkBox.setSelected(true));
+    checkBox.setSelected(true);
 
-    WaitForAsyncUtils.waitForFxEvents();
+    sleep(1000);
 
     // the layer will be visible
     Assertions.assertTrue(featureLayer.isVisible());
@@ -169,7 +169,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     mapView.setMap(map);
 
     TableOfContents tableOfContents = new TableOfContents(mapView);
-    tableOfContents.setMaxSize(100, 100);
+    tableOfContents.setMaxSize(150, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
@@ -181,7 +181,58 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // when the item's checkbox is deselected
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
+    Assertions.assertEquals(1, visibilityCheckboxes.size());
     CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
     Assertions.assertTrue(checkBox.isDisable());
+  }
+
+  /**
+   * Tests group layers in the table of contents.
+   */
+  @Test
+  public void groupLayers() {
+    // given a scene view containing a scene with a group layer
+    SceneView sceneView = new SceneView();
+    Platform.runLater(() -> stackPane.getChildren().add(sceneView));
+
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer");
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer");
+    FeatureTable featureTable = new ServiceFeatureTable("https://services.arcgis" +
+        ".com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1");
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+
+    GroupLayer groupLayer = new GroupLayer();
+    groupLayer.setName("Group: Dev A");
+    groupLayer.getLayers().addAll(Arrays.asList(devOne, devTwo, featureLayer));
+    scene.getOperationalLayers().add(groupLayer);
+    sceneView.setArcGISScene(scene);
+
+    featureLayer.addDoneLoadingListener(() -> sceneView.setViewpointCamera(new Camera(featureLayer.getFullExtent().getCenter(), 700, 0, 60, 0)));
+
+    // when the table of contents is added
+    TableOfContents tableOfContents = new TableOfContents(sceneView);
+    tableOfContents.setMaxSize(150, 300);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setMargin(tableOfContents, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
+
+    sleep(6000);
+
+    // the group layer's name and its children's names should be viewable
+    clickOn(groupLayer.getName());
+    clickOn(groupLayer.getName()); // double-click to expand
+    groupLayer.getLayers().forEach(layer -> clickOn(layer.getName()));
+
+    Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
+    Assertions.assertEquals(4, visibilityCheckboxes.size());
+
+    // turn off parent
+    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
+    checkBox.setSelected(false);
+
+    sleep(1000);
+
+    Assertions.assertFalse(groupLayer.isVisible());
   }
 }
