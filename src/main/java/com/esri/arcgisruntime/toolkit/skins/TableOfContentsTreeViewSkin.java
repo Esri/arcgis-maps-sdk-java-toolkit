@@ -2,7 +2,9 @@ package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.layers.LayerContent;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.toolkit.TableOfContents;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 /**
@@ -27,8 +29,8 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
 
       @Override
       protected void updateItem(LayerContent item, boolean empty) {
-
-        if (empty) {
+        super.updateItem(item, empty);
+        if (empty || item == null) {
           setText(null);
           setGraphic(null);
         } else {
@@ -45,7 +47,7 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
           if (item instanceof Layer) {
             Layer layer = (Layer) item;
             layer.loadAsync();
-            layer.addDoneLoadingListener(() -> setText(item.getName()));
+            layer.addDoneLoadingListener(() -> setText(layer.getName()));
           }
         }
       }
@@ -57,8 +59,33 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
     treeView.setShowRoot(false);
 
     // add all of the layers from the control as child nodes
-    control.getOperationalLayers().forEach(layer -> root.getChildren().add(new TreeItem<>(layer)));
+    control.getOperationalLayers().forEach(layer -> root.getChildren().add(new LayerContentTreeItem(layer)));
 
+  }
+
+
+  public static class LayerContentTreeItem extends TreeItem<LayerContent> {
+
+    public LayerContentTreeItem(LayerContent value, Node graphic) {
+      super(value, graphic);
+      value.getSubLayerContents().forEach(layerContent ->
+          getChildren().add(new TreeItem<>(layerContent))
+      );
+    }
+
+    public LayerContentTreeItem(LayerContent value) {
+      super(value);
+      if (value instanceof Layer) {
+        Layer layer = (Layer) value;
+        layer.addDoneLoadingListener(() -> {
+          if (layer.getLoadStatus() == LoadStatus.LOADED) {
+            layer.getSubLayerContents().forEach(layerContent ->
+                getChildren().add(new TreeItem<>(layerContent))
+            );
+          }
+        });
+      }
+    }
   }
 
 }
