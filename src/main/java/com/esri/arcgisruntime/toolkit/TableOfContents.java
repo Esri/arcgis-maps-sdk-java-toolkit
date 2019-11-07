@@ -11,6 +11,7 @@ import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -24,7 +25,11 @@ public class TableOfContents extends Control {
 
   private final ReadOnlyListWrapper<Layer> operationalLayers;
 
+  private final ReadOnlyListWrapper<Layer> basemapLayers;
+
   private ReadOnlyObjectWrapper<GeoView> geoView;
+
+  private SimpleBooleanProperty showBasemapLayers = new SimpleBooleanProperty(false);
 
   /**
    * Creates a table of contents for the given GeoView.
@@ -37,10 +42,12 @@ public class TableOfContents extends Control {
     // initialize the layerContents property from the map or scene in the geo view
     if (geoView instanceof MapView) {
       ArcGISMap map = Objects.requireNonNull(((MapView) geoView).getMap());
+      basemapLayers = new ReadOnlyListWrapper<>(ListenableListUtils.toObservableList(map.getBasemap().getBaseLayers()));
       operationalLayers = new ReadOnlyListWrapper<>(ListenableListUtils.toObservableList(map.getOperationalLayers()));
       map.loadAsync();
     } else {
       ArcGISScene scene = Objects.requireNonNull(((SceneView) geoView).getArcGISScene());
+      basemapLayers = new ReadOnlyListWrapper<>(ListenableListUtils.toObservableList(scene.getBasemap().getBaseLayers()));
       operationalLayers = new ReadOnlyListWrapper<>(ListenableListUtils.toObservableList(scene.getOperationalLayers()));
       scene.loadAsync();
     }
@@ -75,5 +82,29 @@ public class TableOfContents extends Control {
 
   public ReadOnlyListWrapper<Layer> operationalLayersProperty() {
     return operationalLayers;
+  }
+
+  public boolean getShowBasemapLayers() {
+    return showBasemapLayers.get();
+  }
+
+  public SimpleBooleanProperty showBasemapLayersProperty() {
+    return showBasemapLayers;
+  }
+
+  public void setShowBasemapLayers(boolean showBasemapLayers) {
+    this.showBasemapLayers.set(showBasemapLayers);
+  }
+
+  public ObservableList<Layer> getBasemapLayers() {
+    return basemapLayers.get();
+  }
+
+  public ReadOnlyListWrapper<Layer> basemapLayersProperty() {
+    return basemapLayers;
+  }
+
+  public void setBasemapLayers(ObservableList<Layer> basemapLayers) {
+    this.basemapLayers.set(basemapLayers);
   }
 }

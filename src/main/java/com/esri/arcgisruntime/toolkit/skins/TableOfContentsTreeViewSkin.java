@@ -39,6 +39,7 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
           visibilityToggleCheckBox.selectedProperty().addListener(o ->
               item.setVisible(visibilityToggleCheckBox.isSelected())
           );
+          visibilityToggleCheckBox.setDisable(!item.canChangeVisibility());
 
           setText(item.getName());
           setGraphic(visibilityToggleCheckBox);
@@ -60,6 +61,10 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
 
     // add all of the layers from the control as child nodes
     control.getOperationalLayers().forEach(layer -> root.getChildren().add(new LayerContentTreeItem(layer)));
+
+    if (control.getShowBasemapLayers()) {
+      control.getBasemapLayers().forEach(layer -> root.getChildren().add(new LayerContentTreeItem(layer)));
+    }
 
   }
 

@@ -137,7 +137,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the item's checkbox is deselected
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
     CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
-    checkBox.setSelected(false);
+    clickOn(checkBox);
 
     sleep(1000);
 
@@ -145,7 +145,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Assertions.assertFalse(featureLayer.isVisible());
 
     // when the item's checkbox is selected
-    checkBox.setSelected(true);
+    clickOn(checkBox);
 
     sleep(1000);
 
@@ -157,18 +157,18 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
    * Tests that the checkbox is disabled when visibility cannot be changed.
    */
   @Test
-  public void disableCheckboxWhenVisibilityCannotBeChanged() {
-    // given a map view containing a map with an operational layer
+  public void basemapLayers() {
+    // given a map view containing a map with a basemap
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
-    ArcGISMap map = new ArcGISMap();
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("http://services.arcgisonline" +
         ".com/ArcGIS/rest/services/World_Street_Map/MapServer");
-    map.getOperationalLayers().add(tiledLayer);
+    ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mapView.setMap(map);
 
     TableOfContents tableOfContents = new TableOfContents(mapView);
+    tableOfContents.setShowBasemapLayers(true);
     tableOfContents.setMaxSize(150, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
     StackPane.setMargin(tableOfContents, new Insets(10));
@@ -179,11 +179,16 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     ArcGISSublayer subLayer = tiledLayer.getSublayers().get(0);
     Assertions.assertFalse(subLayer.canChangeVisibility());
 
+    // double-click parent to expand
+    doubleClickOn(tiledLayer.getName());
+
     // when the item's checkbox is deselected
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
-    Assertions.assertEquals(1, visibilityCheckboxes.size());
-    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
+    Assertions.assertEquals(2, visibilityCheckboxes.size());
+    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[1];
     Assertions.assertTrue(checkBox.isDisable());
+
+    sleep(1000);
   }
 
   /**
@@ -229,7 +234,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // turn off parent
     CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
-    checkBox.setSelected(false);
+    clickOn(checkBox);
 
     sleep(1000);
 
