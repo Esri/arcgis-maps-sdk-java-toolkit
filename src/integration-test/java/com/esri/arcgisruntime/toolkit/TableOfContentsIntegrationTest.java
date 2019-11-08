@@ -14,17 +14,23 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.testfx.api.FxRobotException;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.Arrays;
 import java.util.Set;
+
+import static com.esri.arcgisruntime.toolkit.skins.TableOfContentsTreeViewSkin.LayerContentTreeCell;
+import static com.esri.arcgisruntime.toolkit.skins.TableOfContentsTreeViewSkin.LayerContentTreeItem;
 
 /**
  * Integration tests for TableOfContents.
@@ -113,7 +119,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
    * Tests that every item which can change its visibility can have its visibility toggled via its checkbox.
    */
   @Test
-  public void toggleVisibilityWithCheckbox() throws InterruptedException {
+  public void toggleVisibilityWithCheckbox() {
     // given a map view containing a map with an operational layer
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
@@ -136,7 +142,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     // when the item's checkbox is deselected
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
-    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
+    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[1];
     clickOn(checkBox);
 
     sleep(1000);
@@ -168,7 +174,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     mapView.setMap(map);
 
     TableOfContents tableOfContents = new TableOfContents(mapView);
-    tableOfContents.setShowBasemapLayers(true);
     tableOfContents.setMaxSize(150, 100);
     StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
     StackPane.setMargin(tableOfContents, new Insets(10));
@@ -182,11 +187,9 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // double-click parent to expand
     doubleClickOn(tiledLayer.getName());
 
-    // when the item's checkbox is deselected
+    // the sublayer's item should not have a checkbox
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
-    Assertions.assertEquals(2, visibilityCheckboxes.size());
-    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[1];
-    Assertions.assertTrue(checkBox.isDisable());
+    Assertions.assertEquals(1, visibilityCheckboxes.size());
 
     sleep(1000);
   }
@@ -230,7 +233,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     groupLayer.getLayers().forEach(layer -> clickOn(layer.getName()));
 
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
-    Assertions.assertEquals(4, visibilityCheckboxes.size());
+    Assertions.assertEquals(5, visibilityCheckboxes.size());
 
     // turn off parent
     CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
@@ -239,5 +242,54 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     sleep(1000);
 
     Assertions.assertFalse(groupLayer.isVisible());
+  }
+
+  /**
+   * Tests that one can create their own custom layer tree with most of the behavior of table of contents without a
+   * map, scene, or geoview.
+   */
+  @Test
+  public void customLayerTree() {
+    // given a normal TreeView with some layer contents
+    TreeView<LayerContent> layerTree = new TreeView<>();
+    layerTree.setMaxSize(150, 300);
+    Platform.runLater(() -> stackPane.getChildren().add(layerTree));
+    StackPane.setAlignment(layerTree, Pos.TOP_RIGHT);
+    StackPane.setMargin(layerTree, new Insets(10));
+
+    GroupLayer groupLayer = new GroupLayer();
+    groupLayer.setName("Group");
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer");
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer");
+    FeatureTable featureTable = new ServiceFeatureTable("https://services.arcgis" +
+        ".com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1");
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+    groupLayer.getLayers().addAll(Arrays.asList(devOne, devTwo, featureLayer));
+
+    TreeItem<LayerContent> root = new TreeItem<>();
+    Platform.runLater(() -> layerTree.setRoot(root));
+    layerTree.setShowRoot(false);
+
+    // when the cell factory is LayerContentTreeCell and the items are LayerContentTreeItems
+    layerTree.setCellFactory(param -> new LayerContentTreeCell());
+    root.getChildren().add(new LayerContentTreeItem(groupLayer));
+
+    sleep(5000);
+
+    // then the items should show the layer content's name and a checkbox to change the visibility
+    doubleClickOn("Group");
+    groupLayer.getLayers().forEach(l -> clickOn(l.getName()));
+
+    // when the cell factory is LayerContentTreeCell and the items are normal TreeItems
+    root.getChildren().clear();
+    root.getChildren().add(new TreeItem<>(groupLayer));
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    // then the child layers will not be shown
+    doubleClickOn("Group");
+    Assertions.assertThrows(FxRobotException.class, () -> clickOn(devOne.getName()));
+
+    sleep(1000);
   }
 }
