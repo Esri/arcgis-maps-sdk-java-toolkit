@@ -7,14 +7,13 @@ import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.arcgisruntime.toolkit.skins.BookmarksListSkin;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.Control;
-import javafx.scene.control.Skin;
 
 import java.util.Objects;
 
@@ -22,13 +21,11 @@ import java.util.Objects;
  * A control for viewing bookmarks from a map or scene. Selecting a bookmark sets the geoView's viewpoint to the
  * selected bookmark's viewpoint.
  */
-public class BookmarkView extends Control {
+public abstract class BookmarkView extends Control {
 
   private final ReadOnlyListWrapper<Bookmark> bookmarks;
 
   private final ReadOnlyObjectWrapper<GeoView> geoView;
-
-  private final ObjectProperty<EventHandler<BookmarkSelectedEvent>> onBookmarkSelected;
 
   /**
    * Creates an instance for the GeoView.
@@ -70,14 +67,6 @@ public class BookmarkView extends Control {
         throw new IllegalStateException("Scene cannot be null");
       }
     }
-
-    // set this as null and leave it up to the skin
-    onBookmarkSelected = new SimpleObjectProperty<>();
-  }
-
-  @Override
-  protected Skin<?> createDefaultSkin() {
-    return new BookmarksListSkin(this);
   }
 
   /**
@@ -115,59 +104,4 @@ public class BookmarkView extends Control {
     return bookmarks;
   }
 
-  /**
-   * Returns the EventHandler called when a bookmark is selected. Defaults to null, in which case the geoView is
-   * navigated to the selected bookmark, and then the bookmark is deselected.
-   *
-   * @return event handler called when a bookmark is selected
-   */
-  public EventHandler<BookmarkSelectedEvent> getOnBookmarkSelected() {
-    return onBookmarkSelected.get();
-  }
-
-  /**
-   * Called when a bookmark is selected. Defaults to null, in which case the geoView is navigated to the selected
-   * bookmark, and then the bookmark is deselected.
-   *
-   * @return event handler property
-   */
-  public ObjectProperty<EventHandler<BookmarkSelectedEvent>> onBookmarkSelectedProperty() {
-    return onBookmarkSelected;
-  }
-
-  /**
-   * Sets the EventHandler called when a bookmark is selected.
-   *
-   * @param onBookmarkSelected the event handler
-   */
-  public void setOnBookmarkSelected(EventHandler<BookmarkSelectedEvent> onBookmarkSelected) {
-    this.onBookmarkSelected.set(onBookmarkSelected);
-  }
-
-  /**
-   * An Event created when a bookmark is selected from the list.
-   */
-  public static class BookmarkSelectedEvent extends Event {
-
-    private Bookmark selectedBookmark;
-
-    /**
-     * Creates an event based on a selected bookmark.
-     *
-     * @param selectedBookmark the selected bookmark which triggered the event
-     */
-    public BookmarkSelectedEvent(Bookmark selectedBookmark) {
-      super(ANY);
-      this.selectedBookmark = selectedBookmark;
-    }
-
-    /**
-     * Gets the selected bookmark which triggered the event.
-     *
-     * @return selected bookmark
-     */
-    public Bookmark getSelectedBookmark() {
-      return selectedBookmark;
-    }
-  }
 }
