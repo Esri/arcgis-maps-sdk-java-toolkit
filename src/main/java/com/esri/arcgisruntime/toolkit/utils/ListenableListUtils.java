@@ -23,10 +23,10 @@ public class ListenableListUtils {
     listenableList.addListChangedListener(listChangedEvent -> {
       switch (listChangedEvent.getAction()) {
         case ADDED:
-          observableList.add(listChangedEvent.getIndex(), listenableList.get(listChangedEvent.getIndex()));
+          observableList.addAll(listChangedEvent.getIndex(), listChangedEvent.getItems());
           break;
         case REMOVED:
-          observableList.remove(listChangedEvent.getIndex());
+          observableList.removeAll(listChangedEvent.getItems());
           break;
       }
     });
