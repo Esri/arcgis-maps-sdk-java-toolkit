@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.esri.arcgisruntime.mapping.Bookmark?>
+<?import com.esri.arcgisruntime.toolkit.BookmarkListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.StackPane?>
+<StackPane xmlns="http://javafx.com/javafx">
+    <BookmarkListView StackPane.alignment="TOP_RIGHT">
+        <StackPane.margin>
+            <Insets topRightBottomLeft="10"/>
+        </StackPane.margin>
+        <bookmarks>
+            <Bookmark name="Test 1"/>
+            <Bookmark name="Test 2"/>
+        </bookmarks>
+    </BookmarkListView>
+</StackPane>
