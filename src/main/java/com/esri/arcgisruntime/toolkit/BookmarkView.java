@@ -3,18 +3,20 @@ package com.esri.arcgisruntime.toolkit;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Bookmark;
-import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.ReadOnlyListWrapper;
+import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
+import javafx.beans.NamedArg;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,7 +25,7 @@ import java.util.Objects;
  */
 public abstract class BookmarkView extends Control {
 
-  private final ReadOnlyListWrapper<Bookmark> bookmarks;
+  private ListProperty<Bookmark> bookmarks;
 
   private final ReadOnlyObjectWrapper<GeoView> geoView;
 
@@ -32,41 +34,30 @@ public abstract class BookmarkView extends Control {
    *
    * @param geoView A GeoView
    */
-  public BookmarkView(GeoView geoView) {
+  public BookmarkView(@NamedArg("geoView") GeoView geoView) {
     this.geoView = new ReadOnlyObjectWrapper<>(Objects.requireNonNull(geoView));
 
     // initialize the bookmarks property from the map or scene in the geo view
-    final ObservableList<Bookmark> bookmarksInternal = FXCollections.observableArrayList();
-    bookmarks = new ReadOnlyListWrapper<>(bookmarksInternal);
     if (geoView instanceof MapView) {
-      ArcGISMap map = ((MapView) geoView).getMap();
-      if (map != null) {
-        map.addDoneLoadingListener(() -> {
-          BookmarkList bookmarkList = map.getBookmarks();
-          bookmarksInternal.addAll(bookmarkList);
-          bookmarkList.addListChangedListener(listChangedEvent -> {
-            bookmarksInternal.clear();
-            bookmarksInternal.addAll(bookmarkList);
-          });
-        });
-      } else {
-        throw new IllegalStateException("Map cannot be null");
-      }
-    } else if (geoView instanceof SceneView) {
-      ArcGISScene scene = ((SceneView) geoView).getArcGISScene();
-      if (scene != null) {
-        scene.addDoneLoadingListener(() -> {
-          BookmarkList bookmarkList = scene.getBookmarks();
-          bookmarksInternal.addAll(bookmarkList);
-          bookmarkList.addListChangedListener(listChangedEvent -> {
-            bookmarksInternal.clear();
-            bookmarksInternal.addAll(bookmarkList);
-          });
-        });
-      } else {
-        throw new IllegalStateException("Scene cannot be null");
-      }
+      ArcGISMap map = Objects.requireNonNull(((MapView) geoView).getMap());
+      bookmarks = new SimpleListProperty<>(ListenableListUtils.toObservableList(map.getBookmarks()));
+    } else {
+      ArcGISScene scene = Objects.requireNonNull(((SceneView) geoView).getArcGISScene());
+      bookmarks = new SimpleListProperty<>(ListenableListUtils.toObservableList(scene.getBookmarks()));
     }
+  }
+
+  public BookmarkView(@NamedArg("bookmarks") ObservableList<Bookmark> bookmarks) {
+    this.geoView = new ReadOnlyObjectWrapper<>(null);
+    this.bookmarks = new SimpleListProperty<>(bookmarks);
+  }
+
+  public BookmarkView(@NamedArg("bookmarks") List<Bookmark> bookmarks) {
+    this(new SimpleListProperty<>(FXCollections.observableList(bookmarks)));
+  }
+
+  public BookmarkView() {
+    this(new SimpleListProperty<>(FXCollections.observableArrayList()));
   }
 
   /**
@@ -93,15 +84,14 @@ public abstract class BookmarkView extends Control {
    * @return bookmarks in the list
    */
   public ObservableList<Bookmark> getBookmarks() {
-    return bookmarksProperty().get();
-  }
-
-  /**
-   * Gets the read-only bookmarks list property.
-   * @return read-only bookmarks list property
-   */
-  public ReadOnlyListProperty<Bookmark> bookmarksProperty() {
     return bookmarks;
   }
 
+  public ListProperty<Bookmark> bookmarksProperty() {
+    return bookmarks;
+  }
+
+  public void setBookmarks(ObservableList<Bookmark> bookmarks) {
+    this.bookmarks.set(bookmarks);
+  }
 }
