@@ -7,10 +7,12 @@ import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.VerticalDirection;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -28,14 +30,22 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Integration tests for BookmarkList.
  */
-public class BookmarkListIntegrationTest extends ApplicationTest {
+public class BookmarkListViewIntegrationTest extends ApplicationTest {
 
   private StackPane stackPane;
+  private final Bookmark guitarShapedTreesBookmark = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886,
+      -63.985, 4e4));
+  private final Bookmark grandPrismaticSpringBookmark = new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049,
+      -110.83819, 6e3));
+  private final Bookmark strangeSymbolBookmark = new Bookmark("Strange Symbol", new Viewpoint(37.401573, -116.867808,
+      6e3));
 
   @Override
   public void start(Stage primaryStage) {
@@ -63,16 +73,15 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    map.getBookmarks().add(new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4)));
-    map.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
+    map.getBookmarks().addAll(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
     mapView.setMap(map);
 
     // when the bookmarks view is added with the map view
-    BookmarkList bookmarkList = new BookmarkList(mapView);
-    bookmarkList.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkList, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkList, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkList));
+    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
+    bookmarkListView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkListView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
 
     sleep(3000);
 
@@ -90,16 +99,15 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
 
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-    scene.getBookmarks().add(new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4)));
-    scene.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
+    scene.getBookmarks().addAll(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
     sceneView.setArcGISScene(scene);
 
     // when the bookmarks view is added with the scene view
-    BookmarkList bookmarkList = new BookmarkList(sceneView);
-    bookmarkList.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkList, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkList, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkList));
+    BookmarkListView bookmarkListView = new BookmarkListView(sceneView);
+    bookmarkListView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkListView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
 
     sleep(3000);
 
@@ -117,17 +125,16 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    Bookmark bookmarkToKeep = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
-    Bookmark bookmarkToRemove = new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3));
-    map.getBookmarks().add(bookmarkToKeep);
-    map.getBookmarks().add(bookmarkToRemove);
+    Bookmark bookmarkToKeep = guitarShapedTreesBookmark;
+    Bookmark bookmarkToRemove = grandPrismaticSpringBookmark;
+    map.getBookmarks().addAll(Arrays.asList(bookmarkToKeep, bookmarkToRemove));
     mapView.setMap(map);
 
-    BookmarkList bookmarkList = new BookmarkList(mapView);
-    bookmarkList.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkList, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkList, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkList));
+    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
+    bookmarkListView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkListView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
 
     sleep(3000);
 
@@ -155,28 +162,21 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    Bookmark guitarShapedTreesBookmark = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
+    final ArcGISMap map = new ArcGISMap(Basemap.createImagery());
     map.getBookmarks().add(guitarShapedTreesBookmark);
     mapView.setMap(map);
 
-    BookmarkList bookmarkList = new BookmarkList(mapView);
-    bookmarkList.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkList, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkList, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkList));
+    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
+    bookmarkListView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkListView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
 
     sleep(3000);
 
     // when the map is changed to a different map with its own bookmarks
-    ArcGISMap map2 = new ArcGISMap(Basemap.createImagery());
-    Platform.runLater(() -> map.getBookmarks().add(guitarShapedTreesBookmark));
-    mapView.setMap(map);
-
-    // after adding and removing some bookmarks
-    Bookmark strangeSymbolBookmark = new Bookmark("Strange Symbol", new Viewpoint(37.401573, -116.867808, 6e3));
-    Platform.runLater(() -> map.getBookmarks().add(strangeSymbolBookmark));
-
+    final ArcGISMap map2 = new ArcGISMap(Basemap.createStreets());
+    Platform.runLater(() -> map2.getBookmarks().add(strangeSymbolBookmark));
     mapView.setMap(map2);
 
     sleep(3000);
@@ -196,11 +196,11 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    Bookmark bookmark = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
+    Bookmark bookmark = guitarShapedTreesBookmark;
     map.getBookmarks().add(bookmark);
     mapView.setMap(map);
 
-    BookmarkList bookmarksView = new BookmarkList(mapView);
+    BookmarkListView bookmarksView = new BookmarkListView(mapView);
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
@@ -233,11 +233,11 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    Bookmark bookmark = new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4));
+    Bookmark bookmark = guitarShapedTreesBookmark;
     map.getBookmarks().add(bookmark);
     mapView.setMap(map);
 
-    BookmarkList bookmarksView = new BookmarkList(mapView);
+    BookmarkListView bookmarksView = new BookmarkListView(mapView);
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
@@ -272,18 +272,17 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    map.getBookmarks().add(new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4)));
-    map.getBookmarks().add(new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
+    map.getBookmarks().addAll(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
     mapView.setMap(map);
 
-    BookmarkList bookmarkList = new BookmarkList(mapView);
-    bookmarkList.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkList, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkList, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkList));
+    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
+    bookmarkListView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarkListView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
 
     // when the cell factory is set to one that shows an image and custom text
-    bookmarkList.setCellFactory(new Callback<>() {
+    bookmarkListView.setCellFactory(new Callback<>() {
       private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
 
       @Override
@@ -314,17 +313,41 @@ public class BookmarkListIntegrationTest extends ApplicationTest {
     StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarkListView, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
-    bookmarkListView.getItems().addAll(new Bookmark("Guitar-shaped trees", new Viewpoint(-33.867886, -63.985, 4e4)),
-        new Bookmark("Grand Prismatic Spring", new Viewpoint(44.525049, -110.83819, 6e3)));
+    bookmarkListView.getItems().addAll(guitarShapedTreesBookmark, grandPrismaticSpringBookmark);
     bookmarkListView.setMaxSize(100, 100);
 
     // when the cell factory is set to one that shows an image and custom text
-    bookmarkListView.setCellFactory(param -> new BookmarkList.BookmarkListCell());
+    bookmarkListView.setCellFactory(param -> new BookmarkListView.BookmarkListCell());
 
     sleep(3000);
 
     // every bookmark's name will be displayed in the view with an image and custom text
     bookmarkListView.getItems().forEach(bookmark -> clickOn(bookmark.getName()));
+  }
+
+  /**
+   * Tests that you can create a BookmarksList from a simple list of bookmarks.
+   */
+  @Test
+  public void fromBookmarks() {
+    BookmarkListView bookmarkListView = new BookmarkListView(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
+    StackPane.setMargin(bookmarkListView, new Insets(10));
+    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
+
+    sleep(2000);
+
+    bookmarkListView.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
+  }
+
+  @Test
+  public void fxml() throws IOException {
+    Parent parent = FXMLLoader.load(getClass().getResource("/test_view.fxml"));
+    Platform.runLater(() -> stackPane.getScene().setRoot(parent));
+
+    sleep(4000);
+
+
   }
 
   /**
