@@ -2,6 +2,7 @@ package com.esri.arcgisruntime.toolkit.utils;
 
 import com.esri.arcgisruntime.util.ListenableList;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 /**
@@ -10,16 +11,17 @@ import javafx.collections.ObservableList;
 public class ListenableListUtils {
 
   /**
-   * Returns an ObservableList which mirrors the given ListenableList. ListChangedEvents are forwarded to the
-   * ObservableList's ListChangedListener.
+   * Returns an ObservableList which is backed by the given ListenableList. Operations on either list are reflected
+   * in the other.
    *
    * @param listenableList original listenable list
    * @param <T> list content type
    *
-   * @return an observable list that mirrors the listenable list
+   * @return an observable list
    */
   public static <T> ObservableList<T> toObservableList(ListenableList<T> listenableList) {
     ObservableList<T> observableList = FXCollections.observableArrayList(listenableList);
+    // forward listenable list changes to observable list
     listenableList.addListChangedListener(listChangedEvent -> {
       switch (listChangedEvent.getAction()) {
         case ADDED:
@@ -28,6 +30,16 @@ public class ListenableListUtils {
         case REMOVED:
           observableList.removeAll(listChangedEvent.getItems());
           break;
+      }
+    });
+    // forward observable list changes to listenable list
+    observableList.addListener((ListChangeListener<T>) c -> {
+      while (c.next()) {
+        if (c.wasAdded() && !listenableList.containsAll(c.getAddedSubList())) {
+          listenableList.addAll(c.getFrom(), c.getAddedSubList());
+        } else if (c.wasRemoved() && !c.getList().containsAll(listenableList)) {
+          listenableList.removeAll(listenableList.subList(c.getFrom(), c.getRemovedSize()));
+        }
       }
     });
     return observableList;
