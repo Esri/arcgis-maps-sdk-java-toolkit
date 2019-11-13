@@ -10,7 +10,7 @@ import javafx.scene.control.SkinBase;
 /**
  * A Skin to display the BookmarksWidget as a ListView.
  */
-public class BookmarksListSkin extends SkinBase<BookmarkListView> {
+public class BookmarkListViewSkin extends SkinBase<BookmarkListView> {
 
   private final ListView<Bookmark> listView;
 
@@ -19,7 +19,7 @@ public class BookmarksListSkin extends SkinBase<BookmarkListView> {
    *
    * @param control bookmarks list control to skin
    */
-  public BookmarksListSkin(BookmarkListView control) {
+  public BookmarkListViewSkin(BookmarkListView control) {
     super(control);
 
     // show the control as a list view
@@ -27,7 +27,7 @@ public class BookmarksListSkin extends SkinBase<BookmarkListView> {
     getChildren().add(listView);
 
     // bind the items from the control
-    listView.itemsProperty().set(control.getBookmarks());
+    listView.itemsProperty().bind(control.bookmarksProperty());
 
     // default to showing the bookmark's name
     listView.cellFactoryProperty().bind(control.cellFactoryProperty());
