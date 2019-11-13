@@ -8,7 +8,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SkinBase;
 
 /**
- * A Skin to display the BookmarksWidget as a ListView.
+ * A Skin to display the BookmarkListView as a ListView. Selecting a bookmark will move the GeoView to its viewpoint.
+ * Navigating away from the selected bookmark's viewpoint will deselect it in the list.
  */
 public class BookmarkListViewSkin extends SkinBase<BookmarkListView> {
 
@@ -36,7 +37,7 @@ public class BookmarkListViewSkin extends SkinBase<BookmarkListView> {
     listView.getSelectionModel().selectedItemProperty().addListener(listener -> {
         Bookmark selectedBookmark = listView.getSelectionModel().getSelectedItem();
         if (selectedBookmark != null && control.getGeoView() != null) {
-          // default to deselecting the bookmark after changing viewpoint so it can be selected again
+          // deselect the bookmark after changing viewpoint so it can be selected again
           control.getGeoView().setBookmarkAsync(selectedBookmark).addDoneListener(() ->
               control.getGeoView().addViewpointChangedListener(new ViewpointChangedListener() {
                 @Override

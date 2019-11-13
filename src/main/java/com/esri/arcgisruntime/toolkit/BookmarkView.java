@@ -8,10 +8,8 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
 import javafx.beans.NamedArg;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.ReadOnlyListWrapper;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
 
@@ -23,30 +21,42 @@ import java.util.Objects;
  */
 public abstract class BookmarkView extends Control {
 
-  private final ReadOnlyListProperty<Bookmark> bookmarks;
+  private final ReadOnlyListWrapper<Bookmark> bookmarks;
 
-  private final ReadOnlyObjectWrapper<GeoView> geoView;
+  private final ObjectProperty<GeoView> geoView;
 
   /**
    * Creates an instance for the GeoView.
    *
    * @param geoView A GeoView
+   * @throws NullPointerException if the geo view's map/scene is null
    */
   public BookmarkView(@NamedArg("geoView") GeoView geoView) {
-    this.geoView = new ReadOnlyObjectWrapper<>(Objects.requireNonNull(geoView));
+    this.geoView = new SimpleObjectProperty<>(geoView);
+    this.bookmarks = new ReadOnlyListWrapper<>();
+    // initialize the bookmarks from the geoView
+    bindBookmarks(geoView);
+    // reset the bookmarks if the geoView changes
+    this.geoView.addListener(o -> bindBookmarks(geoView));
+  }
 
-    // initialize the bookmarks property from the map or scene in the geo view
+  /**
+   * Updates the bookmarks based on the current GeoView.
+   */
+  private void bindBookmarks(GeoView geoView) {
     if (geoView instanceof MapView) {
       ArcGISMap map = Objects.requireNonNull(((MapView) geoView).getMap());
-      bookmarks = new ReadOnlyListWrapper<>(ListenableListUtils.toObservableList(map.getBookmarks()));
-    } else {
+      bookmarks.set(ListenableListUtils.toObservableList(map.getBookmarks()));
+    } else if (geoView instanceof SceneView) {
       ArcGISScene scene = Objects.requireNonNull(((SceneView) geoView).getArcGISScene());
-      bookmarks = new ReadOnlyListWrapper<>(ListenableListUtils.toObservableList(scene.getBookmarks()));
+      bookmarks.set(ListenableListUtils.toObservableList(scene.getBookmarks()));
+    } else {
+      bookmarks.set(FXCollections.observableArrayList());
     }
   }
 
   /**
-   * Gets the GeoView used to create the control.
+   * Gets the geo view used to create the control.
    *
    * @return geoView used to create the control
    */
@@ -55,12 +65,19 @@ public abstract class BookmarkView extends Control {
   }
 
   /**
-   * The GeoView used to create the control.
+   * The geo view which has the bookmarks in its map or scene.
    *
    * @return geoView property
    */
-  public ReadOnlyObjectProperty<GeoView> geoViewProperty() {
-    return geoView.getReadOnlyProperty();
+  public ObjectProperty<GeoView> geoViewProperty() {
+    return geoView;
+  }
+
+  /**
+   * Sets the geo view.
+   */
+  public void setGeoView(GeoView geoView) {
+    this.geoView.set(geoView);
   }
 
   /**
@@ -72,7 +89,12 @@ public abstract class BookmarkView extends Control {
     return bookmarks;
   }
 
+  /**
+   * The bookmarks being displayed.
+   *
+   * @return bookmarks property
+   */
   public ReadOnlyListProperty<Bookmark> bookmarksProperty() {
-    return bookmarks;
+    return bookmarks.getReadOnlyProperty();
   }
 }

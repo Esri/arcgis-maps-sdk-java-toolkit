@@ -11,14 +11,18 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
 import javafx.util.Callback;
 
+/**
+ * Control for displaying the bookmarks of a GeoView's map or scenes in a list.
+ */
 public class BookmarkListView extends BookmarkView {
 
   private final ObjectProperty<Callback<ListView<Bookmark>, ListCell<Bookmark>>> cellFactory;
 
   /**
-   * Creates an instance in which the bookmarks are bound to a GeoView's map or scene.
+   * Creates an instance using the bookmarks of the given GeoView's map or scene.
    *
    * @param geoView A GeoView
+   * @throws NullPointerException if the geoView or its map/scene are null
    */
   public BookmarkListView(@NamedArg("geoView") GeoView geoView) {
     super(geoView);
