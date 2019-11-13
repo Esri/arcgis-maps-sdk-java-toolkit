@@ -8,6 +8,35 @@ The latest version of the ArcGIS Runtime Toolkit for Java features the following
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
 
+### BookmarkListView
+
+The `BookmarkListView` control allows you to display a list view of bookmarks which is kept synchronized with a
+ `GeoView`'s map/scene's bookmarks. When a bookmark is selected from the list, it's viewpoint is set on the `GeoView
+ `. When the user navigates away from the viewpoint, the item in the list is deselected.
+ 
+#### Basic Usage
+ 
+ ```java
+MapView mapView = new MapView();
+ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+map.getBookmarks().add(new Bookmark("My bookmark", new Viewpoint(-33.867886, -63.985, 4e4)));
+mapView.setMap(map);
+
+BookmarkListView bookmarkListView = new BookmarkListView(mapView);
+```
+
+#### Customization
+
+The control's default `BookmarkListViewSkin` applies a cell factory which displays the name of the bookmark. The cell
+ factory can be overridden with `bookmarkListView#setCellFactory(Callback<ListView<Bookmark>, ListCell<Bookmark>>)`.
+  
+If you don't want the synchronization with the `GeoView` or the selection behavior, and simply want a `ListCell` which
+ displays the name of the bookmark for your own `ListView`, you can use `BookmarkListView.BookmarkListCell` or
+  `BookmarkListView.BookmarkListCellFactory`.
+ 
+The control extends an abstract `BookmarkView` which handles synchronization with the `GeoView`. You can extend this
+  class and create your own skin to display bookmarks in a different kind of control such as a `TreeView` or `Accordion`.
+
 ## Instructions
 
 The toolkit library jar is hosted on https://bintray.com/esri/arcgis.
