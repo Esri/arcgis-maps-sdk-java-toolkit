@@ -7,6 +7,7 @@ import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -325,29 +326,49 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     bookmarkListView.getItems().forEach(bookmark -> clickOn(bookmark.getName()));
   }
 
-  /**
-   * Tests that you can create a BookmarksList from a simple list of bookmarks.
-   */
-  @Test
-  public void fromBookmarks() {
-    BookmarkListView bookmarkListView = new BookmarkListView(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-
-    sleep(2000);
-
-    bookmarkListView.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
-  }
-
   @Test
   public void fxml() throws IOException {
-    Parent parent = FXMLLoader.load(getClass().getResource("/test_view.fxml"));
+    Parent parent = FXMLLoader.load(getClass().getResource("/bookmark_list_from_bookmarks.fxml"));
     Platform.runLater(() -> stackPane.getScene().setRoot(parent));
 
     sleep(4000);
 
+    clickOn("Test 1");
+    clickOn("Test 2");
+  }
 
+  @Test
+  public void fxml2() {
+    BookmarkListFromGeoView bookmarkListFromGeoView = new BookmarkListFromGeoView();
+    Platform.runLater(() -> stackPane.getScene().setRoot(bookmarkListFromGeoView));
+    sleep(4000);
+
+    final ArcGISMap map = bookmarkListFromGeoView.getMapView().getMap();
+    map.getBookmarks().addAll(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
+
+    sleep(2000);
+
+    map.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
+  }
+
+  private static class BookmarkListFromGeoView extends StackPane {
+
+    @FXML private MapView mapView;
+
+    private BookmarkListFromGeoView() {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/bookmark_list_from_geoview.fxml"));
+      loader.setRoot(this);
+      loader.setController(this);
+      try {
+        loader.load();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+    public MapView getMapView() {
+      return mapView;
+    }
   }
 
   /**

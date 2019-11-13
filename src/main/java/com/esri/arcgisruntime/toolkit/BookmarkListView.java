@@ -2,17 +2,14 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.view.GeoView;
-import com.esri.arcgisruntime.toolkit.skins.BookmarksListSkin;
+import com.esri.arcgisruntime.toolkit.skins.BookmarkListViewSkin;
 import javafx.beans.NamedArg;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Skin;
 import javafx.util.Callback;
-
-import java.util.List;
 
 public class BookmarkListView extends BookmarkView {
 
@@ -25,27 +22,12 @@ public class BookmarkListView extends BookmarkView {
    */
   public BookmarkListView(@NamedArg("geoView") GeoView geoView) {
     super(geoView);
-    cellFactory = new SimpleObjectProperty<>(param -> new BookmarkListCell());
-  }
-
-  public BookmarkListView(@NamedArg("bookmarks") ObservableList<Bookmark> bookmarks) {
-    super(bookmarks);
-    cellFactory = new SimpleObjectProperty<>(param -> new BookmarkListCell());
-  }
-
-  public BookmarkListView(@NamedArg("bookmarks") List<Bookmark> bookmarks) {
-    super(bookmarks);
-    cellFactory = new SimpleObjectProperty<>(param -> new BookmarkListCell());
-  }
-
-  public BookmarkListView() {
-    super();
-    cellFactory = new SimpleObjectProperty<>(param -> new BookmarkListCell());
+    cellFactory = new SimpleObjectProperty<>(new BookmarkListCellFactory());
   }
 
   @Override
   protected Skin<?> createDefaultSkin() {
-    return new BookmarksListSkin(this);
+    return new BookmarkListViewSkin(this);
   }
 
   /**
@@ -75,6 +57,9 @@ public class BookmarkListView extends BookmarkView {
     this.cellFactory.set(cellFactory);
   }
 
+  /**
+   * A simple ListCell for Bookmarks to show the bookmark's name.
+   */
   public static class BookmarkListCell extends ListCell<Bookmark> {
 
     @Override
@@ -82,6 +67,17 @@ public class BookmarkListView extends BookmarkView {
       super.updateItem(item, empty);
       setText(empty ? null : item.getName());
       setGraphic(null);
+    }
+  }
+
+  /**
+   * Cell factory using BookmarkListCells.
+   */
+  public static class BookmarkListCellFactory implements Callback<ListView<Bookmark>, ListCell<Bookmark>> {
+
+    @Override
+    public ListCell<Bookmark> call(ListView<Bookmark> param) {
+      return new BookmarkListCell();
     }
   }
 }
