@@ -5,6 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+
 /**
  * Utility methods for ListenableLists.
  */
@@ -38,7 +40,7 @@ public class ListenableListUtils {
         if (c.wasAdded() && !listenableList.containsAll(c.getAddedSubList())) {
           listenableList.addAll(c.getFrom(), c.getAddedSubList());
         } else if (c.wasRemoved() && !c.getList().containsAll(listenableList)) {
-          listenableList.removeAll(listenableList.subList(c.getFrom(), c.getRemovedSize()));
+          listenableList.removeAll(new ArrayList<>(listenableList.subList(c.getFrom(), c.getRemovedSize())));
         }
       }
     });
