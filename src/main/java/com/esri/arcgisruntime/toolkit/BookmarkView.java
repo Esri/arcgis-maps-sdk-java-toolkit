@@ -24,7 +24,10 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
 import javafx.beans.NamedArg;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
@@ -93,7 +96,7 @@ public abstract class BookmarkView extends Control {
    * Sets the geo view.
    */
   public void setGeoView(GeoView geoView) {
-    this.geoView.set(geoView);
+    geoViewProperty().set(geoView);
   }
 
   /**
@@ -102,7 +105,7 @@ public abstract class BookmarkView extends Control {
    * @return bookmarks in the list
    */
   public ObservableList<Bookmark> getBookmarks() {
-    return bookmarks;
+    return bookmarksProperty().get();
   }
 
   /**
