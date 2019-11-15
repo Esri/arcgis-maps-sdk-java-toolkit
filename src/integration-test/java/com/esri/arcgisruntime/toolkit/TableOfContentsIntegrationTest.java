@@ -72,7 +72,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(mapView);
     tableOfContents.setMaxSize(150, 100);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
@@ -102,7 +102,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(sceneView);
     tableOfContents.setMaxSize(150, 100);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
@@ -132,7 +132,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(sceneView);
     tableOfContents.setMaxSize(150, 300);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
@@ -169,7 +169,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     TableOfContents tableOfContents = new TableOfContents(mapView);
     tableOfContents.setMaxSize(150, 100);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
@@ -210,7 +210,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     TableOfContents tableOfContents = new TableOfContents(mapView);
     tableOfContents.setMaxSize(150, 100);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
@@ -254,7 +254,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(sceneView);
     tableOfContents.setMaxSize(150, 300);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
@@ -287,7 +287,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     TreeView<LayerContent> layerTree = new TreeView<>();
     layerTree.setMaxSize(150, 100);
     Platform.runLater(() -> stackPane.getChildren().add(layerTree));
-    StackPane.setAlignment(layerTree, Pos.TOP_RIGHT);
+    StackPane.setAlignment(layerTree, Pos.TOP_LEFT);
     StackPane.setMargin(layerTree, new Insets(10));
 
     GroupLayer groupLayer = new GroupLayer();
@@ -340,7 +340,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the table of contents is added
     TableOfContents tableOfContents = new TableOfContents(sceneView);
     tableOfContents.setMaxSize(150, 100);
-    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
