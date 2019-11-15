@@ -29,9 +29,6 @@ import org.testfx.util.WaitForAsyncUtils;
 import java.util.Arrays;
 import java.util.Set;
 
-import static com.esri.arcgisruntime.toolkit.skins.TableOfContentsTreeViewSkin.LayerContentTreeCell;
-import static com.esri.arcgisruntime.toolkit.skins.TableOfContentsTreeViewSkin.LayerContentTreeItem;
-
 /**
  * Integration tests for TableOfContents.
  */
@@ -79,7 +76,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
-    sleep(6000);
+    sleep(2000);
 
     // every layer's name will be displayed in the view
     map.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
@@ -109,10 +106,48 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
-    sleep(6000);
+    sleep(2000);
 
     // every layer's name will be displayed in the view
     scene.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
+  }
+
+  /**
+   * Tests that every operational layer in the scene has its name displayed.
+   */
+  @Test
+  public void removeLayer() {
+    // given a scene view containing a scene with an operational layer
+    SceneView sceneView = new SceneView();
+    Platform.runLater(() -> stackPane.getChildren().add(sceneView));
+
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
+        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+    FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+    scene.getOperationalLayers().add(featureLayer);
+    sceneView.setArcGISScene(scene);
+
+    // when the table of contents is added
+    TableOfContents tableOfContents = new TableOfContents(sceneView);
+    tableOfContents.setMaxSize(150, 300);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setMargin(tableOfContents, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
+
+    sleep(2000);
+
+    // every layer's name will be displayed in the view
+    scene.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    scene.getOperationalLayers().remove(featureLayer);
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    Assertions.assertThrows(FxRobotException.class, () -> clickOn(featureLayer.getName()));
   }
 
   /**
@@ -138,14 +173,14 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
-    sleep(6000);
+    sleep(2000);
 
     // when the item's checkbox is deselected
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
-    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[1];
+    CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
     clickOn(checkBox);
 
-    sleep(1000);
+    WaitForAsyncUtils.waitForFxEvents();
 
     // the layer will not be visible
     Assertions.assertFalse(featureLayer.isVisible());
@@ -153,7 +188,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // when the item's checkbox is selected
     clickOn(checkBox);
 
-    sleep(1000);
+    WaitForAsyncUtils.waitForFxEvents();
 
     // the layer will be visible
     Assertions.assertTrue(featureLayer.isVisible());
@@ -179,7 +214,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
-    sleep(6000);
+    sleep(2000);
 
     ArcGISSublayer subLayer = tiledLayer.getSublayers().get(0);
     Assertions.assertFalse(subLayer.canChangeVisibility());
@@ -190,8 +225,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // the sublayer's item should not have a checkbox
     Set<CheckBox> visibilityCheckboxes = lookup(n -> n instanceof CheckBox).queryAll();
     Assertions.assertEquals(1, visibilityCheckboxes.size());
-
-    sleep(1000);
   }
 
   /**
@@ -225,7 +258,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     StackPane.setMargin(tableOfContents, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
 
-    sleep(6000);
+    sleep(2000);
 
     // the group layer's name and its children's names should be viewable
     clickOn(groupLayer.getName());
@@ -239,7 +272,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     CheckBox checkBox = (CheckBox) visibilityCheckboxes.toArray()[0];
     clickOn(checkBox);
 
-    sleep(1000);
+    WaitForAsyncUtils.waitForFxEvents();
 
     Assertions.assertFalse(groupLayer.isVisible());
   }
@@ -252,7 +285,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
   public void customLayerTree() {
     // given a normal TreeView with some layer contents
     TreeView<LayerContent> layerTree = new TreeView<>();
-    layerTree.setMaxSize(150, 300);
+    layerTree.setMaxSize(150, 100);
     Platform.runLater(() -> stackPane.getChildren().add(layerTree));
     StackPane.setAlignment(layerTree, Pos.TOP_RIGHT);
     StackPane.setMargin(layerTree, new Insets(10));
@@ -271,10 +304,10 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     layerTree.setShowRoot(false);
 
     // when the cell factory is LayerContentTreeCell and the items are LayerContentTreeItems
-    layerTree.setCellFactory(param -> new LayerContentTreeCell());
-    root.getChildren().add(new LayerContentTreeItem(groupLayer));
+    layerTree.setCellFactory(new TableOfContents.LayerContentTreeCellFactory());
+    root.getChildren().add(new TableOfContents.LayerContentTreeItem(groupLayer));
 
-    sleep(5000);
+    sleep(2000);
 
     // then the items should show the layer content's name and a checkbox to change the visibility
     doubleClickOn("Group");
@@ -289,7 +322,47 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     // then the child layers will not be shown
     doubleClickOn("Group");
     Assertions.assertThrows(FxRobotException.class, () -> clickOn(devOne.getName()));
+  }
 
-    sleep(1000);
+  @Test
+  public void switchGeoView() {
+    SceneView sceneView = new SceneView();
+    Platform.runLater(() -> stackPane.getChildren().add(sceneView));
+
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
+        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+    FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+    scene.getOperationalLayers().add(featureLayer);
+    sceneView.setArcGISScene(scene);
+
+    // when the table of contents is added
+    TableOfContents tableOfContents = new TableOfContents(sceneView);
+    tableOfContents.setMaxSize(150, 100);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_RIGHT);
+    StackPane.setMargin(tableOfContents, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
+
+    sleep(2000);
+
+    // every layer's name will be displayed in the view
+    scene.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
+
+    MapView mapView = new MapView();
+    Platform.runLater(() -> {
+      stackPane.getChildren().remove(sceneView);
+      stackPane.getChildren().add(0, mapView);
+    });
+
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("http://services.arcgisonline" +
+        ".com/ArcGIS/rest/services/World_Street_Map/MapServer");
+    ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
+    mapView.setMap(map);
+    tableOfContents.setGeoView(mapView);
+
+    sleep(2000);
+
+    map.getBasemap().getBaseLayers().forEach(l -> clickOn(l.getName()));
   }
 }
