@@ -36,6 +36,18 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
   private StackPane stackPane;
 
+  final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
+      ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+  final String WORLD_STREET_MAP = "http://services.arcgisonline" +
+      ".com/ArcGIS/rest/services/World_Street_Map/MapServer";
+  final String DEVA_TREES = "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees" +
+      "/SceneServer";
+  final String DEVA_BUILDINGS = "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services" +
+      "/DevA_BuildingShells/SceneServer";
+  final String DEVA_PATHWAYS = "https://services.arcgis" +
+      ".com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1";
+
+
   @Override
   public void start(Stage primaryStage) {
     stackPane = new StackPane();
@@ -62,8 +74,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
-        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
     FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
     map.getOperationalLayers().add(featureLayer);
@@ -92,8 +102,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
 
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
-        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+
     FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
     scene.getOperationalLayers().add(featureLayer);
@@ -122,8 +131,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
 
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
-        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
     FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
     scene.getOperationalLayers().add(featureLayer);
@@ -160,8 +167,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
-        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
     FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
     map.getOperationalLayers().add(featureLayer);
@@ -203,8 +208,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     MapView mapView = new MapView();
     Platform.runLater(() -> stackPane.getChildren().add(mapView));
 
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("http://services.arcgisonline" +
-        ".com/ArcGIS/rest/services/World_Street_Map/MapServer");
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(WORLD_STREET_MAP);
     ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mapView.setMap(map);
 
@@ -237,10 +241,9 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
 
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-    ArcGISSceneLayer devOne = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer");
-    ArcGISSceneLayer devTwo = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer");
-    FeatureTable featureTable = new ServiceFeatureTable("https://services.arcgis" +
-        ".com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1");
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer(DEVA_TREES);
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(DEVA_BUILDINGS);
+    FeatureTable featureTable = new ServiceFeatureTable(DEVA_PATHWAYS);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
     GroupLayer groupLayer = new GroupLayer();
@@ -292,10 +295,9 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
 
     GroupLayer groupLayer = new GroupLayer();
     groupLayer.setName("Group");
-    ArcGISSceneLayer devOne = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer");
-    ArcGISSceneLayer devTwo = new ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer");
-    FeatureTable featureTable = new ServiceFeatureTable("https://services.arcgis" +
-        ".com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1");
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer(DEVA_TREES);
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(DEVA_BUILDINGS);
+    FeatureTable featureTable = new ServiceFeatureTable(DEVA_PATHWAYS);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
     groupLayer.getLayers().addAll(Arrays.asList(devOne, devTwo, featureLayer));
 
@@ -330,8 +332,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     Platform.runLater(() -> stackPane.getChildren().add(sceneView));
 
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
-        ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
     FeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
     scene.getOperationalLayers().add(featureLayer);
@@ -355,8 +355,7 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
       stackPane.getChildren().add(0, mapView);
     });
 
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer("http://services.arcgisonline" +
-        ".com/ArcGIS/rest/services/World_Street_Map/MapServer");
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(WORLD_STREET_MAP);
     ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mapView.setMap(map);
     tableOfContents.setGeoView(mapView);
