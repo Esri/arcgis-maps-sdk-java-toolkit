@@ -27,6 +27,8 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
     TreeView<LayerContent> treeView = new TreeView<>();
     getChildren().add(treeView);
 
+    control.selectionModelProperty().bindBidirectional(treeView.selectionModelProperty());
+
     // set a cell factory which displays the layer content's name
     treeView.setCellFactory(new TableOfContents.LayerContentTreeCellFactory());
 

@@ -33,6 +33,7 @@ public class TableOfContents extends Control {
   private final ReadOnlyListWrapper<Layer> operationalLayers;
   private final ReadOnlyListWrapper<Layer> baseLayers;
   private final ReadOnlyListWrapper<Layer> referenceLayers;
+  private final ObjectProperty<MultipleSelectionModel<TreeItem<LayerContent>>> selectionModel;
 
   private ObjectProperty<GeoView> geoView;
 
@@ -44,6 +45,7 @@ public class TableOfContents extends Control {
     this.baseLayers = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
     this.operationalLayers = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
     this.referenceLayers = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
+    this.selectionModel = new SimpleObjectProperty<>();
     // initialize the layer contents from the geoView
     bindLayerContents(geoView);
     // reset the layer contents if the geoView changes
@@ -109,6 +111,18 @@ public class TableOfContents extends Control {
 
   public void setGeoView(GeoView geoView) {
     geoViewProperty().set(geoView);
+  }
+
+  public MultipleSelectionModel<TreeItem<LayerContent>> getSelectionModel() {
+    return selectionModel.get();
+  }
+
+  public ObjectProperty<MultipleSelectionModel<TreeItem<LayerContent>>> selectionModelProperty() {
+    return selectionModel;
+  }
+
+  public void setSelectionModel(MultipleSelectionModel<TreeItem<LayerContent>> selectionModel) {
+    this.selectionModel.set(selectionModel);
   }
 
   public static class LayerContentTreeCell extends TreeCell<LayerContent> {
