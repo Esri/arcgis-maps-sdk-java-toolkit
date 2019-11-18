@@ -153,8 +153,6 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     scene.getOperationalLayers().remove(featureLayer);
 
     WaitForAsyncUtils.waitForFxEvents();
-    Assertions.assertNull(tableOfContents.getSelectionModel().getSelectedItem(), "Selection should be cleared if " +
-        "removed item was selected");
 
     Assertions.assertThrows(FxRobotException.class, () -> clickOn(featureLayer.getName()));
   }
