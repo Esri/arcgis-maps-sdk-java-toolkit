@@ -2,20 +2,26 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.layers.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.After;
@@ -363,5 +369,51 @@ public class TableOfContentsIntegrationTest extends ApplicationTest {
     sleep(2000);
 
     map.getBasemap().getBaseLayers().forEach(l -> clickOn(l.getName()));
+  }
+
+  @Test
+  public void selection() {
+    // given a map view containing a map with an operational layer
+    SceneView sceneView = new SceneView();
+    Platform.runLater(() -> stackPane.getChildren().add(sceneView));
+
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer(DEVA_TREES);
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(DEVA_BUILDINGS);
+    scene.getOperationalLayers().addAll(Arrays.asList(devOne, devTwo));
+    sceneView.setArcGISScene(scene);
+
+    // when the table of contents is added
+    TableOfContents tableOfContents = new TableOfContents(sceneView);
+    tableOfContents.setMaxSize(150, 100);
+    StackPane.setAlignment(tableOfContents, Pos.TOP_LEFT);
+    StackPane.setMargin(tableOfContents, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(tableOfContents));
+
+    sleep(4000);
+
+    clickOn(devOne.getName());
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    Assertions.assertEquals(devOne, tableOfContents.getSelectedItem());
+
+    tableOfContents.selectedItemProperty().addListener(new ChangeListener<>() {
+      @Override
+      public void changed(ObservableValue<? extends LayerContent> observable, LayerContent oldValue, LayerContent newValue) {
+        if (newValue instanceof Layer) {
+          sceneView.setViewpoint(new Viewpoint(((Layer) newValue).getFullExtent()));
+          tableOfContents.selectedItemProperty().removeListener(this);
+        }
+      }
+    });
+
+    tableOfContents.setSelectedItem(devTwo);
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    Assertions.assertTrue(devOne.getFullExtent().equals(
+        GeometryEngine.project(sceneView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry(),
+            devOne.getFullExtent().getSpatialReference()), 0.01));
   }
 }

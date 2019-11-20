@@ -18,7 +18,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
@@ -33,7 +32,7 @@ public class TableOfContents extends Control {
   private final ReadOnlyListWrapper<Layer> operationalLayers;
   private final ReadOnlyListWrapper<Layer> baseLayers;
   private final ReadOnlyListWrapper<Layer> referenceLayers;
-  private final ObjectProperty<MultipleSelectionModel<TreeItem<LayerContent>>> selectionModel;
+  private final ObjectProperty<LayerContent> selectedItem;
 
   private ObjectProperty<GeoView> geoView;
 
@@ -45,7 +44,7 @@ public class TableOfContents extends Control {
     this.baseLayers = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
     this.operationalLayers = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
     this.referenceLayers = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
-    this.selectionModel = new SimpleObjectProperty<>();
+    this.selectedItem = new SimpleObjectProperty<>();
     // initialize the layer contents from the geoView
     bindLayerContents(geoView);
     // reset the layer contents if the geoView changes
@@ -113,16 +112,16 @@ public class TableOfContents extends Control {
     geoViewProperty().set(geoView);
   }
 
-  public MultipleSelectionModel<TreeItem<LayerContent>> getSelectionModel() {
-    return selectionModel.get();
+  public LayerContent getSelectedItem() {
+    return selectedItem.get();
   }
 
-  public ObjectProperty<MultipleSelectionModel<TreeItem<LayerContent>>> selectionModelProperty() {
-    return selectionModel;
+  public ObjectProperty<LayerContent> selectedItemProperty() {
+    return selectedItem;
   }
 
-  public void setSelectionModel(MultipleSelectionModel<TreeItem<LayerContent>> selectionModel) {
-    this.selectionModel.set(selectionModel);
+  public void setSelectedItem(LayerContent selectedItem) {
+    this.selectedItem.set(selectedItem);
   }
 
   public static class LayerContentTreeCell extends TreeCell<LayerContent> {
@@ -167,13 +166,6 @@ public class TableOfContents extends Control {
   }
 
   public static class LayerContentTreeItem extends TreeItem<LayerContent> {
-
-    public LayerContentTreeItem(LayerContent value, Node graphic) {
-      super(value, graphic);
-      value.getSubLayerContents().forEach(layerContent ->
-          getChildren().add(new LayerContentTreeItem(layerContent))
-      );
-    }
 
     public LayerContentTreeItem(LayerContent value) {
       super(value);

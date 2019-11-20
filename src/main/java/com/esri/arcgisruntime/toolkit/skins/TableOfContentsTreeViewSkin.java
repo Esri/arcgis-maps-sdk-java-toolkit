@@ -27,7 +27,22 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
     TreeView<LayerContent> treeView = new TreeView<>();
     getChildren().add(treeView);
 
-    control.selectionModelProperty().bindBidirectional(treeView.selectionModelProperty());
+    // forward selection events between control and tree view
+    control.selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+      if (oldValue != newValue) {
+        treeView.getSelectionModel().select(findByReference(treeView.getRoot(), newValue));
+      }
+    }));
+
+    treeView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+      if (oldValue != newValue) {
+        if (newValue == null) {
+          control.setSelectedItem(null);
+        } else if (!newValue.getValue().equals(control.getSelectedItem())) {
+          control.setSelectedItem(newValue.getValue());
+        }
+      }
+    }));
 
     // set a cell factory which displays the layer content's name
     treeView.setCellFactory(new TableOfContents.LayerContentTreeCellFactory());
@@ -103,6 +118,18 @@ public class TableOfContentsTreeViewSkin extends SkinBase<TableOfContents> {
           newValue.stream().map(TableOfContents.LayerContentTreeItem::new).collect(Collectors.toList()));
     });
 
+  }
+
+  private <T> TreeItem<T> findByReference(TreeItem<T> root, T item) {
+    if (item == null || root == null) {
+      return null;
+    } else if (item.equals(root.getValue())) {
+      return root;
+    } else if (root.getChildren().size() > 0) {
+      return root.getChildren().stream().filter(treeItem -> findByReference(treeItem, item) != null).findFirst().orElse(null);
+    } else {
+      return null;
+    }
   }
 
 }
