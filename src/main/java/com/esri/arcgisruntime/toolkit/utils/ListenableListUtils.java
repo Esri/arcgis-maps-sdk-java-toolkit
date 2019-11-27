@@ -13,10 +13,9 @@ import java.util.ArrayList;
 public class ListenableListUtils {
 
   /**
-   * Returns an ObservableList which is backed by the given ListenableList. Operations on either list are reflected
-   * in the other.
+   * Returns an ObservableList which is bi-directionally bound to a ListenableList.
    *
-   * @param listenableList original listenable list
+   * @param listenableList a listenable list
    * @param <T> list content type
    *
    * @return an observable list
