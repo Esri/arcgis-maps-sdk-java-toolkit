@@ -22,9 +22,11 @@ import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SkinBase;
@@ -43,44 +45,30 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
 
   private final SimpleObjectProperty<FeatureTemplatePicker.Template> selectedTemplate = new SimpleObjectProperty<>();
 
+  private Orientation orientation;
+
   public FeatureTemplatePickerSkin(FeatureTemplatePicker control) {
     super(control);
 
     control.featureLayersProperty().addListener((ListChangeListener<? super FeatureLayer>) change -> {
       while (change.next()) {
         for (FeatureLayer featureLayer : change.getRemoved()) {
-          System.out.println("Removed " + featureLayer.getFeatureTable().getTableName() + " from  " + change.getFrom());
           removeTemplateList(featureLayer);
         }
         for (FeatureLayer featureLayer : change.getAddedSubList()) {
-          System.out.println("Added " + featureLayer.getFeatureTable().getTableName() + " at " + change.getFrom());
           addTemplateList(featureLayer);
         }
       }
     });
 
-    control.widthProperty().addListener(observable -> invalid = true);
-    control.heightProperty().addListener(observable -> invalid = true);
-    control.insetsProperty().addListener(observable -> invalid = true);
+    control.widthProperty().addListener(this::invalidated);
+    control.heightProperty().addListener(this::invalidated);
+    control.insetsProperty().addListener(this::invalidated);
+    control.orientationProperty().addListener(this::invalidated);
+
+    orientation = control.getOrientation();
 
     control.selectedTemplateProperty().bindBidirectional(selectedTemplate);
-
-    control.orientationProperty().addListener((observableValue, oldValue, newValue) -> {
-      if (newValue != null) {
-        switch (newValue) {
-          case HORIZONTAL:
-            pane = new HBox();
-            break;
-          case VERTICAL:
-            pane = new VBox();
-            break;
-        }
-        pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-        pane.getChildren().setAll(featureLayerMap.values());
-        scrollPane.setContent(pane);
-        invalid = true;
-      }
-    });
 
     selectedTemplate.addListener(observable -> {
       if (selectedTemplate.get() == null) {
@@ -114,6 +102,22 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
   }
 
   private void update(double contentWidth, double contentHeight) {
+    Orientation controlOrientation = getSkinnable().getOrientation();
+    if (orientation != controlOrientation) {
+      switch (controlOrientation) {
+        case HORIZONTAL:
+          pane = new HBox();
+          break;
+        case VERTICAL:
+          pane = new VBox();
+          break;
+      }
+      pane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+      pane.getChildren().setAll(featureLayerMap.values());
+      scrollPane.setContent(pane);
+
+      orientation = controlOrientation;
+    }
   }
 
   private void addTemplateList(FeatureLayer featureLayer) {
@@ -158,5 +162,9 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
       }
       pane.getChildren().setAll(featureLayerMap.values());
     }
+  }
+
+  private void invalidated(Observable observable) {
+    invalid = true;
   }
 }

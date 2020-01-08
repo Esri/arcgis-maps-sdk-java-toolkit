@@ -50,19 +50,21 @@ public final class FeatureTemplatePicker extends Control {
   private final SimpleBooleanProperty showTemplateNamesProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty showFeatureLayerNamesProperty = new SimpleBooleanProperty(true);
   private final SimpleBooleanProperty disableIfCannotAddFeatureLayersProperty = new SimpleBooleanProperty(true);
-  private final SimpleObjectProperty<Orientation> orientationProperty = new SimpleObjectProperty<>(Orientation.VERTICAL);
-//
-//  /**
-//   * Creates a new instance.
-//   *
-//   * @since 100.6.0
-//   */
-//  public FeatureTemplatePicker() {
-//  }
+  private final SimpleObjectProperty<Orientation> orientationProperty = new SimpleObjectProperty<>(Orientation.VERTICAL) {
+    @Override
+    public void set(Orientation orientation) {
+      super.set(Objects.requireNonNull(orientation, "Orientation cannot be null"));
+    }
+
+    @Override
+    protected void invalidated() {
+      System.out.println("Invalidated");
+    }
+  };
 
   /**
    * Property containing the list of feature layers displayed. The order of display matches the list order.
-   * @return
+   * @return the property
    */
   public ListProperty<FeatureLayer> featureLayersProperty() {
     return featureLayersProperty;
