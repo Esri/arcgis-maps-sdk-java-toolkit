@@ -17,17 +17,18 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.mapping.Bookmark;
-import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
-import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
-import com.esri.arcgisruntime.toolkit.BookmarkListView;
+import com.esri.arcgisruntime.toolkit.BookmarksView;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SkinBase;
+import javafx.util.Callback;
 
 /**
  * A Skin to display the BookmarkListView as a ListView. Selecting a bookmark will move the GeoView to its viewpoint.
  * Navigating away from the selected bookmark's viewpoint will deselect it in the list.
  */
-public class BookmarkListViewSkin extends SkinBase<BookmarkListView> {
+public class BookmarkListViewSkin extends SkinBase<BookmarksView> {
 
   private final ListView<Bookmark> listView;
 
@@ -36,7 +37,7 @@ public class BookmarkListViewSkin extends SkinBase<BookmarkListView> {
    *
    * @param control bookmarks list control to skin
    */
-  public BookmarkListViewSkin(BookmarkListView control) {
+  public BookmarkListViewSkin(BookmarksView control) {
     super(control);
 
     // show the control as a list view
@@ -47,27 +48,73 @@ public class BookmarkListViewSkin extends SkinBase<BookmarkListView> {
     listView.itemsProperty().bind(control.bookmarksProperty());
 
     // default to showing the bookmark's name
-    listView.cellFactoryProperty().bind(control.cellFactoryProperty());
+    listView.setCellFactory(new BookmarkListCellFactory());
 
-    // set a listener for when the selected item changes
-    listView.getSelectionModel().selectedItemProperty().addListener(listener -> {
-        Bookmark selectedBookmark = listView.getSelectionModel().getSelectedItem();
-        if (selectedBookmark != null && control.getGeoView() != null) {
-          // deselect the bookmark after changing viewpoint so it can be selected again
-          control.getGeoView().setBookmarkAsync(selectedBookmark).addDoneListener(() ->
-              control.getGeoView().addViewpointChangedListener(new ViewpointChangedListener() {
-                @Override
-                public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
-                  // check that the selected item which triggered this is still selected
-                  if (listView.getSelectionModel().getSelectedItem() == selectedBookmark) {
-                    listView.getSelectionModel().clearSelection();
-                  }
-                  control.getGeoView().removeViewpointChangedListener(this);
-                }
-              })
-          );
-        }
-    });
+    // change the selection on the list view if the control property changes
+    control.selectedBookmarkProperty().addListener(((observable, oldValue, newValue) -> {
+      if (newValue == null) {
+        listView.getSelectionModel().clearSelection();
+      } else {
+        listView.getSelectionModel().select(newValue);
+      }
+    }));
+
+    // update the control property if an item is selected
+    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        control.setSelectedBookmark(newValue)
+    );
+
+  }
+
+  /**
+   * Gets the cell factory callback used to display the cells in the list. Defaults to showing the name of the bookmark.
+   *
+   * @return cell factory callback
+   */
+  public Callback<ListView<Bookmark>, ListCell<Bookmark>> getCellFactory() {
+    return cellFactoryProperty().get();
+  }
+
+  /**
+   * The cell factory callback used to display the cells in the list. Defaults to showing the name of the bookmark.
+   *
+   * @return cell factory callback property
+   */
+  public ObjectProperty<Callback<ListView<Bookmark>, ListCell<Bookmark>>> cellFactoryProperty() {
+    return listView.cellFactoryProperty();
+  }
+
+  /**
+   * Sets the cell factory callback used to display the cells in the list.
+   *
+   * @param cellFactory cell factory callback
+   */
+  public void setCellFactory(Callback<ListView<Bookmark>, ListCell<Bookmark>> cellFactory) {
+    cellFactoryProperty().set(cellFactory);
+  }
+
+  /**
+   * A simple ListCell for Bookmarks to show the bookmark's name.
+   */
+  private static class BookmarkListCell extends ListCell<Bookmark> {
+
+    @Override
+    protected void updateItem(Bookmark item, boolean empty) {
+      super.updateItem(item, empty);
+      setText(empty ? null : item.getName());
+      setGraphic(null);
+    }
+  }
+
+  /**
+   * Cell factory using BookmarkListCells.
+   */
+  private static class BookmarkListCellFactory implements Callback<ListView<Bookmark>, ListCell<Bookmark>> {
+
+    @Override
+    public ListCell<Bookmark> call(ListView<Bookmark> param) {
+      return new BookmarkListCell();
+    }
   }
 
 }

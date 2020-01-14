@@ -6,14 +6,15 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
+import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
+import com.esri.arcgisruntime.toolkit.skins.BookmarkListViewSkin;
+import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.VerticalDirection;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -31,14 +32,13 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Integration tests for BookmarkListView.
+ * Integration tests for BookmarksView.
  */
-public class BookmarkListViewIntegrationTest extends ApplicationTest {
+public class BookmarksViewIntegrationTest extends ApplicationTest {
 
   private StackPane stackPane;
 
@@ -79,11 +79,11 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     mapView.setMap(map);
 
     // when the bookmarks view is added with the map view
-    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
-    bookmarkListView.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
+    BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
+    bookmarksView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarksView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -105,11 +105,11 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     sceneView.setArcGISScene(scene);
 
     // when the bookmarks view is added with the scene view
-    BookmarkListView bookmarkListView = new BookmarkListView(sceneView);
-    bookmarkListView.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
+    BookmarksView bookmarksView = new BookmarksView(scene.getBookmarks());
+    bookmarksView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarksView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -132,11 +132,11 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().addAll(Arrays.asList(bookmarkToKeep, bookmarkToRemove));
     mapView.setMap(map);
 
-    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
-    bookmarkListView.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
+    BookmarksView bookmarksView = new BookmarksView(ListenableListUtils.toObservableList(map.getBookmarks()));
+    bookmarksView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarksView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -168,11 +168,11 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(guitarShapedTreesBookmark);
     mapView.setMap(map);
 
-    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
-    bookmarkListView.setMaxSize(100, 100);
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
+    BookmarksView bookmarksView = new BookmarksView(ListenableListUtils.toObservableList(map.getBookmarks()));
+    bookmarksView.setMaxSize(100, 100);
+    StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarksView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -180,12 +180,15 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     final ArcGISMap map2 = new ArcGISMap(Basemap.createStreets());
     Platform.runLater(() -> map2.getBookmarks().add(strangeSymbolBookmark));
     mapView.setMap(map2);
+    Platform.runLater(() -> bookmarksView.setBookmarks(ListenableListUtils.toObservableList(map2.getBookmarks())));
 
     WaitForAsyncUtils.waitForFxEvents();
 
     // only the new map's bookmarks will be in the list
     clickOn(strangeSymbolBookmark.getName());
     Assertions.assertThrows(FxRobotException.class, () -> clickOn(guitarShapedTreesBookmark.getName()));
+    // original map should still have its bookmarks (doesn't get cleared accidentally changing binding)
+    Assertions.assertTrue(map.getBookmarks().contains(guitarShapedTreesBookmark));
   }
 
   /**
@@ -202,11 +205,15 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(bookmark);
     mapView.setMap(map);
 
-    BookmarkListView bookmarksView = new BookmarkListView(mapView);
+    BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
+
+    bookmarksView.selectedBookmarkProperty().addListener((observable, oldValue, newValue) ->
+      mapView.setViewpoint(newValue.getViewpoint())
+    );
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -239,11 +246,29 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(bookmark);
     mapView.setMap(map);
 
-    BookmarkListView bookmarksView = new BookmarkListView(mapView);
+    BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
     Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
+
+    // deselect the selected bookmark if the user pans/zooms away from it's viewpoint
+    bookmarksView.selectedBookmarkProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue != null) {
+        mapView.setBookmarkAsync(newValue).addDoneListener(() ->
+          mapView.addViewpointChangedListener(new ViewpointChangedListener() {
+            @Override
+            public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
+              // check that the selected item which triggered this is still selected
+              if (bookmarksView.getSelectedBookmark() == newValue) {
+                bookmarksView.setSelectedBookmark(null);
+              }
+              mapView.removeViewpointChangedListener(this);
+            }
+          })
+        );
+      }
+    });
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -264,6 +289,7 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
             bookmark.getViewpoint().getTargetGeometry().getSpatialReference()), 0.01));
   }
 
+
   /**
    * Tests that a user can override the default cell factory to show an icon and custom text.
    */
@@ -277,27 +303,31 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().addAll(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
     mapView.setMap(map);
 
-    BookmarkListView bookmarkListView = new BookmarkListView(mapView);
-    bookmarkListView.setMaxSize(300, 100);
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
+    BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
+    bookmarksView.setMaxSize(300, 100);
+    StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
+    StackPane.setMargin(bookmarksView, new Insets(10));
+    Platform.runLater(() -> stackPane.getChildren().add(bookmarksView));
 
     // when the cell factory is set to one that shows an image and custom text
-    bookmarkListView.setCellFactory(new Callback<>() {
-      private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
+    Platform.runLater(() -> {
+      BookmarkListViewSkin customSkin = new BookmarkListViewSkin(bookmarksView);
+      customSkin.setCellFactory(new Callback<>() {
+        private Image bookmarkIcon = new Image(getClass().getResourceAsStream("/bookmark-outline.png"), 12, 12, true, true);
 
-      @Override
-      public ListCell<Bookmark> call(ListView<Bookmark> param) {
-        return new ListCell<>() {
-          @Override
-          protected void updateItem(Bookmark item, boolean empty) {
-            super.updateItem(item, empty);
-            setText(empty ? null : formatBookmarkNameWithViewpointCoordinate(item));
-            setGraphic(empty ? null : new ImageView(bookmarkIcon));
-          }
-        };
-      }
+        @Override
+        public ListCell<Bookmark> call(ListView<Bookmark> param) {
+          return new ListCell<>() {
+            @Override
+            protected void updateItem(Bookmark item, boolean empty) {
+              super.updateItem(item, empty);
+              setText(empty ? null : formatBookmarkNameWithViewpointCoordinate(item));
+              setGraphic(empty ? null : new ImageView(bookmarkIcon));
+            }
+          };
+        }
+      });
+      bookmarksView.setSkin(customSkin);
     });
 
     WaitForAsyncUtils.waitForFxEvents();
@@ -306,87 +336,6 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
     Assertions.assertEquals(4, lookup(n -> n instanceof ImageView).queryAll().size(), "Two image views from " +
         "mapView and 2 from the bookmarks widget");
     map.getBookmarks().forEach(bookmark -> clickOn(formatBookmarkNameWithViewpointCoordinate(bookmark)));
-  }
-
-  /**
-   * Tests that a regular ListView can use a BookmarkListCell programmatically and without the BookmarkListCellFactory.
-   */
-  @Test
-  public void bookmarkListCell() {
-    // given a map view containing a map with bookmarks
-    ListView<Bookmark> bookmarkListView = new ListView<>();
-    StackPane.setAlignment(bookmarkListView, Pos.TOP_RIGHT);
-    StackPane.setMargin(bookmarkListView, new Insets(10));
-    Platform.runLater(() -> stackPane.getChildren().add(bookmarkListView));
-    bookmarkListView.getItems().addAll(guitarShapedTreesBookmark, grandPrismaticSpringBookmark);
-    bookmarkListView.setMaxSize(100, 100);
-
-    // when the cell factory is set to one that shows an image and custom text
-    bookmarkListView.setCellFactory(param -> new BookmarkListView.BookmarkListCell());
-
-    WaitForAsyncUtils.waitForFxEvents();
-
-    // every bookmark's name will be displayed in the view
-    bookmarkListView.getItems().forEach(bookmark -> clickOn(bookmark.getName()));
-  }
-
-  /**
-   * Tests that a regular ListView can use BookmarkListCells (via BookmarkListCellFactory) as defined in FXML.
-   *
-   * @throws IOException if the fxml could not be loaded
-   */
-  @Test
-  public void fxmlListViewWithBookmarkListCellFactory() throws IOException {
-    // when FXML containing a ListView defined with the BookmarkListCellFactory is loaded
-    Parent parent = FXMLLoader.load(getClass().getResource("/bookmark_list_from_bookmarks.fxml"));
-    Platform.runLater(() -> stackPane.getScene().setRoot(parent));
-
-    WaitForAsyncUtils.waitForFxEvents();
-
-    // the bookmark names should be displayed
-    clickOn("Test 1");
-    clickOn("Test 2");
-  }
-
-  /**
-   * Tests that one can bind the BookmarkList's GeoView in FXML.
-   */
-  @Test
-  public void fxmlGeoViewBinding() {
-    // given an FXML layout contains a BookmarkListView bound to a GeoView
-    BookmarkListFromGeoView bookmarkListFromGeoView = new BookmarkListFromGeoView();
-    Platform.runLater(() -> stackPane.getScene().setRoot(bookmarkListFromGeoView));
-    final ArcGISMap map = bookmarkListFromGeoView.getMapView().getMap();
-
-    // when bookmarks are added to the geo view's map
-    map.getBookmarks().addAll(Arrays.asList(guitarShapedTreesBookmark, grandPrismaticSpringBookmark));
-    WaitForAsyncUtils.waitForFxEvents();
-
-    // the bookmarks will be displayed in the list
-    map.getBookmarks().forEach(bookmark -> clickOn(bookmark.getName()));
-  }
-
-  /**
-   * Test view containing a MapView and a BookmarkListView where the map view is bound via FXML property binding.
-   */
-  private static class BookmarkListFromGeoView extends StackPane {
-
-    @FXML private MapView mapView;
-
-    private BookmarkListFromGeoView() {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/bookmark_list_from_geoview.fxml"));
-      loader.setRoot(this);
-      loader.setController(this);
-      try {
-        loader.load();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-
-    public MapView getMapView() {
-      return mapView;
-    }
   }
 
   /**
@@ -401,4 +350,5 @@ public class BookmarkListViewIntegrationTest extends ApplicationTest {
         CoordinateFormatter.LatitudeLongitudeFormat.DECIMAL_DEGREES, 2);
     return bookmark.getName() + " (" + coordinateString + ")";
   }
+
 }

@@ -17,25 +17,21 @@ The `BookmarkListView` control allows you to display a list view of bookmarks wh
 #### Basic Usage
  
  ```java
-MapView mapView = new MapView();
-ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-map.getBookmarks().add(new Bookmark("My bookmark", new Viewpoint(-33.867886, -63.985, 4e4)));
-mapView.setMap(map);
+// unbound list of bookmarks
+BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
 
-BookmarkListView bookmarkListView = new BookmarkListView(mapView);
+// list bound to map
+BookmarksView bookmarksView = new BookmarksView(ListenableListUtils.toObservableList(map.getBookmarks()));
+
+// switch binding to another map
+bookmarksView.setBookmarks(ListenableListUtils.toObservableList(map2.getBookmarks()));
 ```
 
 #### Customization
 
 The control's default `BookmarkListViewSkin` applies a cell factory which displays the name of the bookmark. The cell
- factory can be overridden with `bookmarkListView#setCellFactory(Callback<ListView<Bookmark>, ListCell<Bookmark>>)`.
-  
-If you don't want the synchronization with the `GeoView` or the selection behavior, and simply want a `ListCell` which
- displays the name of the bookmark for your own `ListView`, you can use `BookmarkListView.BookmarkListCell` or
-  `BookmarkListView.BookmarkListCellFactory`.
- 
-The control extends an abstract `BookmarkView` which handles synchronization with the `GeoView`. You can extend this
-  class and create your own skin to display bookmarks in a different kind of control such as a `TreeView` or `Accordion`.
+ factory can be overridden on the skin with `bookmarkListViewSkin#setCellFactory(Callback<ListView<Bookmark>, ListCell
+ <Bookmark>>)`. The skin can then be replaced with the custom skin with `bookmarksView.setSkin(customSkin)`.
 
 ## Instructions
 
