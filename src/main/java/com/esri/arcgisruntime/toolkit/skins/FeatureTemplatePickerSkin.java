@@ -35,6 +35,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * Defines a skin for a {@link FeatureTemplatePicker}.
+ *
+ * @since 100.6.0
+ */
 public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePicker> {
 
   private Pane pane = new VBox();
@@ -47,6 +52,12 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
 
   private Orientation orientation;
 
+  /**
+   * Creates a new skin instance.
+   *
+   * @param control the control this skin is for
+   * @since 100.6.0
+   */
   public FeatureTemplatePickerSkin(FeatureTemplatePicker control) {
     super(control);
 
@@ -101,6 +112,14 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
       layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
+  /**
+   * Updates the skin when the content has become invalid, for example if the value of the
+   * {@link FeatureTemplatePicker#orientationProperty()} is changed.
+   *
+   * @param contentWidth the content width
+   * @param contentHeight the content height
+   * @since 100.6.0
+   */
   private void update(double contentWidth, double contentHeight) {
     Orientation controlOrientation = getSkinnable().getOrientation();
     if (orientation != controlOrientation) {
@@ -120,6 +139,12 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
     }
   }
 
+  /**
+   * Adds a {@link FeatureTemplateList} for a {@link FeatureLayer} to the skin.
+   *
+   * @param featureLayer the feature layer
+   * @since 100.6.0
+   */
   private void addTemplateList(FeatureLayer featureLayer) {
     var table = featureLayer.getFeatureTable();
 
@@ -154,6 +179,11 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
     pane.getChildren().setAll(featureLayerMap.values());
   }
 
+  /**
+   * Removes a {@link FeatureLayer} from the skin.
+   *
+   * @param featureLayer the feature layer to remove
+   */
   private void removeTemplateList(FeatureLayer featureLayer) {
     var featureTemplateList = featureLayerMap.remove(featureLayer);
     if (featureTemplateList != null) {
@@ -164,6 +194,12 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
     }
   }
 
+  /**
+   * Sets invalid to true whenever the skin becomes invalidated, for example if the control's size changes.
+   *
+   * @param observable the observable
+   * @since 100.6.0
+   */
   private void invalidated(Observable observable) {
     invalid = true;
   }

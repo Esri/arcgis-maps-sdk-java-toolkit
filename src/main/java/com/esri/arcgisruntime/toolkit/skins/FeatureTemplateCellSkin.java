@@ -30,11 +30,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
+/**
+ * Defines a skin for a {@link FeatureTemplateCell}.
+ *
+ * @since 100.6.0
+ */
 public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
 
   private boolean invalid = true;
   private final Label label = new Label();
 
+  /**
+   * Creates a new skin instance.
+   *
+   * @param control the control this skin is for
+   * @since 100.6.0
+   */
   public FeatureTemplateCellSkin(FeatureTemplateCell control) {
     super(control);
 
@@ -69,6 +80,13 @@ public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell>
     getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
+  /**
+   * Updates the skin when the content has become invalid, for example if the dimensions of the cell have been changed.
+   *
+   * @param contentWidth the content width
+   * @param contentHeight the content height
+   * @since 100.6.0
+   */
   private void update(double contentWidth, double contentHeight) {
     var control = getSkinnable();
     FeatureTemplatePicker.Template template = control.templateProperty().get();

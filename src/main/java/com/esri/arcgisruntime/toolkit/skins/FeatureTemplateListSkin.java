@@ -33,6 +33,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Defines a skin for a {@link FeatureTemplateList}.
+ *
+ * @since 100.6.0
+ */
 public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>  {
 
   private final VBox vBox = new VBox();
@@ -46,6 +51,12 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
   private final SimpleObjectProperty<FeatureTemplate> selectedFeatureTemplateProperty = new SimpleObjectProperty<>();
 
+  /**
+   * Creates a new skin instance.
+   *
+   * @param control the control this skin is for
+   * @since 100.6.0
+   */
   public FeatureTemplateListSkin(FeatureTemplateList control) {
     super(control);
 
@@ -104,6 +115,11 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
       layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
   }
 
+  /**
+   * Populates the list with {@link FeatureTemplateCell}s.
+   *
+   * @since 100.6.0
+   */
   private void populate() {
     var control = getSkinnable();
     var featureLayer = control.featureLayerProperty().get();
@@ -132,6 +148,14 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     }));
   }
 
+  /**
+   * Updates the skin when the content has become invalid, for example if the option to display the layer name is
+   * changed value.
+   *
+   * @param contentWidth the content width
+   * @param contentHeight the content height
+   * @since 100.6.0
+   */
   private void update(double contentWidth, double contentHeight) {
     var control = getSkinnable();
 
@@ -151,6 +175,11 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     vBox.getChildren().addAll(tilePane);
   }
 
+  /**
+   * Sets any selected cell to not be selected.
+   *
+   * @since 100.6.0
+   */
   private void clearSelection() {
     templateCells.forEach(featureTemplateCell ->
       templateCells.stream().filter(FeatureTemplateCell::isSelected).findFirst().ifPresent(t -> t.setSelected(false)));
