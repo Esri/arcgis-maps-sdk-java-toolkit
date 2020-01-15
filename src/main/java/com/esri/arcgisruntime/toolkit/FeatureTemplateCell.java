@@ -57,7 +57,7 @@ public final class FeatureTemplateCell extends Control {
   public FeatureTemplateCell(FeatureLayer featureLayer, FeatureTemplate featureTemplate) {
     templateProperty.set(new FeatureTemplatePicker.Template(featureLayer, featureTemplate));
 
-    getStyleClass().add("template-cell");
+    getStyleClass().add("feature-template-cell");
   }
 
   /**
@@ -166,7 +166,7 @@ public final class FeatureTemplateCell extends Control {
    * example
    * <p>
    *   <pre>
-   *   .template-cell: selected {
+   *   .feature-template-cell: selected {
    *     -fx-background-color: pink;
    *   }
    *   </pre>
@@ -219,7 +219,7 @@ public final class FeatureTemplateCell extends Control {
 
   @Override
   public String getUserAgentStylesheet() {
-    return FeatureTemplateCell.class.getResource("skins/template-cell.css").toExternalForm();
+    return FeatureTemplateCell.class.getResource("skins/feature-template-cell.css").toExternalForm();
   }
 
   @Override
