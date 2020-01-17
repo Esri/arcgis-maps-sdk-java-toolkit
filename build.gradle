@@ -37,8 +37,14 @@ sourceSets {
   }
 }
 
+configurations {
+  natives
+}
+
 dependencies {
   implementation "com.esri.arcgisruntime:arcgis-java:100.7.0"
+  natives "com.esri.arcgisruntime:arcgis-java-jnilibs:100.7.0"
+  natives "com.esri.arcgisruntime:arcgis-java-resources:100.7.0"
   implementation "org.openjfx:javafx-base:11:$platform"
   implementation "org.openjfx:javafx-graphics:11:$platform"
   implementation "org.openjfx:javafx-controls:11:$platform"
@@ -56,11 +62,24 @@ dependencies {
   integrationTestImplementation "org.hamcrest:hamcrest:2.1"
 }
 
+task copyNatives(type: Copy) {
+  description = "Copies the arcgis native libraries into USER_HOME/.arcgis for development."
+  group = "build"
+  configurations.natives.asFileTree.each {
+    from(zipTree(it))
+  }
+  into "${System.properties.getProperty("user.home")}/.arcgis/100.7.0"
+}
+
 task integrationTest(type: Test) {
   description = 'Runs the integration tests.'
   group = 'verification'
   testClassesDirs = sourceSets.integrationTest.output.classesDirs
   classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+tasks.withType(Test.class) {
+  dependsOn copyNatives
 }
 
 task javadocJar(type: Jar) {
