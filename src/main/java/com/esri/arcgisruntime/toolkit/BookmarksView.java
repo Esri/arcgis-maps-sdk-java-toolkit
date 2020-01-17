@@ -17,7 +17,10 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.mapping.Bookmark;
+import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.toolkit.skins.BookmarkListViewSkin;
+import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
+import com.esri.arcgisruntime.util.ListenableList;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,6 +42,11 @@ public class BookmarksView extends Control {
    */
   public BookmarksView(ObservableList<Bookmark> bookmarks) {
     this.bookmarks = new SimpleListProperty<>(bookmarks);
+    this.selectedBookmark = new SimpleObjectProperty<>(null);
+  }
+
+  public BookmarksView(BookmarkList bookmarkList) {
+    this.bookmarks = new SimpleListProperty<>(ListenableListUtils.toObservableList(bookmarkList));
     this.selectedBookmark = new SimpleObjectProperty<>(null);
   }
 
@@ -69,12 +77,16 @@ public class BookmarksView extends Control {
    *
    * @return bookmarks property
    */
-  public ReadOnlyListProperty<Bookmark> bookmarksProperty() {
+  public ListProperty<Bookmark> bookmarksProperty() {
     return bookmarks;
   }
 
   public void setBookmarks(ObservableList<Bookmark> bookmarks) {
     this.bookmarks.set(bookmarks);
+  }
+
+  public void setBookmarks(BookmarkList bookmarkList) {
+    this.bookmarks.set(ListenableListUtils.toObservableList(bookmarkList));
   }
 
   public Bookmark getSelectedBookmark() {

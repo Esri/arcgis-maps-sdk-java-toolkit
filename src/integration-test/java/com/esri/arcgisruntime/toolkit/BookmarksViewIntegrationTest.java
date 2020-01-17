@@ -9,7 +9,6 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import com.esri.arcgisruntime.toolkit.skins.BookmarkListViewSkin;
-import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -132,7 +131,7 @@ public class BookmarksViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().addAll(Arrays.asList(bookmarkToKeep, bookmarkToRemove));
     mapView.setMap(map);
 
-    BookmarksView bookmarksView = new BookmarksView(ListenableListUtils.toObservableList(map.getBookmarks()));
+    BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
@@ -168,7 +167,7 @@ public class BookmarksViewIntegrationTest extends ApplicationTest {
     map.getBookmarks().add(guitarShapedTreesBookmark);
     mapView.setMap(map);
 
-    BookmarksView bookmarksView = new BookmarksView(ListenableListUtils.toObservableList(map.getBookmarks()));
+    BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
     bookmarksView.setMaxSize(100, 100);
     StackPane.setAlignment(bookmarksView, Pos.TOP_RIGHT);
     StackPane.setMargin(bookmarksView, new Insets(10));
@@ -180,7 +179,7 @@ public class BookmarksViewIntegrationTest extends ApplicationTest {
     final ArcGISMap map2 = new ArcGISMap(Basemap.createStreets());
     Platform.runLater(() -> map2.getBookmarks().add(strangeSymbolBookmark));
     mapView.setMap(map2);
-    Platform.runLater(() -> bookmarksView.setBookmarks(ListenableListUtils.toObservableList(map2.getBookmarks())));
+    Platform.runLater(() -> bookmarksView.setBookmarks(map2.getBookmarks()));
 
     WaitForAsyncUtils.waitForFxEvents();
 

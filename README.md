@@ -18,13 +18,13 @@ The `BookmarkListView` control allows you to display a list view of bookmarks wh
  
  ```java
 // unbound list of bookmarks
+BookmarksView bookmarksView = new BookmarksView(FXCollections.observableArrayList(bookmark1, bookmark2));
+
+// bound to map's bookmarks
 BookmarksView bookmarksView = new BookmarksView(map.getBookmarks());
 
-// list bound to map
-BookmarksView bookmarksView = new BookmarksView(ListenableListUtils.toObservableList(map.getBookmarks()));
-
 // switch binding to another map
-bookmarksView.setBookmarks(ListenableListUtils.toObservableList(map2.getBookmarks()));
+bookmarksView.setBookmarks(map2.getBookmarks());
 ```
 
 #### Customization
