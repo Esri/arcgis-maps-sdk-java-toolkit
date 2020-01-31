@@ -60,8 +60,7 @@ public class BookmarksView extends Control {
    * @param bookmarkList bookmark list
    */
   public BookmarksView(BookmarkList bookmarkList) {
-    this.bookmarks = new SimpleListProperty<>(ListenableListUtils.toObservableList(bookmarkList));
-    this.selectedBookmark = new SimpleObjectProperty<>(null);
+    this(ListenableListUtils.toObservableList(bookmarkList));
   }
 
   /**
