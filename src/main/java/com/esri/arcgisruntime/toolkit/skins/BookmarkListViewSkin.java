@@ -30,6 +30,9 @@ import javafx.util.Callback;
  */
 public class BookmarkListViewSkin extends SkinBase<BookmarksView> {
 
+  /**
+   * Internal list view.
+   */
   private final ListView<Bookmark> listView;
 
   /**
@@ -47,7 +50,7 @@ public class BookmarkListViewSkin extends SkinBase<BookmarksView> {
     // bind the items from the control
     listView.itemsProperty().bind(control.bookmarksProperty());
 
-    // default to showing the bookmark's name
+    // default to a cell factory with list cells that show the bookmark's name
     listView.setCellFactory(new BookmarkListCellFactory());
 
     // change the selection on the list view if the control property changes
@@ -108,6 +111,8 @@ public class BookmarkListViewSkin extends SkinBase<BookmarksView> {
 
   /**
    * Cell factory using BookmarkListCells.
+   *
+   * @see BookmarkListCell
    */
   private static class BookmarkListCellFactory implements Callback<ListView<Bookmark>, ListCell<Bookmark>> {
 

@@ -20,8 +20,10 @@ import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.toolkit.skins.BookmarkListViewSkin;
 import com.esri.arcgisruntime.toolkit.utils.ListenableListUtils;
-import com.esri.arcgisruntime.util.ListenableList;
-import javafx.beans.property.*;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
@@ -30,30 +32,50 @@ import javafx.scene.control.Skin;
 import java.util.List;
 
 /**
- * Control for displaying the bookmarks of a GeoView's map or scenes in a list.
+ * Control for displaying a list of bookmarks.
  */
 public class BookmarksView extends Control {
 
+  /**
+   * List of bookmarks to show in the view.
+   */
   private final ListProperty<Bookmark> bookmarks;
+
+  /**
+   * Selected bookmark.
+   */
   private final ObjectProperty<Bookmark> selectedBookmark;
 
   /**
-   * Creates an instance for the GeoView.
+   * Creates a BookmarksView showing the given list of bookmarks.
    */
   public BookmarksView(ObservableList<Bookmark> bookmarks) {
     this.bookmarks = new SimpleListProperty<>(bookmarks);
     this.selectedBookmark = new SimpleObjectProperty<>(null);
   }
 
+  /**
+   * Creates a BookmarksView showing the given bookmark list.
+   *
+   * @param bookmarkList bookmark list
+   */
   public BookmarksView(BookmarkList bookmarkList) {
     this.bookmarks = new SimpleListProperty<>(ListenableListUtils.toObservableList(bookmarkList));
     this.selectedBookmark = new SimpleObjectProperty<>(null);
   }
 
+  /**
+   * Creates a BookmarksView showing the given list of bookmarks.
+   *
+   * @param bookmarks bookmarks to show
+   */
   public BookmarksView(List<Bookmark> bookmarks) {
     this(FXCollections.observableArrayList(bookmarks));
   }
 
+  /**
+   * Creates a BookmarksView with an empty list of bookmarks.
+   */
   public BookmarksView() {
     this(FXCollections.observableArrayList());
   }
@@ -81,22 +103,48 @@ public class BookmarksView extends Control {
     return bookmarks;
   }
 
+  /**
+   * Sets the list of bookmarks to show.
+   *
+   * @param bookmarks list of bookmarks
+   */
   public void setBookmarks(ObservableList<Bookmark> bookmarks) {
     this.bookmarks.set(bookmarks);
   }
 
+  /**
+   * Sets the list of bookmarks to show from a BookmarkList.
+   *
+   * @param bookmarkList bookmark list
+   * @see BookmarkList
+   */
   public void setBookmarks(BookmarkList bookmarkList) {
     this.bookmarks.set(ListenableListUtils.toObservableList(bookmarkList));
   }
 
+  /**
+   * Gets the selected bookmark.
+   *
+   * @return selected bookmark
+   */
   public Bookmark getSelectedBookmark() {
     return selectedBookmark.get();
   }
 
+  /**
+   * The selected bookmark.
+   *
+   * @return selected bookmark property
+   */
   public ObjectProperty<Bookmark> selectedBookmarkProperty() {
     return selectedBookmark;
   }
 
+  /**
+   * Sets the selected bookmark.
+   *
+   * @param selectedBookmark bookmark to select
+   */
   public void setSelectedBookmark(Bookmark selectedBookmark) {
     this.selectedBookmark.set(selectedBookmark);
   }
