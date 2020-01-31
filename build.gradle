@@ -42,7 +42,7 @@ configurations {
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:100.7.0"
+  implementation "com.esri.arcgisruntime:arcgis-java:$version"
   natives "com.esri.arcgisruntime:arcgis-java-jnilibs:100.7.0"
   natives "com.esri.arcgisruntime:arcgis-java-resources:100.7.0"
   implementation "org.openjfx:javafx-base:11:$platform"
