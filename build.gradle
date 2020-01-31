@@ -10,7 +10,7 @@ ext {
 }
 
 group "com.esri.arcgisruntime"
-version = "100.6.0"
+version = "100.7.0"
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
@@ -38,7 +38,7 @@ sourceSets {
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:100.6.0"
+  implementation "com.esri.arcgisruntime:arcgis-java:$version"
   implementation "org.openjfx:javafx-base:11:$platform"
   implementation "org.openjfx:javafx-graphics:11:$platform"
   implementation "org.openjfx:javafx-controls:11:$platform"
