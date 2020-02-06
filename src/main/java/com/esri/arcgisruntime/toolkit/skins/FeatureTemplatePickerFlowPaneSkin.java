@@ -59,6 +59,20 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
 
     // toggle group so selection is shared between all feature template items
     toggleGroup = new ToggleGroup();
+    toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+      control.setSelectedFeatureTemplateItem(newValue == null ? null : (FeatureTemplateItem) newValue.getUserData());
+    });
+    control.selectedFeatureTemplateItemProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue == null) {
+        toggleGroup.selectToggle(null);
+      } else {
+        Toggle matchingToggle = toggleGroup.getToggles().stream()
+            .filter(t -> (t.getUserData()).equals(newValue))
+            .findFirst()
+            .orElse(null);
+        toggleGroup.selectToggle(matchingToggle);
+      }
+    });
 
     // add a tile pane for each feature template group
     control.getFeatureTemplateGroups().stream()
@@ -151,6 +165,7 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     toggleButton.setTooltip(new Tooltip(featureTemplateItem.getFeatureTemplate().getName()));
     toggleButton.setToggleGroup(toggleGroup);
+    toggleButton.setUserData(featureTemplateItem);
     toggleButton.getStyleClass().add("feature-template-item");
 
     ImageView imageView = new ImageView();
