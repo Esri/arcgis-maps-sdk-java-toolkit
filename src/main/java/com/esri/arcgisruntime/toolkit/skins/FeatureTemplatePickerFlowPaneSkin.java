@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 
 public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTemplatePicker> {
 
+  private final ToggleGroup toggleGroup;
+
   public FeatureTemplatePickerFlowPaneSkin(FeatureTemplatePicker control) {
     super(control);
 
@@ -43,6 +45,8 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     pane.setHgap(10);
     pane.setVgap(10);
     getChildren().add(pane);
+
+    toggleGroup = new ToggleGroup();
 
     // add a tile pane for each feature template group
     control.getFeatureTemplateGroups().stream()
@@ -109,7 +113,7 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     toggleButton.setTooltip(new Tooltip(featureTemplateItem.getFeatureTemplate().getName()));
     // skip the group and make every item in the picker belong to the same toggle group
-    toggleButton.toggleGroupProperty().bind(this.getSkinnable().toggleGroupProperty());
+    toggleButton.setToggleGroup(toggleGroup);
     toggleButton.getStyleClass().add("feature-template-item");
     vBox.getChildren().add(toggleButton);
 
@@ -118,10 +122,10 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
 
     updateSwatch(featureTemplateItem, imageView);
 
-    featureTemplateItem.symbolWidthProperty().addListener((observable, oldValue, newValue) ->
+    getSkinnable().symbolWidthProperty().addListener((observable, oldValue, newValue) ->
         updateSwatch(featureTemplateItem, imageView)
     );
-    featureTemplateItem.symbolHeightProperty().addListener((observable, oldValue, newValue) ->
+    getSkinnable().symbolHeightProperty().addListener((observable, oldValue, newValue) ->
         updateSwatch(featureTemplateItem, imageView)
     );
 

@@ -46,7 +46,6 @@ public final class FeatureTemplatePicker extends Control {
   private final ObjectProperty<Orientation> orientation;
   private final IntegerProperty symbolWidth;
   private final IntegerProperty symbolHeight;
-  private final ObjectProperty<ToggleGroup> toggleGroup;
 
   public FeatureTemplatePicker(ObservableList<FeatureLayer> featureLayers) {
     this.featureLayers = new SimpleListProperty<>(Objects.requireNonNull(featureLayers));
@@ -57,17 +56,14 @@ public final class FeatureTemplatePicker extends Control {
     this.orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
     this.symbolWidth = new SimpleIntegerProperty(20);
     this.symbolHeight = new SimpleIntegerProperty(20);
-    this.toggleGroup = new SimpleObjectProperty<>(new ToggleGroup());
 
     this.featureLayers.addListener((ListChangeListener<FeatureLayer>) c -> {
       while (c.next()) {
         if (c.wasAdded()) {
           // create a feature template group control for each feature table
-          List<FeatureTemplateGroup> featureTemplateGroups = c.getAddedSubList().stream().map(FeatureTemplateGroup::new).collect(Collectors.toList());
-          // bind template group properties to picker's properties
-          featureTemplateGroups.forEach(featureTemplateGroup -> {
-            featureTemplateGroup.selectedFeatureTemplateItemProperty().bind(this.selectedFeatureTemplateItem);
-          });
+          List<FeatureTemplateGroup> featureTemplateGroups = c.getAddedSubList().stream()
+              .map(FeatureTemplateGroup::new)
+              .collect(Collectors.toList());
           // add the new feature template groups to this control
           this.featureTemplateGroups.addAll(c.getFrom(), featureTemplateGroups);
         } else if (c.wasRemoved()) {
@@ -183,18 +179,6 @@ public final class FeatureTemplatePicker extends Control {
 
   public void setSymbolHeight(int symbolHeight) {
     this.symbolHeight.set(symbolHeight);
-  }
-
-  public ToggleGroup getToggleGroup() {
-    return toggleGroup.get();
-  }
-
-  public ObjectProperty<ToggleGroup> toggleGroupProperty() {
-    return toggleGroup;
-  }
-
-  public void setToggleGroup(ToggleGroup toggleGroup) {
-    this.toggleGroup.set(toggleGroup);
   }
 
   @Override

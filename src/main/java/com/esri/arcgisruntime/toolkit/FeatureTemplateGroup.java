@@ -38,10 +38,6 @@ public final class FeatureTemplateGroup {
 
   private final SimpleObjectProperty<FeatureLayer> featureLayer;
   private final ReadOnlyListWrapper<FeatureTemplateItem> featureTemplateItems;
-  private final SimpleObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItem;
-  private final IntegerProperty symbolHeight;
-  private final IntegerProperty symbolWidth;
-  private final ObjectProperty<ToggleGroup> toggleGroup;
 
   /**
    * Creates a new instance.
@@ -55,10 +51,6 @@ public final class FeatureTemplateGroup {
   public FeatureTemplateGroup(FeatureLayer featureLayer) {
     this.featureLayer = new SimpleObjectProperty<>(Objects.requireNonNull(featureLayer));
     this.featureTemplateItems = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
-    this.selectedFeatureTemplateItem = new SimpleObjectProperty<>();
-    this.symbolHeight = new SimpleIntegerProperty(50);
-    this.symbolWidth = new SimpleIntegerProperty(50);
-    this.toggleGroup = new SimpleObjectProperty<>(new ToggleGroup());
 
     featureLayer.loadAsync();
     featureLayer.addDoneLoadingListener(() -> {
@@ -120,101 +112,5 @@ public final class FeatureTemplateGroup {
 
   public ReadOnlyListWrapper<FeatureTemplateItem> featureTemplateItemsProperty() {
     return featureTemplateItems;
-  }
-
-  /**
-   * A property which contains the selected {@link FeatureTemplate} or null if there is no selection.
-   *
-   * @return the property
-   * @since 100.6.0
-   */
-  public SimpleObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItemProperty() {
-    return selectedFeatureTemplateItem;
-  }
-
-  /**
-   * Gets the value of the {@link #selectedFeatureTemplateItemProperty()}.
-   *
-   * @return the selected template or null if there is no selection
-   * @since 100.6.0
-   */
-  public FeatureTemplateItem getSelectedTemplateItem() {
-    return selectedFeatureTemplateItem.get();
-  }
-
-  public void setSelectedFeatureTemplateItem(FeatureTemplateItem selectedFeatureTemplateItem) {
-    this.selectedFeatureTemplateItem.set(selectedFeatureTemplateItem);
-  }
-
-  /**
-   * A property controlling the width of the symbol used in the cell.
-   *
-   * @return the symbol width property
-   * @since 100.6.0
-   */
-  public IntegerProperty symbolWidthProperty() {
-    return symbolWidth;
-  }
-
-  /**
-   * Sets the value of the {@link #symbolWidthProperty()}.
-   *
-   * @param width the width
-   * @since 100.6.0
-   */
-  public void setSymbolWidth(int width) {
-    symbolWidthProperty().set(width);
-  }
-
-  /**
-   * Gets the value of the {@link #symbolWidthProperty()}.
-   *
-   * @return the width
-   * @since 100.6.0
-   */
-  public int getSymbolWidth() {
-    return symbolWidthProperty().get();
-  }
-
-  /**
-   * A property controlling the height of the symbol used in the cell.
-   *
-   * @return the height property
-   * @since 100.6.0
-   */
-  public IntegerProperty symbolHeightProperty() {
-    return symbolHeight;
-  }
-
-  /**
-   * Sets the value of the {@link #symbolHeightProperty()}.
-   *
-   * @param height the height
-   * @since 100.6.0
-   */
-  public void setSymbolHeight(int height) {
-    symbolHeightProperty().set(height);
-  }
-
-  /**
-   * Gets the value of the {@link #symbolHeightProperty()}.
-   *
-   * @return the height
-   * @since 100.6.0
-   */
-  public int getSymbolHeight() {
-    return symbolHeightProperty().get();
-  }
-
-  public ToggleGroup getToggleGroup() {
-    return toggleGroup.get();
-  }
-
-  public ObjectProperty<ToggleGroup> toggleGroupProperty() {
-    return toggleGroup;
-  }
-
-  public void setToggleGroup(ToggleGroup toggleGroup) {
-    this.toggleGroup.set(toggleGroup);
   }
 }
