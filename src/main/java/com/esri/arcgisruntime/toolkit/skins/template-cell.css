@@ -1,3 +1,16 @@
-.template-cell: selected {
-  -fx-background-color: -fx-accent;
+.feature-template-item {
+  -fx-text-fill: black;
+  -fx-base: transparent;
+  -fx-background: transparent;
+  -fx-focus-color: transparent;
+  -fx-border-color: transparent;
+  -fx-effect: null;
+}
+
+.feature-template-item:hover {
+  -fx-background-color: rgba(10, 10, 10, 0.1);
+}
+
+.feature-template-item:focused:selected {
+  -fx-background-color: pink;
 }
