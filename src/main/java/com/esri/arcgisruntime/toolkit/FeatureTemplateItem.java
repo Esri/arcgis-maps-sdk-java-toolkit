@@ -18,8 +18,8 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import javafx.beans.property.*;
-import javafx.scene.control.ToggleGroup;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 
 /**
  * A control which shows a cell containing a visual representation of a single feature template and allows marking the

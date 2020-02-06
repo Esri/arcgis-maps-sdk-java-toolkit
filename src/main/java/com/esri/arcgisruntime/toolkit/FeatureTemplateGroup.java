@@ -17,13 +17,13 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
-import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ToggleGroup;
 
 import java.util.Objects;
 import java.util.stream.Collectors;

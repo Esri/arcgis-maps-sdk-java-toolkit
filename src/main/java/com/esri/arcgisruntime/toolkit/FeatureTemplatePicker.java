@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerFlowPaneSkin;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -26,7 +25,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import javafx.scene.control.ToggleGroup;
 
 import java.util.List;
 import java.util.Objects;
