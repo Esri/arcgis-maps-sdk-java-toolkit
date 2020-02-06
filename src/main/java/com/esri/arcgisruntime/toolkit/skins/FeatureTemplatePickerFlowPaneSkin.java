@@ -31,6 +31,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,7 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     pane.setVgap(10);
     getChildren().add(pane);
 
+    // toggle group so selection is shared between all feature template items
     toggleGroup = new ToggleGroup();
 
     // add a tile pane for each feature template group
@@ -57,8 +59,10 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     control.featureTemplateGroupsProperty().addListener((ListChangeListener<FeatureTemplateGroup>) c -> {
       while (c.next()) {
         if (c.wasAdded()) {
-          pane.getChildren().addAll(c.getFrom(),
-              c.getAddedSubList().stream().map(this::createVBoxForFeatureTemplateGroup).collect(Collectors.toList()));
+          List<VBox> added = c.getAddedSubList().stream()
+              .map(this::createVBoxForFeatureTemplateGroup)
+              .collect(Collectors.toList());
+          pane.getChildren().addAll(c.getFrom(), added);
         } else if (c.wasRemoved()) {
           pane.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
         }
@@ -92,8 +96,10 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     featureTemplateGroup.featureTemplateItemsProperty().addListener((ListChangeListener<FeatureTemplateItem>) c -> {
       while (c.next()) {
         if (c.wasAdded()) {
-          tilePane.getChildren().addAll(c.getFrom(),
-              c.getAddedSubList().stream().map(this::createVBoxForFeatureTemplateItem).collect(Collectors.toList()));
+          List<VBox> added = c.getAddedSubList().stream()
+              .map(this::createVBoxForFeatureTemplateItem)
+              .collect(Collectors.toList());
+          tilePane.getChildren().addAll(c.getFrom(), added);
         } else if (c.wasRemoved()) {
           tilePane.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
         }
