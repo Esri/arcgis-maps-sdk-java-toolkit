@@ -23,12 +23,16 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateGroup;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
 
 import java.util.List;
@@ -37,15 +41,21 @@ import java.util.stream.Collectors;
 
 public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTemplatePicker> {
 
+  private final ScrollPane scrollPane;
+  private final FlowPane rootFlowPane;
   private final ToggleGroup toggleGroup;
 
   public FeatureTemplatePickerFlowPaneSkin(FeatureTemplatePicker control) {
     super(control);
 
-    FlowPane pane = new FlowPane();
-    pane.setHgap(10);
-    pane.setVgap(10);
-    getChildren().add(pane);
+    scrollPane = new ScrollPane();
+    getChildren().add(scrollPane);
+
+    rootFlowPane = new FlowPane();
+    rootFlowPane.setHgap(10);
+    rootFlowPane.setVgap(10);
+    scrollPane.setContent(rootFlowPane);
+    updateOrientation(control.getOrientation());
 
     // toggle group so selection is shared between all feature template items
     toggleGroup = new ToggleGroup();
@@ -53,7 +63,7 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     // add a tile pane for each feature template group
     control.getFeatureTemplateGroups().stream()
         .map(this::createVBoxForFeatureTemplateGroup)
-        .forEach(tilePane -> pane.getChildren().add(tilePane));
+        .forEach(tilePane -> rootFlowPane.getChildren().add(tilePane));
 
     // add or remove tile panes if the feature template group collection changes
     control.featureTemplateGroupsProperty().addListener((ListChangeListener<FeatureTemplateGroup>) c -> {
@@ -62,18 +72,43 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
           List<VBox> added = c.getAddedSubList().stream()
               .map(this::createVBoxForFeatureTemplateGroup)
               .collect(Collectors.toList());
-          pane.getChildren().addAll(c.getFrom(), added);
+          rootFlowPane.getChildren().addAll(c.getFrom(), added);
         } else if (c.wasRemoved()) {
-          pane.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
+          rootFlowPane.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
         }
       }
     });
 
-    pane.orientationProperty().bind(control.orientationProperty());
+    control.orientationProperty().addListener((observable, oldValue, newValue) -> updateOrientation(newValue));
+  }
+
+  private void updateOrientation(Orientation orientation) {
+    if (orientation == Orientation.HORIZONTAL) {
+      rootFlowPane.setOrientation(Orientation.VERTICAL);
+
+      scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+      scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+      scrollPane.setFitToWidth(false);
+      scrollPane.setFitToHeight(true);
+    } else {
+      rootFlowPane.setOrientation(Orientation.HORIZONTAL);
+
+      scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+      scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+      scrollPane.setFitToWidth(true);
+      scrollPane.setFitToHeight(false);
+    }
   }
 
   private VBox createVBoxForFeatureTemplateGroup(FeatureTemplateGroup featureTemplateGroup) {
     VBox vBox = new VBox(5);
+    vBox.setAlignment(Pos.CENTER);
+
+    vBox.prefHeightProperty().bind(Bindings.createDoubleBinding(() -> getSkinnable().getOrientation() == Orientation.HORIZONTAL ?
+        getSkinnable().getHeight() : Region.USE_COMPUTED_SIZE, getSkinnable().heightProperty(),
+        getSkinnable().orientationProperty()));
+    vBox.prefWidthProperty().bind(Bindings.createDoubleBinding(() -> getSkinnable().getOrientation() == Orientation.HORIZONTAL ?
+        Region.USE_COMPUTED_SIZE : getSkinnable().getWidth(), getSkinnable().widthProperty(), getSkinnable().orientationProperty()));
 
     FeatureLayer featureLayer = featureTemplateGroup.getFeatureLayer();
     Label label = new Label();
@@ -84,7 +119,8 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
       }
     });
 
-    FlowPane tilePane = new FlowPane();
+    TilePane tilePane = new TilePane();
+    tilePane.setBackground(new Background(new BackgroundFill(Paint.valueOf("00ff00"), CornerRadii.EMPTY, Insets.EMPTY)));
     vBox.getChildren().addAll(label, tilePane);
 
     // add toggle buttons for each feature template item in the group
@@ -96,7 +132,7 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     featureTemplateGroup.featureTemplateItemsProperty().addListener((ListChangeListener<FeatureTemplateItem>) c -> {
       while (c.next()) {
         if (c.wasAdded()) {
-          List<VBox> added = c.getAddedSubList().stream()
+          List<ToggleButton> added = c.getAddedSubList().stream()
               .map(this::createVBoxForFeatureTemplateItem)
               .collect(Collectors.toList());
           tilePane.getChildren().addAll(c.getFrom(), added);
@@ -109,33 +145,24 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     return vBox;
   }
 
-  private VBox createVBoxForFeatureTemplateItem(FeatureTemplateItem featureTemplateItem) {
-    VBox vBox = new VBox();
-
+  private ToggleButton createVBoxForFeatureTemplateItem(FeatureTemplateItem featureTemplateItem) {
     ToggleButton toggleButton = new ToggleButton(featureTemplateItem.getFeatureTemplate().getName());
-    toggleButton.prefWidthProperty().bind(vBox.widthProperty());
-    toggleButton.prefHeightProperty().bind(vBox.heightProperty());
     toggleButton.setContentDisplay(ContentDisplay.TOP);
     toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     toggleButton.setTooltip(new Tooltip(featureTemplateItem.getFeatureTemplate().getName()));
-    // skip the group and make every item in the picker belong to the same toggle group
     toggleButton.setToggleGroup(toggleGroup);
     toggleButton.getStyleClass().add("feature-template-item");
-    vBox.getChildren().add(toggleButton);
 
     ImageView imageView = new ImageView();
     toggleButton.setGraphic(imageView);
 
     updateSwatch(featureTemplateItem, imageView);
 
-    getSkinnable().symbolWidthProperty().addListener((observable, oldValue, newValue) ->
-        updateSwatch(featureTemplateItem, imageView)
-    );
-    getSkinnable().symbolHeightProperty().addListener((observable, oldValue, newValue) ->
+    getSkinnable().symbolSizeProperty().addListener((observable, oldValue, newValue) ->
         updateSwatch(featureTemplateItem, imageView)
     );
 
-    return vBox;
+    return toggleButton;
   }
 
   private void updateSwatch(FeatureTemplateItem featureTemplateItem, ImageView imageView) {
@@ -147,8 +174,8 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     featureLayer.addDoneLoadingListener(() -> {
       if (featureLayer.getLoadStatus() == LoadStatus.LOADED) {
         var symbol = featureLayer.getRenderer().getSymbol(graphic);
-        ListenableFuture<Image> swatch = symbol.createSwatchAsync(this.getSkinnable().getSymbolWidth(),
-            this.getSkinnable().getSymbolHeight(), (float) Screen.getPrimary().getOutputScaleX(), 0x00);
+        ListenableFuture<Image> swatch = symbol.createSwatchAsync(this.getSkinnable().getSymbolSize(),
+            this.getSkinnable().getSymbolSize(), (float) Screen.getPrimary().getOutputScaleX(), 0x00);
         swatch.addDoneListener(() -> {
           try {
             imageView.setImage(swatch.get());
