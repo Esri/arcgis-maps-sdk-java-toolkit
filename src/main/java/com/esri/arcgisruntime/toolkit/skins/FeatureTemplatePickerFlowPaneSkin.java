@@ -25,14 +25,15 @@ import com.esri.arcgisruntime.toolkit.FeatureTemplateItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 
 import java.util.List;
