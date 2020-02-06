@@ -42,8 +42,7 @@ public final class FeatureTemplatePicker extends Control {
   private final ReadOnlyListWrapper<FeatureTemplateGroup> featureTemplateGroups;
   private final ObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItem;
   private final ObjectProperty<Orientation> orientation;
-  private final IntegerProperty symbolWidth;
-  private final IntegerProperty symbolHeight;
+  private final IntegerProperty symbolSize;
 
   public FeatureTemplatePicker(ObservableList<FeatureLayer> featureLayers) {
     this.featureLayers = new SimpleListProperty<>(Objects.requireNonNull(featureLayers));
@@ -52,8 +51,7 @@ public final class FeatureTemplatePicker extends Control {
         .collect(Collectors.toCollection(FXCollections::observableArrayList)));
     this.selectedFeatureTemplateItem = new SimpleObjectProperty<>();
     this.orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
-    this.symbolWidth = new SimpleIntegerProperty(20);
-    this.symbolHeight = new SimpleIntegerProperty(20);
+    this.symbolSize = new SimpleIntegerProperty(20);
 
     this.featureLayers.addListener((ListChangeListener<FeatureLayer>) c -> {
       while (c.next()) {
@@ -155,28 +153,16 @@ public final class FeatureTemplatePicker extends Control {
     this.selectedFeatureTemplateItem.set(selectedFeatureTemplateItem);
   }
 
-  public int getSymbolWidth() {
-    return symbolWidth.get();
+  public int getSymbolSize() {
+    return symbolSize.get();
   }
 
-  public IntegerProperty symbolWidthProperty() {
-    return symbolWidth;
+  public IntegerProperty symbolSizeProperty() {
+    return symbolSize;
   }
 
-  public void setSymbolWidth(int symbolWidth) {
-    this.symbolWidth.set(symbolWidth);
-  }
-
-  public int getSymbolHeight() {
-    return symbolHeight.get();
-  }
-
-  public IntegerProperty symbolHeightProperty() {
-    return symbolHeight;
-  }
-
-  public void setSymbolHeight(int symbolHeight) {
-    this.symbolHeight.set(symbolHeight);
+  public void setSymbolSize(int symbolSize) {
+    this.symbolSize.set(symbolSize);
   }
 
   @Override
