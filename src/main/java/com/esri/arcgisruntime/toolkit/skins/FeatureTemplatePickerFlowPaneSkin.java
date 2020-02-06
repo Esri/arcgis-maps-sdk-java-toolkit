@@ -134,7 +134,6 @@ public final class FeatureTemplatePickerFlowPaneSkin extends SkinBase<FeatureTem
     });
 
     TilePane tilePane = new TilePane();
-    tilePane.setBackground(new Background(new BackgroundFill(Paint.valueOf("00ff00"), CornerRadii.EMPTY, Insets.EMPTY)));
     vBox.getChildren().addAll(label, tilePane);
 
     // add toggle buttons for each feature template item in the group
