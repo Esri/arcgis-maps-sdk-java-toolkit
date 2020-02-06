@@ -30,6 +30,7 @@ public class TemplatePickerTest extends ApplicationTest {
         ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
 
     private StackPane stackPane;
+    private final FeatureLayer featureLayer = new FeatureLayer(new ServiceFeatureTable(WILDFIRE_RESPONSE_URL));
 
     @Override
     public void start(Stage primaryStage) {
@@ -43,15 +44,12 @@ public class TemplatePickerTest extends ApplicationTest {
 
     @Test
     public void templatePicker() {
-        ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
-        FeatureLayer featureLayer = new FeatureLayer(featureTable);
-
         Platform.runLater(() -> {
             FeatureTemplatePicker featureTemplatePicker = new FeatureTemplatePicker(featureLayer);
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(10000);
+        sleep(3000);
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
         featureTemplatePicker.getFeatureTemplateGroups().forEach(featureTemplateGroup ->
@@ -78,7 +76,7 @@ public class TemplatePickerTest extends ApplicationTest {
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(10000);
+        sleep(3000);
 
         Object[] scrollBars = lookup(n -> n instanceof ScrollBar).queryAll().toArray();
         assertEquals(2, scrollBars.length);
@@ -89,7 +87,6 @@ public class TemplatePickerTest extends ApplicationTest {
         featureTemplatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         WaitForAsyncUtils.waitForFxEvents();
-        sleep(4000);
 
         assertFalse(((ScrollBar) scrollBars[0]).isVisible());
         assertFalse(((ScrollBar) scrollBars[1]).isVisible());
@@ -106,7 +103,7 @@ public class TemplatePickerTest extends ApplicationTest {
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(10000);
+        sleep(3000);
 
         Object[] scrollBars = lookup(n -> n instanceof ScrollBar).queryAll().toArray();
         assertEquals(2, scrollBars.length);
