@@ -11,6 +11,17 @@
   -fx-background-color: rgba(10, 10, 10, 0.1);
 }
 
+.feature-template-item:focused {
+  -fx-border-color: cyan;
+  -fx-background-color: transparent;
+}
+
 .feature-template-item:focused:selected {
+  -fx-border-color: cyan;
+  -fx-background-color: pink;
+}
+
+.feature-template-item:selected {
+  -fx-border-color: transparent;
   -fx-background-color: pink;
 }
