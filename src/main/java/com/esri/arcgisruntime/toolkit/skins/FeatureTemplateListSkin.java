@@ -29,6 +29,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -51,14 +52,18 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
   private final SimpleObjectProperty<FeatureTemplate> selectedFeatureTemplateProperty = new SimpleObjectProperty<>();
 
+  private final ToggleGroup toggleGroup;
+
   /**
    * Creates a new skin instance.
    *
    * @param control the control this skin is for
    * @since 100.6.0
    */
-  public FeatureTemplateListSkin(FeatureTemplateList control) {
+  public FeatureTemplateListSkin(FeatureTemplateList control, ToggleGroup toggleGroup) {
     super(control);
+
+    this.toggleGroup = toggleGroup;
 
     control.widthProperty().addListener(observable -> invalid = true);
     control.heightProperty().addListener(observable -> invalid = true);
@@ -83,11 +88,11 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
     control.selectedTemplateProperty().bindBidirectional(selectedFeatureTemplateProperty);
 
-    selectedFeatureTemplateProperty.addListener(observable -> {
-      if (selectedFeatureTemplateProperty.get() == null) {
-        clearSelection();
-      }
-    });
+//    selectedFeatureTemplateProperty.addListener(observable -> {
+//      if (selectedFeatureTemplateProperty.get() == null) {
+//        clearSelection();
+//      }
+//    });
 
     featureTable.addDoneLoadingListener(() -> {
       if (featureTable.getLoadStatus() == LoadStatus.LOADED) {
@@ -136,16 +141,18 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
       t.symbolHeightProperty().bind(control.symbolHeightProperty());
     });
 
-    templateCells.forEach(t -> t.setOnMouseClicked(a -> {
-      if (a.getButton() != MouseButton.PRIMARY) {
-        return;
-      }
-      boolean selected = t.isSelected();
-      templateCells.forEach(cell -> cell.setSelected(false));
-      t.setSelected(!selected);
+    templateCells.forEach(t -> t.setToggleGroup(toggleGroup));
 
-      selectedFeatureTemplateProperty.set(t.templateProperty().get().getFeatureTemplate());
-    }));
+//    templateCells.forEach(t -> t.setOnMouseClicked(a -> {
+//      if (a.getButton() != MouseButton.PRIMARY) {
+//        return;
+//      }
+//      boolean selected = t.isSelected();
+//      templateCells.forEach(cell -> cell.setSelected(false));
+//      t.setSelected(!selected);
+//
+//      selectedFeatureTemplateProperty.set(t.templateProperty().get().getFeatureTemplate());
+//    }));
   }
 
   /**

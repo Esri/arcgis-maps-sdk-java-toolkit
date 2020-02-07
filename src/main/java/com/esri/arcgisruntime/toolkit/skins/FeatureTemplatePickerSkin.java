@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import javafx.beans.Observable;
@@ -30,6 +31,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SkinBase;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -51,6 +53,8 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
   private final SimpleObjectProperty<FeatureTemplatePicker.Template> selectedTemplate = new SimpleObjectProperty<>();
 
   private Orientation orientation;
+
+  private final ToggleGroup toggleGroup = new ToggleGroup();
 
   /**
    * Creates a new skin instance.
@@ -155,24 +159,35 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
 
     var control = getSkinnable();
 
-    FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureLayer);
+    FeatureTemplateList featureTemplateList = new FeatureTemplateList(featureLayer, toggleGroup);
     featureTemplateList.symbolWidthProperty().bind(control.symbolWidthProperty());
     featureTemplateList.symbolHeightProperty().bind(control.symbolHeightProperty());
     featureTemplateList.showTemplateNameProperty().bind(control.showTemplateNamesProperty());
     featureTemplateList.showLayerNameProperty().bind(control.showFeatureLayerNamesProperty());
     featureTemplateList.disableIfCannotAddFeaturesProperty().bind(control.disableIfCannotAddFeatureLayersProperty());
 
-    featureTemplateList.selectedTemplateProperty().addListener(observable -> {
-      if (featureTemplateList.selectedTemplateProperty().get() != null) {
-        FeatureTemplatePicker.Template template =
-          new FeatureTemplatePicker.Template(featureTemplateList.featureLayerProperty().get(),
-            featureTemplateList.selectedTemplateProperty().get());
-        selectedTemplate.set(template);
-
-        featureLayerMap.values().stream().filter(
-          t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
+    toggleGroup.selectedToggleProperty().addListener(o -> {
+      var t = toggleGroup.getSelectedToggle();
+      if (t != null) {
+        FeatureTemplateCell f = (FeatureTemplateCell) t;
+        control.selectedTemplateProperty().set(f.templateProperty().get());
+        //control.selectedTemplateProperty.set((FeatureTemplateCell) t).templateProperty());
+      } else {
+        control.selectedTemplateProperty().set(null);
       }
     });
+
+//    featureTemplateList.selectedTemplateProperty().addListener(observable -> {
+//      if (featureTemplateList.selectedTemplateProperty().get() != null) {
+//        FeatureTemplatePicker.Template template =
+//          new FeatureTemplatePicker.Template(featureTemplateList.featureLayerProperty().get(),
+//            featureTemplateList.selectedTemplateProperty().get());
+//        selectedTemplate.set(template);
+//
+//        featureLayerMap.values().stream().filter(
+//          t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
+//      }
+//    });
 
     featureLayerMap.put(featureLayer, featureTemplateList);
 

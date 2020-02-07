@@ -28,6 +28,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import javafx.scene.control.ToggleGroup;
 
 /**
  * A control which displays all of the feature templates for a feature layer and allows selecting one.
@@ -47,6 +48,8 @@ public final class FeatureTemplateList extends Control {
 
   private final SimpleObjectProperty<FeatureTemplate> selectedTemplateProperty = new SimpleObjectProperty<>();
 
+  private final ToggleGroup toggleGroup;
+
   /**
    * Creates a new instance.
    *
@@ -56,8 +59,9 @@ public final class FeatureTemplateList extends Control {
    * table
    * @since 100.6.0
    */
-  public FeatureTemplateList(FeatureLayer featureLayer) {
+  public FeatureTemplateList(FeatureLayer featureLayer, ToggleGroup toggleGroup) {
     featureLayerProperty.set(Objects.requireNonNull(featureLayer));
+    this.toggleGroup = toggleGroup;
     if (!(featureLayer.getFeatureTable() instanceof ArcGISFeatureTable)) {
       throw new IllegalArgumentException("FeatureLayer's table must be an ArcGISFeatureTable");
     }
@@ -268,6 +272,6 @@ public final class FeatureTemplateList extends Control {
 
   @Override
   protected Skin<?> createDefaultSkin() {
-    return new FeatureTemplateListSkin(this);
+    return new FeatureTemplateListSkin(this, toggleGroup);
   }
 }
