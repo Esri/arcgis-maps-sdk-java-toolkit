@@ -32,9 +32,11 @@ import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -166,6 +168,12 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
     featureTemplateList.showLayerNameProperty().bind(control.showFeatureLayerNamesProperty());
     featureTemplateList.disableIfCannotAddFeaturesProperty().bind(control.disableIfCannotAddFeatureLayersProperty());
 
+    control.selectedTemplateProperty().addListener(observable -> {
+      if (control.selectedTemplateProperty().get() == null) {
+        toggleGroup.selectToggle(null);
+      }
+    });
+
     toggleGroup.selectedToggleProperty().addListener(o -> {
       var t = toggleGroup.getSelectedToggle();
       if (t != null) {
@@ -175,18 +183,6 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
         control.selectedTemplateProperty().set(null);
       }
     });
-
-//    featureTemplateList.selectedTemplateProperty().addListener(observable -> {
-//      if (featureTemplateList.selectedTemplateProperty().get() != null) {
-//        FeatureTemplatePicker.Template template =
-//          new FeatureTemplatePicker.Template(featureTemplateList.featureLayerProperty().get(),
-//            featureTemplateList.selectedTemplateProperty().get());
-//        selectedTemplate.set(template);
-//
-//        featureLayerMap.values().stream().filter(
-//          t -> t != featureTemplateList).forEach(FeatureTemplateList::clearSelection);
-//      }
-//    });
 
     featureLayerMap.put(featureLayer, featureTemplateList);
 

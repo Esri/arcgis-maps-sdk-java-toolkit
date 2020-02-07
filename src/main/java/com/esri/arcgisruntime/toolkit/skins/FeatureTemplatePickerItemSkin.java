@@ -23,6 +23,7 @@ import com.esri.arcgisruntime.toolkit.FeatureTemplatePickerItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tooltip;
@@ -66,6 +67,8 @@ public final class FeatureTemplatePickerItemSkin extends SkinBase<FeatureTemplat
       invalid = true;
       control.requestLayout();
     });
+
+    label.setContentDisplay(ContentDisplay.TOP);
 
     getChildren().add(label);
   }
@@ -113,5 +116,6 @@ public final class FeatureTemplatePickerItemSkin extends SkinBase<FeatureTemplat
     } catch (InterruptedException | ExecutionException | IllegalArgumentException e) {
       label.setGraphic(null);
     }
+    label.setPrefSize(control.symbolWidthProperty().get(), control.symbolHeightProperty().get());
   }
 }

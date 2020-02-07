@@ -55,11 +55,6 @@ public final class FeatureTemplatePicker extends Control {
     public void set(Orientation orientation) {
       super.set(Objects.requireNonNull(orientation, "Orientation cannot be null"));
     }
-
-    @Override
-    protected void invalidated() {
-      System.out.println("Invalidated");
-    }
   };
 
   /**
