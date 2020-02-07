@@ -158,6 +158,11 @@ public final class FeatureTemplatePickerItem extends ToggleButton {
   }
 
   @Override
+  public String getUserAgentStylesheet() {
+    return FeatureTemplatePickerItem.class.getResource("skins/feature-template-picker-item.css").toExternalForm();
+  }
+
+  @Override
   protected Skin<?> createDefaultSkin() {
     return new FeatureTemplatePickerItemSkin(this);
   }
