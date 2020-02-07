@@ -18,13 +18,11 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.toolkit.skins.FeatureTemplateCellSkin;
-import javafx.beans.property.BooleanProperty;
+import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerItemSkin;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.css.PseudoClass;
 import javafx.scene.control.Skin;
 import javafx.scene.control.ToggleButton;
 
@@ -34,17 +32,13 @@ import javafx.scene.control.ToggleButton;
  *
  * @since 100.6.0
  */
-public final class FeatureTemplateCell extends ToggleButton {
+public final class FeatureTemplatePickerItem extends ToggleButton {
 
   private final SimpleObjectProperty<FeatureTemplatePicker.Template> templateProperty = new SimpleObjectProperty<>();
   private final SimpleIntegerProperty symbolWidthProperty = new SimpleIntegerProperty(50);
   private final SimpleIntegerProperty symbolHeightProperty = new SimpleIntegerProperty(50);
 
   private final SimpleBooleanProperty showNameProperty = new SimpleBooleanProperty(false);
-
-  // define a psuedo class that will highlight the control if it is selected
-  //private static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
-  //private BooleanProperty selectedProperty;
 
   /**
    * Creates an instance.
@@ -53,7 +47,7 @@ public final class FeatureTemplateCell extends ToggleButton {
    * @param featureTemplate the feature template
    * @since 100.6.0
    */
-  public FeatureTemplateCell(FeatureLayer featureLayer, FeatureTemplate featureTemplate) {
+  public FeatureTemplatePickerItem(FeatureLayer featureLayer, FeatureTemplate featureTemplate) {
     templateProperty.set(new FeatureTemplatePicker.Template(featureLayer, featureTemplate));
 
     getStyleClass().add("feature-template-cell");
@@ -163,89 +157,8 @@ public final class FeatureTemplateCell extends ToggleButton {
     return showNameProperty().get();
   }
 
-//  /**
-//   * Defines the selection state of the cell. Setting this to true will cause the cell to be selected and false will
-//   * cause it to be unselected. The selection style uses {@code -fx-accent} be defualt but can be changed by CSS for
-//   * example
-//   * <p>
-//   *   <pre>
-//   *   .feature-template-cell: selected {
-//   *     -fx-background-color: pink;
-//   *   }
-//   *   </pre>
-//   * </p>
-//   *
-//   * @return the selected property
-//   * @since 100.6.0
-//   */
-//  public final BooleanProperty selectedProperty() {
-//    if (selectedProperty == null) {
-//      selectedProperty = new BooleanPropertyBase(false) {
-//        @Override
-//        protected void invalidated() {
-//          pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, get());
-//        }
-//
-//        @Override
-//        public Object getBean() {
-//          return FeatureTemplateCell.this;
-//        }
-//
-//        @Override
-//        public String getName() {
-//          return "selected";
-//        }
-//      };
-//    }
-//    return selectedProperty;
-//  }
-
-//  /**
-//   * Sets the value of the {@link #selectedProperty()}.
-//   *
-//   * @param selected true to select the cell, false to unselect
-//   * @since 100.6.0
-//   */
-//  public final void setSelected(boolean selected) {
-//    selectedProperty().set(selected);
-//
-//    ToggleGroup t = getToggleGroup();
-//  }
-
-//  @Override
-//  public ToggleGroup getToggleGroup() {
-//    return toggleGroupProperty().get();
-//  }
-
-//  @Override
-//  public void setToggleGroup(ToggleGroup toggleGroup) {
-//    toggleGroupProperty().set(toggleGroup);
-//  }
-
-//  SimpleObjectProperty<ToggleGroup> toggleGroupProperty = new SimpleObjectProperty<>();
-//
-//  @Override
-//  public ObjectProperty<ToggleGroup> toggleGroupProperty() {
-//    return toggleGroupProperty;
-//  }
-
-//  /**
-//   * Gets the value of the {@link #selectedProperty()}.
-//   *
-//   * @return true if the cell is selected, false otherwise
-//   * @since 100.6.0
-//   */
-//  public final boolean isSelected() {
-//    return selectedProperty != null && selectedProperty.get();
-//  }
-
-  @Override
-  public String getUserAgentStylesheet() {
-    return FeatureTemplateCell.class.getResource("skins/feature-template-cell.css").toExternalForm();
-  }
-
   @Override
   protected Skin<?> createDefaultSkin() {
-    return new FeatureTemplateCellSkin(this);
+    return new FeatureTemplatePickerItemSkin(this);
   }
 }

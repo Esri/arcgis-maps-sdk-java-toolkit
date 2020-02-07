@@ -22,7 +22,7 @@ import java.util.List;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
+import com.esri.arcgisruntime.toolkit.FeatureTemplatePickerItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
@@ -30,7 +30,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseButton;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
@@ -48,7 +48,7 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
   private final TilePane tilePane = new TilePane();
 
-  private final List<FeatureTemplateCell> templateCells = new ArrayList<>();
+  private final List<FeatureTemplatePickerItem> templatePickerItems = new ArrayList<>();
 
   private final SimpleObjectProperty<FeatureTemplate> selectedFeatureTemplateProperty = new SimpleObjectProperty<>();
 
@@ -88,11 +88,21 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
 
     control.selectedTemplateProperty().bindBidirectional(selectedFeatureTemplateProperty);
 
-//    selectedFeatureTemplateProperty.addListener(observable -> {
-//      if (selectedFeatureTemplateProperty.get() == null) {
-//        clearSelection();
-//      }
-//    });
+    selectedFeatureTemplateProperty.addListener(observable -> {
+      if (selectedFeatureTemplateProperty.get() == null) {
+        clearSelection();
+      }
+    });
+
+    toggleGroup.selectedToggleProperty().addListener(o -> {
+      var t = toggleGroup.getSelectedToggle();
+      if (t != null) {
+        FeatureTemplatePickerItem f = (FeatureTemplatePickerItem) t;
+        control.selectedTemplateProperty().set(f.templateProperty().get().getFeatureTemplate());
+      } else {
+        control.selectedTemplateProperty().set(null);
+      }
+    });
 
     featureTable.addDoneLoadingListener(() -> {
       if (featureTable.getLoadStatus() == LoadStatus.LOADED) {
@@ -121,7 +131,7 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
   }
 
   /**
-   * Populates the list with {@link FeatureTemplateCell}s.
+   * Populates the list with {@link FeatureTemplatePickerItem}s.
    *
    * @since 100.6.0
    */
@@ -131,28 +141,24 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     var featureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
 
     featureTable.getFeatureTemplates()
-      .forEach(featureTemplate -> templateCells.add(new FeatureTemplateCell(featureLayer, featureTemplate)));
+      .forEach(featureTemplate -> templatePickerItems.add(new FeatureTemplatePickerItem(featureLayer, featureTemplate)));
     featureTable.getFeatureTypes()
       .forEach(featureType -> featureType.getTemplates()
-        .forEach(featureTemplate -> templateCells.add(new FeatureTemplateCell(featureLayer, featureTemplate))));
+        .forEach(featureTemplate -> templatePickerItems.add(new FeatureTemplatePickerItem(featureLayer, featureTemplate))));
 
-    templateCells.forEach(t -> {
+    templatePickerItems.forEach(t -> {
       t.symbolWidthProperty().bind(control.symbolWidthProperty());
       t.symbolHeightProperty().bind(control.symbolHeightProperty());
     });
 
-    templateCells.forEach(t -> t.setToggleGroup(toggleGroup));
+    templatePickerItems.forEach(t -> t.setToggleGroup(toggleGroup));
 
-//    templateCells.forEach(t -> t.setOnMouseClicked(a -> {
-//      if (a.getButton() != MouseButton.PRIMARY) {
-//        return;
-//      }
-//      boolean selected = t.isSelected();
-//      templateCells.forEach(cell -> cell.setSelected(false));
-//      t.setSelected(!selected);
-//
-//      selectedFeatureTemplateProperty.set(t.templateProperty().get().getFeatureTemplate());
-//    }));
+    toggleGroup.selectedToggleProperty().addListener(o -> {
+      var t = toggleGroup.getSelectedToggle();
+      if (t != null) {
+        FeatureTemplatePickerItem f = (FeatureTemplatePickerItem) t;
+      }
+    });
   }
 
   /**
@@ -169,7 +175,7 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
     vBox.getChildren().clear();
     tilePane.getChildren().clear();
 
-    templateCells.forEach(t -> {
+    templatePickerItems.forEach(t -> {
       t.showNameProperty().set(control.showTemplateNameProperty().get());
     });
 
@@ -178,7 +184,7 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
       vBox.getChildren().add(new Label(featureTable.getTableName()));
     }
 
-    tilePane.getChildren().addAll(templateCells);
+    tilePane.getChildren().addAll(templatePickerItems);
     vBox.getChildren().addAll(tilePane);
   }
 
@@ -187,8 +193,15 @@ public final class FeatureTemplateListSkin extends SkinBase<FeatureTemplateList>
    *
    * @since 100.6.0
    */
-  private void clearSelection() {
-    templateCells.forEach(featureTemplateCell ->
-      templateCells.stream().filter(FeatureTemplateCell::isSelected).findFirst().ifPresent(t -> t.setSelected(false)));
+   private void clearSelection() {
+     templatePickerItems.forEach(featureTemplateCell ->
+       templatePickerItems.stream().filter(FeatureTemplatePickerItem::isSelected).findFirst().ifPresent(
+         t -> t.setSelected(false)));
+  }
+
+  @Override
+  public void dispose() {
+    clearSelection();
+    templatePickerItems.forEach(t -> t.setToggleGroup(null));
   }
 }

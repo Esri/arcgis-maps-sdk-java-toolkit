@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
+import com.esri.arcgisruntime.toolkit.FeatureTemplatePickerItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateList;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import javafx.beans.Observable;
@@ -169,9 +169,8 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
     toggleGroup.selectedToggleProperty().addListener(o -> {
       var t = toggleGroup.getSelectedToggle();
       if (t != null) {
-        FeatureTemplateCell f = (FeatureTemplateCell) t;
+        FeatureTemplatePickerItem f = (FeatureTemplatePickerItem) t;
         control.selectedTemplateProperty().set(f.templateProperty().get());
-        //control.selectedTemplateProperty.set((FeatureTemplateCell) t).templateProperty());
       } else {
         control.selectedTemplateProperty().set(null);
       }
@@ -202,9 +201,7 @@ public final class FeatureTemplatePickerSkin extends SkinBase<FeatureTemplatePic
   private void removeTemplateList(FeatureLayer featureLayer) {
     var featureTemplateList = featureLayerMap.remove(featureLayer);
     if (featureTemplateList != null) {
-      if (featureTemplateList.selectedTemplateProperty().get() != null) {
-        selectedTemplate.set(null);
-      }
+      featureTemplateList.clearSelection();
       pane.getChildren().setAll(featureLayerMap.values());
     }
   }

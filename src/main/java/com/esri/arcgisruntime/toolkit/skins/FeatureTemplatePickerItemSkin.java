@@ -19,7 +19,7 @@ package com.esri.arcgisruntime.toolkit.skins;
 import java.util.concurrent.ExecutionException;
 
 import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.toolkit.FeatureTemplateCell;
+import com.esri.arcgisruntime.toolkit.FeatureTemplatePickerItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -31,11 +31,11 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
 /**
- * Defines a skin for a {@link FeatureTemplateCell}.
+ * Defines a skin for a {@link FeatureTemplatePickerItem}.
  *
  * @since 100.6.0
  */
-public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell> {
+public final class FeatureTemplatePickerItemSkin extends SkinBase<FeatureTemplatePickerItem> {
 
   private boolean invalid = true;
   private final Label label = new Label();
@@ -46,7 +46,7 @@ public final class FeatureTemplateCellSkin extends SkinBase<FeatureTemplateCell>
    * @param control the control this skin is for
    * @since 100.6.0
    */
-  public FeatureTemplateCellSkin(FeatureTemplateCell control) {
+  public FeatureTemplatePickerItemSkin(FeatureTemplatePickerItem control) {
     super(control);
 
     control.widthProperty().addListener(observable -> invalid = true);

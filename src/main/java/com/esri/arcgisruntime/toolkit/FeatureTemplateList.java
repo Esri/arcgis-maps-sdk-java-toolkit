@@ -50,6 +50,10 @@ public final class FeatureTemplateList extends Control {
 
   private final ToggleGroup toggleGroup;
 
+  public FeatureTemplateList(FeatureLayer featureLayer) {
+    this(featureLayer, new ToggleGroup());
+  }
+
   /**
    * Creates a new instance.
    *
