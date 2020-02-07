@@ -69,6 +69,8 @@ public final class FeatureTemplatePickerItemSkin extends SkinBase<FeatureTemplat
     });
 
     label.setContentDisplay(ContentDisplay.TOP);
+    label.prefWidthProperty().bind(control.symbolWidthProperty());
+    label.prefHeightProperty().bind(control.symbolHeightProperty());
 
     getChildren().add(label);
   }
@@ -116,6 +118,5 @@ public final class FeatureTemplatePickerItemSkin extends SkinBase<FeatureTemplat
     } catch (InterruptedException | ExecutionException | IllegalArgumentException e) {
       label.setGraphic(null);
     }
-    label.setPrefSize(control.symbolWidthProperty().get(), control.symbolHeightProperty().get());
   }
 }
