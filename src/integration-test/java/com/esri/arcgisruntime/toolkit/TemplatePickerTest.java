@@ -14,17 +14,21 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TemplatePickerTest extends ApplicationTest {
+@ExtendWith(ApplicationExtension.class)
+class TemplatePickerTest {
 
     final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
         ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
@@ -32,8 +36,9 @@ public class TemplatePickerTest extends ApplicationTest {
     private StackPane stackPane;
     private final FeatureLayer featureLayer = new FeatureLayer(new ServiceFeatureTable(WILDFIRE_RESPONSE_URL));
 
-    @Override
-    public void start(Stage primaryStage) {
+    @Start
+    private void start(Stage primaryStage) {
+        System.out.println("start");
         stackPane = new StackPane();
 
         Scene scene = new Scene(stackPane);
@@ -42,31 +47,31 @@ public class TemplatePickerTest extends ApplicationTest {
         primaryStage.toFront();
     }
 
+    @AfterEach
+    void cleanup() throws Exception {
+        FxToolkit.cleanupStages();
+    }
+
     @Test
-    public void templatePicker() {
+    void templatePicker(FxRobot robot) {
         Platform.runLater(() -> {
             FeatureTemplatePicker featureTemplatePicker = new FeatureTemplatePicker(featureLayer);
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(3000);
+        robot.sleep(3000);
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
         featureTemplatePicker.getFeatureTemplateGroups().forEach(featureTemplateGroup ->
             featureTemplateGroup.getFeatureTemplateItems().forEach(featureTemplateItem ->
-                clickOn(featureTemplateItem.getFeatureTemplate().getName())
+                robot.clickOn(featureTemplateItem.getFeatureTemplate().getName())
             )
         );
-        clickOn(featureLayer.getName());
-    }
-
-    @After
-    public void cleanup() throws Exception {
-        FxToolkit.cleanupStages();
+        robot.clickOn(featureLayer.getName());
     }
 
     @Test
-    public void scrollable() {
+    void scrollable(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -76,9 +81,9 @@ public class TemplatePickerTest extends ApplicationTest {
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(3000);
+        robot.sleep(3000);
 
-        Object[] scrollBars = lookup(n -> n instanceof ScrollBar).queryAll().toArray();
+        Object[] scrollBars = robot.lookup(n -> n instanceof ScrollBar).queryAll().toArray();
         assertEquals(2, scrollBars.length);
         assertTrue(((ScrollBar) scrollBars[0]).isVisible());
         assertFalse(((ScrollBar) scrollBars[1]).isVisible());
@@ -93,7 +98,7 @@ public class TemplatePickerTest extends ApplicationTest {
     }
 
     @Test
-    public void orientation() {
+    void orientation(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -103,9 +108,9 @@ public class TemplatePickerTest extends ApplicationTest {
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(3000);
+        robot.sleep(3000);
 
-        Object[] scrollBars = lookup(n -> n instanceof ScrollBar).queryAll().toArray();
+        Object[] scrollBars = robot.lookup(n -> n instanceof ScrollBar).queryAll().toArray();
         assertEquals(2, scrollBars.length);
 
         assertTrue(((ScrollBar) scrollBars[0]).isVisible());
@@ -128,7 +133,7 @@ public class TemplatePickerTest extends ApplicationTest {
     }
 
     @Test
-    public void fromMap() {
+    void fromMap(FxRobot robot) {
         MapView mapView = new MapView();
         ArcGISMap map = new ArcGISMap("https://runtime.maps.arcgis.com/home/webmap/viewer.html?webmap=05792de90e1d4eff81fdbde8c5eb4063");
         mapView.setMap(map);
@@ -149,19 +154,19 @@ public class TemplatePickerTest extends ApplicationTest {
             });
         });
 
-        sleep(5000);
+        robot.sleep(5000);
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
         assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
 
-        map.getOperationalLayers().forEach(layer -> clickOn(layer.getName()));
+        map.getOperationalLayers().forEach(layer -> robot.clickOn(layer.getName()));
     }
 
     /**
      * Tests wiring between items' toggle group and the selected feature template item property.
      */
     @Test
-    public void focusAndSelection() {
+    void focusAndSelection(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -170,30 +175,30 @@ public class TemplatePickerTest extends ApplicationTest {
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(3000);
+        robot.sleep(3000);
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
 
         // given a template which is selected programmatically
-        Object[] toggleButtons = lookup(n -> n instanceof ToggleButton).queryAll().toArray();
+        Object[] toggleButtons = robot.lookup(n -> n instanceof ToggleButton).queryAll().toArray();
         assertTrue(toggleButtons.length > 1);
         ToggleButton firstButton = (ToggleButton) toggleButtons[0];
         ToggleButton secondButton = (ToggleButton) toggleButtons[1];
 
         // when the selected template is clicked
-        clickOn(firstButton);
+        robot.clickOn(firstButton);
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(firstButton.getUserData(), featureTemplatePicker.getSelectedFeatureTemplateItem());
 
-        clickOn(firstButton);
+        robot.clickOn(firstButton);
         WaitForAsyncUtils.waitForFxEvents();
         assertNull(featureTemplatePicker.getSelectedFeatureTemplateItem());
 
-        clickOn(firstButton);
+        robot.clickOn(firstButton);
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(firstButton.getUserData(), featureTemplatePicker.getSelectedFeatureTemplateItem());
 
-        clickOn(secondButton);
+        robot.clickOn(secondButton);
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(secondButton.getUserData(), featureTemplatePicker.getSelectedFeatureTemplateItem());
 
@@ -223,7 +228,7 @@ public class TemplatePickerTest extends ApplicationTest {
      * Tests that the template swatch sizes update when the symbolHeight and symbolWidth properties are changed.
      */
     @Test
-    public void symbolSize() {
+    void symbolSize(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -232,16 +237,16 @@ public class TemplatePickerTest extends ApplicationTest {
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
-        sleep(3000);
+        robot.sleep(3000);
 
-        Set<ImageView> imageViews = lookup(n -> n instanceof ImageView).queryAll();
+        Set<ImageView> imageViews = robot.lookup(n -> n instanceof ImageView).queryAll();
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
         int prevSize = featureTemplatePicker.getSymbolSize();
         int newSize = 100;
         featureTemplatePicker.setSymbolSize(newSize);
 
-        sleep(1000);
+        robot.sleep(1000);
 
         for (ImageView imageView : imageViews) {
             assertEquals(newSize, imageView.getImage().getWidth());
@@ -250,7 +255,7 @@ public class TemplatePickerTest extends ApplicationTest {
 
         featureTemplatePicker.setSymbolSize(prevSize);
 
-        sleep(1000);
+        robot.sleep(1000);
 
         for (ImageView imageView : imageViews) {
             assertEquals(prevSize, imageView.getImage().getWidth());

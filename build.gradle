@@ -52,13 +52,11 @@ dependencies {
   implementation "org.openjfx:javafx-web:11:$platform"
   implementation "org.openjfx:javafx-media:11:$platform"
 
-  testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"
-  testCompileOnly "junit:junit:4.12"
-  testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.1.0"
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 
   testImplementation "org.testfx:testfx-core:4.0.15-alpha"
-  testImplementation "org.testfx:testfx-junit:4.0.15-alpha"
+  testImplementation "org.testfx:testfx-junit5:4.0.15-alpha"
   testImplementation "org.hamcrest:hamcrest:2.1"
 }
 
@@ -80,6 +78,7 @@ task integrationTest(type: Test) {
 
 tasks.withType(Test.class) {
   dependsOn copyNatives
+  useJUnitPlatform()
 }
 
 task javadocJar(type: Jar) {
