@@ -81,7 +81,7 @@ public final class FeatureTemplatePicker extends Control {
    * @param featureLayers list of feature layers
    */
   public FeatureTemplatePicker(FeatureLayer... featureLayers) {
-    this(FXCollections.observableArrayList(featureLayers));
+    this(FXCollections.observableArrayList(Objects.requireNonNull(featureLayers)));
   }
 
   /**
