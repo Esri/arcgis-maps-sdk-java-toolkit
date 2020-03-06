@@ -23,14 +23,18 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.Collection;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Automated integration tests for feature template picker.
+ */
 @ExtendWith(ApplicationExtension.class)
-class TemplatePickerTest {
+public class FeatureTemplatePickerTest {
 
-    final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
+    private static final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
         ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
 
     private StackPane stackPane;
@@ -38,7 +42,6 @@ class TemplatePickerTest {
 
     @Start
     private void start(Stage primaryStage) {
-        System.out.println("start");
         stackPane = new StackPane();
 
         Scene scene = new Scene(stackPane);
@@ -47,29 +50,54 @@ class TemplatePickerTest {
         primaryStage.toFront();
     }
 
+    /**
+     * Clean up stage after each test.
+     *
+     * @throws Exception exception
+     */
     @AfterEach
-    void cleanup() throws Exception {
+    private void cleanup() throws Exception {
         FxToolkit.cleanupStages();
     }
 
+    /**
+     * Tests that the picker shows the correct number of feature templates for a feature layer and displays all of
+     * their names.
+     *
+     * @param robot robot injected by test extension
+     */
     @Test
-    void templatePicker(FxRobot robot) {
+    void templateNamesVisible(FxRobot robot) {
+        // given a feature template picker using a feature layer with 16 feature templates
         Platform.runLater(() -> {
             FeatureTemplatePicker featureTemplatePicker = new FeatureTemplatePicker(featureLayer);
             stackPane.getChildren().add(featureTemplatePicker);
         });
 
+        // when the feature template picker is done rendering
         robot.sleep(3000);
-
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
+
+        // the feature template picker should have 16 feature template items
+        int templates = featureTemplatePicker.getFeatureTemplateGroups().stream()
+            .map(FeatureTemplateGroup::getFeatureTemplateItems)
+            .mapToInt(Collection::size)
+            .sum();
+        assertEquals(16, templates);
+
+        // all feature template names should be visible
         featureTemplatePicker.getFeatureTemplateGroups().forEach(featureTemplateGroup ->
-            featureTemplateGroup.getFeatureTemplateItems().forEach(featureTemplateItem ->
-                robot.clickOn(featureTemplateItem.getFeatureTemplate().getName())
-            )
+            featureTemplateGroup.getFeatureTemplateItems().forEach(featureTemplateItem -> {
+                robot.clickOn(featureTemplateItem.getFeatureTemplate().getName());
+            })
         );
-        robot.clickOn(featureLayer.getName());
     }
 
+    /**
+     * Tests that scrollbars are shown when the picker's max size is smaller than the size of its contents.
+     *
+     * @param robot robot injected by test extension
+     */
     @Test
     void scrollable(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
@@ -89,7 +117,7 @@ class TemplatePickerTest {
         assertFalse(((ScrollBar) scrollBars[1]).isVisible());
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
-        featureTemplatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        Platform.runLater(() -> featureTemplatePicker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE));
 
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -97,6 +125,11 @@ class TemplatePickerTest {
         assertFalse(((ScrollBar) scrollBars[1]).isVisible());
     }
 
+    /**
+     * Tests that the appropriate scrollbars are shown based on the picker's orientation.
+     *
+     * @param robot robot injected by test extension
+     */
     @Test
     void orientation(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
@@ -117,14 +150,14 @@ class TemplatePickerTest {
         assertFalse(((ScrollBar) scrollBars[1]).isVisible());
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
-        featureTemplatePicker.setOrientation(Orientation.HORIZONTAL);
+        Platform.runLater(() -> featureTemplatePicker.setOrientation(Orientation.HORIZONTAL));
 
         WaitForAsyncUtils.waitForFxEvents();
 
         assertFalse(((ScrollBar) scrollBars[0]).isVisible());
         assertTrue(((ScrollBar) scrollBars[1]).isVisible());
 
-        featureTemplatePicker.setOrientation(Orientation.VERTICAL);
+        Platform.runLater(() -> featureTemplatePicker.setOrientation(Orientation.VERTICAL));
 
         WaitForAsyncUtils.waitForFxEvents();
 
@@ -132,8 +165,13 @@ class TemplatePickerTest {
         assertFalse(((ScrollBar) scrollBars[1]).isVisible());
     }
 
+    /**
+     * Tests that the picker shows the names of its layer. Also tests the workflow of adding layers from a web map.
+     *
+     * @param robot robot injected by test extension
+     */
     @Test
-    void fromMap(FxRobot robot) {
+    void layerNamesVisible(FxRobot robot) {
         MapView mapView = new MapView();
         ArcGISMap map = new ArcGISMap("https://runtime.maps.arcgis.com/home/webmap/viewer.html?webmap=05792de90e1d4eff81fdbde8c5eb4063");
         mapView.setMap(map);
