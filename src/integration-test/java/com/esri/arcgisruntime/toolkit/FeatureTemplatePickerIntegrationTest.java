@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Automated integration tests for feature template picker.
  */
 @ExtendWith(ApplicationExtension.class)
+@DisplayName("feature template picker integration tests")
 public class FeatureTemplatePickerIntegrationTest {
 
     private static final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
@@ -66,6 +68,7 @@ public class FeatureTemplatePickerIntegrationTest {
      * @param robot robot injected by test extension
      */
     @Test
+    @DisplayName("feature template names are visible")
     void templateNamesVisible(FxRobot robot) {
         // given a feature template picker using a feature layer with 16 feature templates
         Platform.runLater(() -> {
@@ -98,6 +101,7 @@ public class FeatureTemplatePickerIntegrationTest {
      * @param robot robot injected by test extension
      */
     @Test
+    @DisplayName("scrollbars appear when constrained")
     void scrollable(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
@@ -130,6 +134,7 @@ public class FeatureTemplatePickerIntegrationTest {
      * @param robot robot injected by test extension
      */
     @Test
+    @DisplayName("scrollbars switch when orientation changes")
     void orientation(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
@@ -170,6 +175,7 @@ public class FeatureTemplatePickerIntegrationTest {
      * @param robot robot injected by test extension
      */
     @Test
+    @DisplayName("layer names are shown")
     void layerNamesVisible(FxRobot robot) {
         MapView mapView = new MapView();
         ArcGISMap map = new ArcGISMap("https://runtime.maps.arcgis.com/home/webmap/viewer.html?webmap=05792de90e1d4eff81fdbde8c5eb4063");
@@ -191,7 +197,7 @@ public class FeatureTemplatePickerIntegrationTest {
             });
         });
 
-        robot.sleep(5000);
+        robot.sleep(10000);
 
         FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
         assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
@@ -203,6 +209,7 @@ public class FeatureTemplatePickerIntegrationTest {
      * Tests wiring between items' toggle group and the selected feature template item property.
      */
     @Test
+    @DisplayName("selection works programmatically and interactively")
     void focusAndSelection(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
@@ -265,6 +272,7 @@ public class FeatureTemplatePickerIntegrationTest {
      * Tests that the template swatch sizes update when the symbolHeight and symbolWidth properties are changed.
      */
     @Test
+    @DisplayName("Swatch sizes update when symbol size changes")
     void symbolSize(FxRobot robot) {
         ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
