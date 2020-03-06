@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Automated integration tests for feature template picker.
  */
 @ExtendWith(ApplicationExtension.class)
-public class FeatureTemplatePickerTest {
+public class FeatureTemplatePickerIntegrationTest {
 
     private static final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
         ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
