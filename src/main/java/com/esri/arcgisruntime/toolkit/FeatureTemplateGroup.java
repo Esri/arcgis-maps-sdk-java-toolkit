@@ -48,7 +48,7 @@ public final class FeatureTemplateGroup {
    * @throws NullPointerException if feature layer is null
    * @since 100.7.0
    */
-  public FeatureTemplateGroup(FeatureLayer featureLayer) {
+  FeatureTemplateGroup(FeatureLayer featureLayer) {
     this.featureLayer = new SimpleObjectProperty<>(Objects.requireNonNull(featureLayer));
     this.featureTemplateItems = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
 
