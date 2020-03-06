@@ -17,7 +17,7 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerFlowPaneSkin;
+import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerTilePaneSkin;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -31,28 +31,33 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * A control which provides a view of the feature templates available in a list of feature layers and allows a template
- * to be selected. The templates can be displayed in a horizontal or vertical layout.
+ * A control which shows the feature templates available from a list of feature layers. Templates are grouped by
+ * feature layer. See skin for styling options.
  *
- * @since 100.6.0
+ * @see FeatureTemplatePickerTilePaneSkin
+ * @since 100.7.0
  */
 public final class FeatureTemplatePicker extends Control {
 
   private final ListProperty<FeatureLayer> featureLayers;
   private final ReadOnlyListWrapper<FeatureTemplateGroup> featureTemplateGroups;
-  private final ObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItem;
-  private final ObjectProperty<Orientation> orientation;
-  private final IntegerProperty symbolSize;
+  private final ObjectProperty<Orientation> orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
+  private final ObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItem = new SimpleObjectProperty<>();
+  private final IntegerProperty symbolSize = new SimpleIntegerProperty(20);
 
+  /**
+   * Creates an instance backed by the given observable list. Only feature layers with an ArcGISFeatureTable will be
+   * displayed.
+   *
+   * @param featureLayers observable list of feature layers
+   */
   public FeatureTemplatePicker(ObservableList<FeatureLayer> featureLayers) {
     this.featureLayers = new SimpleListProperty<>(Objects.requireNonNull(featureLayers));
     this.featureTemplateGroups = new ReadOnlyListWrapper<>(featureLayers.stream()
         .map(FeatureTemplateGroup::new)
         .collect(Collectors.toCollection(FXCollections::observableArrayList)));
-    this.selectedFeatureTemplateItem = new SimpleObjectProperty<>();
-    this.orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
-    this.symbolSize = new SimpleIntegerProperty(20);
 
+    // update feature template groups when feature layers list changes
     this.featureLayers.addListener((ListChangeListener<FeatureLayer>) c -> {
       while (c.next()) {
         if (c.wasAdded()) {
@@ -69,17 +74,38 @@ public final class FeatureTemplatePicker extends Control {
     });
   }
 
+  /**
+   * Creates an instance initialized with the given feature layers. Only feature layers with an ArcGISFeatureTable
+   * will be shown.
+   *
+   * @param featureLayers list of feature layers
+   */
   public FeatureTemplatePicker(FeatureLayer... featureLayers) {
     this(FXCollections.observableArrayList(featureLayers));
   }
 
+  /**
+   * Creates an instance with an empty list of feature layers.
+   */
   public FeatureTemplatePicker() {
     this(FXCollections.observableArrayList());
   }
 
+  @Override
+  protected Skin<?> createDefaultSkin() {
+    return new FeatureTemplatePickerTilePaneSkin(this);
+  }
+
+  @Override
+  public String getUserAgentStylesheet() {
+    return this.getClass().getResource("skins/feature-template-picker.css").toExternalForm();
+  }
+
   /**
    * Property containing the list of feature layers displayed. The order of display matches the list order.
+   *
    * @return the property
+   * @since 100.7.0
    */
   public ListProperty<FeatureLayer> featureLayersProperty() {
     return featureLayers;
@@ -89,7 +115,7 @@ public final class FeatureTemplatePicker extends Control {
    * Gets the value of the {@link #featureLayersProperty()}.
    *
    * @return the list of feature layers
-   * @since 100.6.0
+   * @since 100.7.0
    */
   public ObservableList<FeatureLayer> getFeatureLayers() {
     return this.featureLayers.get();
@@ -99,32 +125,57 @@ public final class FeatureTemplatePicker extends Control {
    * Sets the value of the {@link #featureLayersProperty()}.
    *
    * @param featureLayers the list of feature layers
-   * @since 100.6.0
+   * @since 100.7.0
    */
   public void setFeatureLayers(ObservableList<FeatureLayer> featureLayers) {
     this.featureLayers.set(featureLayers);
   }
 
+  /**
+   * Gets the list of feature template groups in the picker.
+   *
+   * @return feature template groups
+   */
   public ObservableList<FeatureTemplateGroup> getFeatureTemplateGroups() {
     return featureTemplateGroups.get();
   }
 
+  /**
+   * Read only list of feature template groups in the picker.
+   *
+   * @return read-only feature template groups list property
+   * @since 100.7.0
+   */
   public ReadOnlyListWrapper<FeatureTemplateGroup> featureTemplateGroupsProperty() {
     return featureTemplateGroups;
   }
 
-  public void setFeatureTemplateGroups(ObservableList<FeatureTemplateGroup> featureTemplateGroups) {
-    this.featureTemplateGroups.set(featureTemplateGroups);
-  }
-
+  /**
+   * Gets the orientation of this control. See skin for effect.
+   *
+   * @return orientation
+   * @since 100.7.0
+   */
   public Orientation getOrientation() {
     return orientation.get();
   }
 
+  /**
+   * Orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
+   *
+   * @return orientation property
+   * @since 100.7.0
+   */
   public ObjectProperty<Orientation> orientationProperty() {
     return orientation;
   }
 
+  /**
+   * Sets the orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
+   *
+   * @param orientation orientation
+   * @since 100.7.0
+   */
   public void setOrientation(Orientation orientation) {
     this.orientation.set(orientation);
   }
@@ -133,7 +184,7 @@ public final class FeatureTemplatePicker extends Control {
    * Property containing the selected template or null if no template is selected.
    *
    * @return the property
-   * @since 100.6.0
+   * @since 100.7.0
    */
   public ObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItemProperty() {
     return selectedFeatureTemplateItem;
@@ -143,7 +194,7 @@ public final class FeatureTemplatePicker extends Control {
    * Gets the value of the {@link #selectedFeatureTemplateItemProperty()}.
    *
    * @return the selected template or null if there is no selection
-   * @since 100.6.0
+   * @since 100.7.0
    */
   public FeatureTemplateItem getSelectedFeatureTemplateItem() {
     return selectedFeatureTemplateItem.get();
@@ -153,25 +204,33 @@ public final class FeatureTemplatePicker extends Control {
     this.selectedFeatureTemplateItem.set(selectedFeatureTemplateItem);
   }
 
+  /**
+   * Get the symbol size used for the feature template symbol swatches.
+   *
+   * @return symbol size
+   * @since 100.7.0
+   */
   public int getSymbolSize() {
     return symbolSize.get();
   }
 
+  /**
+   * Symbol size used for the feature template symbol swatches. Defaults to 20.
+   *
+   * @return symbol size property
+   * @since 100.7.0
+   */
   public IntegerProperty symbolSizeProperty() {
     return symbolSize;
   }
 
+  /**
+   * Sets the symbol size used for the feature template symbol swatches. Defaults to 20.
+   *
+   * @param symbolSize symbol size
+   * @since 100.7.0
+   */
   public void setSymbolSize(int symbolSize) {
     this.symbolSize.set(symbolSize);
-  }
-
-  @Override
-  protected Skin<?> createDefaultSkin() {
-    return new FeatureTemplatePickerFlowPaneSkin(this);
-  }
-
-  @Override
-  public String getUserAgentStylesheet() {
-    return this.getClass().getResource("skins/template-cell.css").toExternalForm();
   }
 }

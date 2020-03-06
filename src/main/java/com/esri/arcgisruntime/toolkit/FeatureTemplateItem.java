@@ -22,10 +22,9 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
 /**
- * A control which shows a cell containing a visual representation of a single feature template and allows marking the
- * cell as selected.
+ * Model class for representing a feature template with the context of its feature layer.
  *
- * @since 100.6.0
+ * @since 100.7.0
  */
 public final class FeatureTemplateItem {
 
@@ -33,30 +32,53 @@ public final class FeatureTemplateItem {
   private final ReadOnlyObjectProperty<FeatureTemplate> featureTemplate;
 
   /**
-   * Creates an instance.
+   * Creates an instance for the given feature layer and feature template.
    *
-   *
-   * @param featureLayer feature layer
+   * @param featureLayer the feature layer
    * @param featureTemplate the feature template
-   * @since 100.6.0
+   * @since 100.7.0
    */
   FeatureTemplateItem(FeatureLayer featureLayer, FeatureTemplate featureTemplate) {
     this.featureLayer = new ReadOnlyObjectWrapper<>(featureLayer);
     this.featureTemplate = new ReadOnlyObjectWrapper<>(featureTemplate);
   }
 
+  /**
+   * Gets the associated feature layer.
+   *
+   * @return feature layer
+   * @since 100.7.0
+   */
   public FeatureLayer getFeatureLayer() {
     return featureLayer.get();
   }
 
+  /**
+   * The associated feature layer.
+   *
+   * @return feature layer read-only property
+   * @since 100.7.0
+   */
   public ReadOnlyObjectProperty<FeatureLayer> featureLayerProperty() {
     return featureLayer;
   }
 
+  /**
+   * Gets the associated feature template.
+   *
+   * @return feature template
+   * @since 100.7.0
+   */
   public FeatureTemplate getFeatureTemplate() {
     return featureTemplate.get();
   }
 
+  /**
+   * The associated feature template.
+   *
+   * @return feature template read-only property.
+   * @since 100.7.0
+   */
   public ReadOnlyObjectProperty<FeatureTemplate> featureTemplateProperty() {
     return featureTemplate;
   }

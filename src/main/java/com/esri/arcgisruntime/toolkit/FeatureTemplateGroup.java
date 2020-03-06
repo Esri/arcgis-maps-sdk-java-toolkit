@@ -21,6 +21,7 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,23 +31,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * View model for a control which shows feature template items for a feature layer.
+ * Model class representing a group of feature templates belonging to a specific feature layer.
  *
- * @since 100.6.0
+ * @since 100.7.0
  */
 public final class FeatureTemplateGroup {
 
-  private final SimpleObjectProperty<FeatureLayer> featureLayer;
+  private final ReadOnlyObjectProperty<FeatureLayer> featureLayer;
   private final ReadOnlyListWrapper<FeatureTemplateItem> featureTemplateItems;
 
   /**
-   * Creates a new instance.
+   * Creates a new instance based on the given feature layer. No feature template items will be created for the group
+   * if the feature layer's feature table is not an instance of {@link ArcGISFeatureTable}.
    *
    * @param featureLayer the feature layer
    * @throws NullPointerException if feature layer is null
-   * @throws IllegalArgumentException if the feature table associated with the feature layer is not an Arc GIS feature
-   * table
-   * @since 100.6.0
+   * @since 100.7.0
    */
   public FeatureTemplateGroup(FeatureLayer featureLayer) {
     this.featureLayer = new SimpleObjectProperty<>(Objects.requireNonNull(featureLayer));
@@ -83,33 +83,41 @@ public final class FeatureTemplateGroup {
   }
 
   /**
-   * A read only property containing the feature layer that the templates are being shown for.
-   *
-   * @return the property
-   * @since 100.6.0
-   */
-  public ObjectProperty<FeatureLayer> featureLayerProperty() {
-    return featureLayer;
-  }
-
-  /**
-   * Gets the value of the {@link #featureLayerProperty()}.
+   * Gets the associated feature layer.
    *
    * @return the feature layer
-   * @since 100.6.0
+   * @since 100.7.0
    */
   public FeatureLayer getFeatureLayer() {
     return featureLayerProperty().get();
   }
 
-  public void setFeatureLayer(FeatureLayer featureLayer) {
-    this.featureLayer.set(featureLayer);
+  /**
+   * The associated feature layer.
+   *
+   * @return feature layer read-only property
+   * @since 100.7.0
+   */
+  public ReadOnlyObjectProperty<FeatureLayer> featureLayerProperty() {
+    return featureLayer;
   }
 
+  /**
+   * Gets the feature template items belonging to this group.
+   *
+   * @return the feature template items in the group
+   * @since 100.7.0
+   */
   public ObservableList<FeatureTemplateItem> getFeatureTemplateItems() {
     return featureTemplateItems.get();
   }
 
+  /**
+   * The feature template items belonging to this group.
+   *
+   * @return feature template items read-only list property
+   * @since 100.7.0
+   */
   public ReadOnlyListWrapper<FeatureTemplateItem> featureTemplateItemsProperty() {
     return featureTemplateItems;
   }
