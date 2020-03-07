@@ -57,6 +57,7 @@ dependencies {
 
   testImplementation "org.testfx:testfx-core:4.0.15-alpha"
   testImplementation "org.testfx:testfx-junit5:4.0.15-alpha"
+  testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
   testImplementation "org.hamcrest:hamcrest:2.1"
 }
 
@@ -78,6 +79,9 @@ task integrationTest(type: Test) {
 
 tasks.withType(Test.class) {
   dependsOn copyNatives
+  systemProperty "testfx.robot", "glass"
+  systemProperty "testfx.headless", "true"
+  systemProperty "prism.order", "sw"
   useJUnitPlatform()
 }
 
