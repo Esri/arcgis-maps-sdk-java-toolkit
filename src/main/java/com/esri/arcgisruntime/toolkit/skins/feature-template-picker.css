@@ -31,15 +31,15 @@
 
 .feature-template-item:focused {
   -fx-border-color: cyan;
-  -fx-background-color: transparent;
+  -fx-background-color: -fx-accent;
 }
 
 .feature-template-item:focused:selected {
   -fx-border-color: cyan;
-  -fx-background-color: pink;
+  -fx-background-color: -fx-accent;
 }
 
 .feature-template-item:selected {
   -fx-border-color: transparent;
-  -fx-background-color: pink;
+  -fx-background-color: -fx-accent;
 }
