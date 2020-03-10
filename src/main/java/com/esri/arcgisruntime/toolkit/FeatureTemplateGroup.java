@@ -63,23 +63,6 @@ public final class FeatureTemplateGroup {
         .collect(Collectors.toCollection(() -> this.featureTemplateItems));
       }
     });
-
-    this.featureLayer.addListener(((observable, oldValue, newValue) -> {
-      this.featureTemplateItems.clear();
-      if (newValue != null) {
-        newValue.loadAsync();
-        newValue.addDoneLoadingListener(() -> {
-          if (newValue.getLoadStatus() == LoadStatus.LOADED && newValue.getFeatureTable() instanceof ArcGISFeatureTable) {
-            Stream.concat(
-                ((ArcGISFeatureTable) newValue.getFeatureTable()).getFeatureTemplates().stream(),
-                ((ArcGISFeatureTable) newValue.getFeatureTable()).getFeatureTypes().stream().flatMap(ft -> ft.getTemplates().stream())
-            )
-            .map(featureTemplate -> new FeatureTemplateItem(newValue, featureTemplate))
-            .collect(Collectors.toCollection(() -> this.featureTemplateItems));
-          }
-        });
-      }
-    }));
   }
 
   /**
