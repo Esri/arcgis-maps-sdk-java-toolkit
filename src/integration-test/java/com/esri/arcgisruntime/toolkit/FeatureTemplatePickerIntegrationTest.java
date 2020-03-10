@@ -38,6 +38,8 @@ public class FeatureTemplatePickerIntegrationTest {
 
   private static final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
       ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+  private static final String WEBMAP_URL = "https://runtime.maps.arcgis.com/home/webmap/viewer" +
+      ".html?webmap=05792de90e1d4eff81fdbde8c5eb4063";
   private static final int DEFAULT_SLEEP_MS = 3000;
   private final FeatureLayer featureLayer = new FeatureLayer(new ServiceFeatureTable(WILDFIRE_RESPONSE_URL));
   private StackPane stackPane;
@@ -178,7 +180,7 @@ public class FeatureTemplatePickerIntegrationTest {
   @DisplayName("layer names are shown")
   void layerNamesVisible(FxRobot robot) {
     MapView mapView = new MapView();
-    ArcGISMap map = new ArcGISMap("https://runtime.maps.arcgis.com/home/webmap/viewer.html?webmap=05792de90e1d4eff81fdbde8c5eb4063");
+    ArcGISMap map = new ArcGISMap(WEBMAP_URL);
     mapView.setMap(map);
 
     Platform.runLater(() -> {
