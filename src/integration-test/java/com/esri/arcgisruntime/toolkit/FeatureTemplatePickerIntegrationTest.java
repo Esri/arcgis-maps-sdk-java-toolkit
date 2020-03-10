@@ -38,6 +38,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
   private static final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
       ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
+  private static final int DEFAULT_SLEEP_MS = 3000;
   private final FeatureLayer featureLayer = new FeatureLayer(new ServiceFeatureTable(WILDFIRE_RESPONSE_URL));
   private StackPane stackPane;
 
@@ -76,7 +77,7 @@ public class FeatureTemplatePickerIntegrationTest {
     });
 
     // when the feature template picker is done rendering
-    robot.sleep(3000);
+    robot.sleep(DEFAULT_SLEEP_MS);
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
 
     // the feature template picker should have feature template items
@@ -111,7 +112,7 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(3000);
+    robot.sleep(DEFAULT_SLEEP_MS);
 
     Object[] scrollBars = robot.lookup(n -> n instanceof ScrollBar).queryAll().toArray();
     assertEquals(2, scrollBars.length);
@@ -144,7 +145,7 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(3000);
+    robot.sleep(DEFAULT_SLEEP_MS);
 
     Object[] scrollBars = robot.lookup(n -> n instanceof ScrollBar).queryAll().toArray();
     assertEquals(2, scrollBars.length);
@@ -218,7 +219,7 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(3000);
+    robot.sleep(DEFAULT_SLEEP_MS);
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
 
@@ -281,7 +282,7 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(3000);
+    robot.sleep(DEFAULT_SLEEP_MS);
 
     Set<ImageView> imageViews = robot.lookup(n -> n instanceof ImageView).queryAll();
 
