@@ -320,6 +320,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
         imageView.setImage(swatch.get());
         updateFuture.complete(null);
       } catch (InterruptedException | ExecutionException | IllegalArgumentException e) {
+        imageView.setImage(null);
         updateFuture.completeExceptionally(e);
       }
     });
