@@ -221,11 +221,9 @@ public class FeatureTemplatePickerIntegrationTest {
     countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
-    map.getOperationalLayers().forEach(layer -> {
-      if (layer instanceof FeatureLayer) {
-        Platform.runLater(() -> featureTemplatePicker.getFeatureLayers().add((FeatureLayer) layer));
-      }
-    });
+    map.getOperationalLayers().stream()
+        .filter(layer -> layer instanceof FeatureLayer)
+        .forEach(layer -> Platform.runLater(() -> featureTemplatePicker.getFeatureLayers().add((FeatureLayer) layer)));
 
     WaitForAsyncUtils.waitForFxEvents();
 
