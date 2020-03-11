@@ -238,6 +238,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
 
     // ensure the group's feature layer is loaded to get its name for the label and its list of feature templates
     FeatureLayer featureLayer = featureTemplateGroup.getFeatureLayer();
+    featureLayer.loadAsync();
     featureLayer.addDoneLoadingListener(() -> {
       if (featureLayer.getLoadStatus() == LoadStatus.LOADED) {
         label.setText(featureLayer.getName());
