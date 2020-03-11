@@ -17,9 +17,9 @@
 package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
+import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -54,13 +54,15 @@ public final class FeatureTemplateGroup {
 
     featureLayer.loadAsync();
     featureLayer.addDoneLoadingListener(() -> {
-      if (featureLayer.getLoadStatus() == LoadStatus.LOADED && featureLayer.getFeatureTable() instanceof ArcGISFeatureTable) {
-        Stream.concat(
-            ((ArcGISFeatureTable) featureLayer.getFeatureTable()).getFeatureTemplates().stream(),
-            ((ArcGISFeatureTable) featureLayer.getFeatureTable()).getFeatureTypes().stream().flatMap(ft -> ft.getTemplates().stream())
-        )
-        .map(ft -> new FeatureTemplateItem(featureLayer, ft))
-        .collect(Collectors.toCollection(() -> this.featureTemplateItems));
+      if (featureLayer.getLoadStatus() == LoadStatus.LOADED &&
+          featureLayer.getFeatureTable() instanceof ArcGISFeatureTable) {
+        ArcGISFeatureTable arcGISFeatureTable = (ArcGISFeatureTable) featureLayer.getFeatureTable();
+        Stream<FeatureTemplate> featureTemplateStream = arcGISFeatureTable.getFeatureTemplates().stream();
+        Stream<FeatureTemplate> featureTemplateTypesTemplateStream = arcGISFeatureTable.getFeatureTypes().stream()
+            .flatMap(ft -> ft.getTemplates().stream());
+        Stream.concat(featureTemplateStream, featureTemplateTypesTemplateStream)
+            .map(ft -> new FeatureTemplateItem(featureLayer, ft))
+            .collect(Collectors.toCollection(() -> this.featureTemplateItems));
       }
     });
   }
