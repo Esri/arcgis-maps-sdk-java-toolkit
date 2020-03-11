@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.toolkit;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import javafx.application.Platform;
@@ -42,6 +41,8 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +57,7 @@ public class FeatureTemplatePickerIntegrationTest {
       ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
   private static final String WEBMAP_URL = "https://runtime.maps.arcgis.com/home/webmap/viewer" +
       ".html?webmap=05792de90e1d4eff81fdbde8c5eb4063";
-  private static final int DEFAULT_SLEEP_MS = 3000;
+  private static final int LATCH_TIMEOUT_MS = 10000;
   private final FeatureLayer featureLayer = new FeatureLayer(new ServiceFeatureTable(WILDFIRE_RESPONSE_URL));
   private StackPane stackPane;
 
@@ -87,7 +88,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("feature template names are visible")
-  void templateNamesVisible(FxRobot robot) {
+  void templateNamesVisible(FxRobot robot) throws Exception {
     // given a feature template picker using a feature layer with 16 feature templates
     Platform.runLater(() -> {
       FeatureTemplatePicker featureTemplatePicker = new FeatureTemplatePicker(featureLayer);
@@ -95,7 +96,9 @@ public class FeatureTemplatePickerIntegrationTest {
     });
 
     // when the feature template picker is done rendering
-    robot.sleep(DEFAULT_SLEEP_MS);
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    featureLayer.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
 
     // the feature template picker should have feature template items
@@ -120,7 +123,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("scrollbars appear when constrained")
-  void scrollable(FxRobot robot) {
+  void scrollable(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -130,7 +133,11 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(DEFAULT_SLEEP_MS);
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    featureLayer.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+
+    WaitForAsyncUtils.waitForFxEvents();
 
     Object[] scrollBars = robot.lookup(n -> n instanceof ScrollBar).queryAll().toArray();
     assertEquals(2, scrollBars.length);
@@ -153,7 +160,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("scrollbars switch when orientation changes")
-  void orientation(FxRobot robot) {
+  void orientation(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -163,7 +170,11 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(DEFAULT_SLEEP_MS);
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    featureLayer.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+
+    WaitForAsyncUtils.waitForFxEvents();
 
     Object[] scrollBars = robot.lookup(n -> n instanceof ScrollBar).queryAll().toArray();
     assertEquals(2, scrollBars.length);
@@ -194,7 +205,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("layer names are shown")
-  void layerNamesVisible(FxRobot robot) {
+  void layerNamesVisible(FxRobot robot) throws Exception {
     MapView mapView = new MapView();
     ArcGISMap map = new ArcGISMap(WEBMAP_URL);
     mapView.setMap(map);
@@ -203,23 +214,25 @@ public class FeatureTemplatePickerIntegrationTest {
       FeatureTemplatePicker featureTemplatePicker = new FeatureTemplatePicker();
       featureTemplatePicker.setMaxWidth(500);
       stackPane.getChildren().add(featureTemplatePicker);
-
-      map.addDoneLoadingListener(() -> {
-        if (map.getLoadStatus() == LoadStatus.LOADED) {
-          map.getOperationalLayers().forEach(layer -> {
-            if (layer instanceof FeatureLayer) {
-              featureTemplatePicker.getFeatureLayers().add((FeatureLayer) layer);
-            }
-          });
-        }
-      });
     });
 
-    robot.sleep(10000);
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    map.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
-    assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
+    map.getOperationalLayers().forEach(layer -> {
+      if (layer instanceof FeatureLayer) {
+        Platform.runLater(() -> featureTemplatePicker.getFeatureLayers().add((FeatureLayer) layer));
+      }
+    });
 
+    WaitForAsyncUtils.waitForFxEvents();
+
+    assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
+    CountDownLatch layersLoadLatch = new CountDownLatch(4);
+    map.getOperationalLayers().forEach(layer -> layer.addDoneLoadingListener(layersLoadLatch::countDown));
+    layersLoadLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
     map.getOperationalLayers().forEach(layer -> robot.clickOn(layer.getName()));
   }
 
@@ -228,7 +241,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("selection works programmatically and interactively")
-  void focusAndSelection(FxRobot robot) {
+  void focusAndSelection(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -237,9 +250,13 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(DEFAULT_SLEEP_MS);
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    featureLayer.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
+
+    WaitForAsyncUtils.waitForFxEvents();
 
     // given a template which is selected programmatically
     Object[] toggleButtons = robot.lookup(n -> n instanceof ToggleButton).queryAll().toArray();
@@ -291,7 +308,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("Swatch sizes update when symbol size changes")
-  void symbolSize(FxRobot robot) {
+  void symbolSize(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -300,7 +317,9 @@ public class FeatureTemplatePickerIntegrationTest {
       stackPane.getChildren().add(featureTemplatePicker);
     });
 
-    robot.sleep(DEFAULT_SLEEP_MS);
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    featureLayer.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
 
     Set<ImageView> imageViews = robot.lookup(n -> n instanceof ImageView).queryAll();
 
@@ -309,7 +328,7 @@ public class FeatureTemplatePickerIntegrationTest {
     int newSize = 100;
     featureTemplatePicker.setSymbolSize(newSize);
 
-    robot.sleep(1000);
+    WaitForAsyncUtils.waitForFxEvents();
 
     for (ImageView imageView : imageViews) {
       assertEquals(newSize, imageView.getImage().getWidth());
@@ -318,7 +337,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     featureTemplatePicker.setSymbolSize(prevSize);
 
-    robot.sleep(1000);
+    WaitForAsyncUtils.waitForFxEvents();
 
     for (ImageView imageView : imageViews) {
       assertEquals(prevSize, imageView.getImage().getWidth());
