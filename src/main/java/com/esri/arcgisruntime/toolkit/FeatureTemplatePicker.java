@@ -56,6 +56,7 @@ public final class FeatureTemplatePicker extends Control {
    * displayed.
    *
    * @param featureLayers observable list of feature layers
+   * @since 100.7.0
    */
   public FeatureTemplatePicker(ObservableList<FeatureLayer> featureLayers) {
     this.featureLayers = new SimpleListProperty<>(Objects.requireNonNull(featureLayers));
@@ -85,6 +86,7 @@ public final class FeatureTemplatePicker extends Control {
    * will be shown.
    *
    * @param featureLayers list of feature layers
+   * @since 100.7.0
    */
   public FeatureTemplatePicker(FeatureLayer... featureLayers) {
     this(FXCollections.observableArrayList(Objects.requireNonNull(featureLayers)));
@@ -92,6 +94,8 @@ public final class FeatureTemplatePicker extends Control {
 
   /**
    * Creates an instance with an empty list of feature layers.
+   *
+   * @since 100.7.0
    */
   public FeatureTemplatePicker() {
     this(FXCollections.observableArrayList());
@@ -141,6 +145,7 @@ public final class FeatureTemplatePicker extends Control {
    * Gets the list of feature template groups in the picker.
    *
    * @return feature template groups
+   * @since 100.7.0
    */
   public ObservableList<FeatureTemplateGroup> getFeatureTemplateGroups() {
     return featureTemplateGroups.get();
@@ -197,15 +202,21 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Gets the value of the {@link #selectedFeatureTemplateItemProperty()}.
+   * Gets the selected feature template item.
    *
-   * @return the selected template or null if there is no selection
+   * @return the selected feature template item or null if there is no selection
    * @since 100.7.0
    */
   public FeatureTemplateItem getSelectedFeatureTemplateItem() {
     return selectedFeatureTemplateItem.get();
   }
 
+  /**
+   * Sets the selected feature template item.
+   *
+   * @param selectedFeatureTemplateItem feature template item to select or null to clear the selection
+   * @since 100.7.0
+   */
   public void setSelectedFeatureTemplateItem(FeatureTemplateItem selectedFeatureTemplateItem) {
     this.selectedFeatureTemplateItem.set(selectedFeatureTemplateItem);
   }

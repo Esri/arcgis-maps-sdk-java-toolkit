@@ -177,6 +177,8 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
 
   /**
    * Updates the control's content pane and scroll pane based on the control's orientation.
+   *
+   * @since 100.7.0
    */
   private void updateOrientation() {
     Orientation orientation = getSkinnable().getOrientation();
@@ -201,6 +203,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
    *
    * @param featureTemplateGroup feature template group to show
    * @return VBox
+   * @since 100.7.0
    */
   private VBox createVBoxForFeatureTemplateGroup(FeatureTemplateGroup featureTemplateGroup) {
     VBox vBox = new VBox();
@@ -274,6 +277,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
    *
    * @param featureTemplateItem feature template item to show
    * @return ToggleButton
+   * @since 100.7.0
    */
   private ToggleButton createToggleButtonForFeatureTemplateItem(FeatureTemplateItem featureTemplateItem) {
     // show the feature template's name in the button text and tooltip
@@ -301,6 +305,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
    * @param featureTemplateItem feature template item
    * @param imageView           image view to update
    * @return completable future which completes when the image has been updated
+   * @since 100.7.0
    */
   private CompletableFuture<Void> updateSwatch(FeatureTemplateItem featureTemplateItem, ImageView imageView) {
     // create a completable future to return
