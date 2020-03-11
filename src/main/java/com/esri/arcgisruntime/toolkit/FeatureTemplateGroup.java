@@ -88,7 +88,7 @@ public final class FeatureTemplateGroup {
   /**
    * Gets the feature template items belonging to this group.
    *
-   * @return the feature template items in the group
+   * @return read-only list of feature template items in the group
    * @since 100.7.0
    */
   public ObservableList<FeatureTemplateItem> getFeatureTemplateItems() {
