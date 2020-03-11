@@ -168,7 +168,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
           })
           .toArray(CompletableFuture<?>[]::new);
       // wait until all updates finished before updating layout normally
-      CompletableFuture.allOf(futures).thenRunAsync(() -> getSkinnable().requestLayout());
+      CompletableFuture.allOf(futures).whenCompleteAsync((future, exception) -> getSkinnable().requestLayout());
     } else {
       super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
     }
