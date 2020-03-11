@@ -302,7 +302,7 @@ public class FeatureTemplatePickerIntegrationTest {
   }
 
   /**
-   * Tests that the template swatch sizes update when the symbolHeight and symbolWidth properties are changed.
+   * Tests that the template swatch sizes update when the symbolSize property is changed.
    */
   @Test
   @DisplayName("Swatch sizes update when symbol size changes")
