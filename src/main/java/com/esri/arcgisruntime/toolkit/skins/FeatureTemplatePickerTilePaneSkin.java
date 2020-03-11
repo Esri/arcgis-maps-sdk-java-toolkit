@@ -24,7 +24,6 @@ import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateGroup;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.css.PseudoClass;
 import javafx.geometry.Orientation;
