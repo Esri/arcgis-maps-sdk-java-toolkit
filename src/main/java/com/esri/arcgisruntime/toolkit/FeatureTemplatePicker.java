@@ -222,7 +222,7 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Get the symbol size used for the feature template symbol swatches.
+   * Get the symbol size (dp) used for the feature template symbol swatches.
    *
    * @return symbol size
    * @since 100.7.0
@@ -232,7 +232,7 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Sets the symbol size used for the feature template symbol swatches. Defaults to 20.
+   * Sets the symbol size used for the feature template symbol swatches. Defaults to 20 (dp).
    *
    * @param symbolSize symbol size
    * @since 100.7.0
@@ -242,7 +242,7 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Symbol size used for the feature template symbol swatches. Defaults to 20.
+   * Symbol size used for the feature template symbol swatches. Defaults to 20 (dp).
    *
    * @return symbol size property
    * @since 100.7.0
