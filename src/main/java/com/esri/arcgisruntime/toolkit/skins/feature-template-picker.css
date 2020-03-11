@@ -16,30 +16,11 @@
 
 .feature-template-item {
   -fx-text-fill: black;
-  -fx-base: transparent;
-  -fx-background: transparent;
-  -fx-focus-color: transparent;
-  -fx-border-color: transparent;
-  -fx-effect: null;
+  -fx-background-color: transparent;
   -fx-content-display: top;
   -fx-min-width: 80;
 }
 
 .feature-template-item:hover {
-  -fx-background-color: rgba(10, 10, 10, 0.1);
-}
-
-.feature-template-item:focused {
-  -fx-border-color: cyan;
-  -fx-background-color: -fx-accent;
-}
-
-.feature-template-item:focused:selected {
-  -fx-border-color: cyan;
-  -fx-background-color: -fx-accent;
-}
-
-.feature-template-item:selected {
-  -fx-border-color: transparent;
-  -fx-background-color: -fx-accent;
+  -fx-background-color: -fx-hover-base;
 }
