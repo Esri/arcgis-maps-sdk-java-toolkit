@@ -88,6 +88,12 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
   private Pane contentPane = new VBox();
   private boolean swatchesNeedUpdate = true;
 
+  /**
+   * Creates an instance of the skin for the given control.
+   *
+   * @param control template picker control
+   * @since 100.7.0
+   */
   public FeatureTemplatePickerTilePaneSkin(FeatureTemplatePicker control) {
     super(control);
     // put everything in a scroll pane to handle sizing within the skin
