@@ -220,6 +220,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     TilePane tilePane = new TilePane();
     tilePane.getStyleClass().add("tile-pane");
     // the tile pane's orientation should be the opposite of the control's orientation
+    // a picker with a vertical orientation is constrained at its width, so the tile pane should wrap horizontally
     tilePane.setOrientation(getSkinnable().getOrientation() == Orientation.HORIZONTAL ? Orientation.VERTICAL :
         Orientation.HORIZONTAL);
     getSkinnable().orientationProperty().addListener((observable, oldValue, newValue) ->
