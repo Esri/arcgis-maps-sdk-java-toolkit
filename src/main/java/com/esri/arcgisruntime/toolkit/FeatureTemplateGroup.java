@@ -20,9 +20,7 @@ import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import javafx.beans.property.ReadOnlyListWrapper;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -37,7 +35,7 @@ import java.util.stream.Stream;
  */
 public final class FeatureTemplateGroup {
 
-  private final ReadOnlyObjectProperty<FeatureLayer> featureLayer;
+  private final ReadOnlyObjectWrapper<FeatureLayer> featureLayer;
   private final ReadOnlyListWrapper<FeatureTemplateItem> featureTemplateItems;
 
   /**
@@ -49,7 +47,7 @@ public final class FeatureTemplateGroup {
    * @since 100.7.0
    */
   FeatureTemplateGroup(FeatureLayer featureLayer) {
-    this.featureLayer = new SimpleObjectProperty<>(Objects.requireNonNull(featureLayer));
+    this.featureLayer = new ReadOnlyObjectWrapper<>(Objects.requireNonNull(featureLayer));
     this.featureTemplateItems = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
 
     featureLayer.loadAsync();
@@ -84,7 +82,7 @@ public final class FeatureTemplateGroup {
    * @since 100.7.0
    */
   public ReadOnlyObjectProperty<FeatureLayer> featureLayerProperty() {
-    return featureLayer;
+    return featureLayer.getReadOnlyProperty();
   }
 
   /**
@@ -103,7 +101,7 @@ public final class FeatureTemplateGroup {
    * @return feature template items read-only list property
    * @since 100.7.0
    */
-  public ReadOnlyListWrapper<FeatureTemplateItem> featureTemplateItemsProperty() {
-    return featureTemplateItems;
+  public ReadOnlyListProperty<FeatureTemplateItem> featureTemplateItemsProperty() {
+    return featureTemplateItems.getReadOnlyProperty();
   }
 }
