@@ -85,7 +85,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
   private final ScrollPane scrollPane = new ScrollPane();
   private final ToggleGroup toggleGroup = new ToggleGroup();
   private Pane contentPane = new VBox();
-  private boolean swatchesNeedUpdate = false;
+  private boolean swatchesNeedUpdate = true;
 
   public FeatureTemplatePickerTilePaneSkin(FeatureTemplatePicker control) {
     super(control);
@@ -140,10 +140,6 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
       swatchesNeedUpdate = true;
       control.requestLayout();
     });
-
-    // update all item swatches once populated
-    swatchesNeedUpdate = true;
-    control.requestLayout();
   }
 
   @Override
