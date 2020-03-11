@@ -133,12 +133,10 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
       }
     });
 
-    control.orientationProperty().addListener((observable, oldValue, newValue) ->
-        this.updateOrientation()
-    );
+    control.orientationProperty().addListener(o -> this.updateOrientation());
 
     // update all swatches together when the symbol size changes
-    control.symbolSizeProperty().addListener((observable, oldValue, newValue) -> {
+    control.symbolSizeProperty().addListener(o -> {
       swatchesNeedUpdate = true;
       control.requestLayout();
     });
