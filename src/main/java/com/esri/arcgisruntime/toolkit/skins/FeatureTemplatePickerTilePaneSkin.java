@@ -210,7 +210,6 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     vBox.getStyleClass().add("feature-template-group");
     // hide the view if it has no feature templates
     vBox.visibleProperty().bind(featureTemplateGroup.featureTemplateItemsProperty().emptyProperty().not());
-    vBox.managedProperty().bind(vBox.visibleProperty());
 
     // add a label to the view to show the group's feature layer's name
     Label label = new Label();
