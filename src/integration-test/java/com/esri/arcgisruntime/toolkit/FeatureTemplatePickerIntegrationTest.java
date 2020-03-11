@@ -188,7 +188,7 @@ public class FeatureTemplatePickerIntegrationTest {
   }
 
   /**
-   * Tests that the picker shows the names of its layer. Also tests the workflow of adding layers from a web map.
+   * Tests that the picker shows the names of its layers. Also tests the workflow of adding layers from a web map.
    *
    * @param robot robot injected by test extension
    */
