@@ -20,7 +20,10 @@ import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.FeatureTemplate;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

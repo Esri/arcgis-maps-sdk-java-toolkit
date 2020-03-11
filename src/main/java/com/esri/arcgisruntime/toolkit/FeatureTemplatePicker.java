@@ -18,7 +18,13 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerTilePaneSkin;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -161,16 +167,6 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
-   *
-   * @return orientation property
-   * @since 100.7.0
-   */
-  public ObjectProperty<Orientation> orientationProperty() {
-    return orientation;
-  }
-
-  /**
    * Sets the orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
    *
    * @param orientation orientation
@@ -178,6 +174,16 @@ public final class FeatureTemplatePicker extends Control {
    */
   public void setOrientation(Orientation orientation) {
     this.orientation.set(orientation);
+  }
+
+  /**
+   * Orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
+   *
+   * @return orientation property
+   * @since 100.7.0
+   */
+  public ObjectProperty<Orientation> orientationProperty() {
+    return orientation;
   }
 
   /**
@@ -215,16 +221,6 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Symbol size used for the feature template symbol swatches. Defaults to 20.
-   *
-   * @return symbol size property
-   * @since 100.7.0
-   */
-  public IntegerProperty symbolSizeProperty() {
-    return symbolSize;
-  }
-
-  /**
    * Sets the symbol size used for the feature template symbol swatches. Defaults to 20.
    *
    * @param symbolSize symbol size
@@ -232,5 +228,15 @@ public final class FeatureTemplatePicker extends Control {
    */
   public void setSymbolSize(int symbolSize) {
     this.symbolSize.set(symbolSize);
+  }
+
+  /**
+   * Symbol size used for the feature template symbol swatches. Defaults to 20.
+   *
+   * @return symbol size property
+   * @since 100.7.0
+   */
+  public IntegerProperty symbolSizeProperty() {
+    return symbolSize;
   }
 }

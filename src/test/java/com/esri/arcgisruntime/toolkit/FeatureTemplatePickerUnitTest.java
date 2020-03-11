@@ -28,7 +28,8 @@ public class FeatureTemplatePickerUnitTest {
    */
   @BeforeAll
   private static void startPlatform() {
-    Platform.startup(() -> {});
+    Platform.startup(() -> {
+    });
   }
 
   /**

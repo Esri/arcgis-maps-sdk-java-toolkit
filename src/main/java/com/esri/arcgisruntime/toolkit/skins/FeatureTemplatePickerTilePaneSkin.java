@@ -29,7 +29,13 @@ import javafx.css.PseudoClass;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SkinBase;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -76,10 +82,9 @@ import java.util.stream.Collectors;
 public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTemplatePicker> {
 
   private static final PseudoClass HORIZONTAL_PSEUDO_CLASS = PseudoClass.getPseudoClass("horizontal");
-
-  private Pane contentPane = new VBox();
   private final ScrollPane scrollPane = new ScrollPane();
   private final ToggleGroup toggleGroup = new ToggleGroup();
+  private Pane contentPane = new VBox();
   private boolean swatchesNeedUpdate = false;
 
   public FeatureTemplatePickerTilePaneSkin(FeatureTemplatePicker control) {
@@ -91,7 +96,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
 
     // use a shared toggle group for all feature template items to keep track of the current selected item
     toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-      control.setSelectedFeatureTemplateItem(newValue == null ? null : (FeatureTemplateItem) newValue.getUserData())
+        control.setSelectedFeatureTemplateItem(newValue == null ? null : (FeatureTemplateItem) newValue.getUserData())
     );
     control.selectedFeatureTemplateItemProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue == null) {
@@ -129,7 +134,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     });
 
     control.orientationProperty().addListener((observable, oldValue, newValue) ->
-      this.updateOrientation()
+        this.updateOrientation()
     );
 
     // update all swatches together when the symbol size changes
@@ -163,7 +168,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
           .toArray(CompletableFuture<?>[]::new);
       // wait until all updates finished before updating layout normally
       CompletableFuture.allOf(futures).thenRunAsync(() ->
-        super.layoutChildren(contentX, contentY, contentWidth, contentHeight)
+          super.layoutChildren(contentX, contentY, contentWidth, contentHeight)
       );
     } else {
       super.layoutChildren(contentX, contentY, contentWidth, contentHeight);
@@ -215,9 +220,9 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     tilePane.getStyleClass().add("tile-pane");
     // the tile pane's orientation should be the opposite of the control's orientation
     tilePane.setOrientation(getSkinnable().getOrientation() == Orientation.HORIZONTAL ? Orientation.VERTICAL :
-            Orientation.HORIZONTAL);
+        Orientation.HORIZONTAL);
     getSkinnable().orientationProperty().addListener((observable, oldValue, newValue) ->
-      tilePane.setOrientation(newValue == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL)
+        tilePane.setOrientation(newValue == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL)
     );
     // switch alignment to center when there is only one row/column, otherwise top-left.
     tilePane.widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -294,8 +299,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
    * feature template item.
    *
    * @param featureTemplateItem feature template item
-   * @param imageView image view to update
-   *
+   * @param imageView           image view to update
    * @return completable future which completes when the image has been updated
    */
   private CompletableFuture<Void> updateSwatch(FeatureTemplateItem featureTemplateItem, ImageView imageView) {
