@@ -289,6 +289,8 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     toggleButton.setToggleGroup(toggleGroup);
     // bind the preferred width of the button based on the symbol size to limit overflowing template names
     toggleButton.prefWidthProperty().bind(getSkinnable().symbolSizeProperty().multiply(2));
+    // disable the toggle button if its feature layer is not editable
+    toggleButton.setDisable(!featureTemplateItem.getFeatureLayer().getFeatureTable().isEditable());
     // use an image view for the button's graphic (to show the symbol swatch)
     ImageView imageView = new ImageView();
     toggleButton.setGraphic(imageView);
