@@ -38,9 +38,8 @@ import java.util.stream.Collectors;
 
 /**
  * A control which shows the feature templates available from a list of feature layers. Templates are grouped by
- * feature layer. See skin for styling options.
+ * feature layer. See {@link FeatureTemplatePickerTilePaneSkin} for default styling options.
  *
- * @see FeatureTemplatePickerTilePaneSkin
  * @since 100.7.0
  */
 public final class FeatureTemplatePicker extends Control {
@@ -172,7 +171,8 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Sets the orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
+   * Sets the orientation of the control. For the default skin, template groups are arranged left to right in a
+   * horizontal orientation and top to bottom in a vertical orientation. Defaults to {@link Orientation#VERTICAL}.
    *
    * @param orientation orientation
    * @since 100.7.0
@@ -182,7 +182,8 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Orientation of the control. See skin for effect. Defaults to {@link Orientation#VERTICAL}.
+   * Orientation of the control. For the default skin, template groups are arranged left to right in a horizontal
+   * orientation and top to bottom in a vertical orientation. Defaults to {@link Orientation#VERTICAL}.
    *
    * @return orientation property
    * @since 100.7.0
