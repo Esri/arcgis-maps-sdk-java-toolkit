@@ -212,7 +212,7 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Sets the selected feature template item.
+   * Sets the selected feature template item. Clears the selection if the given item cannot be found.
    *
    * @param selectedFeatureTemplateItem feature template item to select or null to clear the selection
    * @since 100.7.0
