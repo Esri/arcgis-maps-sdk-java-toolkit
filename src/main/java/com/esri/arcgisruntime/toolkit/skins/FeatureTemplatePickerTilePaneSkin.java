@@ -78,6 +78,20 @@ import java.util.stream.Collectors;
  * }
  * </pre>
  *
+ * <p>To hide feature template group labels:</p>
+ * <pre>
+ * .feature-template-group > .label {
+ *   visibility: hidden;
+ * }
+ * </pre>
+ *
+ * <p>To hide feature template item names:</p>
+ * <pre>
+ * .feature-template-item {
+ *   -fx-content-display: graphic-only;
+ * }
+ * </pre>
+ *
  * @since 100.7.0
  */
 public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTemplatePicker> {
