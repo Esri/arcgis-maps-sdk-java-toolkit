@@ -24,6 +24,7 @@ import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateGroup;
 import com.esri.arcgisruntime.toolkit.FeatureTemplateItem;
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.css.PseudoClass;
 import javafx.geometry.Orientation;
@@ -290,7 +291,11 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     // bind the preferred width of the button based on the symbol size to limit overflowing template names
     toggleButton.prefWidthProperty().bind(getSkinnable().symbolSizeProperty().multiply(2));
     // disable the toggle button if its feature layer is not editable
-    toggleButton.setDisable(!featureTemplateItem.getFeatureLayer().getFeatureTable().isEditable());
+    toggleButton.disableProperty().bind(Bindings.createBooleanBinding(() ->
+        getSkinnable().getDisableTemplatesFromUneditableFeatureLayers() &&
+            !featureTemplateItem.getFeatureLayer().getFeatureTable().isEditable(),
+        getSkinnable().disableTemplatesFromUneditableFeatureLayersProperty())
+    );
     // use an image view for the button's graphic (to show the symbol swatch)
     ImageView imageView = new ImageView();
     toggleButton.setGraphic(imageView);

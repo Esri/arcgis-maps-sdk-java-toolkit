@@ -18,10 +18,12 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerTilePaneSkin;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -44,6 +46,7 @@ import java.util.stream.Collectors;
  */
 public final class FeatureTemplatePicker extends Control {
 
+  private final BooleanProperty disableTemplatesFromUneditableFeatureLayers = new SimpleBooleanProperty(true);
   private final ListProperty<FeatureLayer> featureLayers;
   private final ReadOnlyListWrapper<FeatureTemplateGroup> featureTemplateGroups;
   private final ObjectProperty<Orientation> orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
@@ -108,6 +111,37 @@ public final class FeatureTemplatePicker extends Control {
   @Override
   public String getUserAgentStylesheet() {
     return this.getClass().getResource("skins/feature-template-picker.css").toExternalForm();
+  }
+
+
+  /**
+   * Gets whether templates from uneditable feature layers are disabled in the picker.
+   *
+   * @return if templates from uneditable feature layers are disabled
+   * @since 100.7.0
+   */
+  public boolean getDisableTemplatesFromUneditableFeatureLayers() {
+    return disableTemplatesFromUneditableFeatureLayers.get();
+  }
+
+  /**
+   * Specifies if templates from uneditable feature layers are disabled in the picker. Defaults to true.
+   *
+   * @return disable templates property
+   * @since 100.7.0
+   */
+  public BooleanProperty disableTemplatesFromUneditableFeatureLayersProperty() {
+    return disableTemplatesFromUneditableFeatureLayers;
+  }
+
+  /**
+   * Sets whether templates from uneditable feature layers are disabled in the picker. Defaults to true.
+   *
+   * @param disableTemplatesFromUneditableFeatureLayers whether to disable or not
+   * @since 100.7.0
+   */
+  public void setDisableTemplatesFromUneditableFeatureLayers(boolean disableTemplatesFromUneditableFeatureLayers) {
+    this.disableTemplatesFromUneditableFeatureLayers.set(disableTemplatesFromUneditableFeatureLayers);
   }
 
   /**
