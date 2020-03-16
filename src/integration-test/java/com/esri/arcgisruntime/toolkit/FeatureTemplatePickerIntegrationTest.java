@@ -34,6 +34,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
+import org.testfx.api.FxRobotException;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -44,7 +45,11 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Automated integration tests for feature template picker.
@@ -232,6 +237,47 @@ public class FeatureTemplatePickerIntegrationTest {
     map.getOperationalLayers().forEach(layer -> layer.addDoneLoadingListener(layersLoadLatch::countDown));
     layersLoadLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
     map.getOperationalLayers().forEach(layer -> robot.clickOn(layer.getName()));
+  }
+
+
+  /**
+   * Tests that one can hide feature layer names in template group items with CSS.
+   *
+   * @param robot robot injected by test extension
+   */
+  @Test
+  @DisplayName("hide feature layer names with CSS")
+  void hideLayerNames(FxRobot robot) throws Exception {
+    stackPane.getStylesheets().add(getClass().getResource("/hide-template-group-labels.css").toExternalForm());
+
+    MapView mapView = new MapView();
+    ArcGISMap map = new ArcGISMap(WEBMAP_URL);
+    mapView.setMap(map);
+
+    Platform.runLater(() -> {
+      FeatureTemplatePicker featureTemplatePicker = new FeatureTemplatePicker();
+      featureTemplatePicker.setMaxWidth(500);
+      stackPane.getChildren().add(featureTemplatePicker);
+    });
+
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    map.addDoneLoadingListener(countDownLatch::countDown);
+    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+
+    FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
+    map.getOperationalLayers().stream()
+        .filter(layer -> layer instanceof FeatureLayer)
+        .forEach(layer -> Platform.runLater(() -> featureTemplatePicker.getFeatureLayers().add((FeatureLayer) layer)));
+
+    WaitForAsyncUtils.waitForFxEvents();
+
+    assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
+    CountDownLatch layersLoadLatch = new CountDownLatch(4);
+    map.getOperationalLayers().forEach(layer -> layer.addDoneLoadingListener(layersLoadLatch::countDown));
+    layersLoadLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    map.getOperationalLayers().forEach(layer ->
+      assertThrows(FxRobotException.class, () -> robot.clickOn(layer.getName()), "Name should not be visible")
+    );
   }
 
   /**
