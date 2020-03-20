@@ -306,9 +306,9 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     toggleButton.prefWidthProperty().bind(getSkinnable().symbolSizeProperty().multiply(2));
     // disable the toggle button if its feature layer is not editable
     toggleButton.disableProperty().bind(Bindings.createBooleanBinding(() ->
-        getSkinnable().getDisableTemplatesFromUneditableFeatureLayers() &&
-            !featureTemplateItem.getFeatureLayer().getFeatureTable().isEditable(),
-        getSkinnable().disableTemplatesFromUneditableFeatureLayersProperty())
+        getSkinnable().getDisableTemplatesWhichCannotBeAdded() &&
+            !featureTemplateItem.getFeatureLayer().getFeatureTable().canAdd(),
+        getSkinnable().disableTemplatesWhichCannotBeAddedProperty())
     );
     // use an image view for the button's graphic (to show the symbol swatch)
     ImageView imageView = new ImageView();

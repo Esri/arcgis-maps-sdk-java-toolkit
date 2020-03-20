@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  */
 public final class FeatureTemplatePicker extends Control {
 
-  private final BooleanProperty disableTemplatesFromUneditableFeatureLayers = new SimpleBooleanProperty(true);
+  private final BooleanProperty disableTemplatesWhichCannotBeAdded = new SimpleBooleanProperty(true);
   private final ListProperty<FeatureLayer> featureLayers;
   private final ReadOnlyListWrapper<FeatureTemplateGroup> featureTemplateGroups;
   private final ObjectProperty<Orientation> orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
@@ -115,33 +115,36 @@ public final class FeatureTemplatePicker extends Control {
 
 
   /**
-   * Gets whether templates from uneditable feature layers are disabled in the picker.
+   * Gets whether templates from feature layers that cannot be added to are disabled in the picker.
    *
    * @return if templates from uneditable feature layers are disabled
+   * @see com.esri.arcgisruntime.data.FeatureTable#canAdd
    * @since 100.7.0
    */
-  public boolean getDisableTemplatesFromUneditableFeatureLayers() {
-    return disableTemplatesFromUneditableFeatureLayers.get();
+  public boolean getDisableTemplatesWhichCannotBeAdded() {
+    return disableTemplatesWhichCannotBeAdded.get();
   }
 
   /**
-   * Specifies if templates from uneditable feature layers are disabled in the picker. Defaults to true.
+   * Specifies if templates from feature layers which cannot be added to are disabled in the picker. Defaults to true.
    *
    * @return disable templates property
+   * @see com.esri.arcgisruntime.data.FeatureTable#canAdd
    * @since 100.7.0
    */
-  public BooleanProperty disableTemplatesFromUneditableFeatureLayersProperty() {
-    return disableTemplatesFromUneditableFeatureLayers;
+  public BooleanProperty disableTemplatesWhichCannotBeAddedProperty() {
+    return disableTemplatesWhichCannotBeAdded;
   }
 
   /**
-   * Sets whether templates from uneditable feature layers are disabled in the picker. Defaults to true.
+   * Sets whether templates from feature layers which cannot be added to are disabled in the picker. Defaults to true.
    *
-   * @param disableTemplatesFromUneditableFeatureLayers whether to disable or not
+   * @param disableTemplatesWhichCannotBeAdded whether to disable or not
+   * @see com.esri.arcgisruntime.data.FeatureTable#canAdd
    * @since 100.7.0
    */
-  public void setDisableTemplatesFromUneditableFeatureLayers(boolean disableTemplatesFromUneditableFeatureLayers) {
-    this.disableTemplatesFromUneditableFeatureLayers.set(disableTemplatesFromUneditableFeatureLayers);
+  public void setDisableTemplatesWhichCannotBeAdded(boolean disableTemplatesWhichCannotBeAdded) {
+    this.disableTemplatesWhichCannotBeAdded.set(disableTemplatesWhichCannotBeAdded);
   }
 
   /**
