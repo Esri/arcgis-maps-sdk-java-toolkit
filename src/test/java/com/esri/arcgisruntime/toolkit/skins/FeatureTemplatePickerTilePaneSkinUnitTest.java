@@ -35,8 +35,11 @@ public class FeatureTemplatePickerTilePaneSkinUnitTest {
 
   @BeforeAll
   static void startPlatform() {
-    Platform.startup(() -> {
-    });
+    try {
+      Platform.startup(() -> {});
+    } catch (Exception ex) {
+      // toolkit already initialized
+    }
   }
 
   @Test

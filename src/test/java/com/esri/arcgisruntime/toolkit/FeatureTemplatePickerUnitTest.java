@@ -44,8 +44,11 @@ public class FeatureTemplatePickerUnitTest {
    */
   @BeforeAll
   private static void startPlatform() {
-    Platform.startup(() -> {
-    });
+    try {
+      Platform.startup(() -> {});
+    } catch (Exception ex) {
+      // toolkit already initialized
+    }
   }
 
   /**
