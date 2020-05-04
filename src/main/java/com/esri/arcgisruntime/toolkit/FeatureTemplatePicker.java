@@ -113,7 +113,6 @@ public final class FeatureTemplatePicker extends Control {
     return this.getClass().getResource("skins/feature-template-picker.css").toExternalForm();
   }
 
-
   /**
    * Gets whether templates from feature layers that cannot be added to are disabled in the picker.
    *
