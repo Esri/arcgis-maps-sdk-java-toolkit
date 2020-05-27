@@ -128,7 +128,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("scrollbars appear when constrained")
-  void scrollable(FxRobot robot) throws Exception {
+  void scrollbarsDisplayOnOverflow(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
