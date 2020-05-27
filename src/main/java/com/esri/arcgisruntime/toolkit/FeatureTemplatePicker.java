@@ -197,7 +197,8 @@ public final class FeatureTemplatePicker extends Control {
   }
 
   /**
-   * Gets the orientation of this control. See skin for effect.
+   * Gets the orientation of this control. For the default skin, template groups are arranged left to right in a
+   * horizontal orientation and top to bottom in a vertical orientation. Defaults to {@link Orientation#VERTICAL}.
    *
    * @return orientation
    * @since 100.7.0
