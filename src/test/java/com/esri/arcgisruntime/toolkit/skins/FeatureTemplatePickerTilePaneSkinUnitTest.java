@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.toolkit.FeatureTemplatePicker;
+import com.esri.arcgisruntime.toolkit.util.PlatformUtils;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollPane;
@@ -36,29 +37,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("feature template picker tile pane skin unit tests")
 public class FeatureTemplatePickerTilePaneSkinUnitTest {
 
+  /**
+   * Starts the JavaFX platform before all tests.
+   */
   @BeforeAll
   static void startPlatform() {
-    try {
-      Platform.startup(() -> {});
-    } catch (Exception ex) {
-      // toolkit already initialized
+    if (!PlatformUtils.isPlatformStarted()) {
+      Platform.startup(PlatformUtils::setPlatformStarted);
     }
   }
 
+  /**
+   * Tests constructor with null argument throws null pointer.
+   */
   @Test
   @DisplayName("null control throws exception")
   void nullControlConstructor() {
     assertThrows(IllegalArgumentException.class, () -> new FeatureTemplatePickerTilePaneSkin(null));
   }
 
+  /**
+   * Tests that skin correctly initializes its children.
+   */
   @Test
-  @DisplayName("root child is scrollpane")
-  void scrollpaneChild() {
+  @DisplayName("child nodes initialize")
+  void initializesChildNodes() {
     FeatureTemplatePickerTilePaneSkin skin = new FeatureTemplatePickerTilePaneSkin(new FeatureTemplatePicker());
     assertEquals(1, skin.getChildren().size());
     assertTrue(skin.getChildren().get(0) instanceof ScrollPane);
   }
 
+  /**
+   * Tests that the content node inside the scroll pane changes orientation when the picker's orientation changes.
+   */
   @Test
   @DisplayName("content node changes when orientation changes")
   void contentNodeOrientation() {

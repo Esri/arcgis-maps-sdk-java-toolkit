@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.toolkit.util.PlatformUtils;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -47,10 +48,8 @@ public class FeatureTemplateGroupUnitTest {
    */
   @BeforeAll
   private static void startPlatform() {
-    try {
-      Platform.startup(() -> {});
-    } catch (Exception ex) {
-      // toolkit already initialized
+    if (!PlatformUtils.isPlatformStarted()) {
+      Platform.startup(PlatformUtils::setPlatformStarted);
     }
   }
 

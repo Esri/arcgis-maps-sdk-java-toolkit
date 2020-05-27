@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.toolkit;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.toolkit.util.PlatformUtils;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -44,10 +45,8 @@ public class FeatureTemplatePickerUnitTest {
    */
   @BeforeAll
   private static void startPlatform() {
-    try {
-      Platform.startup(() -> {});
-    } catch (Exception ex) {
-      // toolkit already initialized
+    if (!PlatformUtils.isPlatformStarted()) {
+      Platform.startup(PlatformUtils::setPlatformStarted);
     }
   }
 
@@ -78,6 +77,9 @@ public class FeatureTemplatePickerUnitTest {
     assertThrows(NullPointerException.class, () -> new FeatureTemplatePicker(new FeatureLayer[]{null}));
   }
 
+  /**
+   * Tests that the features layers from the constructor can be retrieved via the getter.
+   */
   @Test
   @DisplayName("can get the feature layers")
   void getFeatureLayers() {
@@ -86,6 +88,9 @@ public class FeatureTemplatePickerUnitTest {
     assertEquals(featureLayer, featureTemplatePicker.getFeatureLayers().get(0));
   }
 
+  /**
+   * Tests that the picker can be backed by an observable list given to the constructor.
+   */
   @Test
   @DisplayName("layers backed by observable list")
   void observableFeatureLayersList() {
@@ -99,6 +104,9 @@ public class FeatureTemplatePickerUnitTest {
     assertEquals(featureLayer, featureTemplatePicker.getFeatureLayers().get(0));
   }
 
+  /**
+   * Tests that feature layers can be added after initialization via the featureLayers observable list.
+   */
   @Test
   @DisplayName("add layers via observable list")
   void featureLayersObservableList() {
@@ -109,6 +117,9 @@ public class FeatureTemplatePickerUnitTest {
     assertEquals(featureLayer, featureTemplatePicker.getFeatureLayers().get(0));
   }
 
+  /**
+   * Tests that the feature layers list can be bound to an external list property.
+   */
   @Test
   @DisplayName("bind feature layers to external property")
   void bindFeatureLayersProperty() {
@@ -121,6 +132,9 @@ public class FeatureTemplatePickerUnitTest {
     assertEquals(featureLayer, featureTemplatePicker.getFeatureLayers().get(0));
   }
 
+  /**
+   * Tests that a binding can override the list the picker was initialized with.
+   */
   @Test
   @DisplayName("can bind over initialized list")
   void bindOverInitializeList() {
