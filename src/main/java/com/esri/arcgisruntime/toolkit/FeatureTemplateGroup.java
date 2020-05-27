@@ -61,9 +61,9 @@ public final class FeatureTemplateGroup {
         Stream<FeatureTemplate> featureTemplateStream = arcGISFeatureTable.getFeatureTemplates().stream();
         Stream<FeatureTemplate> featureTemplateTypesTemplateStream = arcGISFeatureTable.getFeatureTypes().stream()
             .flatMap(ft -> ft.getTemplates().stream());
-        Stream.concat(featureTemplateStream, featureTemplateTypesTemplateStream)
+        featureTemplateItems.addAll(Stream.concat(featureTemplateStream, featureTemplateTypesTemplateStream)
             .map(ft -> new FeatureTemplateItem(featureLayer, ft))
-            .collect(Collectors.toCollection(() -> this.featureTemplateItems));
+            .collect(Collectors.toList()));
       }
     });
   }
