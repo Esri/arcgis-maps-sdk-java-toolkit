@@ -30,6 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Feature template picker tile pane skin unit tests.
+ */
 @DisplayName("feature template picker tile pane skin unit tests")
 public class FeatureTemplatePickerTilePaneSkinUnitTest {
 
