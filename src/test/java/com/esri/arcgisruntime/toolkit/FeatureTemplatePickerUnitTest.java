@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Automated integration tests for feature template picker.
+ * Feature template picker unit tests.
  */
 @DisplayName("feature template picker unit tests")
 public class FeatureTemplatePickerUnitTest {
