@@ -62,7 +62,7 @@ public class FeatureTemplatePickerIntegrationTest {
       ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
   private static final String WEBMAP_URL = "https://runtime.maps.arcgis.com/home/webmap/viewer" +
       ".html?webmap=05792de90e1d4eff81fdbde8c5eb4063";
-  private static final int LATCH_TIMEOUT_MS = 10000;
+  private static final int LATCH_TIMEOUT_SEC = 10;
   private final FeatureLayer featureLayer = new FeatureLayer(new ServiceFeatureTable(WILDFIRE_RESPONSE_URL));
   private StackPane stackPane;
 
@@ -103,7 +103,7 @@ public class FeatureTemplatePickerIntegrationTest {
     // when the feature template picker is done rendering
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
 
     // the feature template picker should have feature template items
@@ -140,7 +140,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -177,7 +177,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
 
     WaitForAsyncUtils.waitForFxEvents();
 
@@ -223,7 +223,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
     map.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
     map.getOperationalLayers().stream()
@@ -235,7 +235,7 @@ public class FeatureTemplatePickerIntegrationTest {
     assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
     CountDownLatch layersLoadLatch = new CountDownLatch(4);
     map.getOperationalLayers().forEach(layer -> layer.addDoneLoadingListener(layersLoadLatch::countDown));
-    layersLoadLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    layersLoadLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS);
     map.getOperationalLayers().forEach(layer -> robot.clickOn(layer.getName()));
   }
 
@@ -262,7 +262,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
     map.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
     map.getOperationalLayers().stream()
@@ -274,7 +274,7 @@ public class FeatureTemplatePickerIntegrationTest {
     assertEquals(4, featureTemplatePicker.getFeatureTemplateGroups().size());
     CountDownLatch layersLoadLatch = new CountDownLatch(4);
     map.getOperationalLayers().forEach(layer -> layer.addDoneLoadingListener(layersLoadLatch::countDown));
-    layersLoadLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    layersLoadLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS);
     map.getOperationalLayers().forEach(layer ->
       assertThrows(FxRobotException.class, () -> robot.clickOn(layer.getName()), "Name should not be visible")
     );
@@ -296,7 +296,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
 
     FeatureTemplatePicker featureTemplatePicker = (FeatureTemplatePicker) stackPane.getChildren().get(0);
 
@@ -363,7 +363,7 @@ public class FeatureTemplatePickerIntegrationTest {
 
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
 
     Set<ImageView> imageViews = robot.lookup(n -> n instanceof ImageView).queryAll();
 

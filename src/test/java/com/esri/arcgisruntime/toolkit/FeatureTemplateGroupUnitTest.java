@@ -19,9 +19,6 @@ package com.esri.arcgisruntime.toolkit;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +39,7 @@ public class FeatureTemplateGroupUnitTest {
   private static final String WILDFIRE_RESPONSE_URL = "https://sampleserver6.arcgisonline" +
       ".com/arcgis/rest/services/Wildfire/FeatureServer/0";
 
-  private static final int LATCH_TIMEOUT_MS = 10_000;
+  private static final int LATCH_TIMEOUT_SEC = 10;
 
   /**
    * Starts the JavaFX platform before all tests.
@@ -100,7 +97,7 @@ public class FeatureTemplateGroupUnitTest {
     assertEquals(0, featureTemplateGroup.getFeatureTemplateItems().size());
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS);
     assertFalse(featureTemplateGroup.getFeatureTemplateItems().isEmpty());
   }
 }
