@@ -165,7 +165,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("scrollbars switch when orientation changes")
-  void orientation(FxRobot robot) throws Exception {
+  void scrollbarsSwitchOnOrientationChange(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
@@ -247,7 +247,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("hide feature layer names with CSS")
-  void hideLayerNames(FxRobot robot) throws Exception {
+  void canHideLayerNamesViaCSS(FxRobot robot) throws Exception {
     stackPane.getStylesheets().add(getClass().getResource("/hide-template-group-labels.css").toExternalForm());
 
     MapView mapView = new MapView();
@@ -352,7 +352,7 @@ public class FeatureTemplatePickerIntegrationTest {
    */
   @Test
   @DisplayName("Swatch sizes update when symbol size changes")
-  void symbolSize(FxRobot robot) throws Exception {
+  void symbolSizeUpdates(FxRobot robot) throws Exception {
     ArcGISFeatureTable featureTable = new ServiceFeatureTable(WILDFIRE_RESPONSE_URL);
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
