@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Feature template group unit tests.
@@ -97,7 +98,7 @@ public class FeatureTemplateGroupUnitTest {
     assertEquals(0, featureTemplateGroup.getFeatureTemplateItems().size());
     CountDownLatch countDownLatch = new CountDownLatch(1);
     featureLayer.addDoneLoadingListener(countDownLatch::countDown);
-    countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS);
+    assertTrue(countDownLatch.await(LATCH_TIMEOUT_SEC, TimeUnit.SECONDS));
     assertFalse(featureTemplateGroup.getFeatureTemplateItems().isEmpty());
   }
 }
