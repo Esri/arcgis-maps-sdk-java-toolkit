@@ -16,7 +16,7 @@ The toolkit library jar is hosted on https://bintray.com/esri/arcgis.
 To add the dependency to your project using Gradle:
 ```groovy
 ext {
-  arcgisVersion = "100.7.0"
+  arcgisVersion = "100.8.0"
 }
 
 repositories {
@@ -57,6 +57,7 @@ The following table shows the minimum version of the SDK compatible with the too
 | --- | --- |
 | 100.2.1 | 100.2.1 |
 | 100.7.0 | 100.7.0 |
+| 100.8.0 | 100.8.0 |
 
 ## Resources
 
