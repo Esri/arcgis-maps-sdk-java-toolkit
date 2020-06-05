@@ -1,0 +1,42 @@
+/*
+ * Copyright 2020 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.feature-template-picker {
+  -fx-spacing: 0;
+}
+
+.feature-template-picker:horizontal .feature-template-group {
+  -fx-border-width: 0 1 0 0;
+}
+
+.feature-template-group {
+  -fx-spacing: 5;
+  -fx-padding: 5;
+  -fx-alignment: top-center;
+  -fx-border-color: -fx-box-border;
+  -fx-border-width: 0 0 1 0;
+}
+
+.feature-template-item {
+  -fx-text-fill: black;
+  -fx-background-color: transparent;
+  -fx-content-display: top;
+  -fx-min-width: 80;
+}
+
+.feature-template-item:hover {
+  -fx-background-color: -fx-hover-base;
+}

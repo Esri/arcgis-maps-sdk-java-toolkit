@@ -7,6 +7,7 @@ The latest version of the ArcGIS Runtime Toolkit for Java features the following
 - Compass: Shows the current viewpoint heading. Can be clicked to reorient the view to north.
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
+- Template Picker: Shows feature templates for a collection of feature layers.
 
 ## Instructions
 
@@ -14,23 +15,10 @@ The toolkit library jar is hosted on https://bintray.com/esri/arcgis.
 
 To add the dependency to your project using Gradle:
 ```groovy
-apply plugin: 'application'
-
-// Runtime SDK dependency
-apply plugin: 'com.esri.arcgisruntime.java'
-buildscript {
-    repositories {
-        maven {
-            url 'https://esri.bintray.com/arcgis'
-        }
-    }
-    dependencies {
-        classpath 'com.esri.arcgisruntime:gradle-arcgis-java-plugin:1.0.0'
-    }
+ext {
+  arcgisVersion = "100.7.0"
 }
-arcgis.version = '100.2.1'
 
-// Toolkit dependency
 repositories {
   maven {
       url 'https://esri.bintray.com/arcgis'
@@ -38,7 +26,22 @@ repositories {
 }
 
 dependencies {
-  compile 'com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1'
+  // toolkit
+  compile "com.esri.arcgisruntime:arcgis-java-toolkit:$arcgisVersion"
+  // api
+  compile "com.esri.arcgisruntime:arcgis-java:$arcgisVersion" 
+  // native libraries
+  natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
+  natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
+}
+
+task copyNatives(type: Copy) {
+  description = "Copies the arcgis native libraries into USER_HOME/.arcgis for development."
+  group = "build"
+  configurations.natives.asFileTree.each {
+    from(zipTree(it))
+  }
+  into "${System.properties.getProperty("user.home")}/.arcgis/$arcgisVersion"
 }
 ```
 
@@ -48,11 +51,12 @@ The toolkit requires the ArcGIS Runtime SDK for Java. Refer to the Instructions 
 See [the guide](https://developers.arcgis.com/java/latest/guide/install-the-sdk.htm) for complete instructions and
 other options for installing the SDK.
 
-The following table shows which versions of the SDK are compatible with the toolkit:
+The following table shows the minimum version of the SDK compatible with the toolkit:
 
 |  SDK Version  |  Toolkit Version  |
 | --- | --- |
 | 100.2.1 | 100.2.1 |
+| 100.7.0 | 100.7.0 |
 
 ## Resources
 
