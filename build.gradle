@@ -10,7 +10,7 @@ ext {
 }
 
 group "com.esri.arcgisruntime"
-version = "100.7.0"
+version = "100.8.0"
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
