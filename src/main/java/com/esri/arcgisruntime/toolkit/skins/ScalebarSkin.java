@@ -136,7 +136,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
 
   /**
    * Returns the width that can be used for the scalebar e.g. some scalebars have labels at the end so they can't be
-   * as long as a scaleber with the label underneath.
+   * as long as a scalebar with the label underneath.
    *
    * @param width the total width available
    * @return the width that the scalebar line/bar can occupy
@@ -193,7 +193,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    */
   Region calculateRegion(Region region) {
     Group root = new Group();
-    Scene dummyScene = new Scene(root);
+    Scene unusedScene = new Scene(root);
     root.getChildren().add(region);
     root.applyCss();
     root.layout();
