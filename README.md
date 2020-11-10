@@ -10,7 +10,7 @@ The latest version of the ArcGIS Runtime Toolkit for Java features the following
 
 ## Instructions
 
-The toolkit library jar is hosted on https://bintray.com/esri/arcgis.
+The toolkit library jar is hosted on https://esri.jfrog.io/artifactory/arcgis.
 
 To add the dependency to your project using Gradle:
 ```groovy
@@ -21,7 +21,7 @@ apply plugin: 'com.esri.arcgisruntime.java'
 buildscript {
     repositories {
         maven {
-            url 'https://esri.bintray.com/arcgis'
+            url 'https://esri.jfrog.io/artifactory/arcgis'
         }
     }
     dependencies {
@@ -33,7 +33,7 @@ arcgis.version = '100.2.1'
 // Toolkit dependency
 repositories {
   maven {
-      url 'https://esri.bintray.com/arcgis'
+      url 'https://esri.jfrog.io/artifactory/arcgis'
   }
 }
 
