@@ -193,7 +193,7 @@ public abstract class ScalebarSkin extends SkinBase<Scalebar> {
    */
   Region calculateRegion(Region region) {
     Group root = new Group();
-    Scene unusedScene = new Scene(root);
+    Scene placeholderScene = new Scene(root);
     root.getChildren().add(region);
     root.applyCss();
     root.layout();
