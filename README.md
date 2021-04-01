@@ -15,7 +15,8 @@ The toolkit library jar is hosted on https://esri.jfrog.io/artifactory/arcgis.
 To add the dependency to your project using Gradle:
 ```groovy
 plugins {
-    'application'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 // Replace with version number of ArcGIS SDK you are using in your app, such as:
@@ -24,18 +25,33 @@ ext {
   arcgisVersion = '100.2.1'
 }
 
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls' ]
+}
+
 compileJava.options.encoding = 'UTF-8'
 
 // Toolkit and Runtime SDK repository
 repositories {
-  maven {
-      url 'https://esri.jfrog.io/artifactory/arcgis'
-  }
+    jcenter()
+    maven {
+        url 'https://esri.jfrog.io/artifactory/arcgis'
+    }
+    maven {
+        url 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
+    }
+}
+
+configurations {
+    natives
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
-  implementation "com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1"
+    implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
+    natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
+    natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
+    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1'
 }
 ```
 
