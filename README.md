@@ -14,45 +14,55 @@ The toolkit library jar is hosted on https://esri.jfrog.io/artifactory/arcgis.
 
 To add the dependency to your project using Gradle:
 ```groovy
-apply plugin: 'application'
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
 
-// Runtime SDK dependency
-apply plugin: 'com.esri.arcgisruntime.java'
-buildscript {
-    repositories {
-        maven {
-            url 'https://esri.jfrog.io/artifactory/arcgis'
-        }
-    }
-    dependencies {
-        classpath 'com.esri.arcgisruntime:gradle-arcgis-java-plugin:1.0.0'
+// Replace with version number of ArcGIS SDK you are using in your app, such as:
+// arcgisVersion = '100.11.0'. See table below for SDK Versions that support the toolkit.
+ext {
+  arcgisVersion = '100.11.0'
+}
+
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls' ]
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+// Toolkit and Runtime SDK repository
+repositories {
+    jcenter()
+    maven {
+        url 'https://esri.jfrog.io/artifactory/arcgis'
     }
 }
-arcgis.version = '100.2.1'
 
-// Toolkit dependency
-repositories {
-  maven {
-      url 'https://esri.jfrog.io/artifactory/arcgis'
-  }
+configurations {
+    natives
 }
 
 dependencies {
-  compile 'com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1'
+    implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
+    natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
+    natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
+    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1'
 }
 ```
 
 ## Requirements
 
 The toolkit requires the ArcGIS Runtime SDK for Java. Refer to the Instructions section above if you are using Gradle.
-See [the guide](https://developers.arcgis.com/java/latest/guide/install-the-sdk.htm) for complete instructions and
+See [the guide](https://developers.arcgis.com/java/install-and-set-up/) for complete instructions and
 other options for installing the SDK.
 
 The following table shows which versions of the SDK are compatible with the toolkit:
 
 |  SDK Version  |  Toolkit Version  |
 | --- | --- |
-| 100.2.1 | 100.2.1 |
+| 100.2.1 or later | 100.2.1 |
 
 ## Resources
 
