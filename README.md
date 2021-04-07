@@ -22,7 +22,7 @@ plugins {
 // Replace with version number of ArcGIS SDK you are using in your app, such as:
 // arcgisVersion = '100.11.0'. See table below for SDK Versions that support the toolkit.
 ext {
-  arcgisVersion = '100.2.1'
+  arcgisVersion = '100.11.0'
 }
 
 javafx {
