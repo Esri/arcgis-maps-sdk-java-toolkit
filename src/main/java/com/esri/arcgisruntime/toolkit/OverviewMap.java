@@ -28,6 +28,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.skins.OverviewMapSkin;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -47,6 +48,7 @@ public class OverviewMap extends Control {
   final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
+  final private SimpleDoubleProperty scaleFactorProperty = new SimpleDoubleProperty(25.0);
 
   /**
    * Creates an overview map for a geo view using default values for the basemap and indicator symbol.
@@ -190,5 +192,17 @@ public class OverviewMap extends Control {
    */
   public SimpleObjectProperty<Symbol> symbolProperty() {
     return symbolProperty;
+  }
+
+  public SimpleDoubleProperty scaleFactorProperty() {
+    return scaleFactorProperty;
+  }
+
+  public void setScaleFactor(double scaleFactor) {
+    scaleFactorProperty.set(scaleFactor);
+  }
+
+  public double getScaleFactor() {
+    return scaleFactorProperty.get();
   }
 }

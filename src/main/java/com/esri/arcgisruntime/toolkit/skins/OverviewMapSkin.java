@@ -26,6 +26,7 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.InteractionListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.OverviewMap;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.StackPane;
 
@@ -39,6 +40,11 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
   private static final double PREF_WIDTH = 200.0;
   private static final double PREF_HEIGHT = 132.0;
 
+  private final GeoView controlGeoView;
+  private final MapView overviewMapView;
+  private final Graphic indicatorGraphic = new Graphic();
+  private final SimpleDoubleProperty scaleFactorProperty = new SimpleDoubleProperty();
+
   /**
    * Creates an instance of the skin.
    *
@@ -48,8 +54,8 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
   public OverviewMapSkin(OverviewMap control) {
     super(control);
 
-    // create a stack pane holding an map view
-    MapView overviewMapView = new MapView();
+    // create a stack pane holding a map view
+    overviewMapView = new MapView();
     ArcGISMap map = new ArcGISMap(control.basemapProperty().get());
     overviewMapView.setMap(map);
     StackPane stackPane = new StackPane();
@@ -57,27 +63,12 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     getChildren().add(stackPane);
 
     // add a listener for changes in the geo view's view point that will update the indicator graphic
-    final Graphic indicatorGraphic = new Graphic();
-    GeoView geoView = control.geoViewProperty().get();
-    geoView.addViewpointChangedListener(v -> {
-      if (geoView instanceof MapView) {
-        MapView mapView = (MapView) geoView;
-        Polygon visibleArea = mapView.getVisibleArea();
-        if (visibleArea != null) {
-          indicatorGraphic.setGeometry(visibleArea);
-          // keep overview centered on the map view's visible area
-          overviewMapView.setViewpoint(new Viewpoint(visibleArea.getExtent().getCenter(), overviewMapView.getMapScale()));
-        }
-      } else {
-        Viewpoint viewpoint = geoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);
-        Point target = (Point) viewpoint.getTargetGeometry();
-        if (target != null) {
-          indicatorGraphic.setGeometry(target);
-          // keep overview centered on the scene view's target
-          overviewMapView.setViewpoint(new Viewpoint(target, overviewMapView.getMapScale()));
-        }
-      }
-    });
+    controlGeoView = control.geoViewProperty().get();
+    controlGeoView.addViewpointChangedListener(v -> update());
+
+    // listen for changes to the scale factor so that we can update the overview immediately
+    scaleFactorProperty.bind(control.scaleFactorProperty());
+    scaleFactorProperty.addListener(o -> update());
 
     // add the indicator graphic to the map view
     indicatorGraphic.setSymbol(control.symbolProperty().get());
@@ -130,5 +121,33 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
   protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double
     leftInset) {
     return PREF_HEIGHT;
+  }
+
+  @Override
+  public void dispose() {
+   if (overviewMapView != null) {
+     overviewMapView.dispose();
+   }
+  }
+
+  private void update() {
+    if (controlGeoView instanceof MapView) {
+      MapView mapView = (MapView) controlGeoView;
+      Polygon visibleArea = mapView.getVisibleArea();
+      if (visibleArea != null) {
+        indicatorGraphic.setGeometry(visibleArea);
+        // keep overview centered on the map view's visible area
+        double scale = mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetScale() * scaleFactorProperty.get();
+        overviewMapView.setViewpoint(new Viewpoint(visibleArea.getExtent().getCenter(), scale));
+      }
+    } else {
+      Viewpoint viewpoint = controlGeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);
+      Point target = (Point) viewpoint.getTargetGeometry();
+      if (target != null) {
+        indicatorGraphic.setGeometry(target);
+        // keep overview centered on the scene view's target
+        overviewMapView.setViewpoint(new Viewpoint(target, overviewMapView.getMapScale() * scaleFactorProperty.get()));
+      }
+    }
   }
 }
