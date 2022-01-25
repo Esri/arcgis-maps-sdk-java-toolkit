@@ -1,9 +1,19 @@
-group "com.esri.arcgisruntime"
-version VERSION
+plugins {
+  id "java-library"
+  id "idea"
+  id "eclipse"
+  id 'org.openjfx.javafxplugin' version '0.0.8'
+}
 
-apply plugin: 'java-library'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
+javafx {
+  version = "11.0.2"
+  modules = [
+    'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media'
+  ]
+}
+
+group "com.esri.arcgisruntime"
+version = "100.13.0"
 
 archivesBaseName = "arcgis-java-toolkit"
 
@@ -13,14 +23,14 @@ eclipse.classpath.downloadJavadoc = true
 compileJava.options.encoding = 'UTF-8'
 
 repositories {
-  jcenter()
+  mavenCentral()
   maven {
     url = 'https://esri.jfrog.io/artifactory/arcgis'
   }
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:100.2.1"
+  implementation "com.esri.arcgisruntime:arcgis-java:$version"
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -28,6 +38,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from javadoc.destinationDir
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.4'
+wrapper {
+  gradleVersion = '7.3.3'
 }
