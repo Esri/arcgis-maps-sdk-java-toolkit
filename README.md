@@ -1,12 +1,32 @@
 # arcgis-runtime-toolkit-java
 
+## Introduction
+
+The ArcGIS Runtime SDK for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource, so you can feel free to download or clone the code and customize to meet your requirements.
+
 ## Features
 
-The latest version of the ArcGIS Runtime Toolkit for Java features the following JavaFX components:
+The latest version of the ArcGIS Runtime SDK for Java Toolkit features the following JavaFX components:
 
 - Compass: Shows the current viewpoint heading. Can be clicked to reorient the view to north.
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
+
+## Requirements
+
+The toolkit requires the ArcGIS Runtime SDK for Java. Refer to the 'Instructions' section below if you are using Gradle.
+See [the developer guide](https://developers.arcgis.com/java/install-and-set-up/) for complete instructions and
+getting setup with the SDK.
+
+The following table shows which versions of the SDK are compatible with the toolkit:
+
+| SDK Version                                              |  Toolkit Version  |
+|----------------------------------------------------------| --- |
+| 100.2.1 or later (including the latest 100.13.0 release) | 100.2.1 |
+
+### Latest update
+
+A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
 
 ## Instructions
 
@@ -20,9 +40,9 @@ plugins {
 }
 
 // Replace with version number of ArcGIS SDK you are using in your app, such as:
-// arcgisVersion = '100.11.0'. See table below for SDK Versions that support the toolkit.
+// arcgisVersion = '100.13.0'. See table below for SDK Versions that support the toolkit.
 ext {
-  arcgisVersion = '100.11.0'
+  arcgisVersion = '100.13.0'
 }
 
 javafx {
@@ -52,17 +72,7 @@ dependencies {
 }
 ```
 
-## Requirements
-
-The toolkit requires the ArcGIS Runtime SDK for Java. Refer to the Instructions section above if you are using Gradle.
-See [the guide](https://developers.arcgis.com/java/install-and-set-up/) for complete instructions and
-other options for installing the SDK.
-
-The following table shows which versions of the SDK are compatible with the toolkit:
-
-|  SDK Version  |  Toolkit Version  |
-| --- | --- |
-| 100.2.1 or later | 100.2.1 |
+The toolkit is open source, so you are also free to clone or download this repository, customize to meet your requirements, and then build and deploy using Gradle.
 
 ## Resources
 
@@ -79,13 +89,13 @@ Find a bug or want to request a new feature?  Please let us know by submitting a
 Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## Licensing
-Copyright 2018 Esri
+Copyright 2018-2022 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
