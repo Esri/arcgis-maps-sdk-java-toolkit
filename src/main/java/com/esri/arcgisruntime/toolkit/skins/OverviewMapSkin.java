@@ -25,6 +25,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.InteractionListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.OverviewMap;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.SkinBase;
@@ -131,13 +132,13 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
   }
 
   private void update() {
+    double scale = controlGeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetScale() * scaleFactorProperty.get();
     if (controlGeoView instanceof MapView) {
       MapView mapView = (MapView) controlGeoView;
       Polygon visibleArea = mapView.getVisibleArea();
       if (visibleArea != null) {
         indicatorGraphic.setGeometry(visibleArea);
         // keep overview centered on the map view's visible area
-        double scale = mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetScale() * scaleFactorProperty.get();
         overviewMapView.setViewpoint(new Viewpoint(visibleArea.getExtent().getCenter(), scale));
       }
     } else {
@@ -146,7 +147,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
       if (target != null) {
         indicatorGraphic.setGeometry(target);
         // keep overview centered on the scene view's target
-        overviewMapView.setViewpoint(new Viewpoint(target, overviewMapView.getMapScale() * scaleFactorProperty.get()));
+        overviewMapView.setViewpoint(new Viewpoint(target, scale));
       }
     }
   }
