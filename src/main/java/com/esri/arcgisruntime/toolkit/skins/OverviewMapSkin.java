@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.GeoView;
@@ -25,7 +24,6 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.InteractionListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.OverviewMap;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.SkinBase;
@@ -63,14 +61,6 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     stackPane.getChildren().add(overviewMapView);
     getChildren().add(stackPane);
 
-    // add a listener for changes in the geo view's view point that will update the indicator graphic
-    controlGeoView = control.geoViewProperty().get();
-    controlGeoView.addViewpointChangedListener(v -> update());
-
-    // listen for changes to the scale factor so that we can update the overview immediately
-    scaleFactorProperty.bind(control.scaleFactorProperty());
-    scaleFactorProperty.addListener(o -> update());
-
     // add the indicator graphic to the map view
     indicatorGraphic.setSymbol(control.symbolProperty().get());
     GraphicsOverlay indicatorOverlay = new GraphicsOverlay();
@@ -80,8 +70,16 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     // disable map view interaction
     overviewMapView.setInteractionListener(new InteractionListener() {});
 
-    // hide attribution
+    // hide the attribution
     overviewMapView.setAttributionTextVisible(false);
+
+    // add a listener for changes in the GeoView's viewpoint so we can update the overview
+    controlGeoView = control.geoViewProperty().get();
+    controlGeoView.addViewpointChangedListener(v -> update());
+
+    // listen for changes to the scale factor so that we can update the overview
+    scaleFactorProperty.bind(control.scaleFactorProperty());
+    scaleFactorProperty.addListener(o -> update());
 
     // listen for property changes
     control.basemapProperty().addListener((observable, oldValue, newValue) -> overviewMapView.getMap().setBasemap(newValue));
@@ -131,23 +129,25 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
    }
   }
 
+  /**
+   * Updates the overview when the GeoView's viewpoint changes.
+   *
+   * @since 100.13.0
+   */
   private void update() {
-    double scale = controlGeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetScale() * scaleFactorProperty.get();
-    if (controlGeoView instanceof MapView) {
-      MapView mapView = (MapView) controlGeoView;
-      Polygon visibleArea = mapView.getVisibleArea();
-      if (visibleArea != null) {
-        indicatorGraphic.setGeometry(visibleArea);
-        // keep overview centered on the map view's visible area
-        overviewMapView.setViewpoint(new Viewpoint(visibleArea.getExtent().getCenter(), scale));
-      }
-    } else {
-      Viewpoint viewpoint = controlGeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);
-      Point target = (Point) viewpoint.getTargetGeometry();
-      if (target != null) {
-        indicatorGraphic.setGeometry(target);
-        // keep overview centered on the scene view's target
-        overviewMapView.setViewpoint(new Viewpoint(target, scale));
+    var viewpoint = controlGeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);
+    if (viewpoint != null) {
+      var scale = viewpoint.getTargetScale() * scaleFactorProperty.get();
+      var center = (Point) viewpoint.getTargetGeometry();
+
+      // keep overview centered on the view's center
+      overviewMapView.setViewpoint(new Viewpoint(center, scale));
+
+      // update the graphic that indicates the visible area/center
+      if (controlGeoView instanceof MapView) {
+        indicatorGraphic.setGeometry(((MapView) controlGeoView).getVisibleArea());
+      } else {
+        indicatorGraphic.setGeometry(center);
       }
     }
   }
