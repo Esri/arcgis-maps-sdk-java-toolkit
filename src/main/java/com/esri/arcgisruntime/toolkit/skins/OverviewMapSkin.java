@@ -84,6 +84,9 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
     // listen for property changes
     control.basemapProperty().addListener((observable, oldValue, newValue) -> overviewMapView.getMap().setBasemap(newValue));
     control.symbolProperty().addListener((observable, oldValue, newValue) -> indicatorGraphic.setSymbol(newValue));
+
+    // make sure the overview starts out up to date
+    update();
   }
 
   @Override
