@@ -44,7 +44,7 @@ import javafx.scene.paint.Color;
 public class OverviewMap extends Control {
 
   final static private FillSymbol FILL_SYMBOL =
-    new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0x00,
+    new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.TRANSPARENT),
       new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.RED), 1.0f));
   final static private MarkerSymbol MARKER_SYMBOL =
     new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.RED), 20);
