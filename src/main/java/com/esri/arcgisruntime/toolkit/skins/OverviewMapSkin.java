@@ -127,9 +127,9 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
 
   @Override
   public void dispose() {
-   if (overviewMapView != null) {
-     overviewMapView.dispose();
-   }
+    if (overviewMapView != null) {
+      overviewMapView.dispose();
+    }
   }
 
   /**
