@@ -1,0 +1,23 @@
+.floor-filter-wrapper {
+  -fx-background-color: white;
+  -fx-border-color: grey;
+  -fx-border-width: 2;
+}
+
+.floor-filter-sites VBox, .floor-filter-facilities VBox {
+  -fx-spacing: 10;
+}
+
+.floor-filter-sites Label, .floor-filter-facilities Label {
+  -fx-font-weight: bold;
+}
+
+.floor-filter-levels {
+  -fx-spacing: 10;
+  -fx-padding: 10;
+}
+
+.floor-filter-zoom-button, .floor-filter-collapse-button {
+  -fx-min-height: 30;
+  -fx-max-height: 30;
+}
