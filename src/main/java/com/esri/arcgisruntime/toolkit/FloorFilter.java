@@ -301,9 +301,10 @@ public class FloorFilter extends Control {
           // if the currently selected facility does not have any levels, reset the selected level
           this.setSelectedLevel(null);
         } else {
-          // if the currently selected facility does have associated levels, auto-select the lowest level
-          var lowestLevel = newValue.getLevels().stream().min(Comparator.comparing(FloorLevel::getVerticalOrder)).orElse(null);
-          this.setSelectedLevel(lowestLevel);
+          // if the currently selected facility does have associated levels, auto-select the ground floor
+          // the floors information model requires ground floor to be at vertical order 0
+          var groundFloor = newValue.getLevels().stream().filter(level -> level.getVerticalOrder() == 0).findFirst().orElse(null);
+          this.setSelectedLevel(groundFloor);
         }
       }
     }
