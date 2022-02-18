@@ -199,7 +199,7 @@ public class OverviewMap extends Control {
   }
 
   /**
-   * A property containing The amount to scale the OverviewMap compared to the geoView. The default is 25.0.
+   * A property containing the amount to scale the OverviewMap compared to the geoView. The default is 25.0.
    *
    * @return the scale property
    * @since 100.13.0
