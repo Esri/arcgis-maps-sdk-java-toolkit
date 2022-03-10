@@ -207,15 +207,18 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
     if (selectedSite == null) {
       // no site is selected so only filter facilities by the search field and reset the site heading
-      filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
+      filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
+        facilitiesFilterTextField.getText().toLowerCase()));
       sitesHeading.setText("Select a site");
     } else if (isAllSitesProperty.get()) {
       // all sites property is true so only filter facilities by the search field but keep the site heading up to date
-      filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
+      filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
+        facilitiesFilterTextField.getText().toLowerCase()));
       sitesHeading.setText(selectedSite.getName());
     } else {
       // filter facilities by the search field and any selected site and keep the site heading up to date
-      filteredFacilities.setPredicate(facility -> facility.getSite() == selectedSite && facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
+      filteredFacilities.setPredicate(facility -> facility.getSite() == selectedSite && facility.getName()
+        .toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
       sitesHeading.setText(selectedSite.getName());
     }
 
@@ -411,7 +414,8 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    */
   private void setupSites() {
     // keep sites list view selection aligned with control selection
-    skinnable.selectedSiteProperty().addListener((observable, oldValue, newValue) -> sitesListView.getSelectionModel().select(newValue));
+    skinnable.selectedSiteProperty().addListener((observable, oldValue, newValue) ->
+      sitesListView.getSelectionModel().select(newValue));
 
     // configure the text field that filters sites by name
     sitesFilterTextField.setPromptText("Filter sites by name");
@@ -487,7 +491,8 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // scrollable. This is calculated using the cell size and maximum number of desired rows before scroll. If the data
     // is smaller than the maximum number of rows, then the number of rows will be the size of the data.
     filteredSites.addListener((ListChangeListener<? super FloorSite>) observable ->
-      sitesListView.setPrefHeight(filteredSites.size() < MAX_NO_OF_ROWS ? filteredSites.size() * CELL_SIZE : MAX_NO_OF_ROWS * CELL_SIZE));
+      sitesListView.setPrefHeight(
+        filteredSites.size() < MAX_NO_OF_ROWS ? filteredSites.size() * CELL_SIZE : MAX_NO_OF_ROWS * CELL_SIZE));
   }
 
   /**

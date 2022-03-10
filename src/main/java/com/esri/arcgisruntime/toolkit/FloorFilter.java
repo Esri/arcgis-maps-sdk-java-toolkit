@@ -653,13 +653,16 @@ public class FloorFilter extends Control {
         } else {
           // if the centerpoint is within a site's geometry, select that site
           Geometry siteGeometry;
-          if (!getSites().isEmpty() && observedViewpoint.getTargetGeometry().getSpatialReference() != getSites().get(0).getGeometry().getSpatialReference()) {
-            siteGeometry = GeometryEngine.project(observedViewpoint.getTargetGeometry(), getSites().get(0).getGeometry().getSpatialReference());
+          if (!getSites().isEmpty() && observedViewpoint.getTargetGeometry().getSpatialReference() !=
+            getSites().get(0).getGeometry().getSpatialReference()) {
+            siteGeometry = GeometryEngine.project(observedViewpoint.getTargetGeometry(),
+              getSites().get(0).getGeometry().getSpatialReference());
           } else {
             siteGeometry = observedViewpoint.getTargetGeometry();
           }
           var result =
-            getSites().stream().filter(site -> site.getGeometry().getExtent() != null && GeometryEngine.intersects(site.getGeometry().getExtent(), siteGeometry)).findFirst().orElse(null);
+            getSites().stream().filter(site -> site.getGeometry().getExtent() != null &&
+              GeometryEngine.intersects(site.getGeometry().getExtent(), siteGeometry)).findFirst().orElse(null);
           if (result != null) {
             blockViewpointUpdate = true;
             selectedSiteProperty.set(result);
@@ -680,8 +683,10 @@ public class FloorFilter extends Control {
         // only take action if the viewpoint is within minimum scale
         if (observedViewpoint.getTargetScale() <= targetScale) {
           Geometry facilityGeometry;
-          if (!getFacilities().isEmpty() && observedViewpoint.getTargetGeometry().getSpatialReference() != getFacilities().get(0).getGeometry().getSpatialReference()) {
-            facilityGeometry = GeometryEngine.project(observedViewpoint.getTargetGeometry(), getFacilities().get(0).getGeometry().getSpatialReference());
+          if (!getFacilities().isEmpty() && observedViewpoint.getTargetGeometry().getSpatialReference() !=
+            getFacilities().get(0).getGeometry().getSpatialReference()) {
+            facilityGeometry = GeometryEngine.project(observedViewpoint.getTargetGeometry(),
+              getFacilities().get(0).getGeometry().getSpatialReference());
           } else {
             facilityGeometry = observedViewpoint.getTargetGeometry();
           }
