@@ -150,10 +150,10 @@ public class FloorFilter extends Control {
     setupFloorManager();
   }
 
-//  @Override
-//  protected Skin<?> createDefaultSkin() {
-//    return new FloorFilterSkin(this);
-//  }
+  @Override
+  protected Skin<?> createDefaultSkin() {
+    return new FloorFilterSkin(this);
+  }
 
 //  @Override
 //  public String getUserAgentStylesheet() {
