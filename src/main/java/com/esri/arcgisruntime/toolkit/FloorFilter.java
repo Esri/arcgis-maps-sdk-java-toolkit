@@ -155,10 +155,10 @@ public class FloorFilter extends Control {
     return new FloorFilterSkin(this);
   }
 
-//  @Override
-//  public String getUserAgentStylesheet() {
-//    return Objects.requireNonNull(this.getClass().getResource("skins/floor-filter.css")).toExternalForm();
-//  }
+  @Override
+  public String getUserAgentStylesheet() {
+    return Objects.requireNonNull(this.getClass().getResource("skins/floor-filter.css")).toExternalForm();
+  }
 
   /**
    * Gets the selection mode. Default is AutomaticSelectionMode.ALWAYS.
