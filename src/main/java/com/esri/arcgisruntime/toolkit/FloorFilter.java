@@ -553,6 +553,9 @@ public class FloorFilter extends Control {
               if (floorManager.getLoadStatus() == LoadStatus.LOADED) {
                 // set the loaded floor manager to the floor manager property
                 floorManagerProperty.set(floorManager);
+              } else if (floorManager.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+                Logger logger = Logger.getLogger(FloorFilter.class.getName());
+                logger.warning("The FloorManager failed to load with error: " + floorManager.getLoadError().getCause());
               }
             });
             // load the floor manager if it is not already loaded
@@ -566,6 +569,9 @@ public class FloorFilter extends Control {
             logger.info("The GeoModel attached to the provided GeoView is not Floor Aware. FloorFilter will not " +
               "be displayed. Call FloorFilter.refresh() after updating the GeoModel to try again.");
           }
+        } else if (geoModel.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+          Logger logger = Logger.getLogger(FloorFilter.class.getName());
+          logger.warning("The GeoModel failed to load with error: " + geoModel.getLoadError().getCause());
         }
       });
       if (geoModel.getLoadStatus() != LoadStatus.LOADED) {
