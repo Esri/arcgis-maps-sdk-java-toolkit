@@ -48,7 +48,7 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
    */
   public GraduatedLineScalebarSkin(Scalebar scalebar) {
     super(scalebar);
-    
+
     line.setStroke(LINE_COLOR);
     line.setStrokeWidth(STROKE_WIDTH);
     line.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -91,7 +91,8 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
     double segmentWidth = displayWidth / bestNumberOfSegments;
     double segmentDistance = displayDistance / bestNumberOfSegments;
 
-    labelPane.getChildren().clear();
+    // don't clear zero label
+    labelPane.getChildren().removeIf(child -> labelPane.getChildren().indexOf(child) != 0);
     labelPane.setMaxWidth(displayWidth);
 
     // update the line and labels
@@ -107,8 +108,13 @@ public final class GraduatedLineScalebarSkin extends ScalebarSkin {
       // labels are centered on the ticks
       if (i > 0) {
         label.setTranslateX((i * segmentWidth) - (calculateRegion(label).getWidth() / 2.0));
+        labelPane.getChildren().add(label);
+      } else {
+        // only add zero label initially
+        if (labelPane.getChildren().isEmpty()) {
+          labelPane.getChildren().add(label);
+        }
       }
-      labelPane.getChildren().add(label);
 
       line.getElements().addAll(
         new LineTo(i * segmentWidth, HEIGHT),
