@@ -83,8 +83,7 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
     double segmentDistance = displayDistance / bestNumberOfSegments;
 
     // clear out all the labels, segments and dividers
-    // don't clear zero label
-    labelPane.getChildren().removeIf(child -> labelPane.getChildren().indexOf(child) != 0);
+    labelPane.getChildren().clear();
     labelPane.setMaxWidth(displayWidth);
 
     segmentPane.getChildren().clear();
@@ -99,15 +98,8 @@ public final class AlternatingBarScalebarSkin extends ScalebarSkin {
 
       // first label is aligned with its left to the edge of the bar while the intermediate
       // labels are centered on the dividers
-      if (i > 0) {
-        label.setTranslateX((i * segmentWidth) - (calculateRegion(label).getWidth() / 2.0));
-        labelPane.getChildren().add(label);
-      } else {
-        // only add zero initially
-        if (labelPane.getChildren().isEmpty()) {
-          labelPane.getChildren().add(label);
-        }
-      }
+      label.setTranslateX((i * segmentWidth) - (calculateRegion(label).getWidth() / 2.0));
+      labelPane.getChildren().add(label);
 
       // create a rectangle for the segment and translate it into the correct position
       barSegment = new Rectangle();
