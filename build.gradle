@@ -3,6 +3,8 @@ plugins {
   id "idea"
   id "eclipse"
   id 'org.openjfx.javafxplugin' version '0.0.8'
+  id "com.jfrog.artifactory" version "4.26.1"
+  id "maven-publish"
 }
 
 javafx {
@@ -13,7 +15,7 @@ javafx {
 }
 
 group "com.esri.arcgisruntime"
-version = "100.13.0"
+version "$arcgisJavaVersion"
 
 archivesBaseName = "arcgis-java-toolkit"
 
@@ -26,6 +28,9 @@ repositories {
   mavenCentral()
   maven {
     url = 'https://esri.jfrog.io/artifactory/arcgis'
+  }
+  maven {
+    url 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
   }
 }
 
@@ -42,7 +47,7 @@ sourceSets {
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:$version"
+  implementation "com.esri.arcgisruntime:arcgis-java:$arcgisJavaVersion"
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
