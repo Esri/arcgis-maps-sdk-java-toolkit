@@ -46,7 +46,7 @@ public final class Compass extends Control {
   private final SimpleDoubleProperty headingProperty = new SimpleDoubleProperty(0.0);
   private final SimpleBooleanProperty autoHideProperty = new SimpleBooleanProperty(true);
 
-  // property to hold the action to be executed when the compass is clicked
+  // property to hold the action to be performed when the compass is clicked
   private final ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
     @Override
     protected void invalidated() {
@@ -230,7 +230,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * A property to hold the action to execute when the compass is clicked or tapped.
+   * A property to hold the action to perform when the compass is clicked or tapped.
    *
    * @return the action property
    * @since 100.2.1
@@ -240,7 +240,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * Sets the action to execute when the compass is clicked or tapped.
+   * Sets the action to perform when the compass is clicked or tapped.
    *
    * @param value the action
    * @since 100.2.1
@@ -250,7 +250,7 @@ public final class Compass extends Control {
   }
 
   /**
-   * Returns the action that is set to execute when the compass is clicked or tapped.
+   * Returns the action that is set to perform when the compass is clicked or tapped.
    *
    * @return the action
    * @since 100.2.1
