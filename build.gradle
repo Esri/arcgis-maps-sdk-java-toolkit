@@ -14,8 +14,8 @@ javafx {
   ]
 }
 
-group "com.esri.arcgisruntime"
-version "$arcgisJavaVersion"
+group = GROUP
+version = SDKVERSION
 
 archivesBaseName = "arcgis-java-toolkit"
 
@@ -30,10 +30,9 @@ repositories {
     url = 'https://esri.jfrog.io/artifactory/arcgis'
   }
   maven {
-    url 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
+    url = 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
   }
 }
-
 sourceSets {
   main {
     resources.srcDirs = ['src/main/java']
@@ -47,7 +46,7 @@ sourceSets {
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:$arcgisJavaVersion"
+  implementation "com.esri.arcgisruntime:arcgis-java:$SDKVERSION"
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
