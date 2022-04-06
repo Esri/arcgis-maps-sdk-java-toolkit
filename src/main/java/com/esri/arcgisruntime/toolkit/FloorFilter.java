@@ -297,34 +297,6 @@ public class FloorFilter extends Control {
   }
 
   /**
-   * Returns the ID of the selected FloorSite.
-   *
-   * @return the ID of the selected FloorSite
-   * @since 100.14.0
-   */
-  public String getSelectedSiteId() {
-    var selectedSite = getSelectedSite();
-    String id = null;
-    if (selectedSite != null) {
-      id = selectedSite.getSiteId();
-    }
-    return id;
-  }
-
-  /**
-   * Sets the selected FloorSite by ID.
-   *
-   * @param id the ID of the FloorSite to select
-   * @throws NullPointerException if id is null
-   * @since 100.14.0
-   */
-  public void setSelectedSiteById(String id) {
-    Objects.requireNonNull(id);
-    getFloorManager().getSites().stream().filter(site -> id.equals(site.getSiteId())).findFirst()
-      .ifPresentOrElse(this::setSelectedSite, () -> setSelectedSite(null));
-  }
-
-  /**
    * Handles changes to the selected site property by keeping other data in-sync.
    *
    * @param oldValue the previously selected site
@@ -378,34 +350,6 @@ public class FloorFilter extends Control {
    */
   public void setSelectedFacility(FloorFacility newValue) {
     selectedFacilityProperty.set(newValue);
-  }
-
-  /**
-   * Returns the ID of the selected FloorFacility.
-   *
-   * @return the ID of the selected FloorFacility
-   * @since 100.14.0
-   */
-  public String getSelectedFacilityId() {
-    var selectedFacility = getSelectedFacility();
-    String id = null;
-    if (selectedFacility != null) {
-      id = selectedFacility.getFacilityId();
-    }
-    return id;
-  }
-
-  /**
-   * Sets the selected FloorFacility by ID.
-   *
-   * @param id the ID of the FloorFacility to select
-   * @throws NullPointerException if id is null
-   * @since 100.14.0
-   */
-  public void setSelectedFacilityById(String id) {
-    Objects.requireNonNull(id);
-    getFloorManager().getFacilities().stream().filter(facility -> id.equals(facility.getFacilityId())).findFirst()
-      .ifPresentOrElse(this::setSelectedFacility, () -> setSelectedFacility(null));
   }
 
   /**
@@ -476,34 +420,6 @@ public class FloorFilter extends Control {
    */
   public void setSelectedLevel(FloorLevel newValue) {
     selectedLevelProperty.set(newValue);
-  }
-
-  /**
-   * Returns the ID of the selected FloorLevel.
-   *
-   * @return the ID of the selected FloorLevel
-   * @since 100.14.0
-   */
-  public String getSelectedLevelId() {
-    var selectedLevel = getSelectedLevel();
-    String id = null;
-    if (selectedLevel != null) {
-      id = selectedLevel.getLevelId();
-    }
-    return id;
-  }
-
-  /**
-   * Sets the selected FloorLevel by ID.
-   *
-   * @param id the ID of the FloorLevel to select
-   * @throws NullPointerException if id is null
-   * @since 100.14.0
-   */
-  public void setSelectedLevelById(String id) {
-    Objects.requireNonNull(id);
-    getFloorManager().getLevels().stream().filter(level -> id.equals(level.getLevelId())).findFirst()
-      .ifPresentOrElse(this::setSelectedLevel, () -> setSelectedLevel(null));
   }
 
   /**
