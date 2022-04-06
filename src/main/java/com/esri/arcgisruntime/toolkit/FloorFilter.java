@@ -306,7 +306,7 @@ public class FloorFilter extends Control {
   public void handleUpdateSelectedSite(FloorSite oldValue, FloorSite newValue) {
     if (newValue != oldValue) {
       try {
-        if (newValue != null && !blockViewpointUpdate && !siteSetViaFacility) {
+        if (newValue != null && !blockViewpointUpdate) {
           getGeoView().setViewpoint(new Viewpoint(newValue.getGeometry().getExtent()));
         }
 
@@ -359,7 +359,7 @@ public class FloorFilter extends Control {
    * @param newValue the selected facility
    * @since 100.14.0
    */
-  public void handleUpdateSelectedFacility(FloorFacility oldValue, FloorFacility newValue) {
+  private void handleUpdateSelectedFacility(FloorFacility oldValue, FloorFacility newValue) {
     if (newValue != oldValue) {
       try {
         if (newValue != null && !blockViewpointUpdate) {
@@ -371,6 +371,7 @@ public class FloorFilter extends Control {
         } else {
           if (newValue.getSite() != getSelectedSite()) {
             siteSetViaFacility = true;
+            blockViewpointUpdate = true;
             setSelectedSite(newValue.getSite());
           }
           if (!facilitySetViaLevel) {
@@ -429,16 +430,18 @@ public class FloorFilter extends Control {
    * @param newValue the selected level
    * @since 100.14.0
    */
-  public void handleUpdateSelectedLevel(FloorLevel oldValue, FloorLevel newValue) {
+  private void handleUpdateSelectedLevel(FloorLevel oldValue, FloorLevel newValue) {
     if (newValue != oldValue) {
       if (newValue != null) {
         if (newValue.getFacility() != getSelectedFacility()) {
           facilitySetViaLevel = true;
           setSelectedFacility(newValue.getFacility());
         }
-        filterLevelsVisibility();
+        // sets all floor levels with the same vertical order as the selected level to be visible
+        getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == newValue.getVerticalOrder()));
       } else {
-        setLevelVisibilityToDefault();
+        // set all levels visibility to the default of vertical order 0
+        getFacilities().forEach(facility -> facility.getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == 0)));
       }
     }
   }
@@ -508,40 +511,6 @@ public class FloorFilter extends Control {
     setSelectedFacility(null);
     setSelectedLevel(null);
     setupFloorManager();
-  }
-
-  /**
-   * If there is a selected floor level, the method sets all floor levels with the same vertical order to be visible,
-   * and sets the visibility of all other levels to false. If there is no selected level, no action is taken.
-   *
-   * @since 100.14.0
-   */
-  public void filterLevelsVisibility() {
-    if (getSelectedLevel() != null) {
-      getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == getSelectedLevel().getVerticalOrder()));
-    }
-  }
-
-  /**
-   * For all facilities, set the visibility of the floor level at vertical order zero, the default, to visible, and all
-   * other levels to false.
-   *
-   * @since 100.14.0
-   */
-  public void setLevelVisibilityToDefault() {
-    if (getFacilities() != null) {
-      getFacilities().forEach(facility -> facility.getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == 0)));
-    }
-  }
-
-  /**
-   * Set the visibility of all floor levels on the FloorManager to visible.
-   * This can be useful when viewing a floor aware ArcGISScene to see all floor levels in 3D.
-   *
-   * @since 100.14.0
-   */
-  public void setAllLevelsVisible() {
-    getLevels().forEach(level -> level.setVisible(true));
   }
 
   /**

@@ -240,10 +240,10 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // if the geoview is a scene view ensure level visibility is correct
     if (isSceneViewProperty.get()) {
       if (allLevelsCheckbox.isSelected()) {
-        skinnable.setAllLevelsVisible();
+        skinnable.getLevels().forEach(level -> level.setVisible(true));
         levelsListView.setDisable(true);
       } else {
-        skinnable.filterLevelsVisibility();
+        filterLevelsVisibility();
         levelsListView.setDisable(false);
       }
     }
@@ -505,11 +505,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // keep the facility list view selection aligned with control selection
     skinnable.selectedFacilityProperty().addListener((observable, oldValue, newValue) -> {
       // if the facility has levels show the levels UI
-      if (newValue != null && !newValue.getLevels().isEmpty()) {
-        isShowLevelsProperty.set(true);
-      } else {
-        isShowLevelsProperty.set(false);
-      }
+      isShowLevelsProperty.set(newValue != null && !newValue.getLevels().isEmpty());
       facilitiesListView.getSelectionModel().select(newValue);
     });
 
@@ -565,7 +561,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
     // if the properties are not bound and the facility is not already selected, set the facility to the control
     facilitiesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != skinnable.getSelectedFacility() && newValue != null && !skinnable.selectedSiteProperty().isBound()
+      if (newValue != null && newValue != skinnable.getSelectedFacility() && !skinnable.selectedSiteProperty().isBound()
         && !skinnable.selectedFacilityProperty().isBound() && !skinnable.selectedLevelProperty().isBound()) {
         skinnable.setSelectedFacility(newValue);
       }
@@ -612,10 +608,10 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // toggles the visibility of levels based on selection
     allLevelsCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
       if (allLevelsCheckbox.isSelected()) {
-        skinnable.setAllLevelsVisible();
+        skinnable.getLevels().forEach(level -> level.setVisible(true));
         invalidated();
       } else if (!allLevelsCheckbox.isSelected()) {
-        skinnable.filterLevelsVisibility();
+        filterLevelsVisibility();
       }
     });
 
@@ -635,7 +631,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
     // if the properties are not bound and level is not already selected, set the level to the control
     levelsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != skinnable.getSelectedLevel() && newValue != null && !skinnable.selectedSiteProperty().isBound()
+      if (newValue != null && newValue != skinnable.getSelectedLevel() && !skinnable.selectedSiteProperty().isBound()
         && !skinnable.selectedFacilityProperty().isBound() && !skinnable.selectedLevelProperty().isBound()) {
         skinnable.setSelectedLevel(newValue);
       }
@@ -665,9 +661,9 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   }
 
   /**
-   * A method to handle changes to the value of the isAllSitesProperty.
-   * This is toggled by the all sites checkbox option on the sites browser. It filters the list of facilities to show
-   * all facilities attached to the floor manager, as opposed to facilities attached to a selected site.
+   * Handle changes to the value of the isAllSitesProperty. This is toggled by the all sites checkbox option on the
+   * sites browser. It filters the list of facilities to show all facilities attached to the floor manager, as opposed
+   * to facilities attached to a selected site.
    *
    * @since 100.14.0
    */
@@ -684,6 +680,18 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
     }
     invalidated();
+  }
+
+  /**
+   * Sets all floor levels with the same vertical order as the selected level to be visible.
+   *
+   * @since 100.14.0
+   */
+  private void filterLevelsVisibility() {
+    var selectedLevel = skinnable.getSelectedLevel();
+    if (selectedLevel != null) {
+      skinnable.getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == selectedLevel.getVerticalOrder()));
+    }
   }
 
   @Override
