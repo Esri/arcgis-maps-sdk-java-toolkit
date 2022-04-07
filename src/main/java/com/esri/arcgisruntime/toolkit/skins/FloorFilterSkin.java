@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 import com.esri.arcgisruntime.mapping.Viewpoint;
@@ -29,8 +30,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -53,17 +52,17 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
  * attached to the floor manager. FloorLevels are displayed in a list view when a facility is selected.</p>
  *
  * <p>If there is only 1 site on the floor manager, it is automatically selected and the sites browser will not be
- * displayed. If there is only 1 facility on the floor manager, it is automatically selected and the facilities
- * browser is still visible.</p>
+ * displayed.</p>
  *
  * <p>Styles can be customized using the CSS classes laid out below:</p>
  *
- * <p>Customize the main wrapper including the border:</p>
+ * <p>Customize the main wrapper including the border and preferred width:</p>
  * <pre>
  * .floor-filter-wrapper {
  *   -fx-background-color: white;
  *   -fx-border-color: grey;
  *   -fx-border-width: 2;
+ *   -fx-pref-width: 220;
  * }
  * </pre>
  *
@@ -138,7 +137,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   // property to toggle the visibility of the all levels option for scenes only
   private final SimpleBooleanProperty isSceneViewProperty = new SimpleBooleanProperty();
 
-  // controls for zoom and collapse functionality
+  // control for zoom functionality
   private final Button zoomButton = new Button("Zoom to");
 
   // data
@@ -260,7 +259,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   /**
    * Configures properties that relate to how the UI should display depending on the floor manager and related data,
    * and triggers the UI to draw if it is the first time a floor manager has been set. If the floor manager changes as
-   * a result of the control.refresh() method being called, the data will be configured within the existing UI.
+   * a result of the control.refresh() method being called, the data will be re-configured within the existing UI.
    *
    * @since 100.14.0
    */
@@ -336,7 +335,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     sitesHeading.getStyleClass().add("floor-filter-heading");
     sitesTitledPane.setContent(sitesVBox);
     sitesTitledPane.getStyleClass().add("floor-filter-sites");
-    // sets titled pane properties to manager behavior
+    // sets titled pane properties to manage behavior
     sitesTitledPane.setExpanded(true);
     sitesTitledPane.setAnimated(false);
     sitesTitledPane.visibleProperty().bind(isShowSitesProperty);
@@ -386,16 +385,13 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private void setupZoomButton() {
     // add style classes
     zoomButton.getStyleClass().add("floor-filter-zoom-button");
-
     // bind the width of the button to the pane
     zoomButton.prefWidthProperty().bind(contentPane.widthProperty());
-
     // configure actions based on what data is selected
     zoomButton.setOnAction(e -> {
       var selectedSite = skinnable.getSelectedSite();
       var selectedFacility = skinnable.getSelectedFacility();
       var geoView = skinnable.getGeoView();
-
       // if there is a selected site but no selected facility, zoom to the selected site
       if (selectedSite != null && selectedFacility == null) {
         geoView.setViewpoint(new Viewpoint(selectedSite.getGeometry().getExtent()));
@@ -428,7 +424,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
       }
     });
 
-    // bind the sites listview interactivity to whether the all sites checkbox is selected
+    // bind the sites listview interactivity to the all sites checkbox selection state
     sitesListView.disableProperty().bind(allSitesCheckbox.selectedProperty());
     sitesFilterTextField.disableProperty().bind(allSitesCheckbox.selectedProperty());
     sitesListView.setPlaceholder(new Label("No sites found"));
@@ -447,7 +443,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
           }
         }
       };
-      // if an already selected site is clicked again, still update the viewpoint. Improves user experience.
+      // if an already selected site is clicked again, still update the viewpoint
       cell.setOnMouseClicked(e -> {
         if (skinnable.getSelectedSite() != null) {
           skinnable.getGeoView().setViewpoint(new Viewpoint(skinnable.getSelectedSite().getGeometry().getExtent()));
@@ -549,7 +545,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
           }
         }
       };
-      // if an already selected facility is clicked again, still update the viewpoint. Improves user experience.
+      // if an already selected facility is clicked again, still update the viewpoint
       cell.setOnMouseClicked(e -> {
         if (skinnable.getSelectedFacility() != null) {
           skinnable.getGeoView().setViewpoint(new Viewpoint(skinnable.getSelectedFacility().getGeometry().getExtent()));
@@ -669,14 +665,12 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    */
   private void handleIsAllSitesPropertyChanged() {
     if (isAllSitesProperty.get()) {
-      // if all sites is true, filter the facilities list only by the text field input
+      // filter the facilities list only by the text field input
       filteredFacilities.setPredicate(facility ->
         facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
-      // switch to displaying the facilities view for the user
-      sitesTitledPane.setExpanded(false);
-      facilitiesTitledPane.setExpanded(true);
     } else {
-      filteredFacilities.setPredicate(facility ->
+      // filter by the selected site as well as text field input
+      filteredFacilities.setPredicate(facility -> facility.getSite() == skinnable.getSelectedSite() &&
         facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
     }
     invalidated();
