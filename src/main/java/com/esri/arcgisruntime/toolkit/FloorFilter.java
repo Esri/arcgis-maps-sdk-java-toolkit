@@ -53,10 +53,8 @@ import javafx.scene.control.Skin;
  * always have one associated FloorFacility. Depending on the data used to create the FloorFilter, a FloorFacility may
  * optionally be linked to a single FloorSite. A FloorSite may optionally have a list of facilities.</p>
  *
- * <p>Please note and be aware that the visibility of all FloorLevels across the FloorManager is updated by the
- * FloorFilter to correspond with changing selections of sites/facilities/levels. For example, if a FloorFacility
- * containing FloorLevels is selected, the FloorLevel at vertical order zero will be set to visible by default, and the
- * visibility of all other levels not at vertical order zero will be set to false.</p>
+ * <p>Please note: The FloorFilter will not respect any custom visibility settings applied to the FloorManager's
+ * contents outside of the FloorFilter, and can change a FloorLevel's visibility at any point.</p>
  *
  * <p>If desired, the FloorFilter will automatically select the site and facility at the center of the connected
  * GeoView's extent. This is controlled by the AutomaticSelectionMode property.</p>
