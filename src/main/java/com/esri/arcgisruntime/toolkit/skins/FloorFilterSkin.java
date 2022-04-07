@@ -150,8 +150,6 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private final ObservableList<FloorLevel> levels = FXCollections.observableArrayList();
   private final FilteredList<FloorLevel> filteredLevels = new FilteredList<>(levels);
 
-  private boolean invalid = false;
-
   /**
    * Creates an instance of the skin.
    *
@@ -175,88 +173,6 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   }
 
   /**
-   * Requests layout when the control's layout has been invalidated.
-   *
-   * @since 100.14.0
-   */
-  private void invalidated() {
-    invalid = true;
-    skinnable.requestLayout();
-  }
-
-  @Override
-  protected void layoutChildren(double contentX, double contentY, double contentWidth, double contentHeight) {
-    if (invalid) {
-      invalid = false;
-      updateUI();
-    }
-    getChildren().forEach(c -> layoutInArea(c, contentX, contentY, contentWidth, contentHeight, -1, HPos.CENTER, VPos.CENTER));
-  }
-
-  /**
-   * Ensures the UI components match the data set in the control. This includes the displayed lists corresponding to
-   * other selected objects and labels being up to date.
-   *
-   * @since 100.14.0
-   */
-  private void updateUI() {
-    var selectedSite = skinnable.getSelectedSite();
-    var selectedFacility = skinnable.getSelectedFacility();
-    var selectedLevel = skinnable.getSelectedLevel();
-
-    if (selectedSite == null) {
-      // no site is selected so only filter facilities by the search field and reset the site heading
-      filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
-        facilitiesFilterTextField.getText().toLowerCase()));
-      sitesHeading.setText("Select a site");
-    } else if (isAllSitesProperty.get()) {
-      // all sites property is true so only filter facilities by the search field but keep the site heading up to date
-      filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
-        facilitiesFilterTextField.getText().toLowerCase()));
-      sitesHeading.setText(selectedSite.getName());
-    } else {
-      // filter facilities by the search field and any selected site and keep the site heading up to date
-      filteredFacilities.setPredicate(facility -> facility.getSite() == selectedSite && facility.getName()
-        .toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
-      sitesHeading.setText(selectedSite.getName());
-    }
-
-    if (selectedFacility == null) {
-      // no facility is selected reset the facility heading
-      if (isSceneViewProperty.get()) {
-        // if the geoview is a scene reset the all levels checkbox
-        allLevelsCheckbox.setSelected(false);
-      }
-      facilityHeading.setText("Select a facility");
-    } else {
-      // facility is selected so keep the facility heading up to date and filter the levels if the facility has them
-      facilityHeading.setText(selectedFacility.getName());
-      if (!selectedFacility.getLevels().isEmpty()) {
-        filteredLevels.setPredicate(level -> level.getFacility() == selectedFacility);
-      }
-    }
-
-    // if the geoview is a scene view ensure level visibility is correct
-    if (isSceneViewProperty.get()) {
-      if (allLevelsCheckbox.isSelected()) {
-        skinnable.getLevels().forEach(level -> level.setVisible(true));
-        levelsListView.setDisable(true);
-      } else {
-        filterLevelsVisibility();
-        levelsListView.setDisable(false);
-      }
-    }
-
-    // only enable the zoom button if there is relevant data selected
-    zoomButton.setDisable(selectedSite == null && selectedFacility == null);
-
-    // reselect the data on the listview after filtering the lists
-    sitesListView.getSelectionModel().select(selectedSite);
-    facilitiesListView.getSelectionModel().select(selectedFacility);
-    levelsListView.getSelectionModel().select(selectedLevel);
-  }
-
-  /**
    * Configures properties that relate to how the UI should display depending on the floor manager and related data,
    * and triggers the UI to draw if it is the first time a floor manager has been set. If the floor manager changes as
    * a result of the control.refresh() method being called, the data will be re-configured within the existing UI.
@@ -264,23 +180,30 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    * @since 100.14.0
    */
   private void setup() {
-    var controlSites = skinnable.getSites();
-
     if (skinnable.getFloorManager() != null) {
       // if the floor filter has not been drawn already, set up the UI elements
       if (floorFilterPane.getChildren().isEmpty()) {
-        setupUI();
+        setupPanes();
+        setupZoomButton();
+        setupSites();
+        setupFacilities();
+        setupLevels();
       }
 
+      var controlSites = skinnable.getSites();
       // if there are no sites, don't show the sites browser
       if (controlSites.isEmpty()) {
         isShowSitesProperty.set(false);
-      } else if (controlSites.size() == 1) {
         // if there is 1 site, set it as the selected site and don't show the sites browser
-        skinnable.setSelectedSite(controlSites.get(0));
+      } else if (controlSites.size() == 1) {
+        // only if the properties are not bound
+        if (!skinnable.selectedSiteProperty().isBound() && !skinnable.selectedFacilityProperty().isBound() &&
+          !skinnable.selectedLevelProperty().isBound()) {
+          skinnable.setSelectedSite(controlSites.get(0));
+        }
         isShowSitesProperty.set(false);
-      } else {
         // if there are multiple sites, show the sites browser and set the data to the sites list
+      } else {
         isShowSitesProperty.set(true);
         sites.setAll(controlSites);
         // sort the sites by name
@@ -291,37 +214,18 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
       // if there are no facilities, don't show the facilities browser
       if (controlFacilities.isEmpty()) {
         isShowFacilitiesProperty.set(false);
-      } else {
         // if there are multiple facilities, show the facilities browser and set the data to the facilities list.
+      } else {
         isShowFacilitiesProperty.set(true);
         facilities.setAll(controlFacilities);
         // sort the facilities by name
         facilities.sort(Comparator.comparing(FloorFacility::getName));
-        // initiate the facilities list with no filtering applied
-        filteredFacilities.setPredicate(facility -> true);
       }
 
-      // set the data to the levels list and sort the levels by vertical order reversed (bottom floor to top floor)
-      levels.setAll(skinnable.getLevels());
-      levels.sort(Comparator.comparing(FloorLevel::getVerticalOrder).reversed());
-
-      invalidated();
+      updateUI();
     } else {
       floorFilterPane.getChildren().clear();
     }
-  }
-
-  /**
-   * Sets up each section of the UI.
-   *
-   * @since 100.14.0
-   */
-  private void setupUI() {
-    setupPanes();
-    setupZoomButton();
-    setupSites();
-    setupFacilities();
-    setupLevels();
   }
 
   /**
@@ -409,9 +313,24 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    * @since 100.14.0
    */
   private void setupSites() {
-    // keep sites list view selection aligned with control selection
-    skinnable.selectedSiteProperty().addListener((observable, oldValue, newValue) ->
-      sitesListView.getSelectionModel().select(newValue));
+    // handle changes to selected site
+    skinnable.selectedSiteProperty().addListener((observable, oldValue, newValue) -> {
+      // filter the facilities
+      if (!isAllSitesProperty.get()) {
+        if (newValue == null) {
+          filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
+            facilitiesFilterTextField.getText().toLowerCase()));
+        } else {
+          filteredFacilities.setPredicate(facility -> facility.getSite() == newValue && facility.getName()
+            .toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
+        }
+      }
+      // if the site is not already selected in the UI select it
+      if (newValue != sitesListView.getSelectionModel().getSelectedItem()) {
+        sitesListView.getSelectionModel().select(newValue);
+      }
+      updateUI();
+    });
 
     // configure the text field that filters sites by name
     sitesFilterTextField.setPromptText("Filter sites by name");
@@ -448,7 +367,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         if (skinnable.getSelectedSite() != null) {
           skinnable.getGeoView().setViewpoint(new Viewpoint(skinnable.getSelectedSite().getGeometry().getExtent()));
         }
-        invalidated();
+        updateUI();
       });
       return cell;
     });
@@ -459,7 +378,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         && !skinnable.selectedFacilityProperty().isBound() && !skinnable.selectedLevelProperty().isBound()) {
         skinnable.setSelectedSite(newValue);
       }
-      invalidated();
+      updateUI();
     });
 
     // list view deselection sets site to null unless any of the properties are bound
@@ -468,7 +387,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         if (!skinnable.selectedSiteProperty().isBound() && !skinnable.selectedFacilityProperty().isBound()
           && !skinnable.selectedLevelProperty().isBound()) {
           skinnable.setSelectedSite(null);
-          invalidated();
+          updateUI();
         } else {
           // ignore deselection if property is bound
           click.consume();
@@ -498,11 +417,20 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    * @since 100.14.0
    */
   private void setupFacilities() {
-    // keep the facility list view selection aligned with control selection
+    // handle changes to selected facility
     skinnable.selectedFacilityProperty().addListener((observable, oldValue, newValue) -> {
-      // if the facility has levels show the levels UI
-      isShowLevelsProperty.set(newValue != null && !newValue.getLevels().isEmpty());
-      facilitiesListView.getSelectionModel().select(newValue);
+      // filter the levels
+      if (newValue != null && !newValue.getLevels().isEmpty()) {
+        var facilityLevels = new ArrayList<>(newValue.getLevels());
+        facilityLevels.sort(Comparator.comparing(FloorLevel::getVerticalOrder).reversed());
+        levels.setAll(facilityLevels);
+        levelsListView.getSelectionModel().select(skinnable.getSelectedLevel());
+      }
+      // if the facility is not already selected in the UI select it
+      if (newValue != facilitiesListView.getSelectionModel().getSelectedItem()) {
+        facilitiesListView.getSelectionModel().select(newValue);
+      }
+      updateUI();
     });
 
     // configure the text field that filters facilities by name
@@ -550,7 +478,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         if (skinnable.getSelectedFacility() != null) {
           skinnable.getGeoView().setViewpoint(new Viewpoint(skinnable.getSelectedFacility().getGeometry().getExtent()));
         }
-        invalidated();
+        updateUI();
       });
       return cell;
     });
@@ -561,7 +489,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         && !skinnable.selectedFacilityProperty().isBound() && !skinnable.selectedLevelProperty().isBound()) {
         skinnable.setSelectedFacility(newValue);
       }
-      invalidated();
+      updateUI();
     });
 
     // list view deselection sets facility to null unless any of the properties are bound
@@ -570,7 +498,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         if (!skinnable.selectedSiteProperty().isBound() && !skinnable.selectedFacilityProperty().isBound()
           && !skinnable.selectedLevelProperty().isBound()) {
           skinnable.setSelectedFacility(null);
-          invalidated();
+          updateUI();
         } else {
           // ignore deselection if property is bound
           click.consume();
@@ -594,8 +522,12 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    */
   private void setupLevels() {
     // keep the level list view selection aligned with control selection
-    skinnable.selectedLevelProperty().addListener((observable, oldValue, newValue) ->
-      levelsListView.getSelectionModel().select(newValue));
+    skinnable.selectedLevelProperty().addListener((observable, oldValue, newValue) -> {
+      // if the level is not already selected in the UI select it
+      if (newValue != levelsListView.getSelectionModel().getSelectedItem()) {
+        levelsListView.getSelectionModel().select(newValue);
+      }
+    });
 
     // only display the all levels checkbox if the view is a SceneView
     allLevelsCheckbox.visibleProperty().bind(isSceneViewProperty);
@@ -605,7 +537,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     allLevelsCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
       if (allLevelsCheckbox.isSelected()) {
         skinnable.getLevels().forEach(level -> level.setVisible(true));
-        invalidated();
+        updateUI();
       } else if (!allLevelsCheckbox.isSelected()) {
         filterLevelsVisibility();
       }
@@ -631,7 +563,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         && !skinnable.selectedFacilityProperty().isBound() && !skinnable.selectedLevelProperty().isBound()) {
         skinnable.setSelectedLevel(newValue);
       }
-      invalidated();
+      updateUI();
     });
 
     // list view deselection sets level to null unless property is bound
@@ -640,7 +572,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         if (!skinnable.selectedSiteProperty().isBound() && !skinnable.selectedFacilityProperty().isBound()
           && !skinnable.selectedLevelProperty().isBound()) {
           skinnable.setSelectedLevel(null);
-          invalidated();
+          updateUI();
         } else {
           // ignore deselection if property is bound
           click.consume();
@@ -654,6 +586,56 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     filteredLevels.addListener((ListChangeListener<? super FloorLevel>) observable ->
       levelsListView.setPrefHeight(filteredLevels.size() < MAX_NO_OF_ROWS ?
         filteredLevels.size() * CELL_SIZE : MAX_NO_OF_ROWS * CELL_SIZE));
+  }
+
+  /**
+   * Ensures the UI components match the data set in the control. This includes labels being kept up to date.
+   *
+   * @since 100.14.0
+   */
+  private void updateUI() {
+    var selectedSite = skinnable.getSelectedSite();
+    var selectedFacility = skinnable.getSelectedFacility();
+
+    // force site selection before facility selection
+    if (isShowSitesProperty.get() && isShowFacilitiesProperty.get() && !isAllSitesProperty.get() && selectedSite == null) {
+      facilitiesTitledPane.setDisable(true);
+      facilitiesTitledPane.setExpanded(false);
+    } else {
+      facilitiesTitledPane.setDisable(false);
+    }
+
+    if (selectedSite == null) {
+      sitesHeading.setText("Select a site");
+    } else {
+      sitesHeading.setText(selectedSite.getName());
+    }
+
+    if (selectedFacility == null) {
+      facilityHeading.setText("Select a facility");
+      isShowLevelsProperty.set(false);
+      // if the geoview is a scene reset the all levels checkbox when no facility is selected
+      if (isSceneViewProperty.get()) {
+        allLevelsCheckbox.setSelected(false);
+      }
+    } else {
+      isShowLevelsProperty.set(!selectedFacility.getLevels().isEmpty());
+      facilityHeading.setText(selectedFacility.getName());
+    }
+
+    // if the geoview is a scene view ensure level visibility is correct
+    if (isSceneViewProperty.get()) {
+      if (allLevelsCheckbox.isSelected()) {
+        skinnable.getLevels().forEach(level -> level.setVisible(true));
+        levelsListView.setDisable(true);
+      } else {
+        filterLevelsVisibility();
+        levelsListView.setDisable(false);
+      }
+    }
+
+    // only enable the zoom button if there is relevant data selected
+    zoomButton.setDisable(selectedSite == null && selectedFacility == null);
   }
 
   /**
@@ -673,7 +655,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
       filteredFacilities.setPredicate(facility -> facility.getSite() == skinnable.getSelectedSite() &&
         facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
     }
-    invalidated();
+    updateUI();
   }
 
   /**
