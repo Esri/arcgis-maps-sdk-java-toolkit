@@ -1,7 +1,7 @@
 .floor-filter-pane {
-  -fx-background-color: white;
+  -fx-background-color: #f4f4f4;
   -fx-border-color: grey;
-  -fx-border-width: 2;
+  -fx-border-width: 1;
   -fx-pref-width: 220;
 }
 
@@ -18,7 +18,7 @@
   -fx-padding: 10;
 }
 
-.floor-filter-zoom-button, .floor-filter-collapse-button {
+.floor-filter-zoom-button {
   -fx-min-height: 30;
   -fx-max-height: 30;
 }

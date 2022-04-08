@@ -54,39 +54,16 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
  * <p>If there is only 1 site on the floor manager, it is automatically selected and the sites browser will not be
  * displayed.</p>
  *
- * <p>Styles can be customized using the CSS classes laid out below:</p>
- *
- * <p>Customize the main wrapper including the border and preferred width:</p>
+ * <p>Styles can be customized using the set style classes. For example:</p>
+ * <p>Customize the main VBox including the border and preferred width:</p>
  * <pre>
- * .floor-filter-wrapper {
+ * .floor-filter-pane {
  *   -fx-background-color: white;
  *   -fx-border-color: grey;
  *   -fx-border-width: 2;
  *   -fx-pref-width: 220;
  * }
  * </pre>
- *
- * <p>Sites:</p>
- * <ul>
- * <li>.floor-filter-sites: styles the titled pane for the sites.</li>
- * <li>.floor-filter-sites VBox: styles the sites VBox wrapper.</li>
- * <li>.floor-filter-sites ListView: styles the sites ListView.</li>
- * </ul>
- * <p>Facilities:</p>
- * <ul>
- * <li>.floor-filter-facilities: styles the titled pane for the facilities.</li>
- * <li>.floor-filter-facilities VBox: styles the facilities VBox wrapper.</li>
- * <li>.floor-filter-facilities ListView: styles the facilities ListView.</li>
- * </ul>
- * <p>Levels:</p>
- * <ul>
- * <li>.floor-filter-levels: styles the levels VBox.</li>
- * <li>.floor-filter-sites ListView: styles the levels ListView.</li>
- * </ul>
- * <p>Other:</p>
- * <ul>
- * <li>floor-filter-zoom-button: styles the zoom button.</li>
- * </ul>
  *
  * @since 100.14.0
  */
@@ -257,7 +234,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     facilitiesTitledPane.setText("Facilities");
     facilitiesTitledPane.setExpanded(false);
 
-    // sets the sites and facilities titled panes to a vbox wrapper
+    // sets the sites and facilities titled panes to a vbox
     sitesAndFacilitiesVBox.getChildren().addAll(sitesTitledPane, facilitiesTitledPane);
     sitesAndFacilitiesVBox.getStyleClass().add("floor-filter-sites-facilities");
 
@@ -268,13 +245,12 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     levelsVBox.visibleProperty().bind(isShowLevelsProperty);
     levelsVBox.managedProperty().bind(levelsVBox.visibleProperty());
 
-    // adds all sections and controls to the content pane vbox and sets it to a scroll pane to manage height
+    // adds all sections and controls to the content pane vbox and sets it to a scroll pane to manage overrun on height
     contentPane.getChildren().addAll(sitesAndFacilitiesVBox, levelsVBox, zoomButton);
     scrollPane.setContent(contentPane);
     // prevent horizontal scrolling on the scroll pane
     scrollPane.setFitToWidth(true);
-
-    // adds the scroll pane to the main wrapper and sets that to the skin
+    // adds the scroll pane to the main vbox and sets that to the skin
     floorFilterPane.getChildren().add(scrollPane);
     floorFilterPane.getStyleClass().add("floor-filter-pane");
     getChildren().add(floorFilterPane);
@@ -351,6 +327,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     sitesListView.setPlaceholder(new Label("No sites found"));
 
     // set the filtered list on the list view and configure a cell factory to display the site names
+    sitesListView.setMinHeight(CELL_SIZE);
     sitesListView.setItems(filteredSites);
     sitesListView.setCellFactory(v -> {
       ListCell<FloorSite> cell = new ListCell<>() {
@@ -460,6 +437,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     });
 
     // set the filtered list on the list view and configure a cell factory to display the facility names
+    facilitiesListView.setMinHeight(CELL_SIZE);
     facilitiesListView.setItems(filteredFacilities);
     facilitiesListView.setPlaceholder(new Label("No facilities found"));
     facilitiesListView.setCellFactory(v -> {
@@ -549,6 +527,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     });
 
     // set the filtered list on the list view and configure a cell factory to display the level long names by default
+    levelsListView.setMinHeight(CELL_SIZE);
     levelsListView.setItems(levels);
     levelsListView.setCellFactory(v -> new ListCell<>() {
       @Override
