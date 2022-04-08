@@ -148,7 +148,6 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private final FilteredList<FloorFacility> filteredFacilities = new FilteredList<>(facilities);
 
   private final ObservableList<FloorLevel> levels = FXCollections.observableArrayList();
-  private final FilteredList<FloorLevel> filteredLevels = new FilteredList<>(levels);
 
   /**
    * Creates an instance of the skin.
@@ -315,21 +314,24 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private void setupSites() {
     // handle changes to selected site
     skinnable.selectedSiteProperty().addListener((observable, oldValue, newValue) -> {
-      // filter the facilities
-      if (!isAllSitesProperty.get()) {
-        if (newValue == null) {
-          filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
-            facilitiesFilterTextField.getText().toLowerCase()));
-        } else {
-          filteredFacilities.setPredicate(facility -> facility.getSite() == newValue && facility.getName()
-            .toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
+      if (isShowSitesProperty.get()) {
+        // filter the facilities
+        if (!isAllSitesProperty.get()) {
+          if (newValue == null) {
+            filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
+              facilitiesFilterTextField.getText().toLowerCase()));
+          } else {
+            filteredFacilities.setPredicate(facility -> facility.getSite() == newValue && facility.getName()
+              .toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
+          }
         }
+        // if the site is not already selected in the UI select it
+        if (newValue != sitesListView.getSelectionModel().getSelectedItem()) {
+          sitesListView.getSelectionModel().select(newValue);
+        }
+
+        updateUI();
       }
-      // if the site is not already selected in the UI select it
-      if (newValue != sitesListView.getSelectionModel().getSelectedItem()) {
-        sitesListView.getSelectionModel().select(newValue);
-      }
-      updateUI();
     });
 
     // configure the text field that filters sites by name
@@ -419,18 +421,21 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private void setupFacilities() {
     // handle changes to selected facility
     skinnable.selectedFacilityProperty().addListener((observable, oldValue, newValue) -> {
-      // filter the levels
-      if (newValue != null && !newValue.getLevels().isEmpty()) {
-        var facilityLevels = new ArrayList<>(newValue.getLevels());
-        facilityLevels.sort(Comparator.comparing(FloorLevel::getVerticalOrder).reversed());
-        levels.setAll(facilityLevels);
-        levelsListView.getSelectionModel().select(skinnable.getSelectedLevel());
+      if (isShowFacilitiesProperty.get()) {
+        // filter the levels
+        if (getSkinnable().getSelectedFacility() != null && !getSkinnable().getSelectedFacility().getLevels().isEmpty()) {
+          levels.clear();
+          var facilityLevels = new ArrayList<>(getSkinnable().getSelectedFacility().getLevels());
+          facilityLevels.sort(Comparator.comparing(FloorLevel::getVerticalOrder).reversed());
+          levels.setAll(facilityLevels);
+          levelsListView.getSelectionModel().select(getSkinnable().getSelectedLevel());
+        }
+        // if the facility is not already selected in the UI select it
+        if (newValue != facilitiesListView.getSelectionModel().getSelectedItem()) {
+          facilitiesListView.getSelectionModel().select(newValue);
+        }
+        updateUI();
       }
-      // if the facility is not already selected in the UI select it
-      if (newValue != facilitiesListView.getSelectionModel().getSelectedItem()) {
-        facilitiesListView.getSelectionModel().select(newValue);
-      }
-      updateUI();
     });
 
     // configure the text field that filters facilities by name
@@ -537,14 +542,14 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     allLevelsCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
       if (allLevelsCheckbox.isSelected()) {
         skinnable.getLevels().forEach(level -> level.setVisible(true));
-        updateUI();
       } else if (!allLevelsCheckbox.isSelected()) {
         filterLevelsVisibility();
       }
+      updateUI();
     });
 
     // set the filtered list on the list view and configure a cell factory to display the level long names by default
-    levelsListView.setItems(filteredLevels);
+    levelsListView.setItems(levels);
     levelsListView.setCellFactory(v -> new ListCell<>() {
       @Override
       protected void updateItem(FloorLevel level, boolean empty) {
@@ -583,9 +588,9 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // configure listener that controls the height of the list view, or the point at which the list view will become
     // scrollable. This is calculated using the cell size and maximum number of desired rows before scroll. If the data
     // is smaller than the maximum number of rows, then the number of rows will be the size of the data.
-    filteredLevels.addListener((ListChangeListener<? super FloorLevel>) observable ->
-      levelsListView.setPrefHeight(filteredLevels.size() < MAX_NO_OF_ROWS ?
-        filteredLevels.size() * CELL_SIZE : MAX_NO_OF_ROWS * CELL_SIZE));
+    levels.addListener((ListChangeListener<? super FloorLevel>) observable ->
+      levelsListView.setPrefHeight(levels.size() < MAX_NO_OF_ROWS ?
+        levels.size() * CELL_SIZE : MAX_NO_OF_ROWS * CELL_SIZE));
   }
 
   /**
