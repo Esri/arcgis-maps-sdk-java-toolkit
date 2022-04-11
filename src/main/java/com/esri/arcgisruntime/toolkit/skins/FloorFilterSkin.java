@@ -166,7 +166,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         setupLevels();
       }
 
-      var controlSites = skinnable.getSites();
+      var controlSites = getSites();
       // if there are no sites, don't show the sites browser
       if (controlSites.isEmpty()) {
         isShowSitesProperty.set(false);
@@ -186,7 +186,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         sites.sort(Comparator.comparing(FloorSite::getName));
       }
 
-      var controlFacilities = skinnable.getFacilities();
+      var controlFacilities = getFacilities();
       // if there are no facilities, don't show the facilities browser
       if (controlFacilities.isEmpty()) {
         isShowFacilitiesProperty.set(false);
@@ -196,6 +196,11 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         facilities.setAll(controlFacilities);
         // sort the facilities by name
         facilities.sort(Comparator.comparing(FloorFacility::getName));
+        // if there is 1 facility, automatically select it
+        if (controlFacilities.size() == 1 && !skinnable.selectedSiteProperty().isBound() && !skinnable.selectedFacilityProperty().isBound() &&
+          !skinnable.selectedLevelProperty().isBound()) {
+          skinnable.setSelectedFacility(controlFacilities.get(0));
+        }
       }
 
       updateUI();
@@ -519,7 +524,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // toggles the visibility of levels based on selection
     allLevelsCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
       if (allLevelsCheckbox.isSelected()) {
-        skinnable.getLevels().forEach(level -> level.setVisible(true));
+        getLevels().forEach(level -> level.setVisible(true));
       } else if (!allLevelsCheckbox.isSelected()) {
         filterLevelsVisibility();
       }
@@ -610,7 +615,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // if the geoview is a scene view ensure level visibility is correct
     if (isSceneViewProperty.get()) {
       if (allLevelsCheckbox.isSelected()) {
-        skinnable.getLevels().forEach(level -> level.setVisible(true));
+        getLevels().forEach(level -> level.setVisible(true));
         levelsListView.setDisable(true);
       } else {
         filterLevelsVisibility();
@@ -650,8 +655,61 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private void filterLevelsVisibility() {
     var selectedLevel = skinnable.getSelectedLevel();
     if (selectedLevel != null) {
-      skinnable.getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == selectedLevel.getVerticalOrder()));
+      getLevels().forEach(level -> level.setVisible(level.getVerticalOrder() == selectedLevel.getVerticalOrder()));
     }
+  }
+
+  /**
+   * Gets all the FloorSites associated with the FloorManager.
+   *
+   * @return an observable list of FloorSites, empty if FloorManager is null.
+   * @since 100.14.0
+   */
+  private ObservableList<FloorSite> getSites() {
+    var floorManager = skinnable.getFloorManager();
+    ObservableList<FloorSite> floorManagerSites = FXCollections.observableArrayList();
+    if (floorManager != null) {
+      floorManagerSites.setAll(floorManager.getSites());
+    } else {
+      floorManagerSites.clear();
+    }
+    return floorManagerSites;
+  }
+
+  /**
+   * Gets all the FloorFacilities associated with the FloorManager.
+   *
+   * @return an observable list of FloorFacilities, empty if FloorManager is null.
+   * @since 100.14.0
+   */
+  private ObservableList<FloorFacility> getFacilities() {
+    var floorManager = skinnable.getFloorManager();
+    ObservableList<FloorFacility> floorManagerFacilities = FXCollections.observableArrayList();
+    if (floorManager != null) {
+      floorManagerFacilities.setAll(floorManager.getFacilities());
+    } else {
+      floorManagerFacilities.clear();
+    }
+    return floorManagerFacilities;
+  }
+
+  /**
+   * Gets all the FloorLevels associated with the FloorManager.
+   *
+   * @return an observable list of FloorLevels, empty if FloorManager is null.
+   * @since 100.14.0
+   */
+  private ObservableList<FloorLevel> getLevels() {
+    var floorManager = skinnable.getFloorManager();
+    ObservableList<FloorLevel> floorManagerLevels = FXCollections.observableArrayList();
+    if (floorManager != null) {
+      floorManagerLevels.setAll(floorManager.getLevels());
+    } else {
+      floorManagerLevels.clear();
+    }
+    return floorManagerLevels;
+  }
+
   }
 
   @Override

@@ -226,7 +226,7 @@ public class FloorFilter extends Control {
    * @return an observable list of FloorSites, empty if FloorManager is null.
    * @since 100.14.0
    */
-  public ObservableList<FloorSite> getSites() {
+  private ObservableList<FloorSite> getSites() {
     if (getFloorManager() != null) {
       sites.setAll(getFloorManager().getSites());
     } else {
@@ -241,7 +241,7 @@ public class FloorFilter extends Control {
    * @return an observable list of FloorFacilities, empty if FloorManager is null.
    * @since 100.14.0
    */
-  public ObservableList<FloorFacility> getFacilities() {
+  private ObservableList<FloorFacility> getFacilities() {
     if (getFloorManager() != null) {
       facilities.setAll(getFloorManager().getFacilities());
     } else {
@@ -256,7 +256,7 @@ public class FloorFilter extends Control {
    * @return an observable list of FloorLevels, empty if FloorManager is null.
    * @since 100.14.0
    */
-  public ObservableList<FloorLevel> getLevels() {
+  private ObservableList<FloorLevel> getLevels() {
     if (getFloorManager() != null) {
       levels.setAll(getFloorManager().getLevels());
     } else {
@@ -304,7 +304,7 @@ public class FloorFilter extends Control {
    * @param newValue the selected site
    * @since 100.14.0
    */
-  public void handleUpdateSelectedSite(FloorSite oldValue, FloorSite newValue) {
+  private void handleUpdateSelectedSite(FloorSite oldValue, FloorSite newValue) {
     if (newValue != oldValue) {
       try {
         if (newValue != null && !blockViewpointUpdate) {
