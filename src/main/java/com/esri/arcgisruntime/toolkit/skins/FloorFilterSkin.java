@@ -49,21 +49,13 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
  * <p>The skin is only configured and displayed if there is a valid FloorManager loaded in the data model.</p>
  *
  * <p>FloorSite and FloorFacility selection occurs within titled panes containing list views of the sites and facilities
- * attached to the floor manager. FloorLevels are displayed in a list view when a facility is selected.</p>
+ * attached to the floor manager. FloorLevels are displayed in a list view when a facility that has levels is selected.</p>
  *
  * <p>If there is only 1 site on the floor manager, it is automatically selected and the sites browser will not be
  * displayed.</p>
  *
- * <p>Styles can be customized using the set style classes. For example:</p>
- * <p>Customize the main VBox including the border and preferred width:</p>
- * <pre>
- * .floor-filter-pane {
- *   -fx-background-color: white;
- *   -fx-border-color: grey;
- *   -fx-border-width: 2;
- *   -fx-pref-width: 220;
- * }
- * </pre>
+ * <p>Styles can be customized using the set style classes. The default style class set in the Control is
+ * "floor-filter-view".>/p>
  *
  * @since 100.14.0
  */
@@ -72,6 +64,8 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   // used to manage list view content
   private static final double MAX_NO_OF_ROWS = 5.0;
   private static final double CELL_SIZE = 26.0;
+
+  private static final double PREF_WIDTH = 220.0;
 
   private final FloorFilter skinnable;
 
@@ -205,7 +199,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
       updateUI();
     } else {
-      floorFilterPane.getChildren().clear();
+      clearUI();
     }
   }
 
@@ -710,6 +704,25 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     return floorManagerLevels;
   }
 
+  /**
+   * Clears all UI Panes.
+   *
+   * @since 100.14.0
+   */
+  private void clearUI() {
+    getChildren().clear();
+    floorFilterPane.getChildren().clear();
+    contentPane.getChildren().clear();
+    sitesAndFacilitiesVBox.getChildren().clear();
+    sitesVBox.getChildren().clear();
+    facilitiesVBox.getChildren().clear();
+    levelsVBox.getChildren().clear();
+  }
+
+  @Override
+  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_WIDTH;
   }
 
   @Override

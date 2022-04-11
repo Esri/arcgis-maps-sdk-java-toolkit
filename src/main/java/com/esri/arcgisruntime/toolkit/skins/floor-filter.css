@@ -1,8 +1,7 @@
-.floor-filter-pane {
+.floor-filter-view {
   -fx-background-color: #f4f4f4;
   -fx-border-color: grey;
   -fx-border-width: 1;
-  -fx-pref-width: 220;
 }
 
 .floor-filter-sites VBox, .floor-filter-facilities VBox {

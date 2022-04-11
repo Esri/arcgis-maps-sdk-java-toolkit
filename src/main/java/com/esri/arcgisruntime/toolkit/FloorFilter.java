@@ -91,6 +91,7 @@ public class FloorFilter extends Control {
     ALWAYS_NON_CLEARING
   }
 
+  private static final String DEFAULT_STYLECLASS = "floor-filter-view";
   private boolean blockViewpointUpdate = false;
   private boolean siteSetViaFacility = false;
   private boolean facilitySetViaLevel = false;
@@ -142,6 +143,8 @@ public class FloorFilter extends Control {
     ChangeListener<? super FloorLevel> levelListener =
       (observable, oldValue, newValue) -> handleUpdateSelectedLevel(oldValue, newValue);
     selectedLevelProperty.addListener(levelListener);
+
+    getStyleClass().add(DEFAULT_STYLECLASS);
 
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
