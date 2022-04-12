@@ -15,8 +15,7 @@ javafx {
 }
 
 group = GROUP
-version = SDKVERSION
-
+version = VERSION
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
@@ -33,6 +32,7 @@ repositories {
     url = 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
   }
 }
+
 sourceSets {
   main {
     resources.srcDirs = ['src/main/java']
@@ -73,6 +73,39 @@ task javadocJar(type: Jar) {
   group = "Documentation"
   archiveClassifier.set('javadoc')
   from javadoc.destinationDir
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId = archivesBaseName
+      from components.java
+      pom {
+        licenses {
+          name = 'Esri License Agreement, E204'
+          url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
+          distribution = 'repo'
+        }
+      }
+    }
+  }
+}
+
+artifactory {
+  contextUrl = ARTIFACTORY_URL
+  publish {
+    repository {
+      repoKey = REPO_KEY
+      username = ARTIFACTORY_USER
+      password = ARTIFACTORY_PASSWORD
+    }
+    defaults {
+      publications('mavenJava')
+    }
+  }
+  resolve {
+    repoKey = 'arcgisruntime-repo'
+  }
 }
 
 wrapper {
