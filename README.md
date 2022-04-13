@@ -28,6 +28,22 @@ The following table shows which versions of the SDK are compatible with the tool
 
 A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
 
+## Requirements
+
+The toolkit requires the ArcGIS Runtime SDK for Java. Refer to the 'Instructions' section below if you are using Gradle.
+See [the developer guide](https://developers.arcgis.com/java/install-and-set-up/) for complete instructions and
+getting setup with the SDK.
+
+The following table shows which versions of the SDK are compatible with the toolkit:
+
+| SDK Version                                              |  Toolkit Version  |
+|----------------------------------------------------------| --- |
+| 100.2.1 or later (including the latest 100.13.0 release) | 100.2.1 |
+
+### Latest update
+
+A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
+
 ## Instructions
 
 The toolkit library jar is hosted on https://esri.jfrog.io/artifactory/arcgis.

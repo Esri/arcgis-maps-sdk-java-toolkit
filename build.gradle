@@ -3,6 +3,8 @@ plugins {
   id "idea"
   id "eclipse"
   id 'org.openjfx.javafxplugin' version '0.0.8'
+  id "com.jfrog.artifactory" version "4.26.1"
+  id "maven-publish"
 }
 
 javafx {
@@ -12,9 +14,8 @@ javafx {
   ]
 }
 
-group "com.esri.arcgisruntime"
-version = "100.13.0"
-
+group = GROUP
+version = VERSION
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
@@ -26,6 +27,9 @@ repositories {
   mavenCentral()
   maven {
     url = 'https://esri.jfrog.io/artifactory/arcgis'
+  }
+  maven {
+    url = 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
   }
 }
 
@@ -42,7 +46,7 @@ sourceSets {
 }
 
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:$version"
+  implementation "com.esri.arcgisruntime:arcgis-java:$SDKVERSION"
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
@@ -69,6 +73,41 @@ task javadocJar(type: Jar) {
   group = "Documentation"
   archiveClassifier.set('javadoc')
   from javadoc.destinationDir
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId = archivesBaseName
+      from components.java
+      pom {
+        licenses {
+          license {
+            name = 'Esri License Agreement, E204'
+            url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
+            distribution = 'repo'
+          }
+        }
+      }
+    }
+  }
+}
+
+artifactory {
+  contextUrl = ARTIFACTORY_URL
+  publish {
+    repository {
+      repoKey = REPO_KEY
+      username = ARTIFACTORY_USER
+      password = ARTIFACTORY_PASSWORD
+    }
+    defaults {
+      publications('mavenJava')
+    }
+  }
+  resolve {
+    repoKey = 'arcgisruntime-repo'
+  }
 }
 
 wrapper {

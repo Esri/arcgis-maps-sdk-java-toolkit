@@ -21,16 +21,20 @@ import java.util.Objects;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.symbology.FillSymbol;
 import com.esri.arcgisruntime.symbology.MarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.skins.OverviewMapSkin;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import javafx.scene.paint.Color;
 
 /**
  * An overview map control that indicates the viewpoint of another map or scene view.
@@ -39,43 +43,45 @@ import javafx.scene.control.Skin;
  */
 public class OverviewMap extends Control {
 
-  final static private FillSymbol sFillSymbol =
-    new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0x7F000000, null);
-  final static private MarkerSymbol sMarkerSymbol =
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0x7F000000, 20);
+  final static private FillSymbol FILL_SYMBOL =
+    new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.TRANSPARENT),
+      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.RED), 1.0f));
+  final static private MarkerSymbol MARKER_SYMBOL =
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.RED), 20);
 
   final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>();
   final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
+  final private SimpleDoubleProperty scaleFactorProperty = new SimpleDoubleProperty(25.0);
 
   /**
-   * Creates an overview map for a geo view using default values for the basemap and indicator symbol.
+   * Creates an overview map for a GeoView using default values for the basemap and indicator symbol.
    *
-   * @param geoView the geo view to connect to this overview map
+   * @param geoView the GeoView to connect to this overview map
    * @throws NullPointerException if geoView is null
    * @since 100.2.1
    */
   public OverviewMap(GeoView geoView) {
-    this(geoView, Basemap.createTopographic(), geoView instanceof MapView ? sFillSymbol : sMarkerSymbol);
+    this(geoView, Basemap.createTopographic(), geoView instanceof MapView ? FILL_SYMBOL : MARKER_SYMBOL);
   }
 
   /**
-   * Creates an overview map for a geo view using a default indicator symbol.
+   * Creates an overview map for a GeoView using a default indicator symbol.
    *
-   * @param geoView the geo view to connect to this overview map
+   * @param geoView the GeoView to connect to this overview map
    * @param basemap the basemap
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if basemap is null
    * @since 100.2.1
    */
   public OverviewMap(GeoView geoView, Basemap basemap) {
-    this(geoView, basemap, geoView instanceof MapView ? sFillSymbol : sMarkerSymbol);
+    this(geoView, basemap, geoView instanceof MapView ? FILL_SYMBOL : MARKER_SYMBOL);
   }
 
   /**
-   * Creates an overview map for a geo view using a default basemap.
+   * Creates an overview map for a GeoView using a default basemap.
    *
-   * @param geoView the geo view to connect to this overview map
+   * @param geoView the GeoView to connect to this overview map
    * @param symbol the symbol to use, for a map view use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
    * @throws NullPointerException if symbol is null
@@ -86,9 +92,9 @@ public class OverviewMap extends Control {
   }
 
   /**
-   * Creates an overview map for a geo view.
+   * Creates an overview map for a GeoView.
    *
-   * @param geoView the geo view to connect to this overview map
+   * @param geoView the GeoView to connect to this overview map
    * @param basemap the basemap
    * @param symbol the symbol to use, for a map view use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
@@ -113,9 +119,9 @@ public class OverviewMap extends Control {
   }
 
   /**
-   * Gets the geo view that this overview map is linked to.
+   * Gets the GeoView that this overview map is linked to.
    *
-   * @return the geo view
+   * @return the GeoView
    * @since 100.2.1
    */
   public GeoView getGeoView() {
@@ -123,9 +129,9 @@ public class OverviewMap extends Control {
   }
 
   /**
-   * A readonly property containing the geo view linked to this overview map.
+   * A readonly property containing the GeoView linked to this overview map.
    *
-   * @return the geo view property
+   * @return the GeoView property
    * @since 100.2.1
    */
   public ReadOnlyObjectProperty<GeoView> geoViewProperty() {
@@ -190,5 +196,34 @@ public class OverviewMap extends Control {
    */
   public SimpleObjectProperty<Symbol> symbolProperty() {
     return symbolProperty;
+  }
+
+  /**
+   * A property containing the amount to scale the OverviewMap compared to the geoView. The default is 25.0.
+   *
+   * @return the scale property
+   * @since 100.14.0
+   */
+  public SimpleDoubleProperty scaleFactorProperty() {
+    return scaleFactorProperty;
+  }
+
+  /**
+   * Sets the value used to scale the OverviewMap compared to the geoView. The default is 25.0.
+   *
+   * @since 100.14.0
+   */
+  public void setScaleFactor(double scaleFactor) {
+    scaleFactorProperty.set(scaleFactor);
+  }
+
+  /**
+   * Gets the value used to scale the OverviewMap compared to the geoView. The default is 25.0.
+   *
+   * @return the scale factor
+   * @since 100.14.0
+   */
+  public double getScaleFactor() {
+    return scaleFactorProperty.get();
   }
 }
