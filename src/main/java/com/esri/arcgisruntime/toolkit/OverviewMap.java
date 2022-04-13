@@ -202,7 +202,7 @@ public class OverviewMap extends Control {
    * A property containing the amount to scale the OverviewMap compared to the geoView. The default is 25.0.
    *
    * @return the scale property
-   * @since 100.13.0
+   * @since 100.14.0
    */
   public SimpleDoubleProperty scaleFactorProperty() {
     return scaleFactorProperty;
@@ -211,7 +211,7 @@ public class OverviewMap extends Control {
   /**
    * Sets the value used to scale the OverviewMap compared to the geoView. The default is 25.0.
    *
-   * @since 100.13.0
+   * @since 100.14.0
    */
   public void setScaleFactor(double scaleFactor) {
     scaleFactorProperty.set(scaleFactor);
@@ -221,7 +221,7 @@ public class OverviewMap extends Control {
    * Gets the value used to scale the OverviewMap compared to the geoView. The default is 25.0.
    *
    * @return the scale factor
-   * @since 100.13.0
+   * @since 100.14.0
    */
   public double getScaleFactor() {
     return scaleFactorProperty.get();
