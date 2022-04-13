@@ -2,15 +2,20 @@ plugins {
   id "java-library"
   id "idea"
   id "eclipse"
-  id "com.google.osdetector" version "1.6.2"
+  id 'org.openjfx.javafxplugin' version '0.0.8'
+  id "com.jfrog.artifactory" version "4.26.1"
+  id "maven-publish"
 }
 
-ext {
-  platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+javafx {
+  version = "11.0.2"
+  modules = [
+    'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media'
+  ]
 }
 
-group "com.esri.arcgisruntime"
-version = "100.8.0"
+group = GROUP
+version = VERSION
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
@@ -19,9 +24,12 @@ eclipse.classpath.downloadJavadoc = true
 compileJava.options.encoding = 'UTF-8'
 
 repositories {
-  jcenter()
+  mavenCentral()
   maven {
-    url = 'https://esri.bintray.com/arcgis'
+    url = 'https://esri.jfrog.io/artifactory/arcgis'
+  }
+  maven {
+    url = 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
   }
 }
 
@@ -37,20 +45,8 @@ sourceSets {
   }
 }
 
-configurations {
-  natives
-}
-
 dependencies {
-  implementation "com.esri.arcgisruntime:arcgis-java:$version"
-  natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$version"
-  natives "com.esri.arcgisruntime:arcgis-java-resources:$version"
-  implementation "org.openjfx:javafx-base:11:$platform"
-  implementation "org.openjfx:javafx-graphics:11:$platform"
-  implementation "org.openjfx:javafx-controls:11:$platform"
-  implementation "org.openjfx:javafx-fxml:11:$platform"
-  implementation "org.openjfx:javafx-web:11:$platform"
-  implementation "org.openjfx:javafx-media:11:$platform"
+  implementation "com.esri.arcgisruntime:arcgis-java:$SDKVERSION"
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
@@ -58,15 +54,6 @@ dependencies {
   testImplementation "org.testfx:testfx-core:4.0.15-alpha"
   testImplementation "org.testfx:testfx-junit5:4.0.15-alpha"
   testImplementation "org.hamcrest:hamcrest:2.1"
-}
-
-task copyNatives(type: Copy) {
-  description = "Copies the arcgis native libraries into USER_HOME/.arcgis for development."
-  group = "build"
-  configurations.natives.asFileTree.each {
-    from(zipTree(it))
-  }
-  into "${System.properties.getProperty("user.home")}/.arcgis/$version"
 }
 
 task integrationTest(type: Test) {
@@ -77,7 +64,6 @@ task integrationTest(type: Test) {
 }
 
 tasks.withType(Test.class) {
-  dependsOn copyNatives
   useJUnitPlatform()
 }
 
@@ -89,6 +75,41 @@ task javadocJar(type: Jar) {
   from javadoc.destinationDir
 }
 
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId = archivesBaseName
+      from components.java
+      pom {
+        licenses {
+          license {
+            name = 'Esri License Agreement, E204'
+            url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
+            distribution = 'repo'
+          }
+        }
+      }
+    }
+  }
+}
+
+artifactory {
+  contextUrl = ARTIFACTORY_URL
+  publish {
+    repository {
+      repoKey = REPO_KEY
+      username = ARTIFACTORY_USER
+      password = ARTIFACTORY_PASSWORD
+    }
+    defaults {
+      publications('mavenJava')
+    }
+  }
+  resolve {
+    repoKey = 'arcgisruntime-repo'
+  }
+}
+
 wrapper {
-  gradleVersion = '5.6'
+  gradleVersion = '7.3.3'
 }

@@ -62,8 +62,8 @@ public final class CompassSkin extends SkinBase<Compass> {
   // property that will be true when the compass is hidden
   private final SimpleBooleanProperty hiddenProperty = new SimpleBooleanProperty(true);
 
-  // a scheduled executor used to execute a delayed fade in/out if auto-hide is enabled
-  private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(0);
+  // a scheduled service used to perform a delayed fade in/out if auto-hide is enabled
+  private final ScheduledExecutorService scheduledService = Executors.newScheduledThreadPool(0);
 
   /**
    * Creates an instance of the skin.
@@ -87,9 +87,9 @@ public final class CompassSkin extends SkinBase<Compass> {
       .and(controlHeadingProperty.isEqualTo(0.0, HEADING_TOLERANCE)
       .or(controlHeadingProperty.isEqualTo(360.0, HEADING_TOLERANCE))));
     hiddenProperty.addListener(observable -> {
-      // when the hidden property changes schedule to execute a fade in/out - having a delay prevents the compass from
+      // when the hidden property changes schedule to perform a fade in/out - having a delay prevents the compass from
       // starting to fade if it momentarily passes through north
-      scheduledExecutor.schedule(() -> Platform.runLater(() -> {
+      scheduledService.schedule(() -> Platform.runLater(() -> {
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(TIMER_DURATION), stackPane);
         if (hiddenProperty.get()) {
           fadeTransition.setToValue(0.0);
