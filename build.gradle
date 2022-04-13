@@ -82,9 +82,11 @@ publishing {
       from components.java
       pom {
         licenses {
-          name = 'Esri License Agreement, E204'
-          url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
-          distribution = 'repo'
+          license {
+            name = 'Esri License Agreement, E204'
+            url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
+            distribution = 'repo'
+          }
         }
       }
     }
