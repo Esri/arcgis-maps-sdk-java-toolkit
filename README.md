@@ -28,7 +28,7 @@ The following table shows which versions of the SDK are compatible with the tool
 
 ### Latest update
 
-A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
+A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our Maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
 
 ## Instructions
 

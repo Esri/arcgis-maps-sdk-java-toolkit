@@ -43,21 +43,26 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
 /**
- * <p>A floor filter control that visualizes data for a floor-aware ArcGISMap / ArcGISScene.</p>
+ * <p>
+ * A floor filter control that visualizes data for a floor-aware ArcGISMap / ArcGISScene.
  *
- * <p>The FloorFilter takes a GeoView and manages data for FloorSites, FloorFacilities and FloorLevels via the
+ * <p>
+ * The FloorFilter takes a GeoView and manages data for FloorSites, FloorFacilities and FloorLevels via the
  * FloorManager attached to a floor-aware ArcGISMap/ArcGISScene. If a map or scene is not floor-aware, the FloorManager
- * will be null.</p>
+ * will be null.
  *
- * <p>The model keeps a selected FloorSite, selected FloorFacility and selected FloorLevel in-sync. A FloorLevel will
+ * <p>
+ * The model keeps a selected FloorSite, selected FloorFacility and selected FloorLevel in-sync. A FloorLevel will
  * always have one associated FloorFacility. Depending on the data used to create the FloorFilter, a FloorFacility may
- * optionally be linked to a single FloorSite. A FloorSite may optionally have a list of facilities.</p>
+ * optionally be linked to a single FloorSite. A FloorSite may optionally have a list of facilities.
  *
- * <p>Please note: The FloorFilter will not respect any custom visibility settings applied to the FloorManager's
- * contents outside of the FloorFilter, and can change a FloorLevel's visibility at any point.</p>
+ * <p>
+ * Please note: The FloorFilter will not respect any custom visibility settings applied to the FloorManager's
+ * contents outside of the FloorFilter, and can change a FloorLevel's visibility at any point.
  *
- * <p>If desired, the FloorFilter will automatically select the site and facility at the center of the connected
- * GeoView's extent. This is controlled by the AutomaticSelectionMode property.</p>
+ * <p>
+ * If desired, the FloorFilter will automatically select the site and facility at the center of the connected
+ * GeoView's extent. This is controlled by the {@link AutomaticSelectionMode} property.
  *
  * @since 100.14.0
  */
@@ -91,7 +96,7 @@ public class FloorFilter extends Control {
     ALWAYS_NON_CLEARING
   }
 
-  private static final String DEFAULT_STYLECLASS = "floor-filter-view";
+  private static final String DEFAULT_STYLE_CLASS = "floor-filter-view";
   private boolean blockViewpointUpdate = false;
   private boolean siteSetViaFacility = false;
   private boolean facilitySetViaLevel = false;
@@ -144,7 +149,7 @@ public class FloorFilter extends Control {
       (observable, oldValue, newValue) -> handleUpdateSelectedLevel(oldValue, newValue);
     selectedLevelProperty.addListener(levelListener);
 
-    getStyleClass().add(DEFAULT_STYLECLASS);
+    getStyleClass().add(DEFAULT_STYLE_CLASS);
 
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
@@ -177,6 +182,7 @@ public class FloorFilter extends Control {
    * Sets the selection mode; defines how the floor filter updates its selection as the user navigated the connected
    * GeoView.
    *
+   * @throws NullPointerException if the selection mode is null
    * @since 100.14.0
    */
   public void setAutomaticSelectionMode(AutomaticSelectionMode selectionMode) {
@@ -226,7 +232,7 @@ public class FloorFilter extends Control {
   /**
    * Gets all the FloorSites associated with the FloorManager.
    *
-   * @return an observable list of FloorSites, empty if FloorManager is null.
+   * @return an observable list of FloorSites, empty if FloorManager is null
    * @since 100.14.0
    */
   private ObservableList<FloorSite> getSites() {
@@ -241,7 +247,7 @@ public class FloorFilter extends Control {
   /**
    * Gets all the FloorFacilities associated with the FloorManager.
    *
-   * @return an observable list of FloorFacilities, empty if FloorManager is null.
+   * @return an observable list of FloorFacilities, empty if FloorManager is null
    * @since 100.14.0
    */
   private ObservableList<FloorFacility> getFacilities() {
@@ -256,7 +262,7 @@ public class FloorFilter extends Control {
   /**
    * Gets all the FloorLevels associated with the FloorManager.
    *
-   * @return an observable list of FloorLevels, empty if FloorManager is null.
+   * @return an observable list of FloorLevels, empty if FloorManager is null
    * @since 100.14.0
    */
   private ObservableList<FloorLevel> getLevels() {
@@ -293,7 +299,7 @@ public class FloorFilter extends Control {
    * In addition, the method resets the currently selected Facility to keep the data in-sync and updates the viewpoint
    * of the GeoView to the extent of the selected FloorSite's geometry.
    *
-   * @param newValue the selected floor site.
+   * @param newValue the selected floor site
    * @since 100.14.0
    */
   public void setSelectedSite(FloorSite newValue) {
@@ -349,7 +355,7 @@ public class FloorFilter extends Control {
    * Sets the selected FloorFacility if it is not already selected. In addition, associated data is reset to keep the
    * data in-sync, and the Viewpoint is set to the extent of the selected FloorFacility's geometry.
    *
-   * @param newValue the selected floor facility.
+   * @param newValue the selected floor facility
    * @since 100.14.0
    */
   public void setSelectedFacility(FloorFacility newValue) {
@@ -385,7 +391,11 @@ public class FloorFilter extends Control {
               // if the currently selected facility has associated levels, auto-select the ground floor.
               // the floors information model requires ground floor to be at vertical order 0.
               // if the currently selected facility does not have any levels, reset the selected level to null.
-              setSelectedLevel(newValue.getLevels().stream().filter(level -> level.getVerticalOrder() == 0).findFirst().orElse(null));
+              setSelectedLevel(newValue.getLevels()
+                .stream()
+                .filter(level -> level.getVerticalOrder() == 0)
+                .findFirst()
+                .orElse(null));
             }
           }
         }
@@ -420,7 +430,7 @@ public class FloorFilter extends Control {
    * Sets the selected FloorLevel if it is not already selected. In addition, associated data is reset to keep the
    * data in-sync.
    *
-   * @param newValue the selected floor level.
+   * @param newValue the selected floor level
    * @since 100.14.0
    */
   public void setSelectedLevel(FloorLevel newValue) {
@@ -477,8 +487,8 @@ public class FloorFilter extends Control {
                 // set the loaded floor manager to the floor manager property
                 floorManagerProperty.set(floorManager);
               } else if (floorManager.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-                Logger logger = Logger.getLogger(FloorFilter.class.getName());
-                logger.warning("The FloorManager failed to load with error: " + floorManager.getLoadError().getCause());
+                floorManagerProperty.set(null);
+                displayLoggerWarning("The FloorManager failed to load with error: " + floorManager.getLoadError().getCause());
               }
             });
             // load the floor manager if it is not already loaded
@@ -488,13 +498,12 @@ public class FloorFilter extends Control {
           } else {
             // if not floor aware set the floor manager property to null
             floorManagerProperty.set(null);
-            Logger logger = Logger.getLogger(FloorFilter.class.getName());
-            logger.info("The GeoModel attached to the provided GeoView is not Floor Aware. FloorFilter will not " +
+            displayLoggerWarning("The GeoModel attached to the provided GeoView is not Floor Aware. FloorFilter will not " +
               "be displayed. Call FloorFilter.refresh() after updating the GeoModel to try again.");
           }
         } else if (geoModel.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-          Logger logger = Logger.getLogger(FloorFilter.class.getName());
-          logger.warning("The GeoModel failed to load with error: " + geoModel.getLoadError().getCause());
+          floorManagerProperty.set(null);
+          displayLoggerWarning("The GeoModel failed to load with error: " + geoModel.getLoadError().getCause());
         }
       });
       if (geoModel.getLoadStatus() != LoadStatus.LOADED) {
@@ -555,12 +564,12 @@ public class FloorFilter extends Control {
           } else {
             siteGeometry = observedViewpoint.getTargetGeometry();
           }
-          var result =
+          FloorSite siteResult =
             getSites().stream().filter(site -> site.getGeometry().getExtent() != null &&
               GeometryEngine.intersects(site.getGeometry().getExtent(), siteGeometry)).findFirst().orElse(null);
-          if (result != null) {
+          if (siteResult != null) {
             blockViewpointUpdate = true;
-            selectedSiteProperty.set(result);
+            selectedSiteProperty.set(siteResult);
           } else if (automaticSelectionModeProperty.get() == AutomaticSelectionMode.ALWAYS) {
             blockViewpointUpdate = true;
             selectedSiteProperty.set(null);
@@ -585,7 +594,7 @@ public class FloorFilter extends Control {
           } else {
             facilityGeometry = observedViewpoint.getTargetGeometry();
           }
-          var facilityResult =
+          FloorFacility facilityResult =
             getFacilities().stream().filter(facility -> facility.getGeometry().getExtent() != null &&
                 GeometryEngine.intersects(facility.getGeometry().getExtent(), facilityGeometry))
               .findFirst().orElse(null);
@@ -600,5 +609,16 @@ public class FloorFilter extends Control {
         }
       }
     }
+  }
+
+  /**
+   * Display provided message as a Logger warning.
+   *
+   * @param message the message to display
+   * @since 100.14.0
+   */
+  private void displayLoggerWarning(String message) {
+    var logger = Logger.getLogger(FloorFilter.class.getName());
+    logger.warning(message);
   }
 }

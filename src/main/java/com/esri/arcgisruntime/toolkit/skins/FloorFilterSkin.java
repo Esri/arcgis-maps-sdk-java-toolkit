@@ -44,18 +44,22 @@ import javafx.scene.layout.VBox;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 /**
- * <p>A skin for displaying a {@link FloorFilter}.</p>
+ * <p>
+ * A skin for displaying a {@link FloorFilter}.
  *
- * <p>The skin is only configured and displayed if there is a valid FloorManager loaded in the data model.</p>
+ * <p>
+ * The skin is only configured and displayed if there is a valid FloorManager loaded in the data model.
  *
- * <p>FloorSite and FloorFacility selection occurs within titled panes containing list views of the sites and facilities
- * attached to the floor manager. FloorLevels are displayed in a list view when a facility that has levels is selected.</p>
+ * <p>
+ * FloorSite and FloorFacility selection occurs within titled panes containing list views of the sites and facilities
+ * attached to the floor manager. FloorLevels are displayed in a list view when a facility that has levels is selected.
  *
- * <p>If there is only 1 site on the floor manager, it is automatically selected and the sites browser will not be
- * displayed.</p>
+ * <p>
+ * If there is only 1 site on the floor manager, it is automatically selected and the sites browser will not be
+ * displayed.
  *
- * <p>Styles can be customized using the set style classes. The default style class set in the Control is
- * "floor-filter-view".>/p>
+ * <p>
+ * Styles can be customized using the set style classes. A default style class is set in the {@link FloorFilter} Control.
  *
  * @since 100.14.0
  */
@@ -145,7 +149,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   /**
    * Configures properties that relate to how the UI should display depending on the floor manager and related data,
    * and triggers the UI to draw if it is the first time a floor manager has been set. If the floor manager changes as
-   * a result of the control.refresh() method being called, the data will be re-configured within the existing UI.
+   * a result of the {@link FloorFilter#refresh()} method being called, the data will be re-configured within the existing UI.
    *
    * @since 100.14.0
    */
@@ -304,7 +308,6 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
         if (newValue != sitesListView.getSelectionModel().getSelectedItem()) {
           sitesListView.getSelectionModel().select(newValue);
         }
-
         updateUI();
       }
     });
@@ -656,7 +659,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   /**
    * Gets all the FloorSites associated with the FloorManager.
    *
-   * @return an observable list of FloorSites, empty if FloorManager is null.
+   * @return an observable list of FloorSites, empty if FloorManager is null
    * @since 100.14.0
    */
   private ObservableList<FloorSite> getSites() {
@@ -673,7 +676,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   /**
    * Gets all the FloorFacilities associated with the FloorManager.
    *
-   * @return an observable list of FloorFacilities, empty if FloorManager is null.
+   * @return an observable list of FloorFacilities, empty if FloorManager is null
    * @since 100.14.0
    */
   private ObservableList<FloorFacility> getFacilities() {
@@ -690,7 +693,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   /**
    * Gets all the FloorLevels associated with the FloorManager.
    *
-   * @return an observable list of FloorLevels, empty if FloorManager is null.
+   * @return an observable list of FloorLevels, empty if FloorManager is null
    * @since 100.14.0
    */
   private ObservableList<FloorLevel> getLevels() {
