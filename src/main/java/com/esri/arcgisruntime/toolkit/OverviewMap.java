@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.toolkit;
 import java.util.Objects;
 
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.ColorUtil;
@@ -39,6 +40,10 @@ import javafx.scene.paint.Color;
 /**
  * An overview map control that indicates the viewpoint of another map or scene view.
  *
+ * Note: By default, the OverviewMap will attempt to use an ArcGIS Topographic basemap, which requires an
+ * <a href="https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key">API key</a>
+ * to access.
+ *
  * @since 100.2.1
  */
 public class OverviewMap extends Control {
@@ -57,12 +62,16 @@ public class OverviewMap extends Control {
   /**
    * Creates an overview map for a GeoView using default values for the basemap and indicator symbol.
    *
+   * Note: By default, the OverviewMap will attempt to use an ArcGIS Topographic basemap, which requires an
+   * <a href="https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key">API key</a>
+   * to access.
+   *
    * @param geoView the GeoView to connect to this overview map
    * @throws NullPointerException if geoView is null
    * @since 100.2.1
    */
   public OverviewMap(GeoView geoView) {
-    this(geoView, Basemap.createTopographic(), geoView instanceof MapView ? FILL_SYMBOL : MARKER_SYMBOL);
+    this(geoView, new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC), geoView instanceof MapView ? FILL_SYMBOL : MARKER_SYMBOL);
   }
 
   /**
@@ -81,6 +90,10 @@ public class OverviewMap extends Control {
   /**
    * Creates an overview map for a GeoView using a default basemap.
    *
+   * Note: By default, the OverviewMap will attempt to use an ArcGIS Topographic basemap, which requires an
+   * <a href="https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key">API key</a>
+   * to access.
+   *
    * @param geoView the GeoView to connect to this overview map
    * @param symbol the symbol to use, for a map view use a fill symbol and for a scene view use a marker symbol
    * @throws NullPointerException if geoView is null
@@ -88,7 +101,7 @@ public class OverviewMap extends Control {
    * @since 100.2.1
    */
   public OverviewMap(GeoView geoView, Symbol symbol) {
-    this(geoView, Basemap.createTopographic(), symbol);
+    this(geoView, new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC), symbol);
   }
 
   /**
