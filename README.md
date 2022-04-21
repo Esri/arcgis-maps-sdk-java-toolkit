@@ -25,6 +25,15 @@ The following table shows which versions of the SDK are compatible with the tool
 |----------------------------------------------------------| --- |
 | 100.2.1 or later (including the latest 100.13.0 release) | 100.2.1 |
 
+### API Key requirements
+
+Some of the toolkit components utilize ArcGIS Platform services which require an API key. Refer to the 'Access services' section of the 
+[Get Started guide](https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key) 
+for more information. Help with how to set your API key can be found in the 
+[Developer Guide tutorials](https://developers.arcgis.com/java/maps-2d/tutorials/display-a-map/#set-your-api-key)
+and [Java Samples Repository](https://github.com/Esri/arcgis-runtime-samples-java). If a toolkit component requires an API
+key, this will be indicated within the JavaDoc for the component.
+
 ### Latest update
 
 A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
