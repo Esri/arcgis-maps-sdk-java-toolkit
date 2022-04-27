@@ -9,9 +9,10 @@ The ArcGIS Runtime SDK for Java Toolkit contains controls and utilities to simpl
 The latest version of the ArcGIS Runtime SDK for Java Toolkit features the following JavaFX components:
 
 - Compass: Shows the current viewpoint heading. Can be clicked to reorient the view to north.
+- Feature Template Picker: Shows feature templates for a collection of feature layers.
+- Floor Filter: Shows sites and facilities, and enables toggling the visibility of levels on floor aware maps and scenes.
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
-- Template Picker: Shows feature templates for a collection of feature layers.
 
 ## Requirements
 
@@ -36,7 +37,7 @@ key, this will be indicated within the JavaDoc for the component.
 
 ### Latest update
 
-A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
+A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our Maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
 
 ## Instructions
 
