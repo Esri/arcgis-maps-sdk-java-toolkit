@@ -102,15 +102,15 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
   // boolean properties for controlling visibility of sections
   // property to toggle the visibility of the sites titled pane
-  private final SimpleBooleanProperty isShowSitesProperty = new SimpleBooleanProperty();
+  private final SimpleBooleanProperty showSitesProperty = new SimpleBooleanProperty();
   // property to handle selection of all sites checkbox
-  private final SimpleBooleanProperty isAllSitesProperty = new SimpleBooleanProperty();
+  private final SimpleBooleanProperty allSitesProperty = new SimpleBooleanProperty();
   // property to toggle the visibility of the facilities titled pane
-  private final SimpleBooleanProperty isShowFacilitiesProperty = new SimpleBooleanProperty();
+  private final SimpleBooleanProperty showFacilitiesProperty = new SimpleBooleanProperty();
   // property to toggle the visibility of the levels vbox
-  private final SimpleBooleanProperty isShowLevelsProperty = new SimpleBooleanProperty(false);
+  private final SimpleBooleanProperty showLevelsProperty = new SimpleBooleanProperty(false);
   // property to toggle the visibility of the all levels option for scenes only
-  private final SimpleBooleanProperty isSceneViewProperty = new SimpleBooleanProperty();
+  private final SimpleBooleanProperty sceneViewProperty = new SimpleBooleanProperty();
 
   // control for zoom functionality
   private final Button zoomButton = new Button("Zoom to");
@@ -136,7 +136,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     skinnable = getSkinnable();
 
     // set boolean property to true if the geo view in the control is a scene view
-    isSceneViewProperty.set(control.getGeoView() instanceof SceneView);
+    sceneViewProperty.set(control.getGeoView() instanceof SceneView);
 
     // add a listener on the floor manager property
     // the UI will only display and be configured if a floor manager is loaded successfully in the control
@@ -167,7 +167,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
       var controlSites = getSites();
       // if there are no sites, don't show the sites browser
       if (controlSites.isEmpty()) {
-        isShowSitesProperty.set(false);
+        showSitesProperty.set(false);
         // if there is 1 site, set it as the selected site and don't show the sites browser
       } else if (controlSites.size() == 1) {
         // only if the properties are not bound
@@ -175,10 +175,10 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
           !skinnable.selectedLevelProperty().isBound()) {
           skinnable.setSelectedSite(controlSites.get(0));
         }
-        isShowSitesProperty.set(false);
+        showSitesProperty.set(false);
         // if there are multiple sites, show the sites browser and set the data to the sites list
       } else {
-        isShowSitesProperty.set(true);
+        showSitesProperty.set(true);
         sites.setAll(controlSites);
         // sort the sites by name
         sites.sort(Comparator.comparing(FloorSite::getName));
@@ -187,10 +187,10 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
       var controlFacilities = getFacilities();
       // if there are no facilities, don't show the facilities browser
       if (controlFacilities.isEmpty()) {
-        isShowFacilitiesProperty.set(false);
+        showFacilitiesProperty.set(false);
         // if there are multiple facilities, show the facilities browser and set the data to the facilities list.
       } else {
-        isShowFacilitiesProperty.set(true);
+        showFacilitiesProperty.set(true);
         facilities.setAll(controlFacilities);
         // sort the facilities by name
         facilities.sort(Comparator.comparing(FloorFacility::getName));
@@ -221,7 +221,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     // sets titled pane properties to manage behavior
     sitesTitledPane.setExpanded(true);
     sitesTitledPane.setAnimated(false);
-    sitesTitledPane.visibleProperty().bind(isShowSitesProperty);
+    sitesTitledPane.visibleProperty().bind(showSitesProperty);
     sitesTitledPane.managedProperty().bind(sitesTitledPane.visibleProperty());
     sitesTitledPane.setText("Sites");
 
@@ -232,7 +232,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     facilitiesTitledPane.getStyleClass().add("floor-filter-facilities");
     // set titled pane properties to manage behavior
     facilitiesTitledPane.setAnimated(false);
-    facilitiesTitledPane.visibleProperty().bind(isShowFacilitiesProperty);
+    facilitiesTitledPane.visibleProperty().bind(showFacilitiesProperty);
     facilitiesTitledPane.managedProperty().bind(facilitiesTitledPane.visibleProperty());
     facilitiesTitledPane.setText("Facilities");
     facilitiesTitledPane.setExpanded(false);
@@ -245,7 +245,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     levelsVBox.getChildren().addAll(levelsHeading, levelsListView, allLevelsCheckbox);
     levelsVBox.getStyleClass().add("floor-filter-levels");
     // only display the levels browser if a selected facility has levels
-    levelsVBox.visibleProperty().bind(isShowLevelsProperty);
+    levelsVBox.visibleProperty().bind(showLevelsProperty);
     levelsVBox.managedProperty().bind(levelsVBox.visibleProperty());
 
     // adds all sections and controls to the content pane vbox and sets it to a scroll pane to manage overrun on height
@@ -293,9 +293,9 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private void setupSites() {
     // handle changes to selected site
     skinnable.selectedSiteProperty().addListener((observable, oldValue, newValue) -> {
-      if (isShowSitesProperty.get()) {
+      if (showSitesProperty.get()) {
         // filter the facilities
-        if (!isAllSitesProperty.get()) {
+        if (!allSitesProperty.get()) {
           if (newValue == null) {
             filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(
               facilitiesFilterTextField.getText().toLowerCase()));
@@ -377,11 +377,11 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     });
 
     // handle the all sites property
-    isAllSitesProperty.addListener(observable -> handleIsAllSitesPropertyChanged());
+    allSitesProperty.addListener(observable -> handleIsAllSitesPropertyChanged());
 
     // when all sites checkbox is selected, update the isAllSitesProperty value
     allSitesCheckbox.selectedProperty().addListener((observable, oldValue, newValue) ->
-      isAllSitesProperty.set(allSitesCheckbox.isSelected()));
+      allSitesProperty.set(allSitesCheckbox.isSelected()));
 
     // configure listener that controls the height of the list view, or the point at which the list view will become
     // scrollable. This is calculated using the cell size and maximum number of desired rows before scroll. If the data
@@ -400,7 +400,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
   private void setupFacilities() {
     // handle changes to selected facility
     skinnable.selectedFacilityProperty().addListener((observable, oldValue, newValue) -> {
-      if (isShowFacilitiesProperty.get()) {
+      if (showFacilitiesProperty.get()) {
         // filter the levels
         if (getSkinnable().getSelectedFacility() != null && !getSkinnable().getSelectedFacility().getLevels().isEmpty()) {
           levels.clear();
@@ -429,7 +429,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
           filteredFacilities.setPredicate(facility -> true);
         }
       } else {
-        if (!isAllSitesProperty.get()) {
+        if (!allSitesProperty.get()) {
           filteredFacilities.setPredicate(facility -> facility.getName().toLowerCase().contains(filter.toLowerCase()) &&
             facility.getSite() == selectedSite);
         } else {
@@ -450,7 +450,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
           if (empty || facility == null) {
             setText(null);
           } else {
-            if (isAllSitesProperty.get()) {
+            if (allSitesProperty.get()) {
               setText(facility.getName() + " (" + facility.getSite().getName() + ")");
             } else {
               setText(facility.getName());
@@ -515,7 +515,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     });
 
     // only display the all levels checkbox if the view is a SceneView
-    allLevelsCheckbox.visibleProperty().bind(isSceneViewProperty);
+    allLevelsCheckbox.visibleProperty().bind(sceneViewProperty);
     allLevelsCheckbox.managedProperty().bind(allLevelsCheckbox.visibleProperty());
 
     // toggles the visibility of levels based on selection
@@ -584,7 +584,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
     var selectedFacility = skinnable.getSelectedFacility();
 
     // force site selection before facility selection
-    if (isShowSitesProperty.get() && isShowFacilitiesProperty.get() && !isAllSitesProperty.get() && selectedSite == null) {
+    if (showSitesProperty.get() && showFacilitiesProperty.get() && !allSitesProperty.get() && selectedSite == null) {
       facilitiesTitledPane.setDisable(true);
       facilitiesTitledPane.setExpanded(false);
     } else {
@@ -599,18 +599,18 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
     if (selectedFacility == null) {
       facilityHeading.setText("Select a facility");
-      isShowLevelsProperty.set(false);
+      showLevelsProperty.set(false);
       // if the geoview is a scene reset the all levels checkbox when no facility is selected
-      if (isSceneViewProperty.get()) {
+      if (sceneViewProperty.get()) {
         allLevelsCheckbox.setSelected(false);
       }
     } else {
-      isShowLevelsProperty.set(!selectedFacility.getLevels().isEmpty());
+      showLevelsProperty.set(!selectedFacility.getLevels().isEmpty());
       facilityHeading.setText(selectedFacility.getName());
     }
 
     // if the geoview is a scene view ensure level visibility is correct
-    if (isSceneViewProperty.get()) {
+    if (sceneViewProperty.get()) {
       if (allLevelsCheckbox.isSelected()) {
         getLevels().forEach(level -> level.setVisible(true));
         levelsListView.setDisable(true);
@@ -632,7 +632,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
    * @since 100.14.0
    */
   private void handleIsAllSitesPropertyChanged() {
-    if (isAllSitesProperty.get()) {
+    if (allSitesProperty.get()) {
       // filter the facilities list only by the text field input
       filteredFacilities.setPredicate(facility ->
         facility.getName().toLowerCase().contains(facilitiesFilterTextField.getText().toLowerCase()));
