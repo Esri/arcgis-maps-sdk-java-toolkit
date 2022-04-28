@@ -135,7 +135,7 @@ public class OverviewMapSkin extends SkinBase<OverviewMap> {
   /**
    * Updates the overview when the GeoView's viewpoint changes.
    *
-   * @since 100.13.0
+   * @since 100.14.0
    */
   private void update() {
     var viewpoint = controlGeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE);

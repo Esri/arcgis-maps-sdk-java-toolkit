@@ -9,6 +9,8 @@ The ArcGIS Runtime SDK for Java Toolkit contains controls and utilities to simpl
 The latest version of the ArcGIS Runtime SDK for Java Toolkit features the following JavaFX components:
 
 - Compass: Shows the current viewpoint heading. Can be clicked to reorient the view to north.
+- Feature Template Picker: Shows feature templates for a collection of feature layers.
+- Floor Filter: Shows sites and facilities, and enables toggling the visibility of levels on floor aware maps and scenes.
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
 
@@ -18,15 +20,21 @@ The toolkit requires the ArcGIS Runtime SDK for Java. Refer to the 'Instructions
 See [the developer guide](https://developers.arcgis.com/java/install-and-set-up/) for complete instructions and
 getting setup with the SDK.
 
-The following table shows which versions of the SDK are compatible with the toolkit:
+The following table shows the minimum version of the SDK compatible with the toolkit:
 
-| SDK Version                                              |  Toolkit Version  |
-|----------------------------------------------------------| --- |
-| 100.2.1 or later (including the latest 100.13.0 release) | 100.2.1 |
+| SDK Version | Toolkit Version |
+|-------------|-----------------|
+| 100.2.1     | 100.2.1         |
+| 100.14.0    | 100.14.0        |
 
-### Latest update
+### API Key requirements
 
-A new release of the toolkit will be coming with the 100.14.0 release of the ArcGIS Runtime SDK for Java (due Spring 2022). The toolkit jar will be made available via our maven repository on jfrog. Additional information will be provided at that time, but this will include new toolkit components as well as updates and improvements to existing components.
+Some of the toolkit components utilize ArcGIS Platform services which require an API key. Refer to the 'Access services' section of the 
+[Get Started guide](https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key) 
+for more information. Help with how to set your API key can be found in the 
+[Developer Guide tutorials](https://developers.arcgis.com/java/maps-2d/tutorials/display-a-map/#set-your-api-key)
+and [Java Samples Repository](https://github.com/Esri/arcgis-runtime-samples-java). If a toolkit component requires an API
+key, this will be indicated within the JavaDoc for the component.
 
 ## Instructions
 
@@ -40,9 +48,9 @@ plugins {
 }
 
 // Replace with version number of ArcGIS SDK you are using in your app, such as:
-// arcgisVersion = '100.13.0'. See table below for SDK Versions that support the toolkit.
+// arcgisVersion = '100.14.0'. See table below for SDK Versions that support the toolkit.
 ext {
-  arcgisVersion = '100.13.0'
+  arcgisVersion = '100.14.0'
 }
 
 javafx {
@@ -68,7 +76,7 @@ dependencies {
     implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
     natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
     natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
-    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.2.1'
+    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.14.0'
 }
 ```
 
