@@ -29,9 +29,9 @@ The following table shows the minimum version of the SDK compatible with the too
 
 ### API Key requirements
 
-Some of the toolkit components utilize ArcGIS Platform services which require an API key. Refer to the 'Access services' section of the
-[Get Started guide](https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key)
-for more information. Help with how to set your API key can be found in the
+Some of the toolkit components utilize ArcGIS Platform services which require an API key. Refer to the 'Access services' section of the 
+[Get Started guide](https://developers.arcgis.com/java/get-started/#3-access-services-and-content-with-an-api-key) 
+for more information. Help with how to set your API key can be found in the 
 [Developer Guide tutorials](https://developers.arcgis.com/java/maps-2d/tutorials/display-a-map/#set-your-api-key)
 and [Java Samples Repository](https://github.com/Esri/arcgis-runtime-samples-java). If a toolkit component requires an API
 key, this will be indicated within the JavaDoc for the component.
