@@ -1,0 +1,243 @@
+.root {
+    -fx-font-family: sans-serif;
+    -fx-hover-color: #00619B;
+}
+
+Label {
+    -fx-wrap-text: true;
+}
+
+StackPane:focus {
+    -fx-border-color: #00619B;
+    -fx-border-style: solid;
+    -fx-border-width: 3;
+}
+
+.header-bar .combo-box {
+    -fx-min-width:300;
+}
+
+ImageView:hover {
+    -fx-cursor: hand;
+}
+
+/* COMBO BOX */
+
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-min-height:40;
+    -fx-border-color: #007AC2;
+    -fx-border-width: 1;
+    -fx-background-radius: 5, 5, 4, 3;
+    -fx-border-radius: 5, 5, 4, 3;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #007AC2;
+}
+
+.combo-box .cell:selected {
+    -fx-font-size: 14;
+    -fx-text-fill: #4A4A4A;
+}
+
+.combo-box:hover .cell:selected {
+    -fx-text-fill: -fx-hover-color;
+}
+
+.combo-box:hover .arrow-button {
+    -fx-background-color: -fx-hover-color;
+}
+
+.combo-box:hover {
+    -fx-border-color: -fx-hover-color;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-text-fill:#ffffff;
+}
+
+.combo-box-base .arrow {
+    -fx-min-width:15;
+    -fx-min-height:10;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-background-color: #ffffff;
+    -fx-padding: 0.166667em 0.333333em 0.166667em 0.333333em; /* 2 4 2 4 */
+    -fx-shape: "M14.77,23.795L5.185,14.21c-0.879-0.879-0.879-2.317,0-3.195l0.8-0.801c0.877-0.878,2.316-0.878,3.194,0  l7.315,7.315l7.316-7.315c0.878-0.878,2.317-0.878,3.194,0l0.8,0.801c0.879,0.878,0.879,2.316,0,3.195l-9.587,9.585  c-0.471,0.472-1.104,0.682-1.723,0.647C15.875,24.477,15.243,24.267,14.77,23.795z";
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-cell-size: 45;
+    -fx-text-fill: #007AC2;
+    -fx-font-size: 14;
+}
+
+.combo-box-popup .list-view {
+    -fx-padding: 0;
+    -fx-border-insets: 5 0 0 0;
+    -fx-background-insets: 5 0 0 0;
+    -fx-border-color: #949494;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 0 0 0 10;
+    -fx-border-insets: 0 0 0 0;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #00619B;
+    -fx-text-fill:#ffffff;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #007AC2;
+}
+
+.combo-box-popup .list-view .list-cell .icon {
+    -fx-min-width: 10;
+    -fx-pref-width: 10;
+    -fx-max-width: 10;
+
+    -fx-min-height: 10;
+    -fx-pref-height: 10;
+    -fx-max-height: 10;
+
+    -fx-shape: "M448,71.9c-17.3-13.4-41.5-9.3-54.1,9.1L214,344.2l-99.1-107.3c-14.6-16.6-39.1-17.4-54.7-1.8  c-15.6,15.5-16.4,41.6-1.7,58.1c0,0,120.4,133.6,137.7,147c17.3,13.4,41.5,9.3,54.1-9.1l206.3-301.7  C469.2,110.9,465.3,85.2,448,71.9z";
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-content-display: text-only;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-content-display: left;
+}
+
+/* TAB PANE */
+
+.tab-pane {
+    -fx-tab-min-width: 100;
+    -fx-tab-min-height: 30;
+}
+
+.tab-pane *.tab-header-area *.tab-header-background  {
+    -fx-background-color: #ffffff;
+    -fx-border-style: solid hidden solid hidden;
+    -fx-border-color: #949494;
+}
+
+.tab-pane *.tab-header-area {
+    -fx-padding: 0.083333em 0.5em 0.083333em 0.5em;;
+}
+
+.tab {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 5;
+    -fx-border-color: transparent;
+    -fx-border-insets: 0 5 0 0;
+}
+
+.tab:selected {
+    -fx-border-color: #0079c1;
+}
+
+.tab:hover {
+    -fx-border-color: #00619B;
+}
+
+.tab {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: black;
+}
+
+/* ToggleButton */
+
+ToggleButton {
+    -fx-background-color: #007AC2;
+    -fx-min-height: 42;
+    -fx-text-fill: white;
+}
+
+ToggleButton:hover, Button:hover {
+    -fx-background-color: #00619B;
+    -fx-text-fill: white;
+}
+
+/* LandingPage */
+
+.landing-page {
+    -fx-text-alignment: center;
+    -fx-padding: 30;
+    -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-background-color: #F8F8F8;
+}
+
+.landing-page Label {
+    -fx-text-fill: #6A6A6A;
+    -fx-wrap-text:true;
+    -fx-text-align: center;
+}
+
+.landing-page VBox {
+    -fx-text-alignment: center;
+    -fx-padding: 15;
+    -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-background-color: #F8F8F8;
+}
+
+.landing-page HBox {
+    -fx-text-alignment: center;
+    -fx-padding: 15;
+    -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-background-color: #F8F8F8;
+}
+
+/* Settings */
+
+.settings {
+    -fx-padding: 10 10 10 10;
+    -fx-border-style: solid hidden hidden solid;
+    -fx-border-color: #949494;
+    -fx-background-color: #ffffff;
+}
+
+.individual-setting {
+    -fx-padding: 5;
+    -fx-border-style: hidden hidden hidden hidden;
+    -fx-border-color: transparent;
+    -fx-background-color: #EAEAEA
+}
+
+/* Headings */
+
+.h1 {
+    -fx-font-size: 24;
+}
+
+.h2 {
+    -fx-font-size: 18;
+}
+
+.h3 {
+    -fx-font-size: 16;
+    -fx-font-width: bold;
+}
+
+.header-bar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15 0 15 0;
+}
