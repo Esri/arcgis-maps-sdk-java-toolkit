@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.toolkit.examples.model;
+package com.esri.arcgisruntime.toolkit.model;
 
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import javafx.scene.control.Tab;

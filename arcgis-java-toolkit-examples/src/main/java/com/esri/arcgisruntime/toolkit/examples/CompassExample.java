@@ -7,19 +7,15 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.Compass;
-import com.esri.arcgisruntime.toolkit.examples.model.Example;
-import com.esri.arcgisruntime.toolkit.examples.model.ExampleContainer;
-import com.esri.arcgisruntime.toolkit.examples.utils.ExampleUtils;
+import com.esri.arcgisruntime.toolkit.model.Example;
+import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
 import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -41,25 +37,7 @@ public class CompassExample extends Application implements Example {
 
     @Override
     public void start(Stage primaryStage) {
-        StackPane stackPane = new StackPane();
-        Scene scene = new Scene(stackPane);
-
-        ExampleContainer exampleContainer = new ExampleContainer(scene);
-        exampleContainer.setExample(new CompassExample());
-        stackPane.getChildren().add(exampleContainer);
-
-        scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
-
-        // set title, size, and add scene to stage
-        primaryStage.setTitle(getExampleName() + " - ArcGIS Runtime for Java Toolkit");
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setWidth(screenBounds.getWidth() * 0.75);
-        primaryStage.setHeight(screenBounds.getHeight() * .75);
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        // TODO: set api key for individual runs - doesn't use the gradle file!
+        ExampleUtils.setupIndividualExampleStage(primaryStage, new CompassExample());
     }
 
     public CompassExample() {

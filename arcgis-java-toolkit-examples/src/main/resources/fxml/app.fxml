@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import com.esri.arcgisruntime.toolkit.controller.ExampleView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<BorderPane fx:id="borderPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.esri.arcgisruntime.toolkit.controller.ExamplesAppController" stylesheets="/styles/app.css">
+    <top>
+        <HBox fx:id="headerBar" spacing="50" styleClass="header-bar" alignment="CENTER">
+            <children>
+                <ComboBox fx:id="menu" promptText="Select a tool"/>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <StackPane fx:id="mainContent">
+            <children>
+                <VBox xmlns:fx="http://javafx.com/fxml" stylesheets="/styles/app.css" fx:id="landingPage" styleClass="landing-page" alignment="TOP_CENTER">
+                    <children>
+                        <Label text="ArcGIS Runtime for Java Toolkit" styleClass="h1" />
+                        <Label text="This app provides a simple way to view all of the components available within the Toolkit, simply select one from the dropdown menu above. Some components are compatible with both MapViews and SceneViews, others have a more custom layout. This will be demonstrated via the available tabs. In addition, each component has a series of settings, and possible test cases, to demonstrate implementation." alignment="CENTER"/>
+                        <VBox fx:id="indexOfExamples" spacing="5" style="-fx-background-color: #EAEAEA;" />
+                    </children>
+                </VBox>
+                <ExampleView fx:id="exampleView" visible="false"/>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

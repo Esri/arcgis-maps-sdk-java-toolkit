@@ -67,7 +67,7 @@ run {
         systemProperty 'apiKey', apiKey
     }
     dependsOn copyNatives
-    mainClassName = 'com.esri.arcgisruntime.toolkit.examples.ExamplesApp'
+    mainClassName = 'com.esri.arcgisruntime.toolkit.ExamplesApp'
 }
 
 jar {
