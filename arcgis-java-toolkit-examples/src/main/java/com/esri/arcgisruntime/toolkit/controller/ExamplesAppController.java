@@ -90,11 +90,14 @@ public class ExamplesAppController {
         examples.forEach(example -> {
             HBox hbox = new HBox(15);
             hbox.setAlignment(Pos.CENTER_LEFT);
-            Image image = new Image("/images/" + example.getExampleName() + ".png");
             ImageView imageView = new ImageView();
             imageView.setFitWidth(100);
             imageView.setFitHeight(100);
-            imageView.setImage(image);
+            if (ExamplesAppController.class.getResource("/images/" + example.getExampleName() + ".png") != null) {
+                imageView.setImage(new Image("/images/" + example.getExampleName() + ".png"));
+            } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
+                imageView.setImage(new Image("/images/default.png"));
+            }
             Label component = new Label(example.getExampleName() + ": " + example.getDescription());
             imageView.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
             hbox.getChildren().addAll(imageView, component);

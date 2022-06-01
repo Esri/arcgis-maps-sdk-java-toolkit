@@ -14,7 +14,7 @@
         <StackPane>
             <children>
                 <TabPane fx:id="exampleTabPane" StackPane.alignment="TOP_LEFT"/>
-                <ToggleButton fx:id="settingsButton" text=">>" StackPane.alignment="TOP_RIGHT"/>
+                <ToggleButton fx:id="settingsButton" text="Show Settings" StackPane.alignment="TOP_RIGHT"/>
             </children>
         </StackPane>
     </center>

@@ -35,21 +35,22 @@ public class ExampleView extends BorderPane {
 
         selectedExampleProperty.addListener(((observable, oldValue, newValue) -> {
             exampleTabPane.getTabs().clear();
-            exampleTabPane.getTabs().addAll(newValue.getTabs());
+            if (newValue.getTabs() != null) {
+                exampleTabPane.getTabs().addAll(newValue.getTabs());
+            }
             settingsScrollPane.setContent(newValue.getSettings());
+            this.setRight(null);
         }));
 
         settingsButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (settingsButton.isSelected()) {
-                settingsButton.setText(">>");
+                settingsButton.setText("Hide Settings");
                 this.setRight(settingsScrollPane);
             } else {
-                settingsButton.setText("<<");
+                settingsButton.setText("Show Settings");
                 this.setRight(null);
             }
         }));
-
-        settingsButton.setSelected(true);
     }
 
     public void setSelectedExample(Example selectedExample) {

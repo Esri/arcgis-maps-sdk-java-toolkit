@@ -17,7 +17,7 @@
     <center>
         <StackPane fx:id="mainContent">
             <children>
-                <VBox xmlns:fx="http://javafx.com/fxml" stylesheets="/styles/app.css" fx:id="landingPage" styleClass="landing-page" alignment="TOP_CENTER">
+                <VBox xmlns:fx="http://javafx.com/fxml" stylesheets="/styles/app.css" fx:id="landingPage" styleClass="landing-page" alignment="TOP_CENTER" spacing="15">
                     <children>
                         <Label text="ArcGIS Runtime for Java Toolkit" styleClass="h1" />
                         <Label text="This app provides a simple way to view all of the components available within the Toolkit, simply select one from the dropdown menu above. Some components are compatible with both MapViews and SceneViews, others have a more custom layout. This will be demonstrated via the available tabs. In addition, each component has a series of settings, and possible test cases, to demonstrate implementation." alignment="CENTER"/>

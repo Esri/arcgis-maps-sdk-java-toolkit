@@ -1,6 +1,5 @@
 .root {
     -fx-font-family: sans-serif;
-    -fx-hover-color: #00619B;
 }
 
 Label {
@@ -36,15 +35,15 @@ ImageView:hover {
 }
 
 .combo-box:hover .cell:selected {
-    -fx-text-fill: -fx-hover-color;
+    -fx-text-fill: #00619B;
 }
 
 .combo-box:hover .arrow-button {
-    -fx-background-color: -fx-hover-color;
+    -fx-background-color: #00619B;
 }
 
 .combo-box:hover {
-    -fx-border-color: -fx-hover-color;
+    -fx-border-color: #00619B;
 }
 
 .combo-box-popup .list-view .list-cell:selected {
@@ -164,9 +163,25 @@ ToggleButton {
     -fx-background-insets: 2 0 0 0, 0, 0, 0;
 }
 
-ToggleButton:hover, Button:hover {
+ToggleButton:hover {
     -fx-background-color: #00619B;
     -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+/* Button */
+
+Button {
+    -fx-background-color: #007AC2;
+    -fx-min-height: 42;
+    -fx-text-fill: white;
+    -fx-background-insets: 2 0 0 0, 0, 0, 0;
+}
+
+Button:hover {
+    -fx-background-color: #00619B;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
 }
 
 /* LandingPage */
