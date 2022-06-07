@@ -69,7 +69,10 @@ public class ExampleUtils {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setWidth(screenBounds.getWidth() * 0.75);
         primaryStage.setHeight(screenBounds.getHeight() * .75);
-        primaryStage.setScene(new Scene(stackPane));
+        var scene = new Scene(stackPane);
+        scene.getStylesheets().add("/styles/example.css");
+        scene.getStylesheets().add("/styles/style.css");
+        primaryStage.setScene(scene);
         primaryStage.show();
 
         exampleView.setSelectedExample(example);

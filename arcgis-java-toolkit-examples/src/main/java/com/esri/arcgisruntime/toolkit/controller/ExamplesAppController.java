@@ -29,10 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
@@ -43,16 +40,13 @@ public class ExamplesAppController {
 
     private final List<Example> examples = new ArrayList<>();
 
-    private SimpleBooleanProperty showLandingPageProperty = new SimpleBooleanProperty();
-
-    @FXML
-    private BorderPane borderPane;
+    private final SimpleBooleanProperty showLandingPageProperty = new SimpleBooleanProperty();
 
     @FXML private ComboBox<Example> menu;
 
     @FXML private ExampleView exampleView;
 
-    @FXML private VBox indexOfExamples;
+    @FXML private GridPane examplesGridPane;
 
     @FXML private VBox landingPage;
 
@@ -103,27 +97,43 @@ public class ExamplesAppController {
             exampleView.setSelectedExample(nv);
         });
 
-        examples.forEach(example -> {
-            HBox hbox = new HBox(15);
-            hbox.setAlignment(Pos.CENTER_LEFT);
-            ImageView imageView = new ImageView();
-            imageView.setFitWidth(100);
-            imageView.setFitHeight(100);
-            if (ExamplesAppController.class.getResource("/images/" + example.getExampleName() + ".png") != null) {
-                imageView.setImage(new Image("/images/" + example.getExampleName() + ".png"));
-            } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
-                imageView.setImage(new Image("/images/default.png"));
+        var numberOfColumns = 2;
+        var numberOfRows = examples.size() / 2;
+        var indexOfExample = 0;
+        while (indexOfExample < examples.size()) {
+            for (int row = 0; row < numberOfRows; row++) {
+                for(int col = 0; col < numberOfColumns; col++) {
+                    var example = examples.get(indexOfExample);
+                    HBox hbox = new HBox(15);
+                    hbox.getStyleClass().add("panel");
+                    hbox.getStyleClass().add("panel-white");
+                    hbox.setId("example-grid-pane-item");
+                    hbox.setAlignment(Pos.CENTER_LEFT);
+                    ImageView imageView = new ImageView();
+                    imageView.setFitWidth(100);
+                    imageView.setFitHeight(100);
+                    if (ExamplesAppController.class.getResource("/images/" + example.getExampleName() + ".png") != null) {
+                        imageView.setImage(new Image("/images/" + example.getExampleName() + ".png"));
+                    } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
+                        imageView.setImage(new Image("/images/default.png"));
+                    }
+                    var labelVBox = new VBox(5);
+                    labelVBox.getStyleClass().add("panel-no-padding, panel-no-border, panel-white");
+                    labelVBox.setAlignment(Pos.CENTER_LEFT);
+                    var componentName = new Label(example.getExampleName());
+                    componentName.getStyleClass().add("h2");
+                    var componentDescription = new Label(example.getDescription());
+                    hbox.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
+                    labelVBox.getChildren().addAll(componentName, componentDescription);
+                    hbox.getChildren().addAll(imageView, labelVBox);
+                    examplesGridPane.add(hbox, col, row);
+                    indexOfExample += 1;
+                }
             }
-            Label component = new Label(example.getExampleName() + ": " + example.getDescription());
-            imageView.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
-            hbox.getChildren().addAll(imageView, component);
-            indexOfExamples.getChildren().add(hbox);
-        });
+        }
 
         exampleView.visibleProperty().bind(showLandingPageProperty.not());
         landingPage.visibleProperty().bind(showLandingPageProperty);
-
-//        menu.getSelectionModel().select(0);
     }
 
     private List<Example> getExamples() {

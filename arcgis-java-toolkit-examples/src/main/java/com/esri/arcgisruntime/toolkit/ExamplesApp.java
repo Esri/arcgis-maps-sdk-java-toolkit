@@ -40,7 +40,11 @@ public class ExamplesApp extends Application {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setWidth(screenBounds.getWidth() * 0.75);
         primaryStage.setHeight(screenBounds.getHeight() * .75);
-        primaryStage.setScene(new Scene(root));
+        var scene = new Scene(root);
+        scene.getStylesheets().add("/styles/style.css");
+        scene.getStylesheets().add("/styles/app.css");
+        scene.getStylesheets().add("/styles/example.css");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 

@@ -2,19 +2,18 @@
 
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.ToggleButton?>
-<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml" stylesheets="/styles/app.css" fx:id="exampleViewPane">
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml" fx:id="exampleViewPane">
     <right>
         <!-- IntelliJ IDE Bug - width binding syntax shows as error but it is correct and compiles -->
-        <ScrollPane fx:id="settingsScrollPane" prefWidth="${exampleViewPane.width*0.25}" fitToWidth="true" fitToHeight="true"/>
+        <ScrollPane fx:id="settingsScrollPane" prefWidth="${exampleViewPane.width*0.25}" fitToWidth="true" fitToHeight="true" styleClass="scroll-pane-no-background"/>
     </right>
     <center>
-        <StackPane>
+        <StackPane styleClass="example-stackpane">
             <children>
-                <TabPane fx:id="exampleTabPane" StackPane.alignment="TOP_LEFT"/>
-                <ToggleButton fx:id="settingsButton" text="Show Settings" StackPane.alignment="TOP_RIGHT"/>
+                <TabPane fx:id="exampleTabPane" StackPane.alignment="TOP_LEFT" id="example-tab-pane" />
+                <ToggleButton fx:id="settingsButton" text="Show Settings" StackPane.alignment="TOP_RIGHT" styleClass="button-large"/>
             </children>
         </StackPane>
     </center>

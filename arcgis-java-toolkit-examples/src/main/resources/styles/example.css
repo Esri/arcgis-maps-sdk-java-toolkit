@@ -25,34 +25,44 @@
     -calcite-ui-danger-press: #7C1D13;
 }
 
-/* The menu combo box in app header */
-
-#menu {
-    -fx-min-height:35;
-    -fx-min-width: 300;
-        -fx-font-size: 16;
+#example-tab-pane {
+    -fx-tab-min-width: 100;
+    -fx-tab-min-height: 30;
 }
 
-#menu .combo-box-popup .list-view .list-cell {
-    -fx-cell-size: 45;
+/* Settings */
+
+.settings {
+    -fx-padding: 10 10 10 10;
+    -fx-border-style: hidden hidden hidden solid;
+    -fx-border-color: -calcite-ui-border-input;
+    -fx-border-width: 2;
+    -fx-background-color: -calcite-ui-background;
 }
 
-#menu .combo-box-popup .list-view .list-cell .icon {
-    -fx-min-width: 10;
-    -fx-pref-width: 10;
-    -fx-max-width: 10;
-    -fx-min-height: 10;
-    -fx-pref-height: 10;
-    -fx-max-height: 10;
-    -fx-shape: "M448,71.9c-17.3-13.4-41.5-9.3-54.1,9.1L214,344.2l-99.1-107.3c-14.6-16.6-39.1-17.4-54.7-1.8  c-15.6,15.5-16.4,41.6-1.7,58.1c0,0,120.4,133.6,137.7,147c17.3,13.4,41.5,9.3,54.1-9.1l206.3-301.7  C469.2,110.9,465.3,85.2,448,71.9z";
-    -fx-background-color: white;
+.individual-setting {
+    -fx-padding: 5;
+    -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-background-color: -calcite-ui-foreground-3;
 }
 
-#menu .combo-box-popup .list-view .list-cell:filled:selected {
-    -fx-content-display: left;
+.titled-pane > .title {
+    -fx-font-size: 16;
 }
 
-#example-grid-pane-item:hover {
-    -fx-cursor:hand;
-    -fx-border-color: -calcite-ui-brand-hover;
+.trash-icon {
+     -fx-shape: "M341,128V99c0-19.1-14.5-35-34.5-35H205.4C185.5,64,171,79.9,171,99v29H80v32h9.2c0,0,5.4,0.6,8.2,3.4c2.8,2.8,3.9,9,3.9,9  l19,241.7c1.5,29.4,1.5,33.9,36,33.9h199.4c34.5,0,34.5-4.4,36-33.8l19-241.6c0,0,1.1-6.3,3.9-9.1c2.8-2.8,8.2-3.4,8.2-3.4h9.2v-32  h-91V128z M192,99c0-9.6,7.8-15,17.7-15h91.7c9.9,0,18.6,5.5,18.6,15v29H192V99z M183.5,384l-10.3-192h20.3L204,384H183.5z   M267.1,384h-22V192h22V384z M328.7,384h-20.4l10.5-192h20.3L328.7,384z";
+     -size: 20;
+     -fx-min-height: -size;
+     -fx-min-width: -size;
+     -fx-max-height: -size;
+     -fx-max-width: -size;
 }
+
+.example-stackpane {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: solid hidden hidden hidden;
+}
+
