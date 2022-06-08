@@ -143,11 +143,11 @@ public class CompassExample extends Application implements Example {
         layoutVBox.getChildren().addAll(positionLabel, positionComboBox);
         requiredSettings.add(layoutTitledPane);
 
-        return ExampleUtils.createSettings(getExampleName(), requiredSettings);
+        return ExampleUtils.createSettings(getName(), requiredSettings);
     }
 
     @Override
-    public String getExampleName() {return "Compass";}
+    public String getName() {return "Compass";}
 
     @Override
     public VBox getSettings() {

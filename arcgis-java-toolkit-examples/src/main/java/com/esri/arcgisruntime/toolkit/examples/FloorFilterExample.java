@@ -113,11 +113,11 @@ public class FloorFilterExample extends Application implements Example {
         layoutVBox.getChildren().addAll(positionLabel, positionComboBox);
         requiredSettings.add(layoutTitledPane);
 
-        return ExampleUtils.createSettings(getExampleName(), requiredSettings);
+        return ExampleUtils.createSettings(getName(), requiredSettings);
     }
 
     @Override
-    public String getExampleName() {return "Floor Filter";}
+    public String getName() {return "Floor Filter";}
 
     @Override
     public VBox getSettings() {

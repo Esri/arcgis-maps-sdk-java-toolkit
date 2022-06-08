@@ -65,7 +65,7 @@ public class ExampleUtils {
         ExampleView exampleView = new ExampleView();
         stackPane.getChildren().add(exampleView);
 
-        primaryStage.setTitle("ArcGIS Runtime for Java Toolkit Examples - " + example.getExampleName());
+        primaryStage.setTitle("ArcGIS Runtime for Java Toolkit Examples - " + example.getName());
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setWidth(screenBounds.getWidth() * 0.75);
         primaryStage.setHeight(screenBounds.getHeight() * .75);

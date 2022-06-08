@@ -26,7 +26,7 @@ public interface Example {
 
     VBox getSettings();
 
-    String getExampleName();
+    String getName();
 
     List<Tab> getTabs();
 

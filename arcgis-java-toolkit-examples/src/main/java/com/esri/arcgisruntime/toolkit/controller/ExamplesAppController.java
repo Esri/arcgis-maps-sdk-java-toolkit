@@ -120,7 +120,7 @@ public class ExamplesAppController {
                     var labelVBox = new VBox(8);
                     labelVBox.getStyleClass().add("panel-no-padding, panel-no-border, panel-white");
                     labelVBox.setAlignment(Pos.CENTER_LEFT);
-                    var componentName = new Label(example.getExampleName());
+                    var componentName = new Label(example.getName());
                     componentName.getStyleClass().add("h2");
                     componentName.getStyleClass().add("blue-text");
                     componentName.getStyleClass().add("label-wrap-text");
