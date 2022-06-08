@@ -79,6 +79,13 @@ public class ExampleUtils {
     }
 
     public static void configureAPIKeyForRunningStandAloneExample() {
+        var logger = Logger.getLogger(ExampleUtils.class.getName());
+        var apiKeyWarning = "An API key is required to enable access to services, web maps, and web scenes hosted in " +
+                "ArcGIS Online.\n If you haven't already, go to your developer dashboard to get your API key.\n Please " +
+                "refer to https://developers.arcgis.com/java/get-started/ for more information.\nYou can set your API " +
+                "Key in ExampleUtils or add an apiKey property to " +
+                System.getProperty("user.home") + "\\.gradle\\gradle.properties.\n Note: it is not best practice to " +
+                "store API keys in source code.";
         try {
             Properties prop = new Properties();
             prop.load(new FileInputStream(System.getProperty("user.home") + "/.gradle/gradle.properties"));
@@ -87,9 +94,11 @@ public class ExampleUtils {
             // If you haven't already, go to your developer dashboard to get your API key.
             // Please refer to https://developers.arcgis.com/java/get-started/ for more information
             ArcGISRuntimeEnvironment.setApiKey(prop.getProperty("apiKey"));
+            if (prop.get("apiKey") == null) {
+                logger.warning(apiKeyWarning);
+            }
         } catch (Exception e) {
-            var logger = Logger.getLogger(ExampleUtils.class.getName());
-            logger.warning("Exception details: " + e.getMessage() + "\nAn API key is required to enable access to services, web maps, and web scenes hosted in ArcGIS Online.\n If you haven't already, go to your developer dashboard to get your API key.\n Please refer to https://developers.arcgis.com/java/get-started/ for more information.\nYou can set your API Key in ExampleUtils or add an apiKey property to " + System.getProperty("user.home") + "\\.gradle\\gradle.properties.\n Note: it is not best practice to store API keys in source code.");
+            logger.warning("Exception details: " + e.getMessage() + apiKeyWarning);
         }
     }
 }
