@@ -117,12 +117,15 @@ public class ExamplesAppController {
                     } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
                         imageView.setImage(new Image("/images/default.png"));
                     }
-                    var labelVBox = new VBox(5);
+                    var labelVBox = new VBox(8);
                     labelVBox.getStyleClass().add("panel-no-padding, panel-no-border, panel-white");
                     labelVBox.setAlignment(Pos.CENTER_LEFT);
                     var componentName = new Label(example.getExampleName());
                     componentName.getStyleClass().add("h2");
+                    componentName.getStyleClass().add("blue-text");
+                    componentName.getStyleClass().add("label-wrap-text");
                     var componentDescription = new Label(example.getDescription());
+                    componentDescription.getStyleClass().add("label-wrap-text");
                     hbox.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
                     labelVBox.getChildren().addAll(componentName, componentDescription);
                     hbox.getChildren().addAll(imageView, labelVBox);

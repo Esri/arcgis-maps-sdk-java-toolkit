@@ -267,6 +267,10 @@ ToggleButton:hover, Button:hover {
     -fx-font-size: 24;
 }
 
+.blue-text {
+    -fx-text-fill: -calcite-ui-info;
+}
+
 .h2 {
     -fx-font-size: 18;
 }
