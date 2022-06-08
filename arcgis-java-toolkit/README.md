@@ -1,4 +1,4 @@
-# arcgis-runtime-toolkit-java
+# arcgis-java-toolkit
 
 ## Introduction
 
@@ -81,12 +81,6 @@ dependencies {
 ```
 
 The toolkit is open source, so you are also free to clone or download this repository, customize to meet your requirements, and then build and deploy using Gradle.
-
-## Resources
-
-* [ArcGIS Runtime SDK for Java](https://developers.arcgis.com/java/)
-* [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
-* [twitter@esri](http://twitter.com/esri)
 
 ## Issues
 
