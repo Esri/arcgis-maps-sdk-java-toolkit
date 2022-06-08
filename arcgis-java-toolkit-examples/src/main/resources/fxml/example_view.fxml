@@ -4,15 +4,19 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.*?>
+<!-- Defines a custom BorderPane used to display an Example -->
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml" fx:id="exampleViewPane">
     <right>
+        <!-- Right side of the BorderPane contains a ScrollPane for displaying the Example settings -->
         <!-- IntelliJ IDE Bug - width binding syntax shows as error but it is correct and compiles -->
-        <ScrollPane fx:id="settingsScrollPane" prefWidth="${exampleViewPane.width*0.25}" fitToWidth="true" fitToHeight="true" styleClass="scroll-pane-no-background"/>
+        <ScrollPane fx:id="settingsScrollPane" prefWidth="${exampleViewPane.width*0.25}" fitToWidth="true" fitToHeight="true" minWidth="200" styleClass="scroll-pane-no-background"/>
     </right>
     <center>
+        <!-- Center of the BorderPane contains a StackPane for displaying the Example -->
         <StackPane styleClass="example-stackpane">
             <children>
                 <TabPane fx:id="exampleTabPane" StackPane.alignment="TOP_LEFT" id="example-tab-pane" />
+                <!-- ToggleButton used to show/hide the settings panel in the right of the BorderPane -->
                 <ToggleButton fx:id="settingsButton" text="Show Settings" StackPane.alignment="TOP_RIGHT" styleClass="button-large"/>
             </children>
         </StackPane>

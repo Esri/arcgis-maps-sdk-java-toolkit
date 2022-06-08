@@ -1,5 +1,6 @@
-/*Colors and themes taken from Esri Calcite Web*/
+/* Stylesheet containing specific styles for the Examples App */
 
+/* Colors and themes taken from Esri Calcite Web */
 * {
     -calcite-ui-brand: #007AC2;
     -calcite-ui-brand-hover: #00619B;
@@ -51,6 +52,8 @@
 #menu .combo-box-popup .list-view .list-cell:filled:selected {
     -fx-content-display: left;
 }
+
+/* The landing page grid pane */
 
 #example-grid-pane-item:hover {
     -fx-cursor:hand;

@@ -25,50 +25,66 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 
+/**
+ * A custom BorderPane used to display an example either within the Example App or as a standalone via the individual
+ * component Application. The layout is configured via example_view.fxml.
+ *
+ * @since 100.15.0
+ */
 public class ExampleView extends BorderPane {
 
-    // model
     private final SimpleObjectProperty<Example> selectedExampleProperty = new SimpleObjectProperty<>();
+    @FXML private ScrollPane settingsScrollPane;
+    @FXML private TabPane exampleTabPane;
+    @FXML private ToggleButton settingsButton;
 
-    @FXML
-    ScrollPane settingsScrollPane;
-
-    @FXML
-    TabPane exampleTabPane;
-
-    @FXML
-    ToggleButton settingsButton;
-
+    /**
+     * Constructor for the ExampleView. Loads the FXML file and sets the controller. Configures properties for the view.
+     *
+     * @since 100.15.0
+     */
     public ExampleView() {
+        // load the FXML file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/example_view.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {
             loader.load();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
 
-        selectedExampleProperty.addListener(((observable, oldValue, newValue) -> {
-            exampleTabPane.getTabs().clear();
-            if (newValue.getTabs() != null) {
-                exampleTabPane.getTabs().addAll(newValue.getTabs());
-            }
-            settingsScrollPane.setContent(newValue.getSettings());
-            this.setRight(null);
-        }));
-
-        settingsButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (settingsButton.isSelected()) {
-                settingsButton.setText("Hide Settings");
-                this.setRight(settingsScrollPane);
-            } else {
-                settingsButton.setText("Show Settings");
+            // when a new example is selected, update the UI to display it
+            selectedExampleProperty.addListener(((observable, oldValue, newValue) -> {
+                // configure the tab pane to contain all tabs associated with the newly selected example
+                exampleTabPane.getTabs().clear();
+                if (newValue.getTabs() != null) {
+                    exampleTabPane.getTabs().addAll(newValue.getTabs());
+                }
+                // configure the settings pane but hide it initially
+                settingsScrollPane.setContent(newValue.getSettings());
                 this.setRight(null);
-            }
-        }));
+                settingsButton.selectedProperty().set(false);
+            }));
+
+            // configure the settings button to show/hide the settings pane
+            settingsButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+                if (settingsButton.isSelected()) {
+                    settingsButton.setText("Hide Settings");
+                    this.setRight(settingsScrollPane);
+                } else {
+                    settingsButton.setText("Show Settings");
+                    this.setRight(null);
+                }
+            }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Sets the selected example to the selected example property.
+     *
+     * @param selectedExample the example to be set
+     * @since 100.15.0
+     */
     public void setSelectedExample(Example selectedExample) {
         selectedExampleProperty.set(selectedExample);
     }

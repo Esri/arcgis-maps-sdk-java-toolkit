@@ -1,4 +1,6 @@
-/*Colors and themes taken from Esri Calcite Web*/
+/* Stylesheet containing generic styles applied across all views */
+
+/* Colors and themes taken from Esri Calcite Web */
 * {
     -calcite-ui-brand: #007AC2;
     -calcite-ui-brand-hover: #00619B;
@@ -22,7 +24,6 @@
     -calcite-ui-danger: #D83020; /* state color: red - Danger - A connection error, destructive action, action failure, etc. */
     -calcite-ui-danger-hover: #A82B1E;
     -calcite-ui-danger-press: #7C1D13;
-
     -fx-text-fill: -calcite-ui-text-1;
 }
 
@@ -74,7 +75,7 @@ Label {
     -fx-font-size: 14;
 }
 
-/* COMBO BOX */
+/* ComboBox */
 
 .combo-box {
     -fx-background-color: white;
@@ -152,7 +153,7 @@ Label {
     -fx-content-display: text-only;
 }
 
-/* TAB PANE */
+/* TabPane */
 
 .tab-pane *.tab-header-area *.tab-header-background  {
     -fx-background-color: white;
@@ -267,10 +268,6 @@ ToggleButton:hover, Button:hover {
     -fx-font-size: 24;
 }
 
-.blue-text {
-    -fx-text-fill: -calcite-ui-info;
-}
-
 .h2 {
     -fx-font-size: 18;
 }
@@ -280,7 +277,11 @@ ToggleButton:hover, Button:hover {
     -fx-font-width: bold;
 }
 
-/* TitledPanes */
+.blue-text {
+    -fx-text-fill: -calcite-ui-info;
+}
+
+/* TitledPane */
 
 .titled-pane > .title {
     -fx-background-color: transparent;
