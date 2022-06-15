@@ -169,7 +169,7 @@ public class FloorFilterExample extends Application implements Example {
     @Override
     public void start(Stage primaryStage) {
         // sets up the individual stage if run via the Launcher class
-        ExampleUtils.setupIndividualExampleStage(primaryStage, new FloorFilterExample());
+        ExampleUtils.setupIndividualExampleStage(primaryStage, this);
     }
 
     public static void main(String[] args) { Application.launch(args); }

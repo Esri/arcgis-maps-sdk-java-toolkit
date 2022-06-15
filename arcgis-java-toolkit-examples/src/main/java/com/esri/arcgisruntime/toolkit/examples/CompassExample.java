@@ -203,7 +203,7 @@ public class CompassExample extends Application implements Example {
     @Override
     public void start(Stage primaryStage) {
         // sets up the individual stage if run via the Launcher class
-        ExampleUtils.setupIndividualExampleStage(primaryStage, new CompassExample());
+        ExampleUtils.setupIndividualExampleStage(primaryStage, this);
     }
 
     public static void main(String[] args) {
