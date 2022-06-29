@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2022 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2022 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit.controller;
@@ -35,13 +35,12 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * A Controller for the Examples App. Configures the layout for the main app via app.fxml. This includes a header
- * section with ComboBox menu to select an Example to view, and also includes an initial Landing Page that displays
- * when the app first loads giving an overview of the available Examples in a GridPane layout.
+ * A Controller for the {@link com.esri.arcgisruntime.toolkit.ExamplesApp}. This includes a header section with ComboBox
+ * menu to select an Example to view, and also includes an initial Landing Page that displays when the app first loads
+ * giving an overview of the available Examples in a GridPane layout.
  *
  * @since 100.15.0
  */
@@ -53,6 +52,11 @@ public class ExamplesAppController {
     @FXML private GridPane examplesGridPane;
     @FXML private VBox landingPage;
 
+    /**
+     * Sets up and populates the UI.
+     *
+     * @since 100.15.0
+     */
     public void initialize() {
         // authentication with an API key or named user is required to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(System.getProperty("apiKey"));
@@ -92,12 +96,12 @@ public class ExamplesAppController {
         });
 
         // sets the selected example to the view
-        menu.getSelectionModel().selectedItemProperty().addListener((obvs, old, nv) -> {
+        menu.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (landingPage.isVisible()) {
                 // hide the landing page once a selection is made
                 landingPage.setVisible(false);
             }
-            exampleView.setSelectedExample(nv);
+            exampleView.setSelectedExample(newValue);
         });
         // toggles the visibility of the landing page and example view
         exampleView.visibleProperty().bind(landingPage.visibleProperty().not());
@@ -106,7 +110,7 @@ public class ExamplesAppController {
     }
 
     /**
-     * Instantiates Examples and adds them to the list of examples.
+     * Returns a list of Examples.
      *
      * @return the list of examples
      * @since 100.15.0
@@ -114,7 +118,7 @@ public class ExamplesAppController {
     private List<Example> getExamples() {
         Example compassExample = new CompassExample();
         Example floorFilterExample = new FloorFilterExample();
-        return Arrays.asList(compassExample, floorFilterExample);
+        return List.of(compassExample, floorFilterExample);
     }
 
     /**
@@ -129,46 +133,44 @@ public class ExamplesAppController {
         var indexOfExample = 0;
         // add each of the examples into the grid at the appropriate column and row
         while (indexOfExample < examples.size()) {
-            for (int row = 0; row < numberOfRows; row++) {
-                for(int col = 0; col < numberOfColumns; col++) {
-                    var example = examples.get(indexOfExample);
-                    // HBox container for each example
-                    HBox hbox = new HBox(15);
-                    hbox.getStyleClass().add("panel");
-                    hbox.getStyleClass().add("panel-white");
-                    hbox.setId("example-grid-pane-item");
-                    hbox.setAlignment(Pos.CENTER_LEFT);
-                    // on clicking the HBox the example will be selected
-                    hbox.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
-                    // ImageView displays thumbnail of the component
-                    ImageView imageView = new ImageView();
-                    imageView.setFitWidth(100);
-                    imageView.setFitHeight(100);
-                    // check if an image exists for the example and display the default if not
-                    if (ExamplesAppController.class.getResource("/images/" + example.getName() + ".png") != null) {
-                        imageView.setImage(new Image("/images/" + example.getName() + ".png"));
-                    } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
-                        imageView.setImage(new Image("/images/default.png"));
-                    }
-                    // VBox containing the name and description for the example
-                    var labelVBox = new VBox(8);
-                    labelVBox.getStyleClass().add("panel-no-padding, panel-no-border, panel-white");
-                    labelVBox.setAlignment(Pos.CENTER_LEFT);
-                    var componentName = new Label(example.getName());
-                    componentName.getStyleClass().add("h2");
-                    componentName.getStyleClass().add("blue-text");
-                    componentName.getStyleClass().add("label-wrap-text");
-                    var componentDescription = new Label(example.getDescription());
-                    componentDescription.getStyleClass().add("label-wrap-text");
-                    labelVBox.getChildren().addAll(componentName, componentDescription);
-                    // add child components to the HBox
-                    hbox.getChildren().addAll(imageView, labelVBox);
-                    // add the example to the GridPane
-                    examplesGridPane.add(hbox, col, row);
-                    // increment the index to loop through the next example
-                    indexOfExample += 1;
-                }
+            int row = indexOfExample / numberOfColumns;
+            int col = indexOfExample % numberOfColumns;
+            var example = examples.get(indexOfExample);
+            // HBox container for each example
+            HBox hbox = new HBox(15);
+            hbox.getStyleClass().add("panel");
+            hbox.getStyleClass().add("panel-white");
+            hbox.setId("example-grid-pane-item");
+            hbox.setAlignment(Pos.CENTER_LEFT);
+            // on clicking the HBox the example will be selected
+            hbox.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
+            // ImageView displays thumbnail of the component
+            ImageView imageView = new ImageView();
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(100);
+            // check if an image exists for the example and display the default if not
+            if (ExamplesAppController.class.getResource("/images/" + example.getName() + ".png") != null) {
+                imageView.setImage(new Image("/images/" + example.getName() + ".png"));
+            } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
+                imageView.setImage(new Image("/images/default.png"));
             }
+            // VBox containing the name and description for the example
+            var labelVBox = new VBox(8);
+            labelVBox.getStyleClass().add("panel-no-padding, panel-no-border, panel-white");
+            labelVBox.setAlignment(Pos.CENTER_LEFT);
+            var componentName = new Label(example.getName());
+            componentName.getStyleClass().add("h2");
+            componentName.getStyleClass().add("blue-text");
+            componentName.getStyleClass().add("label-wrap-text");
+            var componentDescription = new Label(example.getDescription());
+            componentDescription.getStyleClass().add("label-wrap-text");
+            labelVBox.getChildren().addAll(componentName, componentDescription);
+            // add child components to the HBox
+            hbox.getChildren().addAll(imageView, labelVBox);
+            // add the example to the GridPane
+            examplesGridPane.add(hbox, col, row);
+            // increment the index to loop through the next example
+            indexOfExample += 1;
         }
     }
 

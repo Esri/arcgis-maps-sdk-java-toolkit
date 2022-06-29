@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2022 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2022 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit.examples;
@@ -50,8 +50,6 @@ public class FloorFilterExample extends Application implements Example {
     private final List<Tab> tabs = new ArrayList<>();
     private final VBox settings;
     private final BorderPane borderPane;
-
-
 
     /**
      * A constructor for the FloorFilterExample that demonstrates how to implement a FloorFilter for a MapView.
@@ -92,7 +90,7 @@ public class FloorFilterExample extends Application implements Example {
      */
     private VBox configureSettings() {
         // define specific settings for the FloorFilter
-        ArrayList<Node> requiredSettings = new ArrayList<>();
+        List<Node> requiredSettings = new ArrayList<>();
 
         // automatic selection mode
         VBox autoSelectVBox = new VBox(5);
@@ -100,8 +98,8 @@ public class FloorFilterExample extends Application implements Example {
         ComboBox<FloorFilter.AutomaticSelectionMode> autoSelectComboBox = new ComboBox<>();
         autoSelectComboBox.getItems().addAll(FloorFilter.AutomaticSelectionMode.ALWAYS,
                 FloorFilter.AutomaticSelectionMode.ALWAYS_NON_CLEARING, FloorFilter.AutomaticSelectionMode.NEVER);
-        autoSelectComboBox.getSelectionModel().selectedItemProperty().addListener((obvs, ov, nv) -> {
-            floorFilter.setAutomaticSelectionMode(nv);
+        autoSelectComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            floorFilter.setAutomaticSelectionMode(newValue);
         });
         autoSelectComboBox.getSelectionModel().select(FloorFilter.AutomaticSelectionMode.ALWAYS);
         autoSelectVBox.getChildren().addAll(autoSelectLabel, autoSelectComboBox);
@@ -118,16 +116,16 @@ public class FloorFilterExample extends Application implements Example {
         Slider sizeSlider = new Slider(120, 500, 220);
         sizeSlider.setShowTickLabels(true);
         sizeSlider.setMajorTickUnit(500);
-        sizeSlider.valueProperty().addListener((obvs, ov, nv) -> {
-            floorFilter.setPrefSize(nv.doubleValue(), nv.doubleValue());
+        sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            floorFilter.setPrefSize(newValue.doubleValue(), newValue.doubleValue());
         });
         layoutVBox.getChildren().addAll(sizeLabel, sizeSlider);
         // position
         Label positionLabel = new Label("Re-position:");
         ComboBox<String> positionComboBox = new ComboBox<>();
         positionComboBox.getItems().addAll("Left", "Right");
-        positionComboBox.getSelectionModel().selectedItemProperty().addListener((obvs, ov, nv) -> {
-            if(nv.equals("Left")) {
+        positionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals("Left")) {
                 borderPane.setRight(null);
                 borderPane.setLeft(floorFilter);
             } else {

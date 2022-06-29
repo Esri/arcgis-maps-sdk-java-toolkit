@@ -40,6 +40,7 @@ dependencies {
     runtimeOnly 'org.slf4j:slf4j-nop:1.7.32'
     implementation 'com.esri.arcgisruntime:arcgis-java-toolkit'
 }
+
 task createGradlePropertiesAndWriteApiKey {
     description = "Creates a new gradle.properties file with an empty API key variable in the user home ./gradle folder, if the file doesn't already exist."
     group = "build"

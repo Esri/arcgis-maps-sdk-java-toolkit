@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2022 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2022 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit.examples;
@@ -35,7 +35,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,7 +91,7 @@ public class CompassExample extends Application implements Example {
         Tab sceneViewTab = ExampleUtils.createTab(sceneViewStackPane, "Scene");
 
         // add both tabs to the list
-        tabs.addAll(Arrays.asList(mapViewTab, sceneViewTab));
+        tabs.addAll(List.of(mapViewTab, sceneViewTab));
 
         // configure settings options
         settings = configureSettings();
@@ -108,7 +107,7 @@ public class CompassExample extends Application implements Example {
      */
     private VBox configureSettings() {
         // define specific settings for the Compass
-        ArrayList<Node> compassSettings = new ArrayList<>();
+        List<Node> compassSettings = new ArrayList<>();
 
         // Auto Hide
         HBox autoHideSettings = new HBox(10);
@@ -152,10 +151,10 @@ public class CompassExample extends Application implements Example {
         Slider sizeSlider = new Slider(0, 500, 100);
         sizeSlider.setShowTickLabels(true);
         sizeSlider.setMajorTickUnit(500);
-        sizeSlider.valueProperty().addListener((obvs, ov, nv) -> {
+        sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             // update both compasses
-            mapViewCompass.setPrefSize(nv.doubleValue(), nv.doubleValue());
-            sceneViewCompass.setPrefSize(nv.doubleValue(), nv.doubleValue());
+            mapViewCompass.setPrefSize(newValue.doubleValue(), newValue.doubleValue());
+            sceneViewCompass.setPrefSize(newValue.doubleValue(), newValue.doubleValue());
         });
         layoutVBox.getChildren().addAll(sizeLabel, sizeSlider);
         // position
@@ -163,10 +162,10 @@ public class CompassExample extends Application implements Example {
         ComboBox<Pos> positionComboBox = new ComboBox<>();
         positionComboBox.getItems().addAll(Pos.TOP_LEFT, Pos.TOP_CENTER, Pos.TOP_RIGHT, Pos.CENTER, Pos.BOTTOM_LEFT,
                 Pos.BOTTOM_CENTER, Pos.BOTTOM_RIGHT);
-        positionComboBox.getSelectionModel().selectedItemProperty().addListener((obvs, ov, nv) -> {
+        positionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             // update both compasses
-            StackPane.setAlignment(mapViewCompass, nv);
-            StackPane.setAlignment(sceneViewCompass, nv);
+            StackPane.setAlignment(mapViewCompass, newValue);
+            StackPane.setAlignment(sceneViewCompass, newValue);
         });
         positionComboBox.getSelectionModel().select(Pos.TOP_LEFT);
         layoutVBox.getChildren().addAll(positionLabel, positionComboBox);
@@ -197,7 +196,7 @@ public class CompassExample extends Application implements Example {
 
     @Override
     public List<GeoView> getGeoViews() {
-        return Arrays.asList(mapView, sceneView);
+        return List.of(mapView, sceneView);
     }
 
     @Override

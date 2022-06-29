@@ -5,10 +5,10 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
 <!-- Defines the main layout for the Examples App -->
-<BorderPane fx:id="borderPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.esri.arcgisruntime.toolkit.controller.ExamplesAppController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.esri.arcgisruntime.toolkit.controller.ExamplesAppController">
     <!-- Top section of the BorderPane is the Header bar with menu for selecting an Example -->
     <top>
-        <HBox fx:id="headerBar" spacing="50" alignment="CENTER" styleClass="panel, panel-large-padding, panel-no-border">
+        <HBox spacing="50" alignment="CENTER" styleClass="panel, panel-large-padding, panel-no-border">
             <children>
                 <ComboBox fx:id="menu" promptText="Select a tool" id="menu" />
             </children>
@@ -16,10 +16,10 @@
     </top>
     <center>
         <!-- Center section of the BorderPane is a StackPane that displays a Landing Page or Example View  -->
-        <StackPane fx:id="mainContent">
+        <StackPane>
             <children>
                 <!-- Landing Page -->
-                <ScrollPane fx:id="landingPageScrollPane" fitToWidth="true" fitToHeight="true" styleClass="scroll-pane-no-background">
+                <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane-no-background">
                     <VBox fx:id="landingPage" alignment="TOP_CENTER" spacing="15" styleClass="panel-white, panel, panel-extra-large-padding">
                         <children>
                             <Label text="ArcGIS Runtime for Java Toolkit" styleClass="h1, label-align-center, label-wrap-text" />
