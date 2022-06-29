@@ -129,7 +129,6 @@ public class ExamplesAppController {
      */
     private void setupExampleGridPane() {
         var numberOfColumns = 2;
-        var numberOfRows = examples.size() / 2;
         var indexOfExample = 0;
         // add each of the examples into the grid at the appropriate column and row
         while (indexOfExample < examples.size()) {
