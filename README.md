@@ -9,6 +9,7 @@ There are 2 projects within this repository: the Toolkit itself, `arcgis-java-to
 ## Resources
 
 * [ArcGIS Runtime API for Java](https://developers.arcgis.com/java/)
+* [ArcGIS Runtime Blog](https://community.esri.com/t5/arcgis-runtime-sdks-blog/bg-p/arcgis-runtime-sdks-blog)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * [twitter@esri](http://twitter.com/esri)
 
