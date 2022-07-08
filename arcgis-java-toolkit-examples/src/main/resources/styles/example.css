@@ -1,6 +1,7 @@
 /* Stylesheet containing specific styles for an Example View */
 
 /* Colors and themes taken from Esri Calcite Web */
+/* https://esri.github.io/calcite-web */
 * {
     -calcite-ui-brand: #007AC2;
     -calcite-ui-brand-hover: #00619B;

@@ -109,6 +109,7 @@ public class ExampleUtils {
         primaryStage.setHeight(screenBounds.getHeight() * .75);
         // configure the Scene and add to the Stage
         var scene = new Scene(stackPane);
+        // individual stylesheets can be commented out for testing purposes
         scene.getStylesheets().add("/styles/example.css");
         scene.getStylesheets().add("/styles/style.css");
         primaryStage.setScene(scene);

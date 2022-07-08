@@ -42,7 +42,7 @@ public class ExamplesApp extends Application {
             Parent root = loader.load();
             controller = loader.getController();
             // sets the stage title
-            primaryStage.setTitle("ArcGIS Runtime for Java Toolkit - Examples");
+            primaryStage.setTitle("ArcGIS Runtime API for Java Toolkit - Examples");
             // on initial launch the stage is set to 75% of the screen size
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             primaryStage.setWidth(screenBounds.getWidth() * 0.75);
@@ -50,6 +50,7 @@ public class ExamplesApp extends Application {
 
             // configures the scene and sets it to the stage
             var scene = new Scene(root);
+            // individual stylesheets can be commented out for testing purposes
             scene.getStylesheets().add("/styles/style.css");
             scene.getStylesheets().add("/styles/app.css");
             scene.getStylesheets().add("/styles/example.css");

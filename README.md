@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The ArcGIS Runtime API for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource, so you can feel free to download or clone the code and customize to meet your requirements.
+The ArcGIS Runtime API for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource (licensed under the Apache License Version 2.0), so you can feel free to download or clone the code and customize to meet your requirements.
 
 There are 2 projects within this repository: the Toolkit itself, `arcgis-java-toolkit`, and an Examples project, `arcgis-java-toolkit-examples`, which contains example implementations of the components to aid in your development.
 

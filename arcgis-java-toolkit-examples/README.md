@@ -12,12 +12,12 @@ This project provides an Example App to view demo implementations of the ArcGIS 
 
 ## Instructions
 
-The Example App requires the `arcgis-java-toolkit` project, so it is recommended that the whole repository is cloned before following the below steps such that the 2 project directories are next to each other. This enables straightforward testing of any amendments made to the toolkit components as you work.
+The Example App requires the `arcgis-java-toolkit` project to run. The whole repository `arcgis-runtime-toolkit-java` must be cloned before following the below steps, ensuring the project directories for `arcgis-java-toolkit-examples` and `arcgis-java-toolkit` are next to each other. This enables straightforward testing of any amendments made to the toolkit components as you work.
 
 ### IntelliJ IDEA
 
 1. Open Intellij IDEA and select File > Open....
-2. Select the `arcgis-runtime-toolkit-java` folder that you cloned and that contains both the `arcgis-java-toolkit` and `arcgis-java-toolkit-examples` projects.
+2. Select the `arcgis-runtime-toolkit-java` folder that you cloned, which contains both the `arcgis-java-toolkit` and `arcgis-java-toolkit-examples` projects.
 3. Click OK.
 4. Select File > Project Structure... and ensure that the Project SDK and language level are set to use Java 11.
 5. Store your API key in the gradle.properties file located in the /.gradle folder within your home directory. The API key will be set as a Java system property when the sample is run. `apiKey = yourApiKey`
