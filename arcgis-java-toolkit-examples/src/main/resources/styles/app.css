@@ -1,0 +1,62 @@
+/* Stylesheet containing specific styles for the Examples App */
+
+/* Colors and themes taken from Esri Calcite Web */
+/* https://esri.github.io/calcite-web */
+* {
+    -calcite-ui-brand: #007AC2;
+    -calcite-ui-brand-hover: #00619B;
+    -calcite-ui-brand-press: #004874;
+    -calcite-ui-background: #F8F8F8;
+    -calcite-ui-foreground-1: #FFFFFF;
+    -calcite-ui-foreground-2: #F3F3F3;
+    -calcite-ui-foreground-3: #EAEAEA;
+    -calcite-ui-text-1: #151515;
+    -calcite-ui-text-2: #4A4A4A;
+    -calcite-ui-text-3: #6A6A6A;
+    -calcite-ui-text-inverse: #FFFFFF;
+    -calcite-ui-text-link: #00619B;
+    -calcite-ui-border-1: #CACACA;
+    -calcite-ui-border-2: #D4D4D4;
+    -calcite-ui-border-3: #DFDFDF;
+    -calcite-ui-border-input: #949494;
+    -calcite-ui-info: #00619B; /* state color: blue - Info - used for Non critical information which requires minimal user attention */
+    -calcite-ui-success: #35AC46; /* state color: green - Success - To be used when an important action has been completed successfully and requires user notification. */
+    -calcite-ui-warning: #EDD317; /* state color: yellow - Warning - To be used when something needs the user's attention, but is not critical or destructive.*/
+    -calcite-ui-danger: #D83020; /* state color: red - Danger - A connection error, destructive action, action failure, etc. */
+    -calcite-ui-danger-hover: #A82B1E;
+    -calcite-ui-danger-press: #7C1D13;
+}
+
+/* The menu combo box in app header */
+
+#menu {
+    -fx-min-height:35;
+    -fx-min-width: 300;
+        -fx-font-size: 16;
+}
+
+#menu .combo-box-popup .list-view .list-cell {
+    -fx-cell-size: 45;
+}
+
+#menu .combo-box-popup .list-view .list-cell .icon {
+    -fx-min-width: 10;
+    -fx-pref-width: 10;
+    -fx-max-width: 10;
+    -fx-min-height: 10;
+    -fx-pref-height: 10;
+    -fx-max-height: 10;
+    -fx-shape: "M448,71.9c-17.3-13.4-41.5-9.3-54.1,9.1L214,344.2l-99.1-107.3c-14.6-16.6-39.1-17.4-54.7-1.8  c-15.6,15.5-16.4,41.6-1.7,58.1c0,0,120.4,133.6,137.7,147c17.3,13.4,41.5,9.3,54.1-9.1l206.3-301.7  C469.2,110.9,465.3,85.2,448,71.9z";
+    -fx-background-color: white;
+}
+
+#menu .combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-content-display: left;
+}
+
+/* The landing page grid pane */
+
+#example-grid-pane-item:hover {
+    -fx-cursor:hand;
+    -fx-border-color: -calcite-ui-brand-hover;
+}

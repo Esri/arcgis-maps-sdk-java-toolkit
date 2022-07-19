@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import com.esri.arcgisruntime.toolkit.controller.ExampleView?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.*?>
+<!-- Defines the main layout for the Examples App -->
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.esri.arcgisruntime.toolkit.controller.ExamplesAppController">
+    <!-- Top section of the BorderPane is the Header bar with menu for selecting an Example -->
+    <top>
+        <HBox spacing="50" alignment="CENTER" styleClass="panel, panel-large-padding, panel-no-border">
+            <children>
+                <ComboBox fx:id="menu" promptText="Select a tool" id="menu" />
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <!-- Center section of the BorderPane is a StackPane that displays a Landing Page or Example View  -->
+        <StackPane>
+            <children>
+                <!-- Landing Page -->
+                <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane-no-background">
+                    <VBox fx:id="landingPage" alignment="TOP_CENTER" spacing="15" styleClass="panel-white, panel, panel-extra-large-padding">
+                        <children>
+                            <Label text="ArcGIS Runtime for Java Toolkit" styleClass="h1, label-align-center, label-wrap-text" />
+                            <Label text="This app provides a simple way to view all of the components available within the Toolkit, simply select one from the dropdown menu above. Some components are compatible with both MapViews and SceneViews, others have a more custom layout. This will be demonstrated via the available tabs. In addition, each component has a series of settings, and possible test cases, to demonstrate implementation." styleClass="h3, label-align-center, label-wrap-text" />
+                            <!-- IntelliJ IDE Bug - width binding syntax shows as error but it is correct and compiles -->
+                            <GridPane fx:id="examplesGridPane" hgap="10" vgap="10" maxWidth="${landingPage.width*0.9}" styleClass="panel, panel-dark" >
+                                <fx:define>
+                                    <ColumnConstraints fx:id="colConstraints" percentWidth="100"/>
+                                </fx:define>
+                                <columnConstraints>
+                                    <fx:reference source="colConstraints"/>
+                                    <fx:reference source="colConstraints"/>
+                                </columnConstraints>
+                            </GridPane>
+                        </children>
+                    </VBox>
+                </ScrollPane>
+                <!-- Displays an Example, initially not visible -->
+                <ExampleView fx:id="exampleView" visible="false"/>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
