@@ -314,7 +314,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
     // configure the text field that filters sites by name
     sitesFilterTextField.setPromptText("Filter sites by name");
-    sitesFilterTextField.textProperty().addListener(obs -> {
+    sitesFilterTextField.textProperty().addListener(observable -> {
       String filter = sitesFilterTextField.getText();
       if (filter == null || filter.length() == 0) {
         filteredSites.setPredicate(site -> true);
@@ -419,7 +419,7 @@ public class FloorFilterSkin extends SkinBase<FloorFilter> {
 
     // configure the text field that filters facilities by name
     facilitiesFilterTextField.setPromptText("Filter facilities by name");
-    facilitiesFilterTextField.textProperty().addListener(obs -> {
+    facilitiesFilterTextField.textProperty().addListener(observable -> {
       var selectedSite = skinnable.getSelectedSite();
       String filter = facilitiesFilterTextField.getText();
       if (filter == null || filter.length() == 0) {

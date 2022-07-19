@@ -1,0 +1,362 @@
+/* Stylesheet containing generic styles applied across all views */
+
+/* Colors and themes taken from Esri Calcite Web */
+/* https://esri.github.io/calcite-web */
+* {
+    -calcite-ui-brand: #007AC2;
+    -calcite-ui-brand-hover: #00619B;
+    -calcite-ui-brand-press: #004874;
+    -calcite-ui-background: #F8F8F8;
+    -calcite-ui-foreground-1: #FFFFFF;
+    -calcite-ui-foreground-2: #F3F3F3;
+    -calcite-ui-foreground-3: #EAEAEA;
+    -calcite-ui-text-1: #151515;
+    -calcite-ui-text-2: #4A4A4A;
+    -calcite-ui-text-3: #6A6A6A;
+    -calcite-ui-text-inverse: #FFFFFF;
+    -calcite-ui-text-link: #00619B;
+    -calcite-ui-border-1: #CACACA;
+    -calcite-ui-border-2: #D4D4D4;
+    -calcite-ui-border-3: #DFDFDF;
+    -calcite-ui-border-input: #949494;
+    -calcite-ui-info: #00619B; /* state color: blue - Info - used for Non critical information which requires minimal user attention */
+    -calcite-ui-success: #35AC46; /* state color: green - Success - To be used when an important action has been completed successfully and requires user notification. */
+    -calcite-ui-warning: #EDD317; /* state color: yellow - Warning - To be used when something needs the user's attention, but is not critical or destructive.*/
+    -calcite-ui-danger: #D83020; /* state color: red - Danger - A connection error, destructive action, action failure, etc. */
+    -calcite-ui-danger-hover: #A82B1E;
+    -calcite-ui-danger-press: #7C1D13;
+    -fx-text-fill: -calcite-ui-text-1;
+}
+
+/* Panels - styles that can be applied to VBoxes, HBoxes etc. for visual hierarchy */
+
+.panel {
+    -fx-background-color: -calcite-ui-background;
+    -fx-padding: 10;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-color: -calcite-ui-border-1;
+}
+
+.panel-no-padding {
+    -fx-padding: 0;
+}
+
+.panel-large-padding {
+    -fx-padding: 20;
+}
+
+.panel-extra-large-padding {
+    -fx-padding: 40;
+}
+
+.panel-no-border {
+    -fx-border-style: hidden;
+}
+
+.panel-white {
+    -fx-background-color: white;
+}
+
+.panel-dark {
+    -fx-background-color: -calcite-ui-foreground-3;
+}
+
+/* Other useful generic styles */
+
+.label-wrap-text {
+    -fx-wrap-text:true;
+}
+
+.label-align-center {
+    -fx-text-alignment: center;
+}
+
+Label {
+    -fx-font-size: 14;
+}
+
+/* ComboBox */
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -calcite-ui-border-input;
+    -fx-border-width: 1;
+}
+
+.combo-box:hover {
+    -fx-border-color: -calcite-ui-brand-hover;
+    -fx-cursor: hand;
+    -fx-text-fill: -calcite-ui-brand-hover;
+}
+
+.combo-box-base .arrow {
+    -fx-min-width:12;
+    -fx-min-height:5;
+    -fx-background-color: white;
+}
+
+.combo-box-base .arrow-button {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: -calcite-ui-brand;
+}
+
+.combo-box-base .arrow-button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: -calcite-ui-brand-hover;
+}
+
+.combo-box .cell:selected {
+    -fx-text-fill: -calcite-ui-text-2;
+}
+
+.combo-box:hover .cell:selected {
+    -fx-text-fill: -calcite-ui-brand-hover;
+}
+
+.combo-box-popup .list-view {
+    -fx-padding: 0;
+    -fx-border-insets: 5 0 0 0;
+    -fx-background-insets: 5 0 0 0;
+    -fx-border-color: -calcite-ui-border-input;
+}
+
+.combo-box-popup .list-view:hover {
+    -fx-border-color: -calcite-ui-brand-hover;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-text-fill: -calcite-ui-text-inverse;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: -calcite-ui-brand;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 5 5 5 10;
+    -fx-border-insets: 0 0 0 0;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: -calcite-ui-brand-hover;
+    -fx-text-fill: -calcite-ui-text-inverse;
+    -fx-cursor: hand;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: -calcite-ui-brand;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-content-display: text-only;
+}
+
+/* TabPane */
+
+.tab-pane *.tab-header-area *.tab-header-background  {
+    -fx-background-color: white;
+    -fx-border-style: hidden;
+}
+
+.tab-pane *.tab-header-area {
+    -fx-padding: 0.083333em 0.5em 0.083333em 0.5em;;
+}
+
+.tab {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 5;
+    -fx-border-color: transparent;
+    -fx-border-insets: 0 5 0 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab:selected {
+    -fx-border-color: -calcite-ui-brand;
+}
+
+.tab:hover {
+    -fx-border-color: -calcite-ui-brand-hover;
+    -fx-cursor: hand;
+}
+
+.tab:disabled {
+    -fx-border-color:transparent;
+}
+
+.tab:disabled:hover {
+    -fx-border-color:transparent;
+    -fx-cursor: default;
+}
+
+/* ToggleButton and Button */
+
+.button-large {
+    -fx-min-height: 40;
+}
+
+ToggleButton, Button {
+    -fx-background-color: -calcite-ui-brand;
+    -fx-text-fill: -calcite-ui-text-inverse;
+    -fx-background-insets: 2 0 0 0, 0, 0, 0;
+}
+
+ToggleButton:hover, Button:hover {
+    -fx-background-color: -calcite-ui-brand-hover;
+    -fx-text-fill: -calcite-ui-text-inverse;
+    -fx-cursor: hand;
+}
+
+/* RadioButton */
+
+.radio-button .radio  {
+   -fx-background-color: white;
+   -fx-border-width: 1px;
+   -fx-border-color: #949494;
+   -fx-border-radius: 15px;
+   -fx-background-insets: 0 0 -1 0,  0,  1,  2;
+   -fx-background-radius: 1.0em; /* large value to make sure this remains circular */
+   -fx-padding: 0.333333em; /* 4 -- padding from outside edge to the inner black dot */
+}
+
+.radio-button:focused .radio {
+    -fx-background-color: white;
+    -fx-background-radius: 1.0em; /* large value to make sure this remains circular */
+    -fx-background-insets: -1.4, 0, 1, 2;
+    -fx-border-color: -calcite-ui-brand-hover;
+}
+
+.radio-button:hover .radio {
+    -fx-color: -calcite-ui-brand;
+    -fx-border-color: -calcite-ui-brand-hover;
+    -fx-cursor: hand;
+}
+.radio-button:armed .radio {
+    -fx-color: -calcite-ui-brand;
+}
+
+.radio-button .dot {
+   -fx-background-color: transparent;
+   -fx-background-insets: 0;
+   -fx-background-radius: 1.0em; /* large value to make sure this remains circular */
+   -fx-padding: 0.25em; /* 3 -- radius of the inner black dot when selected */
+}
+
+.radio-button:selected .dot {
+   -fx-background-color: -calcite-ui-brand;
+   -fx-background-insets: 0 0 -1 0, 0;
+}
+
+.radio-button:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.radio-button:show-mnemonics .mnemonic-underline {
+    -fx-stroke: -fx-text-fill;
+}
+
+/* Headings */
+
+.h1 {
+    -fx-font-size: 24;
+}
+
+.h2 {
+    -fx-font-size: 18;
+}
+
+.h3 {
+    -fx-font-size: 16;
+    -fx-font-width: bold;
+}
+
+.blue-text {
+    -fx-text-fill: -calcite-ui-info;
+}
+
+/* TitledPane */
+
+.titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color:-calcite-ui-border-input;
+}
+
+.titled-pane:hover > .title {
+    -fx-cursor: hand;
+}
+
+.titled-pane:collapsed > .title{
+    -fx-border-style:solid solid solid solid;
+}
+
+.titled-pane:expanded > .title{
+    -fx-border-style:solid solid hidden solid;
+}
+
+.titled-pane:collapsed > *.content {
+    -fx-border-style:hidden;
+    -fx-border-width: 1;
+    -fx-border-color:-calcite-ui-border-input;
+}
+
+.titled-pane:expanded > *.content{
+    -fx-border-style:hidden solid solid solid;
+    -fx-border-width: 1;
+    -fx-border-color:-calcite-ui-border-input;
+}
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-focus-color:transparent;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-focus-color:transparent;
+}
+
+.titled-pane > *.content {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-style:hidden;
+    -fx-border-width:0;
+}
+
+/* TextField */
+
+.text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-color: -calcite-ui-border-input;
+}
+
+.text-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: -calcite-ui-brand-hover;
+}
+
+/* ImageView */
+
+ImageView:hover {
+    -fx-cursor: hand;
+}
+
+/* ScrollPane */
+
+.scroll-pane-no-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-style: hidden;
+    -fx-border-width: 0;
+    -fx-background-color:transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
