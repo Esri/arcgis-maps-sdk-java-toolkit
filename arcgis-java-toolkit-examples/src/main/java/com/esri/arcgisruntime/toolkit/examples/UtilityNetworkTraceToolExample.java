@@ -340,9 +340,7 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     }
 
     @Override
-    public List<GeoView> getGeoViews() {
-        return null;
-    }
+    public List<GeoView> getGeoViews() { return List.of(mapView); }
 
     public static void main(String[] args) {
         Application.launch(args);
