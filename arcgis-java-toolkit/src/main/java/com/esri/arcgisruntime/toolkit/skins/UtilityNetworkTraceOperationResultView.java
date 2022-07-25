@@ -31,10 +31,26 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.HashMap;
 
+/**
+ * A custom Tab for a UtilityNetworkTraceOperationResult displayed in a {@link UtilityNetworkTraceSkin}.
+ *
+ * <p>
+ * Has custom style class applied if required for customization:
+ * utility-network-trace-operation-result-view
+ *
+ * @since 100.15.0
+ */
 public class UtilityNetworkTraceOperationResultView extends Tab {
 
     private final UtilityNetworkTraceOperationResult result;
 
+    /**
+     * Creates a UtilityNetworkTraceStartingPointView.
+     *
+     * @param skin the UtilityNetworkTraceSkin skin where the result is displayed
+     * @param result the UtilityNetworkTraceOperationResult model for the result
+     * @since 100.15.0
+     */
     protected UtilityNetworkTraceOperationResultView(
             UtilityNetworkTraceSkin skin, UtilityNetworkTraceOperationResult result) {
         this.result = result;
@@ -199,10 +215,25 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
         }
     }
 
+    /**
+     * Returns the result this Tab represents.
+     *
+     * @return the UtilityNetworkTraceOperationResult this tab represents
+     * @since 100.15.0
+     */
     public UtilityNetworkTraceOperationResult getResult() {
         return this.result;
     }
 
+    /**
+     * Creates and returns a rectangle of the provided color and size. Adds an action that on click will update the
+     * color of the result to the color of the rectangle with opacity reduced.
+     *
+     * @param color the color to use
+     * @param size the size to use
+     * @return the rectangle
+     * @since 100.15.0
+     */
     private Rectangle createRectangle(Color color, int size) {
         var rectangle = new Rectangle(size, size);
         rectangle.setFill(color);

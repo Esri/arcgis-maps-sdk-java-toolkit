@@ -31,8 +31,24 @@ import javafx.util.StringConverter;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A custom BorderPane for a starting point displayed in a {@link UtilityNetworkTraceSkin}.
+ *
+ * <p>
+ * Has custom style class applied if required for customization:
+ * utility-network-trace-starting-point-view
+ *
+ * @since 100.15.0
+ */
 public class UtilityNetworkTraceStartingPointView extends BorderPane {
 
+    /**
+     * Creates a UtilityNetworkTraceStartingPointView.
+     *
+     * @param skin the UtilityNetworkTraceSkin skin where the starting point is displayed
+     * @param startingPoint the UtilityNetworkTraceStartingPoint model for the starting point
+     * @since 100.15.0
+     */
     protected UtilityNetworkTraceStartingPointView(
             UtilityNetworkTraceSkin skin, UtilityNetworkTraceStartingPoint startingPoint) {
         double height = skin.getStartingPointListCellHeight() - 10;
