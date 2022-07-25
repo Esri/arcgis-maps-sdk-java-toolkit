@@ -1,7 +1,8 @@
 /* Stylesheet containing generic styles applied across all views */
+/* All styles, including where default JavaFX CSS style classes are overwritten, are applied under the top level style class: arcgis-toolkit-java */
+/* In addition, to avoid clashing with other application styles, any custom style classes are prepended with: arcgis-toolkit-java- */
 
 /* Colors and themes taken from Esri Calcite Web */
-/* https://esri.github.io/calcite-web */
 * {
     -calcite-ui-brand: #007AC2;
     -calcite-ui-brand-hover: #00619B;
@@ -29,8 +30,7 @@
 }
 
 /* Panels - styles that can be applied to VBoxes, HBoxes etc. for visual hierarchy */
-
-.panel {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel {
     -fx-background-color: -calcite-ui-background;
     -fx-padding: 10;
     -fx-border-width: 1;
@@ -38,134 +38,146 @@
     -fx-border-color: -calcite-ui-border-1;
 }
 
-.panel-no-padding {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel-no-padding {
     -fx-padding: 0;
 }
 
-.panel-large-padding {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel-large-padding {
     -fx-padding: 20;
 }
 
-.panel-extra-large-padding {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel-extra-large-padding {
     -fx-padding: 40;
 }
 
-.panel-no-border {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel-no-border {
     -fx-border-style: hidden;
 }
 
-.panel-white {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel-white {
     -fx-background-color: white;
 }
 
-.panel-dark {
+.arcgis-toolkit-java .arcgis-toolkit-java-panel-dark {
     -fx-background-color: -calcite-ui-foreground-3;
 }
 
 /* Other useful generic styles */
 
-.label-wrap-text {
+.arcgis-toolkit-java Label {
     -fx-wrap-text:true;
 }
 
-.label-align-center {
+.arcgis-toolkit-java .arcgis-toolkit-java-label-align-center {
     -fx-text-alignment: center;
 }
 
-Label {
+.arcgis-toolkit-java Label {
     -fx-font-size: 14;
 }
 
 /* ComboBox */
 
-.combo-box {
+.arcgis-toolkit-java .combo-box {
     -fx-background-color: white;
     -fx-border-color: -calcite-ui-border-input;
     -fx-border-width: 1;
 }
 
-.combo-box:hover {
+.arcgis-toolkit-java .combo-box:hover {
     -fx-border-color: -calcite-ui-brand-hover;
     -fx-cursor: hand;
     -fx-text-fill: -calcite-ui-brand-hover;
 }
 
-.combo-box-base .arrow {
+.arcgis-toolkit-java .combo-box-base .arrow {
     -fx-min-width:12;
     -fx-min-height:5;
     -fx-background-color: white;
 }
 
-.combo-box-base .arrow-button {
+.arcgis-toolkit-java .combo-box-base .arrow-button {
     -fx-border-radius: 0;
     -fx-background-radius: 0;
     -fx-background-color: -calcite-ui-brand;
 }
 
-.combo-box-base .arrow-button:hover {
+.arcgis-toolkit-java .combo-box-base .arrow-button:hover {
     -fx-cursor: hand;
     -fx-background-color: -calcite-ui-brand-hover;
 }
 
-.combo-box .cell:selected {
+.arcgis-toolkit-java .combo-box .cell:selected {
     -fx-text-fill: -calcite-ui-text-2;
 }
 
-.combo-box:hover .cell:selected {
+.arcgis-toolkit-java .combo-box:hover .cell:selected {
     -fx-text-fill: -calcite-ui-brand-hover;
 }
 
-.combo-box-popup .list-view {
+.arcgis-toolkit-java .combo-box-popup .list-view {
     -fx-padding: 0;
     -fx-border-insets: 5 0 0 0;
     -fx-background-insets: 5 0 0 0;
     -fx-border-color: -calcite-ui-border-input;
 }
 
-.combo-box-popup .list-view:hover {
+.arcgis-toolkit-java .combo-box-popup .list-view:hover {
     -fx-border-color: -calcite-ui-brand-hover;
 }
 
-.combo-box-popup .list-view .list-cell:selected {
+.arcgis-toolkit-java .combo-box-popup .list-view .list-cell:selected {
     -fx-text-fill: -calcite-ui-text-inverse;
 }
 
-.combo-box-popup .list-view .list-cell {
+.arcgis-toolkit-java .combo-box-popup .list-view .list-cell {
     -fx-text-fill: -calcite-ui-brand;
 }
 
-.combo-box-popup .list-view .list-cell {
+.arcgis-toolkit-java .combo-box-popup .list-view .list-cell {
     -fx-padding: 5 5 5 10;
     -fx-border-insets: 0 0 0 0;
     -fx-background-insets: 0 0 0 0;
 }
 
-.combo-box-popup .list-view .list-cell:filled:hover {
+.arcgis-toolkit-java .combo-box-popup .list-view .list-cell:filled:hover {
     -fx-background-color: -calcite-ui-brand-hover;
     -fx-text-fill: -calcite-ui-text-inverse;
     -fx-cursor: hand;
 }
 
-.combo-box-popup .list-view .list-cell:filled:selected {
+.arcgis-toolkit-java .combo-box-popup .list-view .list-cell:filled:selected {
     -fx-background-color: -calcite-ui-brand;
 }
 
-.combo-box-popup .list-view .list-cell {
+.arcgis-toolkit-java .combo-box-popup .list-view .list-cell {
     -fx-content-display: text-only;
+}
+
+/* Option for combobox with large cell */
+
+.arcgis-toolkit-java .arcgis-toolkit-java-combo-box-large-cell .combo-box-popup .list-view .list-cell {
+    -fx-cell-size: 45;
+    -fx-font-size: 14;
+}
+
+.arcgis-toolkit-java .arcgis-toolkit-java-combo-box-large-cell {
+    -fx-min-height: 45;
+    -fx-font-size: 14;
 }
 
 /* TabPane */
 
-.tab-pane *.tab-header-area *.tab-header-background  {
+.arcgis-toolkit-java .tab-pane *.tab-header-area *.tab-header-background  {
     -fx-background-color: white;
     -fx-border-style: hidden;
 }
 
-.tab-pane *.tab-header-area {
+.arcgis-toolkit-java .tab-pane *.tab-header-area {
     -fx-padding: 0.083333em 0.5em 0.083333em 0.5em;;
 }
 
-.tab {
+.arcgis-toolkit-java .tab {
     -fx-background-color: white;
     -fx-background-radius: 0;
     -fx-background-insets: 0;
@@ -179,37 +191,103 @@ Label {
     -fx-faint-focus-color: transparent;
 }
 
-.tab:selected {
+.arcgis-toolkit-java .tab:selected {
     -fx-border-color: -calcite-ui-brand;
 }
 
-.tab:hover {
+.arcgis-toolkit-java .tab:hover {
     -fx-border-color: -calcite-ui-brand-hover;
     -fx-cursor: hand;
 }
 
-.tab:disabled {
+.arcgis-toolkit-java .tab:disabled {
     -fx-border-color:transparent;
 }
 
-.tab:disabled:hover {
+.arcgis-toolkit-java .tab:disabled:hover {
     -fx-border-color:transparent;
     -fx-cursor: default;
 }
 
+
+/* TabPane - context menu styling */
+
+.context-menu {
+    -fx-background-color: -calcite-ui-foreground-1;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;
+    -fx-padding: 0; /* 4 1 8 1 */
+}
+
+.menu-item .label {
+    -fx-padding: 0em 0.5em 0em 0em;
+    -fx-text-fill: -calcite-ui-text-1;
+}
+
+.menu-item:focused {
+     -fx-background: -calcite-ui-brand;
+     -fx-background-color: -calcite-ui-brand;
+     -fx-text-fill: -calcite-ui-text-inverse;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: -calcite-ui-text-inverse;
+}
+
+.radio-menu-item:checked {
+     -fx-background: -calcite-ui-brand-hover;
+     -fx-background-color: -calcite-ui-brand-hover;
+      -fx-text-fill: -calcite-ui-text-inverse;
+}
+
+.radio-menu-item:checked .label {
+      -fx-text-fill: -calcite-ui-text-inverse;
+}
+
+.radio-menu-item:focused:checked {
+    -fx-background: -calcite-ui-brand-hover;
+    -fx-background-color: -calcite-ui-brand-hover;
+     -fx-text-fill: -calcite-ui-text-inverse;
+}
+
+.radio-menu-item:checked .radio {
+     -fx-background-color: white;
+}
+
+.radio-menu-item:focused:checked .radio {
+    -fx-background-color: white;
+}
+
+.tab-down-button {
+    -fx-background-color: -calcite-ui-brand;
+    -fx-padding: 0.2em 0.4em 0.6em 0.4em; /* 0 5 0 5 */
+}
+
+.tab-down-button:hover {
+    -fx-background-color: -calcite-ui-brand-hover;
+    -fx-color: -calcite-ui-brand-hover;
+}
+
+.tab-down-button .arrow {
+    -fx-background-color: -calcite-ui-text-inverse;
+    -fx-background-insets: 0 0 0 0, 0;
+    -fx-padding: 0.238083em 0.416667em 0.238083em 0.416667em; /* 2.857 5 2.857 5 */
+    -fx-shape: "M 0 0 H 7 L 3.5 4 z";
+}
+
 /* ToggleButton and Button */
 
-.button-large {
+.arcgis-toolkit-java .arcgis-toolkit-java-button-large {
     -fx-min-height: 40;
 }
 
-ToggleButton, Button {
+.arcgis-toolkit-java ToggleButton, Button {
     -fx-background-color: -calcite-ui-brand;
     -fx-text-fill: -calcite-ui-text-inverse;
     -fx-background-insets: 2 0 0 0, 0, 0, 0;
 }
 
-ToggleButton:hover, Button:hover {
+.arcgis-toolkit-java ToggleButton:hover, Button:hover {
     -fx-background-color: -calcite-ui-brand-hover;
     -fx-text-fill: -calcite-ui-text-inverse;
     -fx-cursor: hand;
@@ -217,7 +295,7 @@ ToggleButton:hover, Button:hover {
 
 /* RadioButton */
 
-.radio-button .radio  {
+.arcgis-toolkit-java .radio-button .radio  {
    -fx-background-color: white;
    -fx-border-width: 1px;
    -fx-border-color: #949494;
@@ -227,101 +305,101 @@ ToggleButton:hover, Button:hover {
    -fx-padding: 0.333333em; /* 4 -- padding from outside edge to the inner black dot */
 }
 
-.radio-button:focused .radio {
+.arcgis-toolkit-java .radio-button:focused .radio {
     -fx-background-color: white;
     -fx-background-radius: 1.0em; /* large value to make sure this remains circular */
     -fx-background-insets: -1.4, 0, 1, 2;
     -fx-border-color: -calcite-ui-brand-hover;
 }
 
-.radio-button:hover .radio {
+.arcgis-toolkit-java .radio-button:hover .radio {
     -fx-color: -calcite-ui-brand;
     -fx-border-color: -calcite-ui-brand-hover;
     -fx-cursor: hand;
 }
-.radio-button:armed .radio {
+.arcgis-toolkit-java .radio-button:armed .radio {
     -fx-color: -calcite-ui-brand;
 }
 
-.radio-button .dot {
+.arcgis-toolkit-java .radio-button .dot {
    -fx-background-color: transparent;
    -fx-background-insets: 0;
    -fx-background-radius: 1.0em; /* large value to make sure this remains circular */
    -fx-padding: 0.25em; /* 3 -- radius of the inner black dot when selected */
 }
 
-.radio-button:selected .dot {
+.arcgis-toolkit-java .radio-button:selected .dot {
    -fx-background-color: -calcite-ui-brand;
    -fx-background-insets: 0 0 -1 0, 0;
 }
 
-.radio-button:disabled {
+.arcgis-toolkit-java .radio-button:disabled {
     -fx-opacity: -fx-disabled-opacity;
 }
 
-.radio-button:show-mnemonics .mnemonic-underline {
+.arcgis-toolkit-java .radio-button:show-mnemonics .mnemonic-underline {
     -fx-stroke: -fx-text-fill;
 }
 
 /* Headings */
 
-.h1 {
+.arcgis-toolkit-java .arcgis-toolkit-java-h1 {
     -fx-font-size: 24;
 }
 
-.h2 {
+.arcgis-toolkit-java .arcgis-toolkit-java-h2 {
     -fx-font-size: 18;
 }
 
-.h3 {
+.arcgis-toolkit-java .arcgis-toolkit-java-h3 {
     -fx-font-size: 16;
     -fx-font-width: bold;
 }
 
-.blue-text {
+.arcgis-toolkit-java .arcgis-toolkit-java-blue-text {
     -fx-text-fill: -calcite-ui-info;
 }
 
 /* TitledPane */
 
-.titled-pane > .title {
+.arcgis-toolkit-java .titled-pane > .title {
     -fx-background-color: transparent;
     -fx-border-width: 1;
     -fx-border-color:-calcite-ui-border-input;
 }
 
-.titled-pane:hover > .title {
+.arcgis-toolkit-java .titled-pane:hover > .title {
     -fx-cursor: hand;
 }
 
-.titled-pane:collapsed > .title{
+.arcgis-toolkit-java .titled-pane:collapsed > .title{
     -fx-border-style:solid solid solid solid;
 }
 
-.titled-pane:expanded > .title{
+.arcgis-toolkit-java .titled-pane:expanded > .title{
     -fx-border-style:solid solid hidden solid;
 }
 
-.titled-pane:collapsed > *.content {
+.arcgis-toolkit-java .titled-pane:collapsed > *.content {
     -fx-border-style:hidden;
     -fx-border-width: 1;
     -fx-border-color:-calcite-ui-border-input;
 }
 
-.titled-pane:expanded > *.content{
+.arcgis-toolkit-java .titled-pane:expanded > *.content{
     -fx-border-style:hidden solid solid solid;
     -fx-border-width: 1;
     -fx-border-color:-calcite-ui-border-input;
 }
-.titled-pane > .title > .arrow-button .arrow {
+.arcgis-toolkit-java .titled-pane > .title > .arrow-button .arrow {
     -fx-focus-color:transparent;
 }
 
-.titled-pane > .title > .arrow-button .arrow {
+.arcgis-toolkit-java .titled-pane > .title > .arrow-button .arrow {
     -fx-focus-color:transparent;
 }
 
-.titled-pane > *.content {
+.arcgis-toolkit-java .titled-pane > *.content {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-padding: 0;
@@ -331,27 +409,27 @@ ToggleButton:hover, Button:hover {
 
 /* TextField */
 
-.text-field {
+.arcgis-toolkit-java .text-field {
     -fx-background-color: white;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-color: -calcite-ui-border-input;
 }
 
-.text-field:focused {
+.arcgis-toolkit-java .text-field:focused {
     -fx-background-color: white;
     -fx-border-color: -calcite-ui-brand-hover;
 }
 
 /* ImageView */
 
-ImageView:hover {
+.arcgis-toolkit-java ImageView:hover {
     -fx-cursor: hand;
 }
 
 /* ScrollPane */
 
-.scroll-pane-no-background {
+.arcgis-toolkit-java .arcgis-toolkit-java-scroll-pane-no-background {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-border-style: hidden;
@@ -359,4 +437,178 @@ ImageView:hover {
     -fx-background-color:transparent;
     -fx-background-insets: 0;
     -fx-padding: 0;
+}
+
+.arcgis-toolkit-java .arcgis-toolkit-java-scroll-pane-no-background:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-style: hidden;
+    -fx-border-width: 0;
+    -fx-background-color:transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+/* ProgressBar */
+
+.arcgis-toolkit-java .progress-bar {
+    -fx-min-height: 10;
+    -fx-pref-height: 10;
+    -fx-max-height: 10;
+    -fx-background-color: -calcite-ui-foreground-3;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-indeterminate-bar-length: 60;
+    -fx-indeterminate-bar-escape: true;
+    -fx-indeterminate-bar-animation-time: 2;
+}
+
+.arcgis-toolkit-java .progress-bar .bar {
+    -fx-background-color: -calcite-ui-brand;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.arcgis-toolkit-java .progress-bar:indeterminate .bar {
+    -fx-background-color: -calcite-ui-brand;
+}
+
+.arcgis-toolkit-java .progress-bar .track {
+    -fx-border-color: transparent;
+    -fx-background-color: -calcite-ui-foreground-3;
+    -fx-background-insets:  0;
+}
+
+/* Warnings and Errors */
+
+.arcgis-toolkit-java .arcgis-toolkit-java-warning-box {
+    -fx-border-style: solid;
+    -fx-border-color: -calcite-ui-warning -calcite-ui-border-input -calcite-ui-border-input -calcite-ui-border-input;
+    -fx-border-width: 3 1 1 1;
+    -fx-background-color: -calcite-ui-foreground-1;
+    -fx-background-radius: 3 3 5 5;
+    -fx-border-radius: 3 3 5 5;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.6) , 5, 0.0 , 0.0 , 0 );
+}
+
+.arcgis-toolkit-java .arcgis-toolkit-java-info-box {
+    -fx-border-style: solid;
+    -fx-border-color: -calcite-ui-info -calcite-ui-border-input -calcite-ui-border-input -calcite-ui-border-input;
+    -fx-border-width: 3 1 1 1;
+    -fx-background-color: -calcite-ui-foreground-1;
+    -fx-background-radius: 3 3 5 5;
+    -fx-border-radius: 3 3 5 5;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.6) , 5, 0.0 , 0.0 , 0 );
+}
+
+.arcgis-toolkit-java .arcgis-toolkit-java-error-box {
+    -fx-border-style: solid;
+    -fx-border-color: -calcite-ui-danger -calcite-ui-border-input -calcite-ui-border-input -calcite-ui-border-input;
+    -fx-border-width: 3 1 1 1;
+    -fx-background-color: -calcite-ui-foreground-1;
+    -fx-background-radius: 3 3 5 5;
+    -fx-border-radius: 3 3 5 5;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.6) , 5, 0.0 , 0.0 , 0 );
+    -fx-padding: 10;
+}
+
+/* Slider */
+
+.arcgis-toolkit-java .slider:focused .thumb {
+    -fx-background-color: transparent, -fx-inner-border, -fx-body-color, -calcite-ui-brand, -fx-body-color;
+    -fx-background-insets: -0.2, 1, 2, -0.5, 2.6;
+    -fx-background-radius: 1.0em;
+}
+
+/* Utility Network */
+
+/* Custom ListView for Utility Network Starting Points */
+
+.arcgis-toolkit-java #startingPointsListView {
+    -fx-background-color: transparent, transparent;
+    -fx-border-color:-calcite-ui-border-1;
+    -fx-border-width: 1;
+    -fx-border-style: hidden;
+    -fx-background-insets:0;
+    -fx-padding: 0;
+}
+
+.arcgis-toolkit-java #startingPointsListView:focused {
+    -fx-background-color: transparent, transparent, transparent;
+    -fx-border-color:-calcite-ui-border-1;
+    -fx-border-width: 1;
+    -fx-border-style: hidden;
+    -fx-background-insets:0;
+    -fx-padding: 0;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell {
+    -fx-background-color: -calcite-ui-background;
+    -fx-border-color:-calcite-ui-border-1;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-text-fill:-calcite-ui-text-1;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:empty {
+    -fx-background-color: -calcite-ui-background;
+    -fx-border-color:transparent;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:odd:empty {
+    -fx-background-color: -calcite-ui-background;
+    -fx-border-color:transparent;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:selected {
+    -fx-background-color: -calcite-ui-background;
+    -fx-border-color:-calcite-ui-border-1;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-text-fill:-calcite-ui-text-1;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell VBox {
+    -fx-background-color: transparent;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:hover {
+    -fx-cursor: hand;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:selected Label {
+    -fx-text-fill: -calcite-ui-text-1;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:odd {
+    -fx-background-color: -calcite-ui-background;
+    -fx-border-color: -calcite-ui-border-1;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-text-fill: -calcite-ui-text-1;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:selected:odd {
+    -fx-background-color: -calcite-ui-background;
+    -fx-border-color: -calcite-ui-border-1;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-text-fill: -calcite-ui-text-1;
+}
+
+.arcgis-toolkit-java .utility-network-starting-point-list-cell:filled:focused:selected {
+    -fx-background-color: transparent, transparent, transparent;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background: -calcite-ui-border-1;
+}
+
+/* Overwrites of Utility Network icon styles for compatibility with other styles */
+
+.utility-network-view .arcgis-toolkit-java-trash-icon {
+     -fx-background-color: -calcite-ui-text-inverse;
+}
+
+.utility-network-view .arcgis-toolkit-java-zoom-icon {
+    -fx-background-color: -calcite-ui-text-inverse;
 }
