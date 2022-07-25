@@ -44,6 +44,40 @@ import javafx.util.StringConverter;
 
 import java.util.logging.Logger;
 
+/**
+ * A skin for displaying a {@link UtilityNetworkTraceTool}.
+ *
+ * <p>
+ * The UI is only displayed if there is are Utility Networks loaded in the data model.
+ *
+ * <p>
+ * The skin includes a TabPane with one tab for configuring a new trace and another Tab for displaying results.
+ *
+ * <p>
+ * The new trace Tab includes a custom {@link UtilityNetworkTraceStartingPointView} for displaying the different
+ * properties of starting points in the UI.
+ *
+ * <p>
+ * The result Tab itself contains a TabPane of the results made up of custom Tabs defined in
+ * {@link UtilityNetworkTraceOperationResultView}.
+ *
+ * <p>
+ *  Generic styles can be overwritten using the default style class defined in the Control. In addition a number of
+ *  custom styles are defined within utility-network-trace.css and can be overwritten.
+ *  E.g. to change the icons used for the starting point and results zoom / delete buttons, assign a new SVG string to:
+ *  -utility-network-view-zoom-icon-svg
+ *  -utility-network-view-trash-icon-svg
+ *
+ *  Or, the color of the existing icon could be updated using:
+ *  .utility-network-view .arcgis-toolkit-java-trash-icon {
+ *      -fx-background-color: black;
+ *  }
+ *  .utility-network-view .arcgis-toolkit-java-zoom-icon {
+ *      -fx-background-color: black;
+ *  }
+ *
+ * @since 100.15.0
+ */
 public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
 
     private static final double STARTING_POINT_LIST_CELL_HEIGHT = 95.0;
@@ -111,6 +145,11 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     @FXML TabPane resultsTabPane;
     @FXML Button clearResultsButton;
 
+    /**
+     * Constructor for all SkinBase instances.
+     *
+     * @param control The control for which this Skin should attach to.
+     */
     public UtilityNetworkTraceSkin(UtilityNetworkTraceTool control) {
         super(control);
         // configure mapview related settings
@@ -139,16 +178,51 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         }
     }
 
+    /**
+     * Returns the runTraceButton.
+     *
+     * @return the runTraceButton
+     * @since 100.15.0
+     */
     public Button getRunTraceButton() { return runTraceButton; }
 
+    /**
+     * Returns the getCancelTraceInProgressButton.
+     *
+     * @return the getCancelTraceInProgressButton
+     * @since 100.15.0
+     */
     public Button getCancelTraceInProgressButton() { return cancelTraceInProgressButton; }
 
+    /**
+     * Returns the getCancelIdentifyStartingPointsButton.
+     *
+     * @return the getCancelIdentifyStartingPointsButton
+     * @since 100.15.0
+     */
     public Button getCancelIdentifyStartingPointsButton() { return cancelIdentifyStartingPointsButton; }
 
+    /**
+     * Returns the getClearResultsButton.
+     *
+     * @return the getClearResultsButton
+     * @since 100.15.0
+     */
     public Button getClearResultsButton() { return clearResultsButton; }
 
+    /**
+     * Returns the value of the variable used to define the height of the cells used in the starting points ListView.
+     *
+     * @return the height
+     * @since 100.15.0
+     */
     public double getStartingPointListCellHeight() { return STARTING_POINT_LIST_CELL_HEIGHT; }
 
+    /**
+     * Configures the UI.
+     *
+     * @since 100.15.0
+     */
     private void configureUI() {
         // handle progress indicator for initial load
         utilityNetworkLoadingProgressIndicator.visibleProperty().bind(isMapAndUtilityNetworkLoadingInProgressProperty);
@@ -308,15 +382,33 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         getChildren().add(root);
     }
 
+    /**
+     * Returns the Tab that is displaying the data for the provided result.
+     *
+     * @return the Tab
+     * @since 100.15.0
+     */
     private Tab findTabForResult(UtilityNetworkTraceOperationResult result) {
         return resultsTabPane.getTabs().stream()
                 .filter(c -> ((UtilityNetworkTraceOperationResultView) c).getResult() == result).findFirst().orElse(null);
     }
 
+    /**
+     * Creates and returns the default trace name used when a name is not defined in the text field.
+     *
+     * @return the default trace name
+     * @since 100.15.0
+     */
     public String getDefaultTraceName() {
         return selectedTraceConfigurationProperty.get().getName() + " " + (traceResultsProperty.size() + 1);
     }
 
+    /**
+     * Handles clicks on the addStartingPointsButton.
+     *
+     * @param mouseEvent the mouse event captured by the click
+     * @since 100.15.0
+     */
     @FXML
     private void handleAddStartingPointButtonClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
@@ -324,6 +416,12 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         }
     }
 
+    /**
+     * Handles clicks on the clearStartingPointsButton.
+     *
+     * @param mouseEvent the mouse event captured by the click
+     * @since 100.15.0
+     */
     @FXML
     private void handleClearStartingPointsButtonClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
@@ -331,6 +429,12 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         }
     }
 
+    /**
+     * Handles clicks on the cancelAddStartingPointsButton.
+     *
+     * @param mouseEvent the mouse event captured by the click
+     * @since 100.15.0
+     */
     @FXML
     private void handleCancelAddStartingPointsButtonClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
@@ -347,6 +451,11 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         return PREF_WIDTH;
     }
 
+    /**
+     * Defines a custom String Converter for the UtilityNetwork selection combobox.
+     *
+     * @since 100.15.0
+     */
     private static class UtilityNetworkStringConverter extends StringConverter<UtilityNetwork> {
         @Override
         public String toString(UtilityNetwork utilityNetwork) {
@@ -359,6 +468,11 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         }
     }
 
+    /**
+     * Defines a custom String Converter for the UtilityNamedTraceConfiguration selection combobox.
+     *
+     * @since 100.15.0
+     */
     private static class UtilityNamedTraceConfigurationStringConverter extends StringConverter<UtilityNamedTraceConfiguration> {
         @Override
         public String toString(UtilityNamedTraceConfiguration traceConfig) {
@@ -371,6 +485,12 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         }
     }
 
+    /**
+     * Defines a custom ListCell for the starting points ListView, which contains a custom BorderPane defined in
+     * {@link UtilityNetworkTraceStartingPointView}.
+     *
+     * @since 100.15.0
+     */
     private static class StartingPointListCell extends ListCell<UtilityNetworkTraceStartingPoint> {
 
         private final UtilityNetworkTraceSkin skin;
