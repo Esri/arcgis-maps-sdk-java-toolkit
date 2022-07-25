@@ -1,0 +1,183 @@
+/*
+ * Copyright 2022 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.esri.arcgisruntime.toolkit.examples;
+
+import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.view.GeoView;
+import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.security.UserCredential;
+import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceTool;
+import com.esri.arcgisruntime.toolkit.model.Example;
+import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
+import javafx.application.Application;
+import javafx.scene.Node;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * An Example Class for the {@link UtilityNetworkTraceTool} Toolkit Component. Implements the {@link Example} interface
+ * to ensure required methods are implemented. The example can be viewed by running the
+ * {@link com.esri.arcgisruntime.toolkit.ExamplesApp}, or as a standalone app via the
+ * {@link UtilityNetworkTraceToolExampleLauncher} class.
+ *
+ * @since 100.15.0
+ */
+public class UtilityNetworkTraceToolExample extends Application implements Example {
+
+    // used for setting up the Utility Network Trace Tool
+    private UtilityNetworkTraceTool utilityNetworkTraceTool;
+    private ArcGISMap webMap;
+    private final MapView mapView = new MapView();
+
+    // public data used for the example
+    private final String webMapURL = "https://www.arcgis.com/home/item.html?id=471eb0bf37074b1fbb972b1da70fb310";
+    private final String featureServiceURL = "https://sampleserver7.arcgisonline.com/portal/sharing/rest";
+    private final UserCredential userCred = new UserCredential("viewer01", "I68VGU^nMurF");
+
+    // used for creating the example
+    Stage primaryStage;
+    private final List<Tab> tabs = new ArrayList<>();
+    private final VBox settings = new VBox(5);
+    private final BorderPane mapViewBorderPane = new BorderPane();
+
+    /**
+     * A constructor for the UtilityNetworkTraceExample that demonstrates how to implement a UtilityNetworkTrace
+     * for a MapView.
+     *
+     * A Tab is created for the view to display in the application and settings are configured for testing and demo
+     * purposes.
+     *
+     * @since 100.15.0
+     */
+    public UtilityNetworkTraceToolExample() {
+        StackPane stackPane = new StackPane();
+        // display progress indicator while map loads
+        var progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(true);
+
+        // setup the portal and set the webmap to the mapview
+        try {
+            var portal = new Portal(featureServiceURL);
+            portal.setCredential(userCred);
+            portal.addDoneLoadingListener(() -> {
+                if (portal.getLoadStatus() == LoadStatus.LOADED) {
+                    webMap = new ArcGISMap(webMapURL);
+                    mapView.setMap(webMap);
+
+                    // create a utility network trace tool passing in the mapview
+                    utilityNetworkTraceTool = new UtilityNetworkTraceTool(mapView);
+
+                    // display the utility network trace tool in the UI
+                    // here the tool is displayed in a BorderPane alongside the MapView
+                    mapViewBorderPane.setRight(utilityNetworkTraceTool);
+
+                    webMap.addDoneLoadingListener(() -> {
+                        if (webMap.getLoadStatus() == LoadStatus.LOADED) {
+                            // when the map loads hide the progress indicator
+                            progressIndicator.setVisible(false);
+                            // configure settings options once map has loaded so data can be accessed
+                            var configuredSettings = configureSettings();
+                            settings.getChildren().add(configuredSettings);
+                        } else if (webMap.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+                            progressIndicator.setVisible(false);
+                            throw webMap.getLoadError();
+                        }
+                    });
+                } else if (portal.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+                    progressIndicator.setVisible(false);
+                    throw portal.getLoadError();
+                }
+            });
+            // load the portal
+            portal.loadAsync();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+
+        stackPane.getChildren().addAll(mapView, progressIndicator);
+        mapViewBorderPane.setCenter(stackPane);
+        Tab mapViewTab = ExampleUtils.createTab(mapViewBorderPane, "Map");
+
+        // add the tab to the list
+        tabs.add(mapViewTab);
+    }
+
+    /**
+     * Sets up the required UI elements for toggling properties and other settings relating to the Toolkit Component.
+     *
+     * For the UtilityNetwork this includes public properties, custom styles, size and position.
+     *
+     * @return a VBox containing the settings
+     * @since 100.15.0
+     */
+    private VBox configureSettings() {
+        ArrayList<Node> requiredSettings = new ArrayList<>();
+
+        return ExampleUtils.createSettings(getName(), requiredSettings);
+    }
+
+    @Override
+    public VBox getSettings() {
+        return settings;
+    }
+
+    @Override
+    public String getName() {
+        return "Utility Network Trace";
+    }
+
+    @Override
+    public List<Tab> getTabs() {
+        return tabs;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Use named trace configurations defined in a web map to perform connected trace operations and " +
+                "compare results.";
+    }
+
+    @Override
+    public List<GeoView> getGeoViews() {
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        ExampleUtils.setupIndividualExampleStage(primaryStage, this);
+    }
+
+    @Override
+    public void stop() {
+        mapView.dispose();
+    }
+}
