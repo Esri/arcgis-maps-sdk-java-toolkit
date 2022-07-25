@@ -57,6 +57,12 @@ import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.groupingBy;
 
+/**
+ * A control for a Utility Network Trace that enables trace analysis to be performed on a Utility Network with the
+ * selected named trace configuration and starting points.
+ *
+ * @since 100.15.0
+ */
 public class UtilityNetworkTraceTool extends Control {
 
     // properties with public accessors
@@ -107,6 +113,14 @@ public class UtilityNetworkTraceTool extends Control {
     private ListenableFuture<List<ArcGISFeature>> fetchFeaturesForElementsFuture;
 
     private static final String DEFAULT_STYLE_CLASS = "utility-network-view";
+
+    /**
+     * Creates a UtilityNetworkTrace for the provided MapView.
+     *
+     * @param mapView the MapView to connect to
+     * @throws NullPointerException if mapView is null
+     * @since 100.15.0
+     */
     public UtilityNetworkTraceTool(@NamedArg("mapView") MapView mapView) {
         mapViewProperty.set(mapView);
         // add the starting points graphics overlay to the MapView ready to display starting points
@@ -216,57 +230,208 @@ public class UtilityNetworkTraceTool extends Control {
         return Objects.requireNonNull(this.getClass().getResource("skins/utility-network-trace.css")).toExternalForm();
     }
 
+    /**
+     * Returns a read-only property containing the MapView this UtilityNetworkTrace is linked to.
+     *
+     * @return the MapView Property as read-only
+     * @since 100.15.0
+     */
     public ReadOnlyObjectProperty<MapView> mapViewReadOnlyProperty() { return mapViewProperty.getReadOnlyProperty(); }
 
+    /**
+     * Gets the MapView this UtilityNetworkTrace is linked to.
+     *
+     * @return the map view
+     * @since 100.15.0
+     */
     public MapView getMapView() {
         return mapViewProperty.get();
     }
 
+    /**
+     * Returns a read-only property containing the selected Utility Network so that changes to the selected Utility
+     * Network can be observed.
+     *
+     * @return the selectedUtilityNetwork Property as read-only
+     * @since 100.15.0
+     */
     public ReadOnlyObjectProperty<UtilityNetwork> selectedUtilityNetworkReadOnlyProperty() {
         return selectedUtilityNetworkProperty.getReadOnlyProperty();
     }
 
+    /**
+     * Returns a read-only property containing the last completed trace as a {@link UtilityNetworkTraceToolCompletedTrace}
+     * so that completed traces can be observed and containing data accessed.
+     *
+     * @return a read-only property for the {@link UtilityNetworkTraceToolCompletedTrace}
+     * @since 100.15.0
+     */
     public ReadOnlyObjectProperty<UtilityNetworkTraceToolCompletedTrace> completedTraceReadOnlyProperty() {
         return completedTraceProperty.getReadOnlyProperty();
     }
 
+    /**
+     * Property that determines whether a MapView's onMouseClicked event is used for adding starting points.
+     * Defaults to true.
+     *
+     * @return the isAddingStartingPoints property
+     * @since 100.15.0
+     */
     public SimpleBooleanProperty isAddingStartingPointsProperty() { return isAddingStartingPointsProperty; }
 
+    /**
+     * Returns the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
+     * is used for adding starting points.
+     *
+     * @return true if enabled, false otherwise
+     * @since 100.15.0
+     */
     public Boolean getIsAddingStartingPoints() { return isAddingStartingPointsProperty.get(); }
 
+    /**
+     * Sets the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
+     * is used for adding starting points.
+     *
+     * @param isAddingStartingPoints true to enable, false to disable
+     * @since 100.15.0
+     */
     public void setIsAddingStartingPoints(Boolean isAddingStartingPoints) { isAddingStartingPointsProperty.set(isAddingStartingPoints); }
 
+    /**
+     * Property that determines whether the MapView's viewpoint should change to focus on trace results.
+     * Defaults to true.
+     *
+     * @return the autoZoomToResults property
+     * @since 100.15.0
+     */
     public SimpleBooleanProperty autoZoomToResultsProperty() { return autoZoomToResultsProperty; }
 
+    /**
+     * Returns the value of the autoZoomToResultsProperty which determines whether the MapView's viewpoint should change
+     * to focus on trace results.
+     *
+     * @return true if enabled, false otherwise
+     * @since 100.15.0
+     */
     public Boolean getAutoZoomToResults() { return autoZoomToResultsProperty.get(); }
 
+    /**
+     * Sets the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
+     * is used for adding starting points.
+     *
+     * @param autoZoomToResults true to enable, false to disable
+     * @since 100.15.0
+     */
     public void setAutoZoomToResults(Boolean autoZoomToResults) { autoZoomToResultsProperty.set(autoZoomToResults); }
 
+    /**
+     * Property that determines what symbol should be used to denote starting points for a trace.
+     * Default is a SimpleMarkerSymbol with a green cross.
+     *
+     * @return the startingPointSymbol property
+     * @since 100.15.0
+     */
     public SimpleObjectProperty<Symbol> startingPointSymbolProperty() { return startingPointSymbolProperty; }
 
+    /**
+     * Gets the symbol used to denote starting points for a trace.
+     *
+     * @return the symbol
+     * @since 100.15.0
+     */
     public Symbol getStartingPointSymbol() { return startingPointSymbolProperty.get(); }
 
+    /**
+     * Sets the symbol used to denote starting points for a trace.
+     *
+     * @param symbol the symbol to use
+     * @since 100.15.0
+     */
     public void setStartingPointSymbol(Symbol symbol) { startingPointSymbolProperty.set(symbol); }
 
+    /**
+     * Property that determines what symbol should be used to denote multipoints in a geometry trace result.
+     * Default is a SimpleMarkerSymbol with a blue circle.
+     *
+     * @return the resultPointSymbol property
+     * @since 100.15.0
+     */
     public SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty() { return resultPointSymbolProperty; }
 
+    /**
+     * Gets the symbol used to denote multipoints in a geometry trace result.
+     *
+     * @return the symbol used for multipoints
+     * @since 100.15.0
+     */
     public SimpleMarkerSymbol getResultPointSymbol() { return resultPointSymbolProperty.get(); }
 
+    /**
+     * Sets the symbol used to denote multipoints in a geometry trace result.
+     *
+     * @param simpleMarkerSymbol the symbol to use for multipoints
+     * @since 100.15.0
+     */
     public void setResultPointSymbol(SimpleMarkerSymbol simpleMarkerSymbol) {
         resultPointSymbolProperty.set(simpleMarkerSymbol); }
 
+    /**
+     * Property that determines what symbol should be used to denote polylines in a geometry trace result.
+     * Default is a blue, dot style line.
+     *
+     * @return the resultLineSymbol property
+     * @since 100.15.0
+     */
     public SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty() { return resultLineSymbolProperty; }
 
+    /**
+     * Gets the symbol used to denote polylines in a geometry trace result.
+     *
+     * @return the symbol used for polylines
+     * @since 100.15.0
+     */
     public SimpleLineSymbol getResultLineSymbol() { return resultLineSymbolProperty.get(); }
 
+    /**
+     * Sets the symbol used to denote polylines in a geometry trace result.
+     *
+     * @param simpleLineSymbol the symbol to use for polylines
+     * @since 100.15.0
+     */
     public void setResultLineSymbol(SimpleLineSymbol simpleLineSymbol) { resultLineSymbolProperty.set(simpleLineSymbol); }
 
+    /**
+     * Property that determines what symbol should be used to denote polygons in a geometry trace result.
+     * Default is a blue, dot style line.
+     *
+     * @return the resultFillSymbol property
+     * @since 100.15.0
+     */
     public SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty() { return resultFillSymbolProperty; }
 
+    /**
+     * Gets the symbol used to denote polygons in a geometry trace result.
+     *
+     * @return the symbol used for polygons
+     * @since 100.15.0
+     */
     public SimpleFillSymbol getResultFillSymbol() {return resultFillSymbolProperty.get(); }
 
+    /**
+     * Sets the symbol used to denote polygons in a geometry trace result.
+     *
+     * @param simpleFillSymbol the symbol to use for polygons
+     * @since 100.15.0
+     */
     public void setResultFillSymbol(SimpleFillSymbol simpleFillSymbol) { resultFillSymbolProperty.set(simpleFillSymbol); }
 
+    /**
+     * Gets any UtilityNetworks from the ArcGIS Map attached to the MapView. The ArcGIS Map must be loaded in order to
+     * access the Utility Network data. In addition, the Utility Networks are loaded before setting to the relevant
+     * properties. Messages are logged if any of these requirements are not met.
+     *
+     * @since 100.15.0
+     */
     private void setupUtilityNetworks() {
         isMapAndUtilityNetworkLoadingInProgressProperty.set(true);
         var mapView = mapViewProperty.get();
@@ -327,6 +492,12 @@ public class UtilityNetworkTraceTool extends Control {
         }
     }
 
+    /**
+     * Resets the data on the existing UtilityNetworkTrace. For example, if the ArcGISMap attached
+     * to the MapView is updated, the data can be reloaded. Relevant properties will also be reset.
+     *
+     * @since 100.15.0
+     */
     public void refresh() {
         selectedUtilityNetworkProperty.set(null);
         utilityNetworksProperty.clear();
@@ -336,6 +507,12 @@ public class UtilityNetworkTraceTool extends Control {
         applyStartingPointWarnings();
     }
 
+    /**
+     * Resets all data relating to trace results. Removes all result graphics overlays from the MapView, clears the last
+     * completed trace property, and clears the list of results.
+     *
+     * @since 100.15.0
+     */
     private void resetTraceResults() {
         var mapViewGraphicsOverlay = getMapView().getGraphicsOverlays();
         traceResultsProperty.forEach(result -> {
@@ -346,6 +523,12 @@ public class UtilityNetworkTraceTool extends Control {
         traceResultsProperty.clear();
     }
 
+    /**
+     * Resets all data relating to the configuration of a new trace. Cancels listenable futures, resets properties
+     * and removes all starting point graphics from the graphics overlay.
+     *
+     * @since 100.15.0
+     */
     private void resetNewTraceConfigurationProperties() {
         if (traceInProgressFuture != null) {
             traceInProgressFuture.cancel(true);
@@ -377,10 +560,41 @@ public class UtilityNetworkTraceTool extends Control {
         applyStartingPointWarnings();
     }
 
+    /**
+     * Adds a starting point to be used for a trace from the provided feature.
+     *
+     * <p>
+     * This enables the adding of starting points programmatically, and not just via clicks on the MapView.
+     * For example, feature results from a query, selection, geocode, route, geoprocessing, search, and more.
+     *
+     * <p>
+     * A starting point is only added to the list if a Utility Network has been selected, the feature is part of the
+     * selected utility network and the starting point does not already exist.
+     *
+     * @param feature the feature to use as the basis for the starting point
+     * @throws NullPointerException if feature is null
+     * @since 100.15.0
+     */
     public void addStartingPoint(ArcGISFeature feature) {
         addStartingPoint(feature, null);
     }
 
+    /**
+     * Adds a starting point to be used for a trace from the provided feature and point.
+     *
+     * <p>
+     * This enables the adding of starting points programmatically, and not just via clicks on the MapView.
+     * For example, feature results from a query, selection, geocode, route, geoprocessing, search, and more.
+     *
+     * <p>
+     * A starting point is only added to the list if a Utility Network has been selected, the feature is part of the
+     * selected utility network and the starting point does not already exist.
+     *
+     * @param feature the feature to use as the basis for the starting point
+     * @param mapPoint the point to use - if it's polyline for location along the line
+     * @throws NullPointerException if feature is null
+     * @since 100.15.0
+     */
     public void addStartingPoint(ArcGISFeature feature, Point mapPoint) {
         if (selectedUtilityNetworkProperty != null) {
             var geometry = feature.getGeometry();
@@ -455,6 +669,14 @@ public class UtilityNetworkTraceTool extends Control {
         }
     }
 
+    /**
+     * Performs a Utility Network Trace based on the selected utility network, selected trace configuration and defined
+     * starting points. If the trace is successful, the result is added to the list of trace results. If the trace
+     * completes with an error, this is error is set to the result.
+     *
+     * @param name the name of the trace
+     * @since 100.15.0
+     */
     private void runTraceAsync(String name) {
         // cancel any previous traces
         cancelTrace();
@@ -634,6 +856,13 @@ public class UtilityNetworkTraceTool extends Control {
         }
     }
 
+    /**
+     * Handles clicks on the MapView. Identifies starting points if the adding starting points property is true and if
+     * a utility network is selected.
+     *
+     * @param e the mouse event
+     * @since 100.15.0
+     */
     private void onMapViewClicked(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY && e.isStillSincePress()
                 && isAddingStartingPointsProperty.get() && selectedUtilityNetworkProperty != null) {
@@ -641,6 +870,13 @@ public class UtilityNetworkTraceTool extends Control {
         }
     }
 
+    /**
+     * Identifies any ArcGISFeatures associated with a clicked point for the provided mouse event. If a feature is
+     * identified, a starting point is added.
+     *
+     * @param e the mouse event
+     * @since 100.15.0
+     */
     private void identifyStartingPoints(MouseEvent e) {
         // cancel any previous identify tasks
         cancelIdentifyLayers();
@@ -681,6 +917,12 @@ public class UtilityNetworkTraceTool extends Control {
         });
     }
 
+    /**
+     * Assesses whether there are insufficient or above minimum numbers of starting points for the selected trace
+     * configuration property.
+     *
+     * @since 100.15.0
+     */
     private void applyStartingPointWarnings() {
         if (selectedTraceConfigurationProperty.get() != null) {
             var minimum = selectedTraceConfigurationProperty.get().getMinimumStartingLocations() == UtilityMinimumStartingLocations.MANY ? 2 : 1;
@@ -689,6 +931,12 @@ public class UtilityNetworkTraceTool extends Control {
         }
     }
 
+    /**
+     * Cancels the listenable futures associated the traceAsync and fetchFeatureForElementsAsync tasks associated
+     * with running a utility network trace.
+     *
+     * @since 100.15.0
+     */
     private void cancelTrace() {
         if (traceInProgressFuture != null) {
             traceInProgressFuture.cancel(true);
@@ -699,6 +947,12 @@ public class UtilityNetworkTraceTool extends Control {
         isTraceInProgressProperty.set(false);
     }
 
+    /**
+     * Cancels the listenable future associated with the identifyLayersAsync task used to identify features from a
+     * provided mouse event.
+     *
+     * @since 100.15.0
+     */
     private void cancelIdentifyLayers() {
         if (identifyLayersFuture != null) {
             identifyLayersFuture.cancel(true);
@@ -706,6 +960,12 @@ public class UtilityNetworkTraceTool extends Control {
         isIdentifyInProgressProperty.set(false);
     }
 
+    /**
+     * Display provided message as a Logger warning.
+     *
+     * @param message the message to display
+     * @since 100.15.0
+     */
     private void displayLoggerWarning(String message) {
         var logger = Logger.getLogger(UtilityNetworkTraceTool.class.getName());
         logger.warning(message);
