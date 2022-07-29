@@ -117,9 +117,9 @@ public class ExamplesAppController {
    * @since 100.15.0
    */
   private List<Example> getExamples() {
-    Example compassExample = new CompassExample();
-    Example floorFilterExample = new FloorFilterExample();
-    Example scalebarExample = new ScalebarExample();
+    var compassExample = new CompassExample();
+    var floorFilterExample = new FloorFilterExample();
+    var scalebarExample = new ScalebarExample();
     return List.of(compassExample, floorFilterExample, scalebarExample);
   }
 
@@ -138,7 +138,7 @@ public class ExamplesAppController {
       int col = indexOfExample % numberOfColumns;
       var example = examples.get(indexOfExample);
       // HBox container for each example
-      HBox hbox = new HBox(15);
+      var hbox = new HBox(15);
       hbox.getStyleClass().add("panel");
       hbox.getStyleClass().add("panel-white");
       hbox.setId("example-grid-pane-item");
@@ -146,7 +146,7 @@ public class ExamplesAppController {
       // on clicking the HBox the example will be selected
       hbox.setOnMouseClicked(e -> menu.getSelectionModel().select(example));
       // ImageView displays thumbnail of the component
-      ImageView imageView = new ImageView();
+      var imageView = new ImageView();
       imageView.setFitWidth(100);
       imageView.setFitHeight(100);
       // check if an image exists for the example and display the default if not

@@ -52,7 +52,7 @@ public class ExampleUtils {
    * @since 100.15.0
    */
   public static Tab createTab(Node node, String tabLabel) {
-    Tab tab = new Tab();
+    var tab = new Tab();
     // set the provided node as the tabs content
     tab.setContent(node);
     // set the tab text as the provided label
@@ -72,11 +72,11 @@ public class ExampleUtils {
    */
   public static VBox createSettings(String exampleName, List<Node> settings) {
     // configure the VBox
-    VBox vBox = new VBox(10);
+    var vBox = new VBox(10);
     vBox.getStyleClass().add("settings");
     vBox.setAlignment(Pos.TOP_LEFT);
     // set a heading using the example name
-    Label label = new Label(exampleName + " Settings");
+    var label = new Label(exampleName + " Settings");
     label.getStyleClass().add("h3");
     vBox.getChildren().add(label);
     // for each provided setting add a styleclass and add to the VBox
@@ -96,8 +96,8 @@ public class ExampleUtils {
    */
   public static void setupIndividualExampleStage(Stage primaryStage, Example example) {
     // add the ExampleView to a StackPane
-    StackPane stackPane = new StackPane();
-    ExampleView exampleView = new ExampleView();
+    var stackPane = new StackPane();
+    var exampleView = new ExampleView();
     exampleView.setSelectedExample(example);
     stackPane.getChildren().add(exampleView);
 
@@ -140,7 +140,7 @@ public class ExampleUtils {
       "store API keys in source code.";
     try {
       // loads the gradle.properties file
-      Properties prop = new Properties();
+      var prop = new Properties();
       prop.load(new FileInputStream(System.getProperty("user.home") + "/.gradle/gradle.properties"));
       // set the API Key
       // Note: it is not best practice to store API keys in source code

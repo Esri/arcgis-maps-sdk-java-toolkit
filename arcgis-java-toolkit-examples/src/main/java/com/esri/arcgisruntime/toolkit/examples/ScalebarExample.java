@@ -79,6 +79,7 @@ public class ScalebarExample  extends Application implements Example {
     // give padding to scale bar
     StackPane.setMargin(scalebar, new Insets(0, 0, 50, 0));
     // optionally define a width for the scalebar
+    // by default the width of the scalebar will be 1/4 the map view width.
     scalebar.setPrefWidth(300);
 
     // add both tabs to the list

@@ -75,7 +75,7 @@ public class FloorFilterExample extends Application implements Example {
     floorFilter.minHeightProperty().bind(borderPane.heightProperty());
     borderPane.setLeft(floorFilter);
     borderPane.setCenter(mapView);
-    Tab mapViewTab = ExampleUtils.createTab(borderPane, "Map");
+    var mapViewTab = ExampleUtils.createTab(borderPane, "Map");
 
     // add the tab to the list
     tabs.add(mapViewTab);
@@ -97,8 +97,8 @@ public class FloorFilterExample extends Application implements Example {
     List<Node> requiredSettings = new ArrayList<>();
 
     // automatic selection mode
-    VBox autoSelectVBox = new VBox(5);
-    Label autoSelectLabel = new Label("Automatic selection mode:");
+    var autoSelectVBox = new VBox(5);
+    var autoSelectLabel = new Label("Automatic selection mode:");
     ComboBox<FloorFilter.AutomaticSelectionMode> autoSelectComboBox = new ComboBox<>();
     autoSelectComboBox.getItems().addAll(FloorFilter.AutomaticSelectionMode.ALWAYS,
       FloorFilter.AutomaticSelectionMode.ALWAYS_NON_CLEARING, FloorFilter.AutomaticSelectionMode.NEVER);
@@ -110,14 +110,14 @@ public class FloorFilterExample extends Application implements Example {
     requiredSettings.add(autoSelectVBox);
 
     // Layout settings
-    TitledPane layoutTitledPane = new TitledPane();
+    var layoutTitledPane = new TitledPane();
     layoutTitledPane.setExpanded(false);
     layoutTitledPane.setText("Layout settings");
-    VBox layoutVBox = new VBox(5);
+    var layoutVBox = new VBox(5);
     layoutTitledPane.setContent(layoutVBox);
     // resize
-    Label sizeLabel = new Label("Resize:");
-    Slider sizeSlider = new Slider(120, 500, 220);
+    var sizeLabel = new Label("Resize:");
+    var sizeSlider = new Slider(120, 500, 220);
     sizeSlider.setShowTickLabels(true);
     sizeSlider.setMajorTickUnit(500);
     sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -125,7 +125,7 @@ public class FloorFilterExample extends Application implements Example {
     });
     layoutVBox.getChildren().addAll(sizeLabel, sizeSlider);
     // position
-    Label positionLabel = new Label("Re-position:");
+    var positionLabel = new Label("Re-position:");
     ComboBox<String> positionComboBox = new ComboBox<>();
     positionComboBox.getItems().addAll("Left", "Right");
     positionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
