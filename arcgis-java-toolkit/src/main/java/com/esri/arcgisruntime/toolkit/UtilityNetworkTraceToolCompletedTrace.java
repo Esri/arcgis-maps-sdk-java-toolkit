@@ -15,10 +15,10 @@
  */
 package com.esri.arcgisruntime.toolkit;
 
+import java.util.List;
+
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceResult;
-
-import java.util.List;
 
 /**
  * A model for a complete trace from a {@link UtilityNetworkTraceTool} that enables access to the results.

@@ -16,6 +16,12 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -28,17 +34,15 @@ import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
-import com.esri.arcgisruntime.utilitynetworks.*;
+import com.esri.arcgisruntime.utilitynetworks.UtilityAssetGroup;
+import com.esri.arcgisruntime.utilitynetworks.UtilityElement;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTraceFunctionOutput;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTraceResult;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * A model for the results of a utility network trace run by a {@link UtilityNetworkTraceTool}.

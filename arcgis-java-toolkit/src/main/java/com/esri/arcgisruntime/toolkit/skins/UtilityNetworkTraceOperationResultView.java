@@ -16,20 +16,25 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import java.util.HashMap;
+
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceOperationResult;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import java.util.HashMap;
 
 /**
  * A custom Tab for a UtilityNetworkTraceOperationResult displayed in a {@link UtilityNetworkTraceSkin}.

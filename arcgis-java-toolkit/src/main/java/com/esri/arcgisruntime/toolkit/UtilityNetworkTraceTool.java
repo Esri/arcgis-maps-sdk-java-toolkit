@@ -16,6 +16,15 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -31,13 +40,31 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.*;
+import com.esri.arcgisruntime.symbology.ColorUtil;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.skins.UtilityNetworkTraceSkin;
-import com.esri.arcgisruntime.utilitynetworks.*;
+import com.esri.arcgisruntime.utilitynetworks.UtilityElement;
+import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult;
+import com.esri.arcgisruntime.utilitynetworks.UtilityFunctionTraceResult;
+import com.esri.arcgisruntime.utilitynetworks.UtilityGeometryTraceResult;
+import com.esri.arcgisruntime.utilitynetworks.UtilityMinimumStartingLocations;
+import com.esri.arcgisruntime.utilitynetworks.UtilityNamedTraceConfiguration;
+import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork;
+import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTraceResult;
 import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -47,15 +74,6 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.groupingBy;
 

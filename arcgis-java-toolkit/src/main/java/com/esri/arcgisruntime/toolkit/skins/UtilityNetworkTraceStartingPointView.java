@@ -15,21 +15,27 @@
  */
 package com.esri.arcgisruntime.toolkit.skins;
 
+import java.util.concurrent.TimeUnit;
+
 import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceStartingPoint;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.*;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-
-import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A custom BorderPane for a starting point displayed in a {@link UtilityNetworkTraceSkin}.
@@ -67,7 +73,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
         symbolVBox.getChildren().add(featureSymbolImageView);
         try {
             featureSymbolImageView.setImage(
-                    startingPoint.getFeatureSymbol().createSwatchAsync(Color.TRANSLUCENT, 1f).get(30, TimeUnit.SECONDS));
+                    startingPoint.getFeatureSymbol().createSwatchAsync(ColorUtil.colorToArgb(Color.TRANSPARENT), 1f).get(30, TimeUnit.SECONDS));
         } catch (Exception ex) {
             // if the async swatch method fails, set the image to null
             featureSymbolImageView.setImage(null);
