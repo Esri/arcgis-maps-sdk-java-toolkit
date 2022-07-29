@@ -1,19 +1,17 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 group = 'com.esri.arcgisruntime.toolkit.examples'
 
 ext {
-    arcgisVersion = '100.14.0'
+    arcgisVersion = '100.14.1'
 }
 
 javafx {
-    version = "11.0.2"
-    modules = [
-            'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media'
-    ]
+    version = "17.0.2"
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media']
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -95,5 +93,5 @@ task productionZip(type: Zip) {
 }
 
 wrapper {
-    gradleVersion = '7.3'
+    gradleVersion = '7.5'
 }
