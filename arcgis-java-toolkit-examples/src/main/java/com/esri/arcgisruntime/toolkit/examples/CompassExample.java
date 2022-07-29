@@ -211,7 +211,15 @@ public class CompassExample extends Application implements Example {
     ExampleUtils.setupIndividualExampleStage(primaryStage, this);
   }
 
+  /**
+   * Opens and runs application.
+   *
+   * @param args arguments passed to this application
+   */
   public static void main(String[] args) {
+    // configure the API Key
+    // authentication with an API key or named user is required to access basemaps and other location services
+    ExampleUtils.configureAPIKeyForRunningStandAloneExample();
     Application.launch(args);
   }
 
