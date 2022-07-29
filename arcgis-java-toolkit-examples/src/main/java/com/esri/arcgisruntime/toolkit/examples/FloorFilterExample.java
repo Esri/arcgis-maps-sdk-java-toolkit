@@ -168,13 +168,23 @@ public class FloorFilterExample extends Application implements Example {
     return List.of(mapView);
   }
 
+  /**
+   * Opens and runs application.
+   *
+   * @param args arguments passed to this application
+   */
+  public static void main(String[] args) {
+    // configure the API Key
+    // authentication with an API key or named user is required to access basemaps and other location services
+    ExampleUtils.configureAPIKeyForRunningStandAloneExample();
+    Application.launch(args);
+  }
+
   @Override
   public void start(Stage primaryStage) {
     // sets up the individual stage if run via the Launcher class
     ExampleUtils.setupIndividualExampleStage(primaryStage, this);
   }
-
-  public static void main(String[] args) { Application.launch(args); }
 
   @Override
   public void stop() {

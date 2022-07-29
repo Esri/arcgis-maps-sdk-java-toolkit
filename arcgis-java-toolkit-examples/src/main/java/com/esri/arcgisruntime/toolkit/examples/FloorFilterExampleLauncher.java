@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.toolkit.examples;
 
-import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
-
 /**
  * A Launcher class for the {@link FloorFilterExample}.
  *
@@ -25,9 +23,6 @@ import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
  */
 public class FloorFilterExampleLauncher {
   public static void main(String[] args) {
-    // configure the API Key
-    // authentication with an API key or named user is required to access basemaps and other location services
-    ExampleUtils.configureAPIKeyForRunningStandAloneExample();
     // run the app
     FloorFilterExample.main(args);
   }
