@@ -23,6 +23,7 @@ import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.toolkit.examples.CompassExample;
 import com.esri.arcgisruntime.toolkit.examples.FloorFilterExample;
+import com.esri.arcgisruntime.toolkit.examples.ScalebarExample;
 import com.esri.arcgisruntime.toolkit.model.Example;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -118,7 +119,8 @@ public class ExamplesAppController {
   private List<Example> getExamples() {
     Example compassExample = new CompassExample();
     Example floorFilterExample = new FloorFilterExample();
-    return List.of(compassExample, floorFilterExample);
+    Example scalebarExample = new ScalebarExample();
+    return List.of(compassExample, floorFilterExample, scalebarExample);
   }
 
   /**
