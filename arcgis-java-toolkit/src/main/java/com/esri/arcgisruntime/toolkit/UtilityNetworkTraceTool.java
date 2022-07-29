@@ -145,8 +145,8 @@ public class UtilityNetworkTraceTool extends Control {
         mapViewProperty.set(mapView);
         // add the starting points graphics overlay to the MapView ready to display starting points
         mapView.getGraphicsOverlays().add(startingPointsGraphicsOverlay);
-        // configure action for clicks on the MapView
-        mapView.setOnMouseClicked(this::onMapViewClicked);
+        // add event handler for mapview clicks
+        mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMapViewClicked);
 
         // listener for changes to the loading state property
         // once loading is complete, selects the first utility network in the list by default
@@ -912,8 +912,8 @@ public class UtilityNetworkTraceTool extends Control {
     }
 
     /**
-     * Handles clicks on the MapView. Identifies starting points if the adding starting points property is true and if
-     * a utility network is selected.
+     * Handles clicks on the MapView. Identifies starting points if isAddingStartingPoints is true and if
+     * a UtilityNetwork is selected.
      *
      * @param e the mouse event
      * @since 100.15.0
@@ -923,6 +923,16 @@ public class UtilityNetworkTraceTool extends Control {
                 && isAddingStartingPointsProperty.get() && selectedUtilityNetworkProperty != null) {
             identifyStartingPoints(e);
         }
+    }
+
+    /**
+     * Removes the default EventHandler from the MapView that identifies starting points if isAddingStartingPoints
+     * is true and if a UtilityNetwork is selected.
+     *
+     * @since 100.15.0
+     */
+    public void removeDefaultMapViewEventHandler() {
+        getMapView().removeEventHandler(MouseEvent.MOUSE_CLICKED, this::onMapViewClicked);
     }
 
     /**

@@ -461,6 +461,12 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         return PREF_WIDTH;
     }
 
+    @Override
+    public void dispose() {
+        // remove event handler from MapView when the skin is disposed
+        getSkinnable().removeDefaultMapViewEventHandler();
+    }
+
     /**
      * Defines a custom String Converter for the UtilityNetwork selection combobox.
      *
