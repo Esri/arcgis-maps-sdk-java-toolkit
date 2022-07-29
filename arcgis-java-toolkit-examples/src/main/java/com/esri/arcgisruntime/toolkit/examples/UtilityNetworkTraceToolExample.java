@@ -66,7 +66,7 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     // public data used for the example
     private final String webMapURL = "https://www.arcgis.com/home/item.html?id=471eb0bf37074b1fbb972b1da70fb310";
     private final String featureServiceURL = "https://sampleserver7.arcgisonline.com/portal/sharing/rest";
-    private final UserCredential userCred = new UserCredential("viewer01", "I68VGU^nMurF");
+    private final Portal portal = new Portal(featureServiceURL);
 
     // used for creating the example
     Stage primaryStage;
@@ -84,15 +84,14 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
      * @since 100.15.0
      */
     public UtilityNetworkTraceToolExample() {
-        StackPane stackPane = new StackPane();
+        var stackPane = new StackPane();
         // display progress indicator while map loads
         var progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(true);
 
         // setup the portal and set the webmap to the mapview
         try {
-            var portal = new Portal(featureServiceURL);
-            portal.setCredential(userCred);
+            portal.setCredential(new UserCredential("viewer01", "I68VGU^nMurF"));
             portal.addDoneLoadingListener(() -> {
                 if (portal.getLoadStatus() == LoadStatus.LOADED) {
                     webMap = new ArcGISMap(webMapURL);
@@ -149,17 +148,17 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         ArrayList<Node> requiredSettings = new ArrayList<>();
 
         // property settings
-        TitledPane propertyTitledPane = new TitledPane();
+        var propertyTitledPane = new TitledPane();
         propertyTitledPane.setExpanded(false);
         propertyTitledPane.setText("Properties");
-        VBox propertyVBox = new VBox(5);
+        var propertyVBox = new VBox(5);
         propertyTitledPane.setContent(propertyVBox);
         requiredSettings.add(propertyTitledPane);
         // adding starting points
-        Label isAddingStartingPoints = new Label("Toggle isAddingStartingPoints:");
-        RadioButton addStartingPointT = new RadioButton("True");
+        var isAddingStartingPointsLabel = new Label("Toggle isAddingStartingPoints:");
+        var addStartingPointT = new RadioButton("True");
         addStartingPointT.setUserData(true);
-        RadioButton addStartingPointF = new RadioButton("False");
+        var addStartingPointF = new RadioButton("False");
         addStartingPointF.setUserData(false);
         var addStartingPointToggleGroup = new ToggleGroup();
         addStartingPointT.setToggleGroup(addStartingPointToggleGroup);
@@ -183,13 +182,13 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         } else {
             addStartingPointToggleGroup.selectToggle(addStartingPointF);
         }
-        propertyVBox.getChildren().addAll(isAddingStartingPoints, addStartingPointT, addStartingPointF);
+        propertyVBox.getChildren().addAll(isAddingStartingPointsLabel, addStartingPointT, addStartingPointF);
 
         // auto zoom to result
-        Label isAutoZoomToResults = new Label("Toggle isAutoZoomToResults");
-        RadioButton isAutoZoomT = new RadioButton("True");
+        var isAutoZoomToResultsLabel = new Label("Toggle isAutoZoomToResults");
+        var isAutoZoomT = new RadioButton("True");
         isAutoZoomT.setUserData(true);
-        RadioButton isAutoZoomF = new RadioButton("False");
+        var isAutoZoomF = new RadioButton("False");
         isAutoZoomF.setUserData(false);
         var isAutoZoomToggleGroup = new ToggleGroup();
         isAutoZoomT.setToggleGroup(isAutoZoomToggleGroup);
@@ -213,28 +212,28 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         } else {
             isAutoZoomToggleGroup.selectToggle(isAutoZoomF);
         }
-        propertyVBox.getChildren().addAll(isAutoZoomToResults, isAutoZoomT, isAutoZoomF);
+        propertyVBox.getChildren().addAll(isAutoZoomToResultsLabel, isAutoZoomT, isAutoZoomF);
 
 
         // update starting point symbol color
-        Label updateStartingPointSymbolColor = new Label("Update starting point color");
-        ColorPicker colorPicker =
+        var updateStartingPointSymbolColorLabel = new Label("Update starting point color");
+        var colorPicker =
                 new ColorPicker(ColorUtil.argbToColor(
                         ((SimpleMarkerSymbol) utilityNetworkTraceTool.getStartingPointSymbol()).getColor()));
         colorPicker.setOnAction(event -> {
             ((SimpleMarkerSymbol) utilityNetworkTraceTool.getStartingPointSymbol()).setColor(
                     ColorUtil.colorToArgb(colorPicker.getValue()));
         });
-        propertyVBox.getChildren().addAll(updateStartingPointSymbolColor, colorPicker);
+        propertyVBox.getChildren().addAll(updateStartingPointSymbolColorLabel, colorPicker);
 
         // map settings
-        Label setNewMap = new Label("Set new ARCGISMap on MapView.");
-        TitledPane mapTitledPane = new TitledPane();
+        var setNewMapLabel = new Label("Set new ARCGISMap on MapView.");
+        var mapTitledPane = new TitledPane();
         mapTitledPane.setExpanded(false);
         mapTitledPane.setText("Map settings");
-        VBox mapVBox = new VBox(5);
+        var mapVBox = new VBox(5);
         mapTitledPane.setContent(mapVBox);
-        Label mapDescription = new Label("Also calls refresh() to reload data.");
+        var mapDescription = new Label("Also calls refresh() to reload data.");
         ComboBox<ArcGISMap> mapComboBox = new ComboBox<>();
         var map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
         mapComboBox.getItems().addAll(webMap, map);
@@ -262,19 +261,19 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
                 utilityNetworkTraceTool.refresh();
             }
         });
-        mapVBox.getChildren().addAll(setNewMap, mapDescription, mapComboBox);
+        mapVBox.getChildren().addAll(setNewMapLabel, mapDescription, mapComboBox);
         requiredSettings.add(mapTitledPane);
 
         // style settings
-        Label styleSettingsLabel = new Label("Show/Hide default styles.");
-        TitledPane stylesTitledPane = new TitledPane();
+        var styleSettingsLabel = new Label("Show/Hide default styles.");
+        var stylesTitledPane = new TitledPane();
         stylesTitledPane.setExpanded(false);
         stylesTitledPane.setText("Syle settings");
-        VBox stylesVBox = new VBox(5);
+        var stylesVBox = new VBox(5);
         stylesTitledPane.setContent(stylesVBox);
-        RadioButton showCustomStyles = new RadioButton("Show custom styles");
+        var showCustomStyles = new RadioButton("Show custom styles");
         showCustomStyles.setUserData(true);
-        RadioButton hideCustomStyles = new RadioButton("Hide custom styles");
+        var hideCustomStyles = new RadioButton("Hide custom styles");
         hideCustomStyles.setUserData(false);
         var stylesToggleGroup = new ToggleGroup();
         showCustomStyles.setToggleGroup(stylesToggleGroup);
@@ -293,13 +292,13 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         requiredSettings.add(stylesTitledPane);
 
         // Layout settings
-        TitledPane layoutTitledPane = new TitledPane();
+        var layoutTitledPane = new TitledPane();
         layoutTitledPane.setExpanded(false);
         layoutTitledPane.setText("Layout settings");
-        VBox layoutVBox = new VBox(5);
+        var layoutVBox = new VBox(5);
         layoutTitledPane.setContent(layoutVBox);
-        Label sizeLabel = new Label("Resize:");
-        Slider sizeSlider = new Slider(120, 500, 220);
+        var sizeLabel = new Label("Resize:");
+        var sizeSlider = new Slider(120, 500, 220);
         sizeSlider.setShowTickLabels(true);
         sizeSlider.setMajorTickUnit(500);
         sizeSlider.valueProperty().addListener((obvs, ov, nv) -> {
@@ -307,7 +306,7 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         });
         layoutVBox.getChildren().addAll(sizeLabel, sizeSlider);
         // position
-        Label positionLabel = new Label("Re-position:");
+        var positionLabel = new Label("Re-position:");
         ComboBox<String> positionComboBox = new ComboBox<>();
         positionComboBox.getItems().addAll("Left", "Right");
         positionComboBox.getSelectionModel().selectedItemProperty().addListener((obvs, ov, nv) -> {
