@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- Defines a custom BorderPane used to display an Example -->
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.layout.*?>
-<!-- Defines a custom BorderPane used to display an Example -->
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml" fx:id="exampleViewPane">
     <right>
         <!-- Right side of the BorderPane contains a ScrollPane for displaying the Example settings -->
