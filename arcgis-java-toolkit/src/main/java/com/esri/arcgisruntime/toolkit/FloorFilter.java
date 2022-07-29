@@ -172,6 +172,7 @@ public class FloorFilter extends Control {
   /**
    * Gets the selection mode. Default is AutomaticSelectionMode.ALWAYS.
    *
+   * @return the automatic selection mode
    * @since 100.14.0
    */
   public AutomaticSelectionMode getAutomaticSelectionMode() {
@@ -182,6 +183,7 @@ public class FloorFilter extends Control {
    * Sets the selection mode; defines how the floor filter updates its selection as the user navigated the connected
    * GeoView.
    *
+   * @param selectionMode the automatic selection mode to set
    * @throws NullPointerException if the selection mode is null
    * @since 100.14.0
    */
