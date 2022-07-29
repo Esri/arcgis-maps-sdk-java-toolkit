@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.toolkit.examples;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
@@ -30,15 +33,20 @@ import com.esri.arcgisruntime.toolkit.model.Example;
 import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
 import javafx.application.Application;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An Example Class for the {@link UtilityNetworkTraceTool} Toolkit Component. Implements the {@link Example} interface
@@ -342,7 +350,15 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     @Override
     public List<GeoView> getGeoViews() { return List.of(mapView); }
 
+    /**
+     * Opens and runs application.
+     *
+     * @param args arguments passed to this application
+     */
     public static void main(String[] args) {
+        // configure the API Key
+        // authentication with an API key or named user is required to access basemaps and other location services
+        ExampleUtils.configureAPIKeyForRunningStandAloneExample();
         Application.launch(args);
     }
 
