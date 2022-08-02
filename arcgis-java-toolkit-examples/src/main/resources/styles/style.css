@@ -333,10 +333,6 @@
    -fx-background-insets: 0 0 -1 0, 0;
 }
 
-.arcgis-toolkit-java .radio-button:disabled {
-    -fx-opacity: -fx-disabled-opacity;
-}
-
 .arcgis-toolkit-java .radio-button:show-mnemonics .mnemonic-underline {
     -fx-stroke: -fx-text-fill;
 }

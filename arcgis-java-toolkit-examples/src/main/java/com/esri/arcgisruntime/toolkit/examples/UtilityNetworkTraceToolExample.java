@@ -32,6 +32,8 @@ import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceTool;
 import com.esri.arcgisruntime.toolkit.model.Example;
 import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -69,7 +71,7 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     private final Portal portal = new Portal(featureServiceURL);
 
     // used for creating the example
-    Stage primaryStage;
+    private final SimpleObjectProperty<Stage> primaryStageProperty = new SimpleObjectProperty();
     private final List<Tab> tabs = new ArrayList<>();
     private final VBox settings = new VBox(5);
     private final BorderPane mapViewBorderPane = new BorderPane();
@@ -265,16 +267,20 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         requiredSettings.add(mapTitledPane);
 
         // style settings
-        var styleSettingsLabel = new Label("Show/Hide default styles.");
         var stylesTitledPane = new TitledPane();
         stylesTitledPane.setExpanded(false);
-        stylesTitledPane.setText("Syle settings");
+        stylesTitledPane.setText("Style settings");
+        var styleSettingsLabel = new Label("Show/Hide default styles.");
+        var styleSettingsDescription =
+        new Label("Note: this toggle only works when running the Utility Network Example individually.");
         var stylesVBox = new VBox(5);
         stylesTitledPane.setContent(stylesVBox);
         var showCustomStyles = new RadioButton("Show custom styles");
         showCustomStyles.setUserData(true);
+        showCustomStyles.disableProperty().bind(Bindings.isNull(primaryStageProperty));
         var hideCustomStyles = new RadioButton("Hide custom styles");
         hideCustomStyles.setUserData(false);
+        hideCustomStyles.disableProperty().bind(Bindings.isNull(primaryStageProperty));
         var stylesToggleGroup = new ToggleGroup();
         showCustomStyles.setToggleGroup(stylesToggleGroup);
         hideCustomStyles.setToggleGroup(stylesToggleGroup);
@@ -282,13 +288,13 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
         stylesToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.getUserData() instanceof Boolean) {
                 if ((Boolean) newValue.getUserData()) {
-                    primaryStage.getScene().getStylesheets().add("/styles/style.css");
+                    primaryStageProperty.get().getScene().getStylesheets().add("/styles/style.css");
                 } else {
-                    primaryStage.getScene().getStylesheets().remove("/styles/style.css");
+                    primaryStageProperty.get().getScene().getStylesheets().remove("/styles/style.css");
                 }
             }
         });
-        stylesVBox.getChildren().addAll(styleSettingsLabel, showCustomStyles, hideCustomStyles);
+        stylesVBox.getChildren().addAll(styleSettingsLabel, showCustomStyles, hideCustomStyles, styleSettingsDescription);
         requiredSettings.add(stylesTitledPane);
 
         // Layout settings
@@ -363,7 +369,7 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+        primaryStageProperty.set(primaryStage);
         ExampleUtils.setupIndividualExampleStage(primaryStage, this);
     }
 
