@@ -255,11 +255,8 @@ ToggleButton:hover, Button:hover {
    -fx-background-insets: 0 0 -1 0, 0;
 }
 
-.radio-button:disabled {
-    -fx-opacity: -fx-disabled-opacity;
-}
-
 .radio-button:show-mnemonics .mnemonic-underline {
+.arcgis-toolkit-java .radio-button:show-mnemonics .mnemonic-underline {
     -fx-stroke: -fx-text-fill;
 }
 
