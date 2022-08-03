@@ -54,9 +54,24 @@ public class OverviewMap extends Control {
   final static private MarkerSymbol MARKER_SYMBOL =
     new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.RED), 20);
 
-  final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>();
-  final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>();
-  final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<GeoView> geoViewProperty = new SimpleObjectProperty<>() {
+    @Override
+    public void set(GeoView newValue) {
+      super.set(Objects.requireNonNull(newValue, "GeoView cannot be null"));
+    }
+  };
+  final private SimpleObjectProperty<Basemap> basemapProperty = new SimpleObjectProperty<>() {
+    @Override
+    public void set(Basemap newValue) {
+      super.set(Objects.requireNonNull(newValue, "Basemap cannot be null"));
+    }
+  };
+  final private SimpleObjectProperty<Symbol> symbolProperty = new SimpleObjectProperty<>() {
+    @Override
+    public void set(Symbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   final private SimpleDoubleProperty scaleFactorProperty = new SimpleDoubleProperty(25.0);
 
   /**
@@ -116,9 +131,9 @@ public class OverviewMap extends Control {
    * @since 100.2.1
    */
   public OverviewMap(GeoView geoView, Basemap basemap, Symbol symbol) {
-    geoViewProperty.set(Objects.requireNonNull(geoView, "geoView cannot be null"));
-    basemapProperty.set(Objects.requireNonNull(basemap, "basemap cannot be null"));
-    symbolProperty.set(Objects.requireNonNull(symbol, "symbol cannot be null"));
+    geoViewProperty.set(geoView);
+    basemapProperty.set(basemap);
+    symbolProperty.set(symbol);
 
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
@@ -165,6 +180,7 @@ public class OverviewMap extends Control {
    * Sets the basemap to use.
    *
    * @param basemap the basemap to use
+   * @throws NullPointerException if basemap is null
    * @since 100.2.1
    */
   public void setBasemap(Basemap basemap) {
@@ -195,6 +211,7 @@ public class OverviewMap extends Control {
    * Sets the symbol to use to indicate the viewpoint.
    *
    * @param symbol the symbol, for a mapview use a fill symbol and for a scene view use a marker symbol
+   * @throws NullPointerException if symbol is null
    * @since 100.2.1
    */
   public void setSymbol(Symbol symbol) {

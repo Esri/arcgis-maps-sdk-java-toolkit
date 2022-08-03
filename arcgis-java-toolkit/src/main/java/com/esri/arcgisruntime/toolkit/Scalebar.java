@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import java.util.Objects;
+
 import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.skins.AlternatingBarScalebarSkin;
@@ -29,8 +31,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-
-import java.util.Objects;
 
 /**
  * Scalebar control that shows an accurate distance that can be used to visually gauge distances on a map view. The
@@ -88,13 +88,28 @@ public final class Scalebar extends Control {
   private SkinStyle skinStyle;
 
   // property to hold the alignment
-  final private SimpleObjectProperty<HPos> alignmentProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<HPos> alignmentProperty = new SimpleObjectProperty<>() {
+    @Override
+    public void set(HPos newValue) {
+      super.set(Objects.requireNonNull(newValue, "Alignment cannot be null"));
+    }
+  };
 
   // property to hold the measurement system
-  final private SimpleObjectProperty<UnitSystem> unitSystemProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<UnitSystem> unitSystemProperty = new SimpleObjectProperty<>() {
+    @Override
+    public void set(UnitSystem newValue) {
+      super.set(Objects.requireNonNull(newValue, "UnitSytem cannot be null"));
+    }
+  };
 
   // property to hold the map view this scale bar is measuring
-  final private SimpleObjectProperty<MapView> mapViewProperty = new SimpleObjectProperty<>();
+  final private SimpleObjectProperty<MapView> mapViewProperty = new SimpleObjectProperty<>() {
+    @Override
+    public void set(MapView newValue) {
+      super.set(Objects.requireNonNull(newValue, "MapView cannot be null"));
+    }
+  };
 
   /**
    * Creates a scalebar with a {@link SkinStyle#ALTERNATING_BAR} style and an alignment of {@link HPos#CENTER}. By
@@ -135,11 +150,11 @@ public final class Scalebar extends Control {
    * @since 100.2.1
    */
   public Scalebar(MapView mapView, SkinStyle style, HPos alignment) {
-    mapViewProperty.set(Objects.requireNonNull(mapView, "mapView cannot be null"));
-    skinStyle = Objects.requireNonNull(style,"style cannot be null");
-    alignmentProperty.set(Objects.requireNonNull(alignment, "alignment cannot be null"));
-
+    mapViewProperty.set(mapView);
+    alignmentProperty.set(alignment);
     unitSystemProperty.set(UnitSystem.METRIC);
+
+    setSkinStyle(style);
 
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
@@ -179,7 +194,6 @@ public final class Scalebar extends Control {
    * @since 100.2.1
    */
   public void setAlignment(HPos hPos) {
-    Objects.requireNonNull(hPos, "hPos cannot be null");
     alignmentProperty.set(hPos);
   }
 
@@ -242,11 +256,12 @@ public final class Scalebar extends Control {
    * Sets the measurement system for the scalebar to use.
    *
    * @param units the measurement system
+   * @throws NullPointerException if unit system is null
    * @see UnitSystem
    * @since 100.2.1
    */
   public void setUnitSystem(UnitSystem units) {
-    unitSystemProperty.set(Objects.requireNonNull(units, "units cannot be null"));
+    unitSystemProperty.set(units);
   }
 
   /**

@@ -16,6 +16,10 @@
 
 package com.esri.arcgisruntime.toolkit;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.toolkit.skins.FeatureTemplatePickerTilePaneSkin;
 import javafx.beans.property.BooleanProperty;
@@ -34,10 +38,6 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 /**
  * A control which shows the feature templates available from a list of feature layers. Templates are grouped by
  * feature layer. See {@link FeatureTemplatePickerTilePaneSkin} for default styling options.
@@ -49,8 +49,13 @@ public final class FeatureTemplatePicker extends Control {
   private final BooleanProperty disableTemplatesWhichCannotBeAdded = new SimpleBooleanProperty(true);
   private final ListProperty<FeatureLayer> featureLayers;
   private final ReadOnlyListWrapper<FeatureTemplateGroup> featureTemplateGroups;
-  private final ObjectProperty<Orientation> orientation = new SimpleObjectProperty<>(Orientation.VERTICAL);
-  private final ObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItem = new SimpleObjectProperty<>();
+  private final ObjectProperty<Orientation> orientation = new SimpleObjectProperty<>(Orientation.VERTICAL) {
+    @Override
+    public void set(Orientation newValue) {
+      super.set(Objects.requireNonNull(newValue, "Orientation cannot be null"));
+    }
+  };;
+  private final ObjectProperty<FeatureTemplateItem> selectedFeatureTemplateItem = new SimpleObjectProperty<>() ;
   private final IntegerProperty symbolSize = new SimpleIntegerProperty(20);
 
   /**
@@ -58,6 +63,7 @@ public final class FeatureTemplatePicker extends Control {
    * displayed.
    *
    * @param featureLayers observable list of feature layers
+   * @throws NullPointerException if featureLayers is null
    * @since 100.7.0
    */
   public FeatureTemplatePicker(ObservableList<FeatureLayer> featureLayers) {
@@ -88,6 +94,7 @@ public final class FeatureTemplatePicker extends Control {
    * will be shown.
    *
    * @param featureLayers list of feature layers
+   * @throws NullPointerException if featureLayers is null
    * @since 100.7.0
    */
   public FeatureTemplatePicker(FeatureLayer... featureLayers) {
@@ -170,10 +177,11 @@ public final class FeatureTemplatePicker extends Control {
    * Sets the value of the {@link #featureLayersProperty()}.
    *
    * @param featureLayers the list of feature layers
+   * @throws NullPointerException if featureLayers is null
    * @since 100.7.0
    */
   public void setFeatureLayers(ObservableList<FeatureLayer> featureLayers) {
-    this.featureLayers.set(featureLayers);
+    this.featureLayers.set(Objects.requireNonNull(featureLayers));
   }
 
   /**
@@ -212,6 +220,7 @@ public final class FeatureTemplatePicker extends Control {
    * horizontal orientation and top to bottom in a vertical orientation. Defaults to {@link Orientation#VERTICAL}.
    *
    * @param orientation orientation
+   * @throws NullPointerException if featureLayers is null
    * @since 100.7.0
    */
   public void setOrientation(Orientation orientation) {
