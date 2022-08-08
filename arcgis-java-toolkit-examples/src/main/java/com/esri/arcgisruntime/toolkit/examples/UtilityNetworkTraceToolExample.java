@@ -71,7 +71,7 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     private final Portal portal = new Portal(featureServiceURL);
 
     // used for creating the example
-    private final SimpleObjectProperty<Stage> primaryStageProperty = new SimpleObjectProperty();
+    private final SimpleObjectProperty<Stage> primaryStageProperty = new SimpleObjectProperty<>();
     private final List<Tab> tabs = new ArrayList<>();
     private final VBox settings = new VBox(5);
     private final BorderPane mapViewBorderPane = new BorderPane();
