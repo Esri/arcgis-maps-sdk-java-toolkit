@@ -11,11 +11,13 @@
     -utility-network-view-error-icon-svg: "M16.5 24.5a1 1 0 1 1 1-1 1.002 1.002 0 0 1-1 1zM16 20h1V9h-1zm13.8-3.5A13.3 13.3 0 1 1 16.5 3.2a13.3 13.3 0 0 1 13.3 13.3zm-1 0a12.3 12.3 0 1 0-12.3 12.3 12.314 12.314 0 0 0 12.3-12.3z";
     -utility-network-view-error-icon-color: #D83020;
     -utility-network-view-border-color: #CACACA;
+    -utility-network-view-background-color: #FFFFFF;
 }
 
 .utility-network-view {
     -fx-border-color: -utility-network-view-border-color;
     -fx-border-width: 1;
+    -fx-background-color: -utility-network-view-background-color;
 }
 
 .utility-network-view .arcgis-toolkit-java-trash-icon {
