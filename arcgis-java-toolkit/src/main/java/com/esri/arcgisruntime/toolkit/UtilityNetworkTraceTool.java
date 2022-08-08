@@ -777,8 +777,6 @@ public class UtilityNetworkTraceTool extends Control {
             List<UtilityElement> utilityElementsForStartingPoints = new ArrayList<>();
             startingPointsProperty.forEach(sp -> utilityElementsForStartingPoints.add(sp.getUtilityElement()));
 
-            System.out.println("here: " + utilityElementsForStartingPoints.get(0).getFractionAlongEdge());
-
             try {
                 // create utility trace parameters from the trace configuration and starting points
                 UtilityTraceParameters utilityTraceParameters =
