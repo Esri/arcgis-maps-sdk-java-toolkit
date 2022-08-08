@@ -91,7 +91,10 @@ import javafx.util.StringConverter;
 public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
 
     private static final double STARTING_POINT_LIST_CELL_HEIGHT = 95.0;
+    // default width/height
+    // overwrite using setPrefWidth or setPrefHeight
     private static final double PREF_WIDTH = 350.0;
+    private static final double PREF_HEIGHT = 700.0;
 
     private final UtilityNetworkTraceTool skinnable = getSkinnable();
     public final MapView controlMapView;
@@ -459,6 +462,12 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
             leftInset) {
         return PREF_WIDTH;
+    }
+
+    @Override
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double
+            leftInset) {
+        return PREF_HEIGHT;
     }
 
     @Override

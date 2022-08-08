@@ -241,7 +241,7 @@ public class UtilityNetworkTraceTool extends Control {
 
         setMinHeight(USE_PREF_SIZE);
         setMinWidth(USE_PREF_SIZE);
-        setMaxHeight(USE_COMPUTED_SIZE);
+        setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
     }
 
