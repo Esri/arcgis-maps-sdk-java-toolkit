@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.toolkit.skins;
 
+import java.util.logging.Logger;
+
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceOperationResult;
@@ -34,15 +36,23 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.SkinBase;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
-
-import java.util.logging.Logger;
 
 /**
  * A skin for displaying a {@link UtilityNetworkTraceTool}.
@@ -80,435 +90,450 @@ import java.util.logging.Logger;
  */
 public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
 
-    private static final double STARTING_POINT_LIST_CELL_HEIGHT = 95.0;
-    private static final double PREF_WIDTH = 350.0;
+  private static final double STARTING_POINT_LIST_CELL_HEIGHT = 95.0;
+  // default width/height
+  // overwrite using setPrefWidth or setPrefHeight
+  private static final double PREF_WIDTH = 350.0;
+  private static final double PREF_HEIGHT = 700.0;
 
-    private final UtilityNetworkTraceTool skinnable = getSkinnable();
-    public final MapView controlMapView;
-    private final Callout callout;
-    private final Label calloutTitle = new Label();
-    private final Label calloutDetail = new Label();
-    private Node root;
+  private final UtilityNetworkTraceTool skinnable = getSkinnable();
+  public final MapView controlMapView;
+  private final Callout callout;
+  private final Label calloutTitle = new Label();
+  private final Label calloutDetail = new Label();
+  private Node root;
 
-    public SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
-    public SimpleBooleanProperty insufficientStartingPointsProperty = new SimpleBooleanProperty(false);
-    public SimpleBooleanProperty aboveMinimumStartingPointsProperty = new SimpleBooleanProperty(false);
-    public SimpleBooleanProperty enableTraceProperty = new SimpleBooleanProperty();
-    public SimpleBooleanProperty isIdentifyInProgressProperty = new SimpleBooleanProperty(false);
-    public SimpleBooleanProperty isTraceInProgressProperty = new SimpleBooleanProperty(false);
-    public SimpleListProperty<UtilityNetwork> utilityNetworksProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    public SimpleListProperty<UtilityNamedTraceConfiguration> traceConfigurationsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    public SimpleListProperty<UtilityNetworkTraceStartingPoint> startingPointsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    public SimpleListProperty<UtilityNetworkTraceOperationResult> traceResultsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-    public SimpleObjectProperty<UtilityNetwork> selectedUtilityNetworkProperty = new SimpleObjectProperty<>();
-    public SimpleObjectProperty<UtilityNamedTraceConfiguration> selectedTraceConfigurationProperty = new SimpleObjectProperty<>();
-    public SimpleStringProperty traceNameProperty = new SimpleStringProperty();
+  public SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
+  public SimpleBooleanProperty insufficientStartingPointsProperty = new SimpleBooleanProperty(false);
+  public SimpleBooleanProperty aboveMinimumStartingPointsProperty = new SimpleBooleanProperty(false);
+  public SimpleBooleanProperty enableTraceProperty = new SimpleBooleanProperty();
+  public SimpleBooleanProperty isIdentifyInProgressProperty = new SimpleBooleanProperty(false);
+  public SimpleBooleanProperty isTraceInProgressProperty = new SimpleBooleanProperty(false);
+  public SimpleListProperty<UtilityNetwork> utilityNetworksProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public SimpleListProperty<UtilityNamedTraceConfiguration> traceConfigurationsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public SimpleListProperty<UtilityNetworkTraceStartingPoint> startingPointsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public SimpleListProperty<UtilityNetworkTraceOperationResult> traceResultsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public SimpleObjectProperty<UtilityNetwork> selectedUtilityNetworkProperty = new SimpleObjectProperty<>();
+  public SimpleObjectProperty<UtilityNamedTraceConfiguration> selectedTraceConfigurationProperty = new SimpleObjectProperty<>();
+  public SimpleStringProperty traceNameProperty = new SimpleStringProperty();
 
-    @FXML ProgressIndicator utilityNetworkLoadingProgressIndicator;
-    // displays if no utility networks are found
-    @FXML VBox utilityNetworksNotFoundVBox;
+  @FXML ProgressIndicator utilityNetworkLoadingProgressIndicator;
+  // displays if no utility networks are found
+  @FXML VBox utilityNetworksNotFoundVBox;
 
-    @FXML TabPane tabPane;
-    // tab containing configuration options for running a trace
-    @FXML Tab newTraceTab;
-    @FXML BorderPane newTraceBorderPane;
-    // utility networks
-    @FXML VBox utilityNetworkSelectionVBox;
-    @FXML ComboBox<UtilityNetwork> utilityNetworkSelectionComboBox;
-    // named trace configuration
-    @FXML VBox traceConfigsNotFoundVBox;
-    @FXML ComboBox<UtilityNamedTraceConfiguration> traceConfigComboBox;
-    @FXML VBox traceConfigVBox;
-    // starting points
-    @FXML VBox startingPointsVBox;
-    @FXML ListView<UtilityNetworkTraceStartingPoint> startingPointsListView;
-    @FXML Label startingPointsPlaceholder;
-    @FXML Button addStartingPointButton;
-    @FXML Button cancelAddStartingPointsButton;
-    @FXML Button clearStartingPointsButton;
-    @FXML VBox addStartingPointProgressVBox;
-    @FXML Button cancelIdentifyStartingPointsButton;
-    @FXML TextField traceNameTextField;
-    // warnings
-    @FXML HBox aboveMinStartingPointsWarningHBox;
-    @FXML HBox insufficientStartingPointsWarningHBox;
-    // run trace
-    @FXML Button runTraceButton;
-    @FXML VBox traceInProgressVBox;
-    @FXML ProgressBar traceInProgressBar;
-    @FXML Label traceInProgressLabel;
-    @FXML Button cancelTraceInProgressButton;
-    // results
-    @FXML VBox noResultsFoundVBox;
-    @FXML Tab resultsTab;
-    @FXML VBox resultsVBox;
-    @FXML TabPane resultsTabPane;
-    @FXML Button clearResultsButton;
+  @FXML TabPane tabPane;
+  // tab containing configuration options for running a trace
+  @FXML Tab newTraceTab;
+  @FXML BorderPane newTraceBorderPane;
+  // utility networks
+  @FXML VBox utilityNetworkSelectionVBox;
+  @FXML ComboBox<UtilityNetwork> utilityNetworkSelectionComboBox;
+  // named trace configuration
+  @FXML VBox traceConfigsNotFoundVBox;
+  @FXML ComboBox<UtilityNamedTraceConfiguration> traceConfigComboBox;
+  @FXML VBox traceConfigVBox;
+  // starting points
+  @FXML VBox startingPointsVBox;
+  @FXML ListView<UtilityNetworkTraceStartingPoint> startingPointsListView;
+  @FXML Label startingPointsPlaceholder;
+  @FXML Button addStartingPointButton;
+  @FXML Button cancelAddStartingPointsButton;
+  @FXML Button clearStartingPointsButton;
+  @FXML VBox addStartingPointProgressVBox;
+  @FXML Button cancelIdentifyStartingPointsButton;
+  @FXML TextField traceNameTextField;
+  // warnings
+  @FXML HBox aboveMinStartingPointsWarningHBox;
+  @FXML HBox insufficientStartingPointsWarningHBox;
+  // run trace
+  @FXML Button runTraceButton;
+  @FXML VBox traceInProgressVBox;
+  @FXML ProgressBar traceInProgressBar;
+  @FXML Label traceInProgressLabel;
+  @FXML Button cancelTraceInProgressButton;
+  // results
+  @FXML VBox noResultsFoundVBox;
+  @FXML Tab resultsTab;
+  @FXML VBox resultsVBox;
+  @FXML TabPane resultsTabPane;
+  @FXML Button clearResultsButton;
 
-    /**
-     * Constructor for all SkinBase instances.
-     *
-     * @param control The control for which this Skin should attach to.
-     */
-    public UtilityNetworkTraceSkin(UtilityNetworkTraceTool control) {
-        super(control);
-        // configure mapview related settings
-        controlMapView = skinnable.getMapView();
-        callout = controlMapView.getCallout();
-        callout.setStyle("leader-position: bottom; corner-radius:0; margin:10;");
-        var calloutCustomView = new VBox(5);
-        calloutTitle.getStyleClass().add("arcgis-toolkit-java-h2");
-        calloutDetail.getStyleClass().add("arcgis-toolkit-java-h3");
-        calloutCustomView.getChildren().addAll(calloutTitle, calloutDetail);
-        callout.setCustomView(calloutCustomView);
-        callout.setOnMouseClicked(e -> callout.dismiss());
+  /**
+   * Constructor for all SkinBase instances.
+   *
+   * @param control The control for which this Skin should attach to.
+   */
+  public UtilityNetworkTraceSkin(UtilityNetworkTraceTool control) {
+    super(control);
+    // configure mapview related settings
+    controlMapView = skinnable.getMapView();
+    callout = controlMapView.getCallout();
+    callout.setStyle("leader-position: bottom; corner-radius:0; margin:10;");
+    var calloutCustomView = new VBox(5);
+    calloutTitle.getStyleClass().add("arcgis-toolkit-java-h2");
+    calloutDetail.getStyleClass().add("arcgis-toolkit-java-h3");
+    calloutCustomView.getChildren().addAll(calloutTitle, calloutDetail);
+    callout.setCustomView(calloutCustomView);
+    callout.setOnMouseClicked(e -> callout.dismiss());
 
-        // load the FXML
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("utility_network_trace.fxml"));
-        fxmlLoader.setControllerFactory(param -> this);
-        try {
-            root = fxmlLoader.load();
-            // configure the UI if the FXML is loaded successfully
-            configureUI();
-        }  catch (Exception e) {
-            // if the FXML file fails to load, log a warning
-            Logger.getLogger(UtilityNetworkTraceSkin.class.getName()).warning(
-                    "Failed to load the FXML file. UtilityNetworkTraceSkin will not be displayed.");
+    // load the FXML
+    FXMLLoader fxmlLoader = new FXMLLoader();
+    fxmlLoader.setLocation(getClass().getResource("utility_network_trace.fxml"));
+    fxmlLoader.setControllerFactory(param -> this);
+    try {
+      root = fxmlLoader.load();
+      // configure the UI if the FXML is loaded successfully
+      configureUI();
+    }  catch (Exception e) {
+      // if the FXML file fails to load, log a warning
+      Logger.getLogger(UtilityNetworkTraceSkin.class.getName()).warning(
+        "Failed to load the FXML file. UtilityNetworkTraceSkin will not be displayed.");
+    }
+  }
+
+  /**
+   * Returns the runTraceButton.
+   *
+   * @return the runTraceButton
+   * @since 100.15.0
+   */
+  public Button getRunTraceButton() { return runTraceButton; }
+
+  /**
+   * Returns the getCancelTraceInProgressButton.
+   *
+   * @return the getCancelTraceInProgressButton
+   * @since 100.15.0
+   */
+  public Button getCancelTraceInProgressButton() { return cancelTraceInProgressButton; }
+
+  /**
+   * Returns the getCancelIdentifyStartingPointsButton.
+   *
+   * @return the getCancelIdentifyStartingPointsButton
+   * @since 100.15.0
+   */
+  public Button getCancelIdentifyStartingPointsButton() { return cancelIdentifyStartingPointsButton; }
+
+  /**
+   * Returns the getClearResultsButton.
+   *
+   * @return the getClearResultsButton
+   * @since 100.15.0
+   */
+  public Button getClearResultsButton() { return clearResultsButton; }
+
+  /**
+   * Returns the value of the variable used to define the height of the cells used in the starting points ListView.
+   *
+   * @return the height
+   * @since 100.15.0
+   */
+  public double getStartingPointListCellHeight() { return STARTING_POINT_LIST_CELL_HEIGHT; }
+
+  /**
+   * Configures the UI.
+   *
+   * @since 100.15.0
+   */
+  private void configureUI() {
+    // handle progress indicator for initial load
+    utilityNetworkLoadingProgressIndicator.visibleProperty().bind(isMapAndUtilityNetworkLoadingInProgressProperty);
+    // Utility Network selection setup
+    // if there are no utility networks, display an error message and don't display the tabpane
+    utilityNetworksNotFoundVBox.visibleProperty().bind(Bindings.and(utilityNetworksProperty.emptyProperty(), isMapAndUtilityNetworkLoadingInProgressProperty.not()));
+    // if there are utility networks, display the tabpane and don't display the error message
+    tabPane.visibleProperty().bind(utilityNetworksProperty.emptyProperty().not());
+
+    // utility network combobox displays the utility networks
+    utilityNetworkSelectionComboBox.itemsProperty().bind(utilityNetworksProperty);
+    utilityNetworkSelectionComboBox.setConverter(new UtilityNetworkStringConverter());
+
+    // only display the utility network UI if there is more than 1 utility network to choose from,
+    // or if one is not pre-selected
+    utilityNetworkSelectionVBox.visibleProperty().bind(
+      Bindings.or(utilityNetworksProperty.sizeProperty().greaterThan(1),
+        Bindings.and(utilityNetworksProperty.sizeProperty().isEqualTo(1),
+          selectedUtilityNetworkProperty.isNull())));
+
+    // keep the selected utility network property up to date
+    utilityNetworkSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue != selectedUtilityNetworkProperty.get()) {
+        selectedUtilityNetworkProperty.set(newValue);
+      }
+    });
+
+    // keep the combobox in sync with the data
+    selectedUtilityNetworkProperty.addListener(((observable, oldValue, newValue) -> {
+      if (newValue != utilityNetworkSelectionComboBox.getSelectionModel().getSelectedItem()) {
+        utilityNetworkSelectionComboBox.getSelectionModel().select(newValue);
+      }
+    }));
+
+    // Trace Configuration selection setup
+    // only display the trace configuration settings when there is a utility network selected
+    traceConfigVBox.visibleProperty().bind(selectedUtilityNetworkProperty.isNotNull());
+
+    // only display the combobox if there are available trace configurations, otherwise show warning
+    traceConfigComboBox.visibleProperty().bind(traceConfigurationsProperty.emptyProperty().not());
+    traceConfigsNotFoundVBox.visibleProperty().bind(traceConfigurationsProperty.emptyProperty());
+    startingPointsVBox.visibleProperty().bind(traceConfigurationsProperty.emptyProperty().not());
+
+    // trace config combobox displays the trace configs
+    traceConfigComboBox.itemsProperty().bind(traceConfigurationsProperty);
+    traceConfigComboBox.setConverter(new UtilityNamedTraceConfigurationStringConverter());
+
+    // keep the selected trace configuration property up to date
+    traceConfigComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue != selectedTraceConfigurationProperty.get()) {
+        selectedTraceConfigurationProperty.set(newValue);
+      }
+    });
+
+    // keep the combobox in sync with the data
+    selectedTraceConfigurationProperty.addListener(((observable, oldValue, newValue) -> {
+      if (newValue != traceConfigComboBox.getSelectionModel().getSelectedItem()) {
+        traceConfigComboBox.getSelectionModel().select(newValue);
+      }
+    }));
+
+    // Starting Point selection setup
+
+    // only display the starting points listview and remove button if there are any
+    startingPointsListView.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
+    clearStartingPointsButton.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
+    // configure the list view
+    startingPointsListView.setCellFactory(listView -> new StartingPointListCell(this));
+    startingPointsListView.setItems(startingPointsProperty);
+    // set the pref height to the number of cells multiplied by the defined cell height
+    startingPointsListView.prefHeightProperty().bind(Bindings.size(startingPointsProperty).multiply(STARTING_POINT_LIST_CELL_HEIGHT));
+
+    // hide add starting points button if selection is in progress
+    addStartingPointButton.visibleProperty().bind(skinnable.isAddingStartingPointsProperty().not());
+    // only show the cancel button if selection is in process
+    cancelAddStartingPointsButton.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
+    // display the starting points placeholder label if starting points are being added
+    startingPointsPlaceholder.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
+
+    // link the callout content to the starting point currently selected in the list view
+    startingPointsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue != null) {
+        calloutTitle.setText(newValue.getUtilityElement().getNetworkSource().getName());
+        calloutDetail.setText(newValue.getUtilityElement().getAssetGroup().getName());
+        callout.showCalloutAt(newValue.getGraphic().getGeometry().getExtent().getCenter());
+      } else {
+        calloutTitle.setText("");
+        calloutDetail.setText("");
+        callout.dismiss();
+      }
+    });
+
+    // configure the UI when an identify is in progress
+    isIdentifyInProgressProperty.addListener((observable, oldValue, newValue) -> {
+      if (newValue) {
+        addStartingPointProgressVBox.setVisible(true);
+        newTraceBorderPane.setVisible(false);
+      } else {
+        addStartingPointProgressVBox.setVisible(false);
+        newTraceBorderPane.setVisible(true);
+      }
+    });
+
+    // only show warning if there are insufficient starting points
+    insufficientStartingPointsWarningHBox.visibleProperty().bind(insufficientStartingPointsProperty);
+
+    // only show warning if there are above the minimum starting points
+    aboveMinStartingPointsWarningHBox.visibleProperty().bind(aboveMinimumStartingPointsProperty);
+
+    // bind the trace name to the value in the text field
+    traceNameProperty.bind(traceNameTextField.textProperty());
+
+    // only enable the trace button if trace is enabled
+    runTraceButton.disableProperty().bind(enableTraceProperty.not());
+
+    // only show the results tab when there are results and/or a result is in progress
+    noResultsFoundVBox.visibleProperty().bind(Bindings.and(isTraceInProgressProperty.not(), traceResultsProperty.emptyProperty()));
+
+    // keep trace results in sync with data
+    traceResultsProperty.addListener((ListChangeListener<UtilityNetworkTraceOperationResult>) c -> {
+      while (c.next()) {
+        if (traceResultsProperty.isEmpty()) {
+          tabPane.getSelectionModel().select(newTraceTab);
         }
-    }
-
-    /**
-     * Returns the runTraceButton.
-     *
-     * @return the runTraceButton
-     * @since 100.15.0
-     */
-    public Button getRunTraceButton() { return runTraceButton; }
-
-    /**
-     * Returns the getCancelTraceInProgressButton.
-     *
-     * @return the getCancelTraceInProgressButton
-     * @since 100.15.0
-     */
-    public Button getCancelTraceInProgressButton() { return cancelTraceInProgressButton; }
-
-    /**
-     * Returns the getCancelIdentifyStartingPointsButton.
-     *
-     * @return the getCancelIdentifyStartingPointsButton
-     * @since 100.15.0
-     */
-    public Button getCancelIdentifyStartingPointsButton() { return cancelIdentifyStartingPointsButton; }
-
-    /**
-     * Returns the getClearResultsButton.
-     *
-     * @return the getClearResultsButton
-     * @since 100.15.0
-     */
-    public Button getClearResultsButton() { return clearResultsButton; }
-
-    /**
-     * Returns the value of the variable used to define the height of the cells used in the starting points ListView.
-     *
-     * @return the height
-     * @since 100.15.0
-     */
-    public double getStartingPointListCellHeight() { return STARTING_POINT_LIST_CELL_HEIGHT; }
-
-    /**
-     * Configures the UI.
-     *
-     * @since 100.15.0
-     */
-    private void configureUI() {
-        // handle progress indicator for initial load
-        utilityNetworkLoadingProgressIndicator.visibleProperty().bind(isMapAndUtilityNetworkLoadingInProgressProperty);
-        // Utility Network selection setup
-        // if there are no utility networks, display an error message and don't display the tabpane
-        utilityNetworksNotFoundVBox.visibleProperty().bind(Bindings.and(utilityNetworksProperty.emptyProperty(), isMapAndUtilityNetworkLoadingInProgressProperty.not()));
-        // if there are utility networks, display the tabpane and don't display the error message
-        tabPane.visibleProperty().bind(utilityNetworksProperty.emptyProperty().not());
-
-        // utility network combobox displays the utility networks
-        utilityNetworkSelectionComboBox.itemsProperty().bind(utilityNetworksProperty);
-        utilityNetworkSelectionComboBox.setConverter(new UtilityNetworkStringConverter());
-
-        // only display the utility network UI if there is more than 1 utility network to choose from,
-        // or if one is not pre-selected
-        utilityNetworkSelectionVBox.visibleProperty().bind(
-                Bindings.or(utilityNetworksProperty.sizeProperty().greaterThan(1),
-                        Bindings.and(utilityNetworksProperty.sizeProperty().isEqualTo(1),
-                                selectedUtilityNetworkProperty.isNull())));
-
-        // keep the selected utility network property up to date
-        utilityNetworkSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != selectedUtilityNetworkProperty.get()) {
-                selectedUtilityNetworkProperty.set(newValue);
-            }
-        });
-
-        // keep the combobox in sync with the data
-        selectedUtilityNetworkProperty.addListener(((observable, oldValue, newValue) -> {
-            if (newValue != utilityNetworkSelectionComboBox.getSelectionModel().getSelectedItem()) {
-                utilityNetworkSelectionComboBox.getSelectionModel().select(newValue);
-            }
-        }));
-
-        // Trace Configuration selection setup
-        // only display the trace configuration settings when there is a utility network selected
-        traceConfigVBox.visibleProperty().bind(selectedUtilityNetworkProperty.isNotNull());
-
-        // only display the combobox if there are available trace configurations, otherwise show warning
-        traceConfigComboBox.visibleProperty().bind(traceConfigurationsProperty.emptyProperty().not());
-        traceConfigsNotFoundVBox.visibleProperty().bind(traceConfigurationsProperty.emptyProperty());
-        startingPointsVBox.visibleProperty().bind(traceConfigurationsProperty.emptyProperty().not());
-
-        // trace config combobox displays the trace configs
-        traceConfigComboBox.itemsProperty().bind(traceConfigurationsProperty);
-        traceConfigComboBox.setConverter(new UtilityNamedTraceConfigurationStringConverter());
-
-        // keep the selected trace configuration property up to date
-        traceConfigComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != selectedTraceConfigurationProperty.get()) {
-                selectedTraceConfigurationProperty.set(newValue);
-            }
-        });
-
-        // keep the combobox in sync with the data
-        selectedTraceConfigurationProperty.addListener(((observable, oldValue, newValue) -> {
-            if (newValue != traceConfigComboBox.getSelectionModel().getSelectedItem()) {
-                traceConfigComboBox.getSelectionModel().select(newValue);
-            }
-        }));
-
-        // Starting Point selection setup
-
-        // only display the starting points listview and remove button if there are any
-        startingPointsListView.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
-        clearStartingPointsButton.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
-        // configure the list view
-        startingPointsListView.setCellFactory(listView -> new StartingPointListCell(this));
-        startingPointsListView.setItems(startingPointsProperty);
-        // set the pref height to the number of cells multiplied by the defined cell height
-        startingPointsListView.prefHeightProperty().bind(Bindings.size(startingPointsProperty).multiply(STARTING_POINT_LIST_CELL_HEIGHT));
-
-        // hide add starting points button if selection is in progress
-        addStartingPointButton.visibleProperty().bind(skinnable.isAddingStartingPointsProperty().not());
-        // only show the cancel button if selection is in process
-        cancelAddStartingPointsButton.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
-        // display the starting points placeholder label if starting points are being added
-        startingPointsPlaceholder.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
-
-        // link the callout content to the starting point currently selected in the list view
-        startingPointsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                calloutTitle.setText(newValue.getUtilityElement().getNetworkSource().getName());
-                calloutDetail.setText(newValue.getUtilityElement().getAssetGroup().getName());
-                callout.showCalloutAt(newValue.getGraphic().getGeometry().getExtent().getCenter());
-            } else {
-                calloutTitle.setText("");
-                calloutDetail.setText("");
-                callout.dismiss();
-            }
-        });
-
-        // configure the UI when an identify is in progress
-        isIdentifyInProgressProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                addStartingPointProgressVBox.setVisible(true);
-                newTraceBorderPane.setVisible(false);
-            } else {
-                addStartingPointProgressVBox.setVisible(false);
-                newTraceBorderPane.setVisible(true);
-            }
-        });
-
-        // only show warning if there are insufficient starting points
-        insufficientStartingPointsWarningHBox.visibleProperty().bind(insufficientStartingPointsProperty);
-
-        // only show warning if there are above the minimum starting points
-        aboveMinStartingPointsWarningHBox.visibleProperty().bind(aboveMinimumStartingPointsProperty);
-
-        // bind the trace name to the value in the text field
-        traceNameProperty.bind(traceNameTextField.textProperty());
-
-        // only enable the trace button if trace is enabled
-        runTraceButton.disableProperty().bind(enableTraceProperty.not());
-
-        // only show the results tab when there are results and/or a result is in progress
-        noResultsFoundVBox.visibleProperty().bind(Bindings.and(isTraceInProgressProperty.not(), traceResultsProperty.emptyProperty()));
-
-        // keep trace results in sync with data
-        traceResultsProperty.addListener((ListChangeListener<UtilityNetworkTraceOperationResult>) c -> {
-            while (c.next()) {
-                if (traceResultsProperty.isEmpty()) {
-                    tabPane.getSelectionModel().select(newTraceTab);
-                }
-                for (UtilityNetworkTraceOperationResult removedResult : c.getRemoved()) {
-                    resultsTabPane.getTabs().remove(findTabForResult(removedResult));
-                }
-                for (UtilityNetworkTraceOperationResult addedResult : c.getAddedSubList()) {
-                    Platform.runLater(() -> {
-                        // waits for result to finish process via async operation
-                        var tab = new UtilityNetworkTraceOperationResultView(this, addedResult);
-                        resultsTabPane.getTabs().add(tab);
-                        resultsTabPane.getSelectionModel().select(tab);
-                    });
-                }
-            }
-        });
-
-        // configure the UI for when a trace is running
-        isTraceInProgressProperty.addListener(((observable, oldValue, newValue) -> {
-            if (newValue) {
-                tabPane.getSelectionModel().select(resultsTab);
-                newTraceTab.setDisable(true);
-                resultsVBox.setVisible(false);
-                traceInProgressVBox.setVisible(true);
-            } else {
-                resultsVBox.setVisible(true);
-                traceInProgressVBox.setVisible(false);
-                newTraceTab.setDisable(false);
-            }
-        }));
-
-        // configure the clear results button and only display when there are trace results
-        clearResultsButton.setOnAction(e -> traceResultsProperty.clear());
-        clearResultsButton.visibleProperty().bind(Bindings.isNotEmpty(traceResultsProperty));
-
-        getChildren().add(root);
-    }
-
-    /**
-     * Returns the Tab that is displaying the data for the provided result.
-     *
-     * @return the Tab
-     * @since 100.15.0
-     */
-    private Tab findTabForResult(UtilityNetworkTraceOperationResult result) {
-        return resultsTabPane.getTabs().stream()
-                .filter(c -> ((UtilityNetworkTraceOperationResultView) c).getResult() == result).findFirst().orElse(null);
-    }
-
-    /**
-     * Creates and returns the default trace name used when a name is not defined in the text field.
-     *
-     * @return the default trace name
-     * @since 100.15.0
-     */
-    public String getDefaultTraceName() {
-        return selectedTraceConfigurationProperty.get().getName() + " " + (traceResultsProperty.size() + 1);
-    }
-
-    /**
-     * Handles clicks on the addStartingPointsButton.
-     *
-     * @param mouseEvent the mouse event captured by the click
-     * @since 100.15.0
-     */
-    @FXML
-    private void handleAddStartingPointButtonClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-            skinnable.isAddingStartingPointsProperty().set(true);
+        for (UtilityNetworkTraceOperationResult removedResult : c.getRemoved()) {
+          resultsTabPane.getTabs().remove(findTabForResult(removedResult));
         }
-    }
-
-    /**
-     * Handles clicks on the clearStartingPointsButton.
-     *
-     * @param mouseEvent the mouse event captured by the click
-     * @since 100.15.0
-     */
-    @FXML
-    private void handleClearStartingPointsButtonClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-            startingPointsProperty.clear();
+        for (UtilityNetworkTraceOperationResult addedResult : c.getAddedSubList()) {
+          Platform.runLater(() -> {
+            // waits for result to finish process via async operation
+            var tab = new UtilityNetworkTraceOperationResultView(this, addedResult);
+            resultsTabPane.getTabs().add(tab);
+            resultsTabPane.getSelectionModel().select(tab);
+          });
         }
-    }
+      }
+    });
 
-    /**
-     * Handles clicks on the cancelAddStartingPointsButton.
-     *
-     * @param mouseEvent the mouse event captured by the click
-     * @since 100.15.0
-     */
-    @FXML
-    private void handleCancelAddStartingPointsButtonClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-            skinnable.isAddingStartingPointsProperty().set(false);
-            if (traceResultsProperty.isEmpty()) {
-                tabPane.getSelectionModel().select(newTraceTab);
-            }
-        }
+    // configure the UI for when a trace is running
+    isTraceInProgressProperty.addListener(((observable, oldValue, newValue) -> {
+      if (newValue) {
+        tabPane.getSelectionModel().select(resultsTab);
+        newTraceTab.setDisable(true);
+        resultsVBox.setVisible(false);
+        traceInProgressVBox.setVisible(true);
+      } else {
+        resultsVBox.setVisible(true);
+        traceInProgressVBox.setVisible(false);
+        newTraceTab.setDisable(false);
+      }
+    }));
+
+    // configure the clear results button and only display when there are trace results
+    clearResultsButton.setOnAction(e -> traceResultsProperty.clear());
+    clearResultsButton.visibleProperty().bind(Bindings.isNotEmpty(traceResultsProperty));
+
+    getChildren().add(root);
+  }
+
+  /**
+   * Returns the Tab that is displaying the data for the provided result.
+   *
+   * @return the Tab
+   * @since 100.15.0
+   */
+  private Tab findTabForResult(UtilityNetworkTraceOperationResult result) {
+    return resultsTabPane.getTabs().stream()
+      .filter(c -> ((UtilityNetworkTraceOperationResultView) c).getResult() == result).findFirst().orElse(null);
+  }
+
+  /**
+   * Creates and returns the default trace name used when a name is not defined in the text field.
+   *
+   * @return the default trace name
+   * @since 100.15.0
+   */
+  public String getDefaultTraceName() {
+    return selectedTraceConfigurationProperty.get().getName() + " " + (traceResultsProperty.size() + 1);
+  }
+
+  /**
+   * Handles clicks on the addStartingPointsButton.
+   *
+   * @param mouseEvent the mouse event captured by the click
+   * @since 100.15.0
+   */
+  @FXML
+  private void handleAddStartingPointButtonClicked(MouseEvent mouseEvent) {
+    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
+      skinnable.isAddingStartingPointsProperty().set(true);
+    }
+  }
+
+  /**
+   * Handles clicks on the clearStartingPointsButton.
+   *
+   * @param mouseEvent the mouse event captured by the click
+   * @since 100.15.0
+   */
+  @FXML
+  private void handleClearStartingPointsButtonClicked(MouseEvent mouseEvent) {
+    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
+      startingPointsProperty.clear();
+    }
+  }
+
+  /**
+   * Handles clicks on the cancelAddStartingPointsButton.
+   *
+   * @param mouseEvent the mouse event captured by the click
+   * @since 100.15.0
+   */
+  @FXML
+  private void handleCancelAddStartingPointsButtonClicked(MouseEvent mouseEvent) {
+    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
+      skinnable.isAddingStartingPointsProperty().set(false);
+      if (traceResultsProperty.isEmpty()) {
+        tabPane.getSelectionModel().select(newTraceTab);
+      }
+    }
+  }
+
+  @Override
+  protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_WIDTH;
+  }
+
+  @Override
+  protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double
+    leftInset) {
+    return PREF_HEIGHT;
+  }
+
+  @Override
+  public void dispose() {
+    // remove event handler from MapView when the skin is disposed
+    getSkinnable().removeDefaultMapViewEventHandler();
+  }
+
+  /**
+   * Defines a custom String Converter for the UtilityNetwork selection combobox.
+   *
+   * @since 100.15.0
+   */
+  private static class UtilityNetworkStringConverter extends StringConverter<UtilityNetwork> {
+    @Override
+    public String toString(UtilityNetwork utilityNetwork) {
+      return utilityNetwork != null ? utilityNetwork.getName() : "";
     }
 
     @Override
-    protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double
-            leftInset) {
-        return PREF_WIDTH;
+    public UtilityNetwork fromString(String string) {
+      return null;
+    }
+  }
+
+  /**
+   * Defines a custom String Converter for the UtilityNamedTraceConfiguration selection combobox.
+   *
+   * @since 100.15.0
+   */
+  private static class UtilityNamedTraceConfigurationStringConverter extends StringConverter<UtilityNamedTraceConfiguration> {
+    @Override
+    public String toString(UtilityNamedTraceConfiguration traceConfig) {
+      return traceConfig != null ? traceConfig.getName() : "";
     }
 
-    /**
-     * Defines a custom String Converter for the UtilityNetwork selection combobox.
-     *
-     * @since 100.15.0
-     */
-    private static class UtilityNetworkStringConverter extends StringConverter<UtilityNetwork> {
-        @Override
-        public String toString(UtilityNetwork utilityNetwork) {
-            return utilityNetwork != null ? utilityNetwork.getName() : "";
-        }
-
-        @Override
-        public UtilityNetwork fromString(String string) {
-            return null;
-        }
+    @Override
+    public UtilityNamedTraceConfiguration fromString(String string) {
+      return null;
     }
+  }
 
-    /**
-     * Defines a custom String Converter for the UtilityNamedTraceConfiguration selection combobox.
-     *
-     * @since 100.15.0
-     */
-    private static class UtilityNamedTraceConfigurationStringConverter extends StringConverter<UtilityNamedTraceConfiguration> {
-        @Override
-        public String toString(UtilityNamedTraceConfiguration traceConfig) {
-            return traceConfig != null ? traceConfig.getName() : "";
-        }
+  /**
+   * Defines a custom ListCell for the starting points ListView, which contains a custom BorderPane defined in
+   * {@link UtilityNetworkTraceStartingPointView}.
+   *
+   * @since 100.15.0
+   */
+  private static class StartingPointListCell extends ListCell<UtilityNetworkTraceStartingPoint> {
 
-        @Override
-        public UtilityNamedTraceConfiguration fromString(String string) {
-            return null;
-        }
+    private final UtilityNetworkTraceSkin skin;
+
+    public StartingPointListCell(UtilityNetworkTraceSkin skin) {
+      this.skin = skin;
+      this.getStyleClass().add("utility-network-starting-point-list-cell");
     }
-
-    /**
-     * Defines a custom ListCell for the starting points ListView, which contains a custom BorderPane defined in
-     * {@link UtilityNetworkTraceStartingPointView}.
-     *
-     * @since 100.15.0
-     */
-    private static class StartingPointListCell extends ListCell<UtilityNetworkTraceStartingPoint> {
-
-        private final UtilityNetworkTraceSkin skin;
-
-        public StartingPointListCell(UtilityNetworkTraceSkin skin) {
-            this.skin = skin;
-            this.getStyleClass().add("utility-network-starting-point-list-cell");
-        }
-        @Override
-        public void updateItem(UtilityNetworkTraceStartingPoint startingPoint, boolean empty) {
-            super.updateItem(startingPoint, empty);
-            if (startingPoint != null && !empty) {
-                setText(null);
-                setGraphic(new UtilityNetworkTraceStartingPointView(skin, startingPoint));
-            } else {
-                setText(null);
-                setGraphic(null);
-            }
-        }
+    @Override
+    public void updateItem(UtilityNetworkTraceStartingPoint startingPoint, boolean empty) {
+      super.updateItem(startingPoint, empty);
+      if (startingPoint != null && !empty) {
+        setText(null);
+        setGraphic(new UtilityNetworkTraceStartingPointView(skin, startingPoint));
+      } else {
+        setText(null);
+        setGraphic(null);
+      }
     }
+  }
 }
