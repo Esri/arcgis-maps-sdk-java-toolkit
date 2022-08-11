@@ -45,6 +45,7 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
+import com.esri.arcgisruntime.toolkit.skins.UtilityNetworkTraceSkin;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult;
 import com.esri.arcgisruntime.utilitynetworks.UtilityFunctionTraceResult;
@@ -69,6 +70,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
+import javafx.scene.control.Skin;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -241,6 +243,41 @@ public class UtilityNetworkTraceTool extends Control {
     setMinWidth(USE_PREF_SIZE);
     setMaxHeight(USE_PREF_SIZE);
     setMaxWidth(USE_PREF_SIZE);
+  }
+
+  @Override
+  protected Skin<?> createDefaultSkin() {
+    UtilityNetworkTraceSkin skin = new UtilityNetworkTraceSkin(this);
+
+    // bind internal properties to keep data in-sync
+    skin.utilityNetworksProperty.bind(utilityNetworksProperty);
+    skin.selectedUtilityNetworkProperty.bindBidirectional(selectedUtilityNetworkProperty);
+    skin.traceConfigurationsProperty.bind(traceConfigurationsProperty);
+    skin.selectedTraceConfigurationProperty.bindBidirectional(selectedTraceConfigurationProperty);
+    skin.startingPointsProperty.bindContentBidirectional(startingPointsProperty);
+    skin.traceResultsProperty.bindContentBidirectional(traceResultsProperty);
+    skin.insufficientStartingPointsProperty.bind(insufficientStartingPointsProperty);
+    skin.aboveMinimumStartingPointsProperty.bind(aboveMinimumStartingPointsProperty);
+    skin.enableTraceProperty.bind(enableTraceProperty);
+    skin.isTraceInProgressProperty.bind(isTraceInProgressProperty);
+    skin.isIdentifyInProgressProperty.bind(isIdentifyInProgressProperty);
+    skin.isMapAndUtilityNetworkLoadingInProgressProperty.bind(isMapAndUtilityNetworkLoadingInProgressProperty);
+    // configure actions requiring internal methods
+    if (skin.getRunTraceButton() != null) {
+      skin.getRunTraceButton().setOnAction(e ->
+        runTraceAsync(
+          Objects.equals(skin.traceNameProperty.get(), "") ? skin.getDefaultTraceName() : skin.traceNameProperty.get()));
+    }
+    if (skin.getCancelIdentifyStartingPointsButton() != null) {
+      skin.getCancelIdentifyStartingPointsButton().setOnAction(e -> cancelIdentifyLayers());
+    }
+    if (skin.getCancelTraceInProgressButton() != null) {
+      skin.getCancelTraceInProgressButton().setOnAction(e -> cancelTrace());
+    }
+    if (skin.getClearResultsButton() != null) {
+      skin.getClearResultsButton().setOnAction(e -> resetTraceResults());
+    }
+    return skin;
   }
 
   @Override
