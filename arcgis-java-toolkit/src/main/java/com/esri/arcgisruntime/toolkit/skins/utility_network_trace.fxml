@@ -156,7 +156,12 @@
                             <VBox fx:id="resultsVBox" managed="${resultsVBox.visible}" spacing="5">
                                 <children>
                                     <TabPane fx:id="resultsTabPane" VBox.vgrow="ALWAYS"/>
-                                    <Button fx:id="clearResultsButton" styleClass="arcgis-toolkit-java-button-large" maxWidth="Infinity" text="Clear results" VBox.vgrow="ALWAYS"/>
+                                    <VBox>
+                                        <padding>
+                                            <Insets top="10" right="10" bottom="10" left="10"/>
+                                        </padding>
+                                        <Button fx:id="clearResultsButton" styleClass="arcgis-toolkit-java-button-large" maxWidth="Infinity" text="Clear results" />
+                                    </VBox>
                                 </children>
                             </VBox>
                         </children>
