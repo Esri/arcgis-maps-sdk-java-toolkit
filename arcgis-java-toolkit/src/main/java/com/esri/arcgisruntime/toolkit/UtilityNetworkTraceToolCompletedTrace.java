@@ -27,48 +27,48 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceResult;
  */
 public class UtilityNetworkTraceToolCompletedTrace {
 
-    private final List<UtilityTraceResult> utilityTraceResults;
-    private final Exception exception;
-    private final UtilityTraceParameters utilityTraceParameters;
+  private final List<UtilityTraceResult> utilityTraceResults;
+  private final Exception exception;
+  private final UtilityTraceParameters utilityTraceParameters;
 
-    /**
-     * Creates a UtilityNetworkTraceToolCompletedTrace.
-     *
-     * @param utilityTraceResults the results associated with the trace
-     * @param exception the exception associated with an unsuccessful result
-     * @param utilityTraceParameters the utility trace parameters used to run the trace
-     * @since 100.15.0
-     */
-    protected UtilityNetworkTraceToolCompletedTrace(
-            List<UtilityTraceResult> utilityTraceResults,
-            Exception exception,
-            UtilityTraceParameters utilityTraceParameters) {
-        this.utilityTraceResults = utilityTraceResults;
-        this.exception = exception;
-        this.utilityTraceParameters = utilityTraceParameters;
-    }
+  /**
+   * Creates a UtilityNetworkTraceToolCompletedTrace.
+   *
+   * @param utilityTraceResults the results associated with the trace
+   * @param exception the exception associated with an unsuccessful result
+   * @param utilityTraceParameters the utility trace parameters used to run the trace
+   * @since 100.15.0
+   */
+  protected UtilityNetworkTraceToolCompletedTrace(
+    List<UtilityTraceResult> utilityTraceResults,
+    Exception exception,
+    UtilityTraceParameters utilityTraceParameters) {
+    this.utilityTraceResults = utilityTraceResults;
+    this.exception = exception;
+    this.utilityTraceParameters = utilityTraceParameters;
+  }
 
-    /**
-     * Returns the utility trace results associated with the completed trace.
-     *
-     * @return a list of the results
-     * @since 100.15.0
-     */
-    public List<UtilityTraceResult> getUtilityTraceResults() { return utilityTraceResults; }
+  /**
+   * Returns the utility trace results associated with the completed trace.
+   *
+   * @return a list of the results
+   * @since 100.15.0
+   */
+  public List<UtilityTraceResult> getUtilityTraceResults() { return utilityTraceResults; }
 
-    /**
-     * Returns the exception resulting from a failed trace.
-     *
-     * @return the exception. Null if the trace was successful.
-     * @since 100.15.0
-     */
-    public Exception getException() { return exception; }
+  /**
+   * Returns the exception resulting from a failed trace.
+   *
+   * @return the exception. Null if the trace was successful.
+   * @since 100.15.0
+   */
+  public Exception getException() { return exception; }
 
-    /**
-     * Returns the UtilityTraceParameters used in the trace.
-     *
-     * @return the utility trace parameters
-     * @since 100.15.0
-     */
-    public UtilityTraceParameters getUtilityTraceParameters() { return utilityTraceParameters; }
+  /**
+   * Returns the UtilityTraceParameters used in the trace.
+   *
+   * @return the utility trace parameters
+   * @since 100.15.0
+   */
+  public UtilityTraceParameters getUtilityTraceParameters() { return utilityTraceParameters; }
 }

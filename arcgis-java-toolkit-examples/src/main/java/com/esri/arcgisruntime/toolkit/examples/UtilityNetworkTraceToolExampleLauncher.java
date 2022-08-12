@@ -22,7 +22,7 @@ package com.esri.arcgisruntime.toolkit.examples;
  * @since 100.15.0
  */
 public class UtilityNetworkTraceToolExampleLauncher {
-    public static void main(String[] args) {
-        UtilityNetworkTraceToolExample.main(args);
-    }
+  public static void main(String[] args) {
+    UtilityNetworkTraceToolExample.main(args);
+  }
 }
