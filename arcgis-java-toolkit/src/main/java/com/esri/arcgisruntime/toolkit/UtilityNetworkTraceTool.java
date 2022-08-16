@@ -34,7 +34,6 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.LayerContent;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -291,7 +290,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the MapView Property as read-only
    * @since 100.15.0
    */
-  public ReadOnlyObjectProperty<MapView> mapViewReadOnlyProperty() { return mapViewProperty.getReadOnlyProperty(); }
+  public ReadOnlyObjectProperty<MapView> mapViewReadOnlyProperty() {
+    return mapViewProperty.getReadOnlyProperty();
+  }
 
   /**
    * Gets the MapView this UtilityNetworkTrace is linked to.
@@ -332,7 +333,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the isAddingStartingPoints property
    * @since 100.15.0
    */
-  public SimpleBooleanProperty isAddingStartingPointsProperty() { return isAddingStartingPointsProperty; }
+  public SimpleBooleanProperty isAddingStartingPointsProperty() {
+    return isAddingStartingPointsProperty;
+  }
 
   /**
    * Returns the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
@@ -341,7 +344,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return true if enabled, false otherwise
    * @since 100.15.0
    */
-  public Boolean getIsAddingStartingPoints() { return isAddingStartingPointsProperty.get(); }
+  public Boolean getIsAddingStartingPoints() {
+    return isAddingStartingPointsProperty.get();
+  }
 
   /**
    * Sets the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
@@ -350,7 +355,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param isAddingStartingPoints true to enable, false to disable
    * @since 100.15.0
    */
-  public void setIsAddingStartingPoints(Boolean isAddingStartingPoints) { isAddingStartingPointsProperty.set(isAddingStartingPoints); }
+  public void setIsAddingStartingPoints(Boolean isAddingStartingPoints) {
+    isAddingStartingPointsProperty.set(isAddingStartingPoints);
+  }
 
   /**
    * Property that determines whether the MapView's viewpoint should change to focus on trace results.
@@ -359,7 +366,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the autoZoomToResults property
    * @since 100.15.0
    */
-  public SimpleBooleanProperty autoZoomToResultsProperty() { return autoZoomToResultsProperty; }
+  public SimpleBooleanProperty autoZoomToResultsProperty() {
+    return autoZoomToResultsProperty;
+  }
 
   /**
    * Returns the value of the autoZoomToResultsProperty which determines whether the MapView's viewpoint should change
@@ -368,7 +377,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return true if enabled, false otherwise
    * @since 100.15.0
    */
-  public Boolean getAutoZoomToResults() { return autoZoomToResultsProperty.get(); }
+  public Boolean getAutoZoomToResults() {
+    return autoZoomToResultsProperty.get();
+  }
 
   /**
    * Sets the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
@@ -377,7 +388,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param autoZoomToResults true to enable, false to disable
    * @since 100.15.0
    */
-  public void setAutoZoomToResults(Boolean autoZoomToResults) { autoZoomToResultsProperty.set(autoZoomToResults); }
+  public void setAutoZoomToResults(Boolean autoZoomToResults) {
+    autoZoomToResultsProperty.set(autoZoomToResults);
+  }
 
   /**
    * Property that determines what symbol should be used to denote starting points for a trace.
@@ -386,7 +399,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the startingPointSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<Symbol> startingPointSymbolProperty() { return startingPointSymbolProperty; }
+  public SimpleObjectProperty<Symbol> startingPointSymbolProperty() {
+    return startingPointSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote starting points for a trace.
@@ -394,7 +409,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol
    * @since 100.15.0
    */
-  public Symbol getStartingPointSymbol() { return startingPointSymbolProperty.get(); }
+  public Symbol getStartingPointSymbol() {
+    return startingPointSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote starting points for a trace.
@@ -402,7 +419,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param symbol the symbol to use
    * @since 100.15.0
    */
-  public void setStartingPointSymbol(Symbol symbol) { startingPointSymbolProperty.set(symbol); }
+  public void setStartingPointSymbol(Symbol symbol) {
+    startingPointSymbolProperty.set(symbol);
+  }
 
   /**
    * Property that determines what symbol should be used to denote multipoints in a geometry trace result.
@@ -411,7 +430,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the resultPointSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty() { return resultPointSymbolProperty; }
+  public SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty() {
+    return resultPointSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote multipoints in a geometry trace result.
@@ -419,7 +440,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol used for multipoints
    * @since 100.15.0
    */
-  public SimpleMarkerSymbol getResultPointSymbol() { return resultPointSymbolProperty.get(); }
+  public SimpleMarkerSymbol getResultPointSymbol() {
+    return resultPointSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote multipoints in a geometry trace result.
@@ -437,7 +460,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the resultLineSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty() { return resultLineSymbolProperty; }
+  public SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty() {
+    return resultLineSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote polylines in a geometry trace result.
@@ -445,7 +470,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol used for polylines
    * @since 100.15.0
    */
-  public SimpleLineSymbol getResultLineSymbol() { return resultLineSymbolProperty.get(); }
+  public SimpleLineSymbol getResultLineSymbol() {
+    return resultLineSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote polylines in a geometry trace result.
@@ -453,7 +480,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param simpleLineSymbol the symbol to use for polylines
    * @since 100.15.0
    */
-  public void setResultLineSymbol(SimpleLineSymbol simpleLineSymbol) { resultLineSymbolProperty.set(simpleLineSymbol); }
+  public void setResultLineSymbol(SimpleLineSymbol simpleLineSymbol) {
+    resultLineSymbolProperty.set(simpleLineSymbol);
+  }
 
   /**
    * Property that determines what symbol should be used to denote polygons in a geometry trace result.
@@ -462,7 +491,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the resultFillSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty() { return resultFillSymbolProperty; }
+  public SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty() {
+    return resultFillSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote polygons in a geometry trace result.
@@ -470,7 +501,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol used for polygons
    * @since 100.15.0
    */
-  public SimpleFillSymbol getResultFillSymbol() {return resultFillSymbolProperty.get(); }
+  public SimpleFillSymbol getResultFillSymbol() {
+    return resultFillSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote polygons in a geometry trace result.
@@ -478,7 +511,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param simpleFillSymbol the symbol to use for polygons
    * @since 100.15.0
    */
-  public void setResultFillSymbol(SimpleFillSymbol simpleFillSymbol) { resultFillSymbolProperty.set(simpleFillSymbol); }
+  public void setResultFillSymbol(SimpleFillSymbol simpleFillSymbol) {
+    resultFillSymbolProperty.set(simpleFillSymbol);
+  }
 
   /**
    * Gets any UtilityNetworks from the ArcGIS Map attached to the MapView. The ArcGIS Map must be loaded in order to
