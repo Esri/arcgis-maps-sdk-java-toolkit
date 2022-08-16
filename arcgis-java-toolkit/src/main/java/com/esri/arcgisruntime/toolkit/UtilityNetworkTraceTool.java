@@ -642,11 +642,16 @@ public class UtilityNetworkTraceTool extends Control {
    * @since 100.15.0
    */
   public void addStartingPoint(ArcGISFeature feature) {
+    Objects.requireNonNull(feature);
     addStartingPoint(feature, null);
   }
 
   /**
    * Adds a starting point to be used for a trace from the provided feature and point.
+   *
+   * <p>
+   * This method allows the provision of a specific starting point location, such as if the provided feature is a
+   * PolyLine and the desired starting point is located at a specific point along the line.
    *
    * <p>
    * This enables the adding of starting points programmatically, and not just via clicks on the MapView.
@@ -657,11 +662,13 @@ public class UtilityNetworkTraceTool extends Control {
    * selected utility network and the starting point does not already exist.
    *
    * @param feature the feature to use as the basis for the starting point
-   * @param mapPoint the point to use - if it's polyline for location along the line
+   * @param startingPointLocation the location of the starting point e.g. if the feature is a PolyLine, specify where
+   * along the line the starting point is located.
    * @throws NullPointerException if feature is null
    * @since 100.15.0
    */
-  public void addStartingPoint(ArcGISFeature feature, Point mapPoint) {
+  public void addStartingPoint(ArcGISFeature feature, Point startingPointLocation) {
+    Objects.requireNonNull(feature);
     if (selectedUtilityNetworkProperty != null) {
       var geometry = feature.getGeometry();
       UtilityElement utilityElement = null;
@@ -692,14 +699,14 @@ public class UtilityNetworkTraceTool extends Control {
               // get the geometry of the identified feature as a polyline, and remove the z component
               polyline = (Polyline) GeometryEngine.removeZ(polyline);
             }
-            if (mapPoint != null && mapPoint.getSpatialReference() != polyline.getSpatialReference()) {
-              polyline = (Polyline) GeometryEngine.project(polyline, mapPoint.getSpatialReference());
+            if (startingPointLocation != null && startingPointLocation.getSpatialReference() != polyline.getSpatialReference()) {
+              polyline = (Polyline) GeometryEngine.project(polyline, startingPointLocation.getSpatialReference());
             }
             geometry = polyline;
 
-            // compute how far the clicked location is along the edge feature
-            if (mapPoint != null) {
-              double fractionAlongEdge = GeometryEngine.fractionAlong(polyline, mapPoint, -1);
+            // compute how far the location is along the edge feature
+            if (startingPointLocation != null) {
+              double fractionAlongEdge = GeometryEngine.fractionAlong(polyline, startingPointLocation, -1);
               if (!Double.isNaN(fractionAlongEdge)) {
                 // set the fraction along edge
                 utilityElement.setFractionAlongEdge(fractionAlongEdge);
