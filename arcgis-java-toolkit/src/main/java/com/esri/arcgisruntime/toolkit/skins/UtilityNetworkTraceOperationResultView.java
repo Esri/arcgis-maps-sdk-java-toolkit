@@ -189,15 +189,15 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
 
         // create colored rectangles that set their respective color to the result when clicked
         // this helps differentiate multiple results from one another on the map
-        var RECTANGLE_SIZE = 20;
-        var redSelector = createRectangle(Color.RED, RECTANGLE_SIZE);
-        var orangeSelector = createRectangle(Color.ORANGE, RECTANGLE_SIZE);
-        var yellowSelector = createRectangle(Color.YELLOW, RECTANGLE_SIZE);
-        var greenSelector = createRectangle(Color.DARKGREEN, RECTANGLE_SIZE);
-        var blueSelector = createRectangle(Color.BLUE, RECTANGLE_SIZE);
-        var purpleSelector = createRectangle(Color.PURPLE, RECTANGLE_SIZE);
-        var pinkSelector = createRectangle(Color.PINK, RECTANGLE_SIZE);
-        var blackSelector = createRectangle(Color.BLACK, RECTANGLE_SIZE);
+        var size = 20;
+        var redSelector = createRectangle(Color.RED, size);
+        var orangeSelector = createRectangle(Color.ORANGE, size);
+        var yellowSelector = createRectangle(Color.YELLOW, size);
+        var greenSelector = createRectangle(Color.DARKGREEN, size);
+        var blueSelector = createRectangle(Color.BLUE, size);
+        var purpleSelector = createRectangle(Color.PURPLE, size);
+        var pinkSelector = createRectangle(Color.PINK, size);
+        var blackSelector = createRectangle(Color.BLACK, size);
         visualizationOptionsVHBox.getChildren().addAll(
           redSelector, orangeSelector, yellowSelector, greenSelector, blueSelector, purpleSelector,
           pinkSelector, blackSelector);
@@ -221,7 +221,7 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
   }
 
   /**
-   * Returns the result this Tab represents.
+   * Returns the UtilityNetworkTraceOperationResult this Tab represents.
    *
    * @return the UtilityNetworkTraceOperationResult this tab represents
    * @since 100.15.0
@@ -234,8 +234,8 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
    * Creates and returns a rectangle of the provided color and size. Adds an action that on click will update the
    * color of the result to the color of the rectangle with opacity reduced.
    *
-   * @param color the color to use
-   * @param size the size to use
+   * @param color the color to set to the rectangle
+   * @param size the size to set to the rectangle
    * @return the rectangle
    * @since 100.15.0
    */

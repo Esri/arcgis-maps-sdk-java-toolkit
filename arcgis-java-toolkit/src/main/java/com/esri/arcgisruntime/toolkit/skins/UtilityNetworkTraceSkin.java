@@ -103,19 +103,19 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   private final Label calloutDetail = new Label();
   private Node root;
 
-  public SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
-  public SimpleBooleanProperty insufficientStartingPointsProperty = new SimpleBooleanProperty(false);
-  public SimpleBooleanProperty aboveMinimumStartingPointsProperty = new SimpleBooleanProperty(false);
-  public SimpleBooleanProperty enableTraceProperty = new SimpleBooleanProperty();
-  public SimpleBooleanProperty isIdentifyInProgressProperty = new SimpleBooleanProperty(false);
-  public SimpleBooleanProperty isTraceInProgressProperty = new SimpleBooleanProperty(false);
-  public SimpleListProperty<UtilityNetwork> utilityNetworksProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleListProperty<UtilityNamedTraceConfiguration> traceConfigurationsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleListProperty<UtilityNetworkTraceStartingPoint> startingPointsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleListProperty<UtilityNetworkTraceOperationResult> traceResultsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleObjectProperty<UtilityNetwork> selectedUtilityNetworkProperty = new SimpleObjectProperty<>();
-  public SimpleObjectProperty<UtilityNamedTraceConfiguration> selectedTraceConfigurationProperty = new SimpleObjectProperty<>();
-  public SimpleStringProperty traceNameProperty = new SimpleStringProperty();
+  public final SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
+  public final SimpleBooleanProperty insufficientStartingPointsProperty = new SimpleBooleanProperty(false);
+  public final SimpleBooleanProperty aboveMinimumStartingPointsProperty = new SimpleBooleanProperty(false);
+  public final SimpleBooleanProperty enableTraceProperty = new SimpleBooleanProperty();
+  public final SimpleBooleanProperty isIdentifyInProgressProperty = new SimpleBooleanProperty(false);
+  public final SimpleBooleanProperty isTraceInProgressProperty = new SimpleBooleanProperty(false);
+  public final SimpleListProperty<UtilityNetwork> utilityNetworksProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleListProperty<UtilityNamedTraceConfiguration> traceConfigurationsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleListProperty<UtilityNetworkTraceStartingPoint> startingPointsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleListProperty<UtilityNetworkTraceOperationResult> traceResultsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleObjectProperty<UtilityNetwork> selectedUtilityNetworkProperty = new SimpleObjectProperty<>();
+  public final SimpleObjectProperty<UtilityNamedTraceConfiguration> selectedTraceConfigurationProperty = new SimpleObjectProperty<>();
+  public final SimpleStringProperty traceNameProperty = new SimpleStringProperty();
 
   @FXML ProgressIndicator utilityNetworkLoadingProgressIndicator;
   // displays if no utility networks are found
@@ -242,7 +242,8 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   }
 
   /**
-   * Configures the UI.
+   * Configures the UI by setting up relationships between UI controls and the properties and data that determine
+   * what is displayed and what interactions occur.
    *
    * @since 100.15.0
    */
