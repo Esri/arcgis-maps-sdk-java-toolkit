@@ -197,7 +197,9 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * @return the runTraceButton
    * @since 100.15.0
    */
-  public Button getRunTraceButton() { return runTraceButton; }
+  public Button getRunTraceButton() {
+    return runTraceButton;
+  }
 
   /**
    * Returns the getCancelTraceInProgressButton.
@@ -205,7 +207,9 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * @return the getCancelTraceInProgressButton
    * @since 100.15.0
    */
-  public Button getCancelTraceInProgressButton() { return cancelTraceInProgressButton; }
+  public Button getCancelTraceInProgressButton() {
+    return cancelTraceInProgressButton;
+  }
 
   /**
    * Returns the getCancelIdentifyStartingPointsButton.
@@ -213,7 +217,9 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * @return the getCancelIdentifyStartingPointsButton
    * @since 100.15.0
    */
-  public Button getCancelIdentifyStartingPointsButton() { return cancelIdentifyStartingPointsButton; }
+  public Button getCancelIdentifyStartingPointsButton() {
+    return cancelIdentifyStartingPointsButton;
+  }
 
   /**
    * Returns the getClearResultsButton.
@@ -221,7 +227,9 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * @return the getClearResultsButton
    * @since 100.15.0
    */
-  public Button getClearResultsButton() { return clearResultsButton; }
+  public Button getClearResultsButton() {
+    return clearResultsButton;
+  }
 
   /**
    * Returns the value of the variable used to define the height of the cells used in the starting points ListView.
@@ -229,7 +237,9 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * @return the height
    * @since 100.15.0
    */
-  public double getStartingPointListCellHeight() { return STARTING_POINT_LIST_CELL_HEIGHT; }
+  public double getStartingPointListCellHeight() {
+    return STARTING_POINT_LIST_CELL_HEIGHT;
+  }
 
   /**
    * Configures the UI.
