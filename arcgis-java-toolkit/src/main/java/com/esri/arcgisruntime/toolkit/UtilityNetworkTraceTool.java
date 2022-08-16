@@ -124,7 +124,6 @@ public class UtilityNetworkTraceTool extends Control {
   private UtilityNetworkTraceOperationResult traceResultInProgress;
 
   // listenable futures for asynchronous methods so that they can be cancelled
-  private ListenableFuture<List<UtilityNamedTraceConfiguration>> queryNamedTraceConfigurationsFuture;
   private ListenableFuture<List<IdentifyLayerResult>> identifyLayersFuture;
   private ListenableFuture<List<UtilityTraceResult>> traceInProgressFuture;
   private ListenableFuture<List<ArcGISFeature>> fetchFeaturesForElementsFuture;
@@ -159,20 +158,16 @@ public class UtilityNetworkTraceTool extends Control {
     selectedUtilityNetworkProperty.addListener(((observable, oldValue, newValue) -> {
       resetNewTraceConfigurationProperties();
       if (newValue != null) {
-        // async operation to query named trace configurations for the newly selected utility network
-        queryNamedTraceConfigurationsFuture = selectedUtilityNetworkProperty.get().queryNamedTraceConfigurationsAsync(null);
         try {
-          // added a timeout as there is no UI configured to directly cancel this async operation
-          ObservableList<UtilityNamedTraceConfiguration> traceConfigs =
-            FXCollections.observableArrayList(queryNamedTraceConfigurationsFuture.get(30, TimeUnit.SECONDS));
+          // query named trace configurations for the newly selected utility network
+          ObservableList<UtilityNamedTraceConfiguration> traceConfigs = FXCollections.observableArrayList(
+              selectedUtilityNetworkProperty.get().queryNamedTraceConfigurationsAsync(null).get(30 ,TimeUnit.SECONDS));
           traceConfigurationsProperty.set(traceConfigs);
           traceConfigurationsProperty.sort(Comparator.comparing(UtilityNamedTraceConfiguration::getName));
           if (!traceConfigurationsProperty.isEmpty()) {
             // select the first trace configuration by default
             selectedTraceConfigurationProperty.set(traceConfigurationsProperty.get(0));
           }
-        } catch (CancellationException cancellationException) {
-          // ignore cancellations of the async query operation
         } catch (Exception e) {
           // if there is any other Exception while setting up the named trace configurations, display a warning
           displayLoggerWarning("Could not load Utility Named Trace Configurations.");
@@ -599,10 +594,6 @@ public class UtilityNetworkTraceTool extends Control {
       identifyLayersFuture.cancel(true);
     }
     identifyLayersFuture = null;
-    if (queryNamedTraceConfigurationsFuture != null) {
-      queryNamedTraceConfigurationsFuture.cancel(true);
-    }
-    queryNamedTraceConfigurationsFuture = null;
 
     selectedTraceConfigurationProperty.set(null);
     traceConfigurationsProperty.set(FXCollections.observableArrayList());
