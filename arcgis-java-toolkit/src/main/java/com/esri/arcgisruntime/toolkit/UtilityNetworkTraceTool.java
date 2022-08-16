@@ -764,15 +764,6 @@ public class UtilityNetworkTraceTool extends Control {
 
     isTraceInProgressProperty.set(true);
     var selectedUtilityNetwork = selectedUtilityNetworkProperty.get();
-    try {
-      if (selectedUtilityNetwork == null) {
-        // if the selected utility network is null, throw an exception and handle the futures
-        throw new IllegalArgumentException("No Utility Network Selected.");
-      }
-    } catch (IllegalArgumentException e) {
-      traceCompletableFuture.completeExceptionally(e);
-      fetchFeaturesForElementsCompletableFuture.cancel(true);
-    }
 
     if (selectedUtilityNetwork != null) {
       var selectedTraceConfiguration = selectedTraceConfigurationProperty.get();
@@ -908,6 +899,10 @@ public class UtilityNetworkTraceTool extends Control {
         traceCompletableFuture.complete(null);
         fetchFeaturesForElementsCompletableFuture.complete(null);
       }
+    } else {
+      // if the selected utility network is null, handle the futures
+      traceCompletableFuture.completeExceptionally(new IllegalArgumentException("No Utility Network Selected."));
+      fetchFeaturesForElementsFuture.cancel(true);
     }
   }
 
