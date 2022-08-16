@@ -840,30 +840,32 @@ public class UtilityNetworkTraceTool extends Control {
                 // handle geometry results and add graphics to the graphics overlay
                 var geometryTraceResult = (UtilityGeometryTraceResult) utilityTraceResult;
 
+                List<Graphic> graphics = new ArrayList<>();
+
                 var multipoint = geometryTraceResult.getMultipoint();
                 if (multipoint != null) {
                   var graphic = new Graphic(multipoint, new SimpleMarkerSymbol(getResultPointSymbol().getStyle(),
                     getResultPointSymbol().getColor(), getResultPointSymbol().getSize()));
-                  traceResultInProgress.getGraphics().add(graphic);
-                  traceResultInProgress.getResultsGraphicsOverlay().getGraphics().add(graphic);
+                  graphics.add(graphic);
                 }
 
                 var polyline = geometryTraceResult.getPolyline();
                 if (polyline != null) {
                   var graphic = new Graphic(polyline, new SimpleLineSymbol(getResultLineSymbol().getStyle(),
                     getResultLineSymbol().getColor(), getResultLineSymbol().getWidth()));
-                  traceResultInProgress.getGraphics().add(graphic);
-                  traceResultInProgress.getResultsGraphicsOverlay().getGraphics().add(graphic);
+                  graphics.add(graphic);
                 }
 
                 var polygon = geometryTraceResult.getPolygon();
                 if (polygon != null) {
                   var graphic = new Graphic(polygon, new SimpleFillSymbol(getResultFillSymbol().getStyle(),
                     getResultFillSymbol().getColor(), getResultFillSymbol().getOutline()));
-                  traceResultInProgress.getGraphics().add(graphic);
-                  traceResultInProgress.getResultsGraphicsOverlay().getGraphics().add(graphic);
+                  graphics.add(graphic);
                 }
-                // add the graphics to the MapView's graphics overlay
+
+                traceResultInProgress.getGraphics().addAll(graphics);
+                traceResultInProgress.getResultsGraphicsOverlay().getGraphics().addAll(graphics);
+                // add the graphics overlay to the MapView
                 getMapView().getGraphicsOverlays().add(traceResultInProgress.getResultsGraphicsOverlay());
               } else if (utilityTraceResult instanceof UtilityFunctionTraceResult) {
                 // handle function results
