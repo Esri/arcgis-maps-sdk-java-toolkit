@@ -940,26 +940,19 @@ public class UtilityNetworkTraceTool extends Control {
    * @since 100.15.0
    */
   private void identifyStartingPoints(MouseEvent e) {
-    // cancel any previous identify tasks
-    cancelIdentifyLayers();
-    // start new identify
-    isAddingStartingPointsProperty.set(false);
-    isIdentifyInProgressProperty.set(true);
     // get the clicked map point
     Point2D screenPoint = new Point2D(e.getX(), e.getY());
     Point mapPoint = getMapView().screenToLocation(screenPoint);
-    // identify features
-    identifyLayersFuture =
-      getMapView().identifyLayersAsync(screenPoint, 10, false);
-    identifyLayersFuture.addDoneListener(() -> {
+    // runnable to handle identify
+    Runnable getIdentifyResults = () -> {
       try {
         // get the result of the query and find any identified features
         List<IdentifyLayerResult> identifyLayerResults = identifyLayersFuture.get();
         identifyLayerResults.forEach(identifyLayerResult -> {
           LayerContent layerContent = identifyLayerResult.getLayerContent();
-          if (layerContent instanceof FeatureLayer && !identifyLayerResult.getElements().isEmpty()) {
-            List<GeoElement> identifiedFeatures = identifyLayerResult.getElements();
-            identifiedFeatures.forEach(identifiedFeature -> {
+          var resultElements = identifyLayerResult.getElements();
+          if (layerContent instanceof FeatureLayer && !resultElements.isEmpty()) {
+            resultElements.forEach(identifiedFeature -> {
               if (identifiedFeature instanceof ArcGISFeature) {
                 // add any identified features as starting points
                 addStartingPoint((ArcGISFeature) identifiedFeature, mapPoint);
@@ -976,7 +969,21 @@ public class UtilityNetworkTraceTool extends Control {
         identifyLayersFuture = null;
         isIdentifyInProgressProperty.set(false);
       }
-    });
+    };
+
+    // cancel any previous identify tasks
+    if (identifyLayersFuture != null) {
+      identifyLayersFuture.removeDoneListener(getIdentifyResults);
+    }
+    cancelIdentifyLayers();
+    // start new identify
+    isAddingStartingPointsProperty.set(false);
+    isIdentifyInProgressProperty.set(true);
+
+    // identify features
+    identifyLayersFuture =
+      getMapView().identifyLayersAsync(screenPoint, 10, false);
+    identifyLayersFuture.addDoneListener(getIdentifyResults);
   }
 
   /**
