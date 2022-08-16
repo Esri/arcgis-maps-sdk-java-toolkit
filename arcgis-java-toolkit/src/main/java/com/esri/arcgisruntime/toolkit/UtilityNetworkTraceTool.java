@@ -96,15 +96,34 @@ public class UtilityNetworkTraceTool extends Control {
   private final SimpleBooleanProperty isAddingStartingPointsProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty autoZoomToResultsProperty = new SimpleBooleanProperty(true);
   private final SimpleObjectProperty<Symbol> startingPointSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.LIMEGREEN), 20));
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.LIMEGREEN), 20)) {
+    @Override
+    public void set(Symbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   private final SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 20));
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 20)) {
+    @Override
+    public void set(SimpleMarkerSymbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   private final SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleLineSymbol(SimpleLineSymbol.Style.DOT, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 5));
+    new SimpleLineSymbol(SimpleLineSymbol.Style.DOT, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 5)) {
+    @Override
+    public void set(SimpleLineSymbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   private final SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty = new SimpleObjectProperty<>(
     new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)),
-      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 2)));
-
+      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 2)))  {
+    @Override
+    public void set(SimpleFillSymbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   // internal properties
   private final SimpleListProperty<UtilityNetwork> utilityNetworksProperty =
     new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -163,7 +182,7 @@ public class UtilityNetworkTraceTool extends Control {
         try {
           // query named trace configurations for the newly selected utility network
           ObservableList<UtilityNamedTraceConfiguration> traceConfigs = FXCollections.observableArrayList(
-              selectedUtilityNetworkProperty.get().queryNamedTraceConfigurationsAsync(null).get(30 ,TimeUnit.SECONDS));
+            selectedUtilityNetworkProperty.get().queryNamedTraceConfigurationsAsync(null).get(30 ,TimeUnit.SECONDS));
           traceConfigurationsProperty.set(traceConfigs);
           traceConfigurationsProperty.sort(Comparator.comparing(UtilityNamedTraceConfiguration::getName));
           if (!traceConfigurationsProperty.isEmpty()) {
@@ -412,6 +431,7 @@ public class UtilityNetworkTraceTool extends Control {
    * Sets the symbol used to denote starting points for a trace.
    *
    * @param symbol the symbol to use
+   * @throws NullPointerException if symbol is null
    * @since 100.15.0
    */
   public void setStartingPointSymbol(Symbol symbol) {
@@ -443,6 +463,7 @@ public class UtilityNetworkTraceTool extends Control {
    * Sets the symbol used to denote multipoints in a geometry trace result.
    *
    * @param simpleMarkerSymbol the symbol to use for multipoints
+   * @throws NullPointerException if simpleMarkerSymbol is null
    * @since 100.15.0
    */
   public void setResultPointSymbol(SimpleMarkerSymbol simpleMarkerSymbol) {
@@ -473,6 +494,7 @@ public class UtilityNetworkTraceTool extends Control {
    * Sets the symbol used to denote polylines in a geometry trace result.
    *
    * @param simpleLineSymbol the symbol to use for polylines
+   * @throws NullPointerException if simpleLineSymbol is null
    * @since 100.15.0
    */
   public void setResultLineSymbol(SimpleLineSymbol simpleLineSymbol) {
@@ -504,6 +526,7 @@ public class UtilityNetworkTraceTool extends Control {
    * Sets the symbol used to denote polygons in a geometry trace result.
    *
    * @param simpleFillSymbol the symbol to use for polygons
+   * @throws NullPointerException if simpleFillSymbol is null
    * @since 100.15.0
    */
   public void setResultFillSymbol(SimpleFillSymbol simpleFillSymbol) {
