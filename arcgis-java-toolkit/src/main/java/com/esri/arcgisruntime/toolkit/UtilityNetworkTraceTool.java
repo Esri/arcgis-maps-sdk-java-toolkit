@@ -994,7 +994,11 @@ public class UtilityNetworkTraceTool extends Control {
    */
   private void applyStartingPointWarnings() {
     if (selectedTraceConfigurationProperty.get() != null) {
-      var minimum = selectedTraceConfigurationProperty.get().getMinimumStartingLocations() == UtilityMinimumStartingLocations.MANY ? 2 : 1;
+      var minimumStartingLocations = selectedTraceConfigurationProperty.get().getMinimumStartingLocations();
+      var minimum = 1;
+      if (minimumStartingLocations == UtilityMinimumStartingLocations.MANY) {
+        minimum = 2;
+      }
       insufficientStartingPointsProperty.set(startingPointsProperty.size() < minimum);
       aboveMinimumStartingPointsProperty.set(startingPointsProperty.size() > minimum);
     }
