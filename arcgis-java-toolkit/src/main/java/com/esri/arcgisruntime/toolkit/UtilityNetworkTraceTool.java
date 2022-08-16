@@ -516,19 +516,18 @@ public class UtilityNetworkTraceTool extends Control {
             ObservableList<UtilityNetwork> utilityNetworksFromMap = FXCollections.observableArrayList();
             // create completable futures to wait for all utility networks to finish loading before
             // setting the data
-            CompletableFuture<?>[] futures = new CompletableFuture<?>[map.getUtilityNetworks().size()];
+            List<CompletableFuture<?>> futures = new ArrayList<>();
             for (var utilityNetwork : map.getUtilityNetworks()) {
-              var index = map.getUtilityNetworks().indexOf(utilityNetwork);
               var completableFuture = new CompletableFuture<>();
-              futures[index] = completableFuture;
+              futures.add(completableFuture);
               utilityNetwork.addDoneLoadingListener(() -> {
                 if (utilityNetwork.getLoadStatus() == LoadStatus.LOADED) {
                   utilityNetworksFromMap.add(utilityNetwork);
                   // complete the future if the utility network loads successfully
-                  futures[index].complete(null);
+                  completableFuture.complete(null);
                 } else if (utilityNetwork.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
                   // complete the future with an exception if the utility network fails to load
-                  futures[index].completeExceptionally(utilityNetwork.getLoadError());
+                  completableFuture.completeExceptionally(utilityNetwork.getLoadError());
                 }
               });
               if (utilityNetwork.getLoadStatus() == LoadStatus.NOT_LOADED) {
@@ -537,7 +536,7 @@ public class UtilityNetworkTraceTool extends Control {
               }
             }
 
-            CompletableFuture.allOf(futures).whenCompleteAsync((future, exception) -> {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).whenCompleteAsync((future, exception) -> {
               // when all futures complete, set the data to the utility networks property
               utilityNetworksProperty.set(utilityNetworksFromMap);
               isMapAndUtilityNetworkLoadingInProgressProperty.set(false);
