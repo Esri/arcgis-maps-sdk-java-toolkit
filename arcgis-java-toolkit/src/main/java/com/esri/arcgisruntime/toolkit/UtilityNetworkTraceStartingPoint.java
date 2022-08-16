@@ -34,8 +34,8 @@ public class UtilityNetworkTraceStartingPoint {
 
   private final SimpleDoubleProperty fractionAlongEdgeProperty = new SimpleDoubleProperty();
 
-  private Boolean hasMultipleTerminals = false;
-  private Boolean hasFractionAlongEdge = false;
+  private boolean hasMultipleTerminals = false;
+  private boolean hasFractionAlongEdge = false;
   private final Envelope extent;
   private final Graphic graphic;
   private final Symbol featureSymbol;
@@ -116,7 +116,7 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the hasFractionAlongEdge value. True if it does, false otherwise
    * @since 100.15.0
    */
-  public Boolean getHasFractionAlongEdge() {
+  public boolean getHasFractionAlongEdge() {
     return hasFractionAlongEdge;
   }
 
@@ -126,7 +126,7 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the hasMultipleTerminals value. True if there is more than 1 terminal, false otherwise
    * @since 100.15.0
    */
-  public Boolean getHasMultipleTerminals() {
+  public boolean getHasMultipleTerminals() {
     return hasMultipleTerminals;
   }
 
