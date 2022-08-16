@@ -86,7 +86,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the fraction along edge property. Null if the starting point is not an edge feature
    * @since 100.15.0
    */
-  public SimpleDoubleProperty fractionAlongEdgeProperty() {return fractionAlongEdgeProperty;}
+  public SimpleDoubleProperty fractionAlongEdgeProperty() {
+    return fractionAlongEdgeProperty;
+  }
 
   /**
    * Returns the fraction along edge value.
@@ -94,7 +96,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the fraction along edge value. Null if the starting point is not an edge feature
    * @since 100.15.0
    */
-  public Double getFractionAlongEdge() {return fractionAlongEdgeProperty.get();}
+  public Double getFractionAlongEdge() {
+    return fractionAlongEdgeProperty.get();
+  }
 
   /**
    * Returns a boolean value which determines whether the starting point has a fraction along edge.
@@ -102,7 +106,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the hasFractionAlongEdge value. True if it does, false otherwise
    * @since 100.15.0
    */
-  public Boolean getHasFractionAlongEdge() {return hasFractionAlongEdge;}
+  public Boolean getHasFractionAlongEdge() {
+    return hasFractionAlongEdge;
+  }
 
   /**
    * Returns a boolean value which determines whether the starting point has multiple terminals.
@@ -110,7 +116,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the hasMultipleTerminals value. True if there is more than 1 terminal, false otherwise
    * @since 100.15.0
    */
-  public Boolean getHasMultipleTerminals() {return hasMultipleTerminals;}
+  public Boolean getHasMultipleTerminals() {
+    return hasMultipleTerminals;
+  }
 
   /**
    * Returns an Envelope of the extent of the starting point.
@@ -118,7 +126,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the extent
    * @since 100.15.0
    */
-  public Envelope getExtent() { return extent; }
+  public Envelope getExtent() {
+    return extent;
+  }
 
   /**
    * Returns the graphic associated with the starting point.
@@ -146,7 +156,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the symbol
    * @since 100.15.0
    */
-  public Symbol getFeatureSymbol() {return featureSymbol;}
+  public Symbol getFeatureSymbol() {
+    return featureSymbol;
+  }
 
   /**
    * Returns the UtilityElement associated with the starting point.
