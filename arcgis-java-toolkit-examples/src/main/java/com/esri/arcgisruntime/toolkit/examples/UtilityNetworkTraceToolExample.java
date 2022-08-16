@@ -101,6 +101,8 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
 
           // create a utility network trace tool passing in the mapview
           utilityNetworkTraceTool = new UtilityNetworkTraceTool(mapView);
+          // set a desired height. The default is 700.
+          utilityNetworkTraceTool.setPrefHeight(600);
 
           // display the utility network trace tool in the UI
           // here the tool is displayed in a BorderPane alongside the MapView
