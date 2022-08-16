@@ -101,6 +101,16 @@ public class UtilityNetworkTraceStartingPoint {
   }
 
   /**
+   * Sets the fraction along edge value.
+   *
+   * @param fractionAlongEdge the fraction along edge value.
+   * @since 100.15.0
+   */
+  public void setFractionAlongEdge(Double fractionAlongEdge) {
+    fractionAlongEdgeProperty.set(fractionAlongEdge);
+  }
+
+  /**
    * Returns a boolean value which determines whether the starting point has a fraction along edge.
    *
    * @return the hasFractionAlongEdge value. True if it does, false otherwise
