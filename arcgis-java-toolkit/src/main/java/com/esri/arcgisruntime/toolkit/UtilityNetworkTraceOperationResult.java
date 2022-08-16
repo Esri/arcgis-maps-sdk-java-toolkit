@@ -92,6 +92,26 @@ public class UtilityNetworkTraceOperationResult {
   }
 
   /**
+   * Gets the visualization color.
+   *
+   * @return the visualization color
+   * @since 100.15.0
+   */
+  public Color getVisualizationColor() {
+    return visualizationColorProperty.get();
+  }
+
+  /**
+   * Sets the visualization color.
+   *
+   * @param color visualization color to set
+   * @since 100.15.0
+   */
+  public void setVisualizationColor(Color color) {
+    visualizationColorProperty.set(color);
+  }
+
+  /**
    * Returns a property that contains the value of isSelected.
    *
    * @return true if the graphics are selected, false otherwise
@@ -99,6 +119,26 @@ public class UtilityNetworkTraceOperationResult {
    */
   public SimpleBooleanProperty isSelectedProperty() {
     return isSelectedProperty;
+  }
+
+  /**
+   * Gets the value of the isSelectedProperty.
+   *
+   * @return the value of isSelected. True if the graphics of the result are selected, false otherwise
+   * @since 100.15.0
+   */
+  public Boolean getIsSelected() {
+    return isSelectedProperty.get();
+  }
+
+  /**
+   * Sets the value of the isSelectedProperty.
+   *
+   * @param isSelected True if the graphics of the result are selected, false otherwise
+   * @since 100.15.0
+   */
+  public void setIsSelectedProperty(Boolean isSelected) {
+    isSelectedProperty.set(isSelected);
   }
 
   /**
