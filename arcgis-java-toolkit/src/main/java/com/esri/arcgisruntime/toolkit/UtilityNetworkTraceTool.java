@@ -188,8 +188,9 @@ public class UtilityNetworkTraceTool extends Control {
             selectedTraceConfigurationProperty.set(traceConfigurationsProperty.get(0));
           }
         } catch (Exception e) {
-          // if there is any other Exception while setting up the named trace configurations, display a warning
-          displayLoggerWarning("Could not load Utility Named Trace Configurations.");
+          // if there is any other Exception while setting up the named trace configurations, display a warning and the
+          // exception message
+          displayLoggerWarning("Could not load Utility Named Trace Configurations.\n" + e.getMessage());
           // ensure data is reset
           traceConfigurationsProperty.clear();
           selectedTraceConfigurationProperty.set(null);
@@ -724,9 +725,7 @@ public class UtilityNetworkTraceTool extends Control {
           }
           // create a graphic based on the geometry of the provided feature and set the starting point symbol
           // this is used to display the starting point on the map
-          var graphic = new Graphic();
-          graphic.setGeometry(geometry);
-          graphic.setSymbol(startingPointSymbolProperty.get());
+          var graphic = new Graphic(geometry, startingPointSymbolProperty.get());
           // get the symbol used for the feature on the feature layer
           // this is used as an indicator in the UI
           Symbol symbol = null;
