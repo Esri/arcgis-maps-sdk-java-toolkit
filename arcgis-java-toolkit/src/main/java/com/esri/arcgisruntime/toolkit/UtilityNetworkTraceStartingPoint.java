@@ -45,9 +45,9 @@ public class UtilityNetworkTraceStartingPoint {
    * Creates a UtilityNetworkTraceStartingPoint.
    *
    * @param utilityElement the utility element the starting point represents
-   * @param graphic the graphic used to display the on the MapView
+   * @param graphic the graphic used to display the starting point location on the MapView
    * @param featureSymbol the symbol of the feature itself
-   * @param extent the extent
+   * @param extent the extent of the feature used to create the utilityElement
    * @since 100.15.0
    */
   protected UtilityNetworkTraceStartingPoint(
@@ -131,9 +131,9 @@ public class UtilityNetworkTraceStartingPoint {
   }
 
   /**
-   * Returns an Envelope of the extent of the starting point.
+   * Returns an Envelope of the extent of the feature used to create the UtilityElement this starting point is based on.
    *
-   * @return the extent
+   * @return the extent of the feature
    * @since 100.15.0
    */
   public Envelope getExtent() {
