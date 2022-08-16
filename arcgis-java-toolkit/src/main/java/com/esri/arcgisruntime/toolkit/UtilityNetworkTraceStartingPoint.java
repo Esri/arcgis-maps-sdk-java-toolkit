@@ -75,7 +75,7 @@ public class UtilityNetworkTraceStartingPoint {
       fractionAlongEdgeProperty.addListener((observable, oldValue, newValue) -> {
         graphic.setGeometry(
           GeometryEngine.createPointAlong(polyline, GeometryEngine.length(polyline) * newValue.doubleValue()));
-        utilityElement.setFractionAlongEdge((Double) newValue);
+        utilityElement.setFractionAlongEdge(newValue.doubleValue());
       });
     }
   }
