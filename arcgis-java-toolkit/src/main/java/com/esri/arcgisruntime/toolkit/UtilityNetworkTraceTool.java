@@ -748,7 +748,9 @@ public class UtilityNetworkTraceTool extends Control {
         traceResultInProgress.setName(name);
         if (traceResultInProgress.getExtent() != null && autoZoomToResultsProperty.get()) {
           // update the viewpoint if an extent has been set and autoZoomToResults is true
-          mapViewProperty.get().setViewpoint(new Viewpoint(traceResultInProgress.getExtent()));
+          var resultsExtent = traceResultInProgress.getExtent();
+          // update MapView viewpoint on UI thread
+          Platform.runLater(() -> mapViewProperty.get().setViewpoint(new Viewpoint(resultsExtent)));
         }
         // add the result to the list and then reset
         traceResultsProperty.add(traceResultInProgress);
