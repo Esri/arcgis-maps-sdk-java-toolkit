@@ -339,7 +339,7 @@ public class UtilityNetworkTraceTool extends Control {
    * @return true if enabled, false otherwise
    * @since 100.15.0
    */
-  public Boolean getIsAddingStartingPoints() {
+  public boolean getIsAddingStartingPoints() {
     return isAddingStartingPointsProperty.get();
   }
 
@@ -350,7 +350,7 @@ public class UtilityNetworkTraceTool extends Control {
    * @param isAddingStartingPoints true to enable, false to disable
    * @since 100.15.0
    */
-  public void setIsAddingStartingPoints(Boolean isAddingStartingPoints) {
+  public void setIsAddingStartingPoints(boolean isAddingStartingPoints) {
     isAddingStartingPointsProperty.set(isAddingStartingPoints);
   }
 
@@ -372,7 +372,7 @@ public class UtilityNetworkTraceTool extends Control {
    * @return true if enabled, false otherwise
    * @since 100.15.0
    */
-  public Boolean getAutoZoomToResults() {
+  public boolean getAutoZoomToResults() {
     return autoZoomToResultsProperty.get();
   }
 
@@ -383,7 +383,7 @@ public class UtilityNetworkTraceTool extends Control {
    * @param autoZoomToResults true to enable, false to disable
    * @since 100.15.0
    */
-  public void setAutoZoomToResults(Boolean autoZoomToResults) {
+  public void setAutoZoomToResults(boolean autoZoomToResults) {
     autoZoomToResultsProperty.set(autoZoomToResults);
   }
 

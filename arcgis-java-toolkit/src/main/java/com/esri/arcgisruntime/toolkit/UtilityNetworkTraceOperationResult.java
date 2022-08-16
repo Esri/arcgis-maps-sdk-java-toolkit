@@ -127,7 +127,7 @@ public class UtilityNetworkTraceOperationResult {
    * @return the value of isSelected. True if the graphics of the result are selected, false otherwise
    * @since 100.15.0
    */
-  public Boolean getIsSelected() {
+  public boolean getIsSelected() {
     return isSelectedProperty.get();
   }
 
@@ -137,7 +137,7 @@ public class UtilityNetworkTraceOperationResult {
    * @param isSelected True if the graphics of the result are selected, false otherwise
    * @since 100.15.0
    */
-  public void setIsSelectedProperty(Boolean isSelected) {
+  public void setIsSelectedProperty(boolean isSelected) {
     isSelectedProperty.set(isSelected);
   }
 
@@ -288,7 +288,7 @@ public class UtilityNetworkTraceOperationResult {
    * @param isSelectFeatures true if the features should be selected, false to unselect
    * @since 100.15.0
    */
-  public void selectResultFeatures(Boolean isSelectFeatures) {
+  public void selectResultFeatures(boolean isSelectFeatures) {
     Map<Layer, List<ArcGISFeature>> groups =
       features.stream().collect(Collectors.groupingBy(feature -> feature.getFeatureTable().getLayer()));
 
@@ -342,7 +342,7 @@ public class UtilityNetworkTraceOperationResult {
    * @return true if there are graphic or element or function results, false otherwise
    * @since 100.15.0
    */
-  public Boolean hasAnyResults() {
+  public boolean hasAnyResults() {
     return !graphics.isEmpty() || !elementResults.isEmpty() || !functionResults.isEmpty();
   }
 
