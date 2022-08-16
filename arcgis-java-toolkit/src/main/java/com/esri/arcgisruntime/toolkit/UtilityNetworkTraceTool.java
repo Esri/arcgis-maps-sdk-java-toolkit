@@ -18,7 +18,9 @@ package com.esri.arcgisruntime.toolkit;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -45,6 +47,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.toolkit.skins.UtilityNetworkTraceSkin;
+import com.esri.arcgisruntime.utilitynetworks.UtilityAssetGroup;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult;
 import com.esri.arcgisruntime.utilitynetworks.UtilityFunctionTraceResult;
@@ -73,8 +76,6 @@ import javafx.scene.control.Skin;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * A control for a Utility Network Trace that enables trace analysis to be performed on a Utility Network with the
@@ -861,9 +862,16 @@ public class UtilityNetworkTraceTool extends Control {
                 // add the element trace results to the current result
                 traceResultInProgress.getElementResults().addAll(
                   FXCollections.observableArrayList(utilityElementTraceResult.getElements()));
-                traceResultInProgress.setElementResultsByAssetGroup(
-                  traceResultInProgress.getElementResults().stream()
-                    .collect(groupingBy(UtilityElement::getAssetGroup)));
+                // set the element results organised by asset group
+                Map<UtilityAssetGroup, List<UtilityElement>> elementResultsByAssetGroup = new HashMap<>();
+                for (var elementResult : traceResultInProgress.getElementResults()) {
+                  var utilityAssetGroup = elementResult.getAssetGroup();
+                  List<UtilityElement> utilityElementsInGroup =
+                    elementResultsByAssetGroup.computeIfAbsent(utilityAssetGroup, k -> new ArrayList<>());
+                  utilityElementsInGroup.add(elementResult);
+                }
+                traceResultInProgress.setElementResultsByAssetGroup(elementResultsByAssetGroup);
+
                 // fetch the features to be displayed on the map via an async method
                 fetchFeaturesForElementsFuture =
                   selectedUtilityNetwork.fetchFeaturesForElementsAsync(utilityElementTraceResult.getElements());
