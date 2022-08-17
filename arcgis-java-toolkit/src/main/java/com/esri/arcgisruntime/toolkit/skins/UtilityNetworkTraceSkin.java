@@ -455,8 +455,10 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * @since 100.15.0
    */
   private Tab findTabForResult(UtilityNetworkTraceOperationResult result) {
-    return resultsTabPane.getTabs().stream()
-      .filter(c -> ((UtilityNetworkTraceOperationResultView) c).getResult() == result).findFirst().orElse(null);
+    return resultsTabPane.getTabs()
+      .stream()
+      .map(UtilityNetworkTraceOperationResultView.class::cast)
+      .filter(t -> t.getResult() == result).findFirst().orElse(null);
   }
 
   /**
