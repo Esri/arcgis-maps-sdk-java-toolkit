@@ -47,8 +47,6 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -472,44 +470,35 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   }
 
   /**
-   * Handles clicks on the addStartingPointsButton.
+   * Handles actions on the addStartingPointsButton.
    *
-   * @param mouseEvent the mouse event captured by the click
    * @since 100.15.0
    */
   @FXML
-  private void handleAddStartingPointButtonClicked(MouseEvent mouseEvent) {
-    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-      skinnable.isAddingStartingPointsProperty().set(true);
-    }
+  private void handleAddStartingPointButton() {
+    skinnable.isAddingStartingPointsProperty().set(true);
   }
 
   /**
-   * Handles clicks on the clearStartingPointsButton.
+   * Handles actions on the clearStartingPointsButton.
    *
-   * @param mouseEvent the mouse event captured by the click
    * @since 100.15.0
    */
   @FXML
-  private void handleClearStartingPointsButtonClicked(MouseEvent mouseEvent) {
-    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-      startingPointsProperty.clear();
-    }
+  private void handleClearStartingPointsButton() {
+    startingPointsProperty.clear();
   }
 
   /**
-   * Handles clicks on the cancelAddStartingPointsButton.
+   * Handles actions on the cancelAddStartingPointsButton.
    *
-   * @param mouseEvent the mouse event captured by the click
    * @since 100.15.0
    */
   @FXML
-  private void handleCancelAddStartingPointsButtonClicked(MouseEvent mouseEvent) {
-    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-      skinnable.isAddingStartingPointsProperty().set(false);
-      if (traceResultsProperty.isEmpty()) {
-        tabPane.getSelectionModel().select(newTraceTab);
-      }
+  private void handleCancelAddStartingPointsButton() {
+    skinnable.isAddingStartingPointsProperty().set(false);
+    if (traceResultsProperty.isEmpty()) {
+      tabPane.getSelectionModel().select(newTraceTab);
     }
   }
 
