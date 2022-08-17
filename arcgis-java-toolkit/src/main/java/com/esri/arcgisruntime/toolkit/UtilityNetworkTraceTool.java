@@ -70,6 +70,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -278,20 +280,11 @@ public class UtilityNetworkTraceTool extends Control {
     skin.isIdentifyInProgressProperty.bind(isIdentifyInProgressProperty);
     skin.isMapAndUtilityNetworkLoadingInProgressProperty.bind(isMapAndUtilityNetworkLoadingInProgressProperty);
     // configure actions requiring internal methods
-    if (skin.getRunTraceButton() != null) {
-      skin.getRunTraceButton().setOnAction(e ->
-        runTraceAsync(
-          Objects.equals(skin.traceNameProperty.get(), "") ? skin.getDefaultTraceName() : skin.traceNameProperty.get()));
-    }
-    if (skin.getCancelIdentifyStartingPointsButton() != null) {
-      skin.getCancelIdentifyStartingPointsButton().setOnAction(e -> cancelIdentifyLayers());
-    }
-    if (skin.getCancelTraceInProgressButton() != null) {
-      skin.getCancelTraceInProgressButton().setOnAction(e -> cancelTrace());
-    }
-    if (skin.getClearResultsButton() != null) {
-      skin.getClearResultsButton().setOnAction(e -> resetTraceResults());
-    }
+    skin.setRunTraceEventHandler(event -> runTraceAsync(
+      Objects.equals(skin.traceNameProperty.get(), "") ? skin.getDefaultTraceName() : skin.traceNameProperty.get()));
+    skin.setCancelIdentifyStartingPointsEventHandler(e -> cancelIdentifyLayers());
+    skin.setCancelTraceEventHandler(e -> cancelTrace());
+    skin.setClearResultsEventHandler(e -> resetTraceResults());
     return skin;
   }
 
