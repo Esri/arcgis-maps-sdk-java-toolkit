@@ -60,16 +60,16 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
     UtilityNetworkTraceSkin skin, UtilityNetworkTraceOperationResult result) {
     this.result = result;
     // configure the tab
-    this.setText(result.getName());
-    this.setClosable(false);
-    this.getStyleClass().add("utility-network-trace-operation-result-view");
+    setText(result.getName());
+    setClosable(false);
+    getStyleClass().add("utility-network-trace-operation-result-view");
 
     var scrollPane = new ScrollPane();
     var vBox = new VBox(10);
     scrollPane.setContent(vBox);
     scrollPane.setFitToWidth(true);
     scrollPane.setFitToHeight(true);
-    this.setContent(scrollPane);
+    setContent(scrollPane);
     vBox.setPadding(new Insets(10, 10, 10, 10));
 
     // configure UI universal to all results, successful or unsuccessful
@@ -227,7 +227,7 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
    * @since 100.15.0
    */
   public UtilityNetworkTraceOperationResult getResult() {
-    return this.result;
+    return result;
   }
 
   /**
