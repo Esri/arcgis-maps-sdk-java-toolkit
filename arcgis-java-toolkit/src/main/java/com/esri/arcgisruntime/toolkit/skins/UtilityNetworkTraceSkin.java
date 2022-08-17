@@ -251,7 +251,21 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   private void configureUI() {
     // handle progress indicator for initial load
     utilityNetworkLoadingProgressIndicator.visibleProperty().bind(isMapAndUtilityNetworkLoadingInProgressProperty);
-    // Utility Network selection setup
+    utilityNetworkSelectionSetup();
+    traceConfigurationSelectionSetup();
+    startingPointSelectionSetup();
+    warningsSetup();
+    traceControlsSetup();
+    resultsSetup();
+    getChildren().add(root);
+  }
+
+  /**
+   * Configures the UI, listeners and properties relating to the selection of a UtilityNetwork.
+   *
+   * @since 100.15.0
+   */
+  private void utilityNetworkSelectionSetup() {
     // if there are no utility networks, display an error message and don't display the tabpane
     utilityNetworksNotFoundVBox.visibleProperty().bind(Bindings.and(utilityNetworksProperty.emptyProperty(), isMapAndUtilityNetworkLoadingInProgressProperty.not()));
     // if there are utility networks, display the tabpane and don't display the error message
@@ -281,8 +295,14 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         utilityNetworkSelectionComboBox.getSelectionModel().select(newValue);
       }
     }));
+  }
 
-    // Trace Configuration selection setup
+  /**
+   * Configures the UI, listeners and properties relating to the selection of a UtilityNamedTraceConfiguration.
+   *
+   * @since 100.15.0
+   */
+  private void traceConfigurationSelectionSetup() {
     // only display the trace configuration settings when there is a utility network selected
     traceConfigVBox.visibleProperty().bind(selectedUtilityNetworkProperty.isNotNull());
 
@@ -308,9 +328,14 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         traceConfigComboBox.getSelectionModel().select(newValue);
       }
     }));
+  }
 
-    // Starting Point selection setup
-
+  /**
+   * Configures the UI, listeners and properties relating to the selection of starting points.
+   *
+   * @since 100.15.0
+   */
+  private void startingPointSelectionSetup() {
     // only display the starting points listview and remove button if there are any
     startingPointsListView.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
     clearStartingPointsButton.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
@@ -350,19 +375,53 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         newTraceBorderPane.setVisible(true);
       }
     });
+  }
 
+  /**
+   * Configures the UI relating to the display of warnings.
+   *
+   * @since 100.15.0
+   */
+  private void warningsSetup() {
     // only show warning if there are insufficient starting points
     insufficientStartingPointsWarningHBox.visibleProperty().bind(insufficientStartingPointsProperty);
-
     // only show warning if there are above the minimum starting points
     aboveMinStartingPointsWarningHBox.visibleProperty().bind(aboveMinimumStartingPointsProperty);
+  }
 
+  /**
+   * Configures the UI, listeners and properties relating to the running of a trace.
+   *
+   * @since 100.15.0
+   */
+  private void traceControlsSetup() {
     // bind the trace name to the value in the text field
     traceNameProperty.bind(traceNameTextField.textProperty());
 
     // only enable the trace button if trace is enabled
     runTraceButton.disableProperty().bind(enableTraceProperty.not());
 
+    // configure the UI for when a trace is running
+    isTraceInProgressProperty.addListener(((observable, oldValue, newValue) -> {
+      if (newValue) {
+        tabPane.getSelectionModel().select(resultsTab);
+        newTraceTab.setDisable(true);
+        resultsVBox.setVisible(false);
+        traceInProgressVBox.setVisible(true);
+      } else {
+        resultsVBox.setVisible(true);
+        traceInProgressVBox.setVisible(false);
+        newTraceTab.setDisable(false);
+      }
+    }));
+  }
+
+  /**
+   * Configures the UI, listeners and properties relating to the display of results.
+   *
+   * @since 100.15.0
+   */
+  private void resultsSetup() {
     // only show the results tab when there are results and/or a result is in progress
     noResultsFoundVBox.visibleProperty().bind(Bindings.and(isTraceInProgressProperty.not(), traceResultsProperty.emptyProperty()));
 
@@ -386,25 +445,9 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
       }
     });
 
-    // configure the UI for when a trace is running
-    isTraceInProgressProperty.addListener(((observable, oldValue, newValue) -> {
-      if (newValue) {
-        tabPane.getSelectionModel().select(resultsTab);
-        newTraceTab.setDisable(true);
-        resultsVBox.setVisible(false);
-        traceInProgressVBox.setVisible(true);
-      } else {
-        resultsVBox.setVisible(true);
-        traceInProgressVBox.setVisible(false);
-        newTraceTab.setDisable(false);
-      }
-    }));
-
     // configure the clear results button and only display when there are trace results
     clearResultsButton.setOnAction(e -> traceResultsProperty.clear());
     clearResultsButton.visibleProperty().bind(Bindings.isNotEmpty(traceResultsProperty));
-
-    getChildren().add(root);
   }
 
   /**
