@@ -57,11 +57,11 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
   protected UtilityNetworkTraceStartingPointView(
     UtilityNetworkTraceSkin skin, UtilityNetworkTraceStartingPoint startingPoint) {
     double height = skin.getStartingPointListCellHeight() - 10;
-    this.setPrefHeight(height);
-    this.setMinHeight(height);
-    this.setMaxHeight(height + 15);
-    this.setPadding(new Insets(5, 2, 5, 2));
-    this.getStyleClass().add("utility-network-trace-starting-point-view");
+    setPrefHeight(height);
+    setMinHeight(height);
+    setMaxHeight(height + 15);
+    setPadding(new Insets(5, 2, 5, 2));
+    getStyleClass().add("utility-network-trace-starting-point-view");
 
     // Left of the borderpane is a thumbnail image of the feature symbol.
     // Setup and configure the feature symbol image
@@ -77,7 +77,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
       // if the async swatch method fails, set the image to null
       featureSymbolImageView.setImage(null);
     }
-    this.setLeft(symbolVBox);
+    setLeft(symbolVBox);
 
     // Center of the borderpane are labels denoting the network source and asset group.
     // Configure the labels
@@ -86,7 +86,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
     var labelsVBox = new VBox(5);
     labelsVBox.setAlignment(Pos.CENTER_LEFT);
     labelsVBox.getChildren().addAll(networkSourceLabel, assetGroupLabel);
-    this.setCenter(labelsVBox);
+    setCenter(labelsVBox);
 
     // Right of the borderpane are buttons enabling zoom and deletion of the starting point.
     // Configure the buttons
@@ -108,7 +108,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
     deleteButton.setAlignment(Pos.CENTER_RIGHT);
     deleteButton.setOnAction(e -> skin.startingPointsProperty.remove(startingPoint));
     buttonsHBox.getChildren().addAll(zoomButton, deleteButton);
-    this.setRight(buttonsHBox);
+    setRight(buttonsHBox);
 
     // Bottom of the borderpane is optional depending on whether the starting point has a fraction along edge value
     // and/or multiple terminals.
@@ -118,7 +118,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
 
     if (fractionSliderVisible || terminalPickerVisible) {
       var fractionTerminalsVBox = new VBox(5);
-      this.setBottom(fractionTerminalsVBox);
+      setBottom(fractionTerminalsVBox);
 
       if (fractionSliderVisible) {
         var fractionHBox = new HBox(5);
