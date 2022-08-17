@@ -347,6 +347,16 @@ public class UtilityNetworkTraceOperationResult {
   }
 
   /**
+   * Validates whether the result failed with an Exception.
+   *
+   * @return true if there is an Exception, false otherwise
+   * @since 100.15.0
+   */
+  public boolean hasException() {
+    return exception != null;
+  }
+
+  /**
    * Updates the symbology of all graphics associated with the trace result to the provided color.
    *
    * @param color the new color
