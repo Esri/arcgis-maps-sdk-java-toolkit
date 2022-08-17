@@ -91,13 +91,15 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
       Region errorIcon = new Region();
       errorIcon.getStyleClass().add("arcgis-toolkit-java-error-icon");
       var error = new Label();
-      if (result.getException().getCause() instanceof ArcGISRuntimeException) {
-        var runtimeException = (ArcGISRuntimeException) result.getException().getCause();
+      var resultException = result.getException();
+      var resultCause = resultException.getCause();
+      if (resultCause instanceof ArcGISRuntimeException) {
+        var runtimeException = (ArcGISRuntimeException) resultCause;
         error.setText(runtimeException.getMessage() + " " + runtimeException.getAdditionalMessage());
-      } else if (result.getException().getCause() != null) {
-        error.setText(result.getException().getCause().getMessage());
+      } else if (resultCause != null) {
+        error.setText(resultCause.getMessage());
       } else {
-        error.setText(result.getException().getMessage());
+        error.setText(resultException.getMessage());
       }
       errorPanel.getChildren().addAll(errorIcon, error);
       vBox.getChildren().add(errorPanel);
