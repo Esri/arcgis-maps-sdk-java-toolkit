@@ -33,6 +33,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -191,45 +193,53 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   }
 
   /**
-   * Returns the runTraceButton.
+   * Takes an event handler for run trace events and sets to the runTraceButton.
    *
-   * @return the runTraceButton
+   * @param eventHandler the event handler for run trace events
    * @since 100.15.0
    */
-  public Button getRunTraceButton() {
-    return runTraceButton;
+  public void setRunTraceEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (runTraceButton != null) {
+      runTraceButton.setOnAction(eventHandler);
+    }
   }
 
   /**
-   * Returns the getCancelTraceInProgressButton.
+   * Takes an event handler for cancel trace events and sets to the cancelTraceInProgressButton.
    *
-   * @return the getCancelTraceInProgressButton
+   * @param eventHandler the event handler for cancel trace events
    * @since 100.15.0
    */
-  public Button getCancelTraceInProgressButton() {
-    return cancelTraceInProgressButton;
+  public void setCancelTraceEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (cancelTraceInProgressButton != null) {
+      cancelTraceInProgressButton.setOnAction(eventHandler);
+    }
   }
 
   /**
-   * Returns the getCancelIdentifyStartingPointsButton.
+   * Takes an event handler for cancel identify starting point events and sets to the
+   * cancelIdentifyStartingPointsButton.
    *
-   * @return the getCancelIdentifyStartingPointsButton
+   * @param eventHandler the event handler for cancel identify starting point events
    * @since 100.15.0
    */
-  public Button getCancelIdentifyStartingPointsButton() {
-    return cancelIdentifyStartingPointsButton;
+  public void setCancelIdentifyStartingPointsEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (cancelIdentifyStartingPointsButton != null) {
+      cancelIdentifyStartingPointsButton.setOnAction(eventHandler);
+    }
   }
 
   /**
-   * Returns the getClearResultsButton.
+   * Takes an event handler for clear results events and sets to the clearResultsButton.
    *
-   * @return the getClearResultsButton
+   * @param eventHandler the event handler for clear results events
    * @since 100.15.0
    */
-  public Button getClearResultsButton() {
-    return clearResultsButton;
+  public void setClearResultsEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (clearResultsButton != null) {
+      clearResultsButton.setOnAction(eventHandler);
+    }
   }
-
   /**
    * Returns the value of the variable used to define the height of the cells used in the starting points ListView.
    *
