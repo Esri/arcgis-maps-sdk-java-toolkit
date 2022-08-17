@@ -162,6 +162,7 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * Constructor for all SkinBase instances.
    *
    * @param control The control for which this Skin should attach to.
+   * @since 100.15.0
    */
   public UtilityNetworkTraceSkin(UtilityNetworkTraceTool control) {
     super(control);
@@ -187,7 +188,7 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     }  catch (Exception e) {
       // if the FXML file fails to load, log a warning
       Logger.getLogger(UtilityNetworkTraceSkin.class.getName()).warning(
-        "Failed to load the FXML file. UtilityNetworkTraceSkin will not be displayed.");
+        "Failed to load the FXML file. UtilityNetworkTraceSkin will not be displayed.\n" + e);
     }
   }
 
