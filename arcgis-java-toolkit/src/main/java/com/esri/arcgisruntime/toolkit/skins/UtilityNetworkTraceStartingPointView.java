@@ -73,7 +73,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
     symbolVBox.getChildren().add(featureSymbolImageView);
     try {
       featureSymbolImageView.setImage(
-        startingPoint.getFeatureSymbol().createSwatchAsync(ColorUtil.colorToArgb(Color.TRANSPARENT), 1f).get(30, TimeUnit.SECONDS));
+        startingPoint.getFeatureSymbol().createSwatchAsync(ColorUtil.colorToArgb(Color.TRANSPARENT), 1f).get(5, TimeUnit.SECONDS));
     } catch (Exception ex) {
       // if the async swatch method fails, set the image to null
       featureSymbolImageView.setImage(null);
