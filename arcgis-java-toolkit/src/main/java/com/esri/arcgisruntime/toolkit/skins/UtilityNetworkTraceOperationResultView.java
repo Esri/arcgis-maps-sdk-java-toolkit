@@ -29,12 +29,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 /**
  * A custom Tab for a UtilityNetworkTraceOperationResult displayed in a {@link UtilityNetworkTraceSkin}.
@@ -189,17 +187,17 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
         var visualizationOptionsVHBox = new HBox(15);
         visualizationOptionsTitledPane.setContent(visualizationOptionsVHBox);
 
-        // create colored rectangles that set their respective color to the result when clicked
+        // create colored buttons that set their respective color to the result when clicked
         // this helps differentiate multiple results from one another on the map
         var size = 20;
-        var redSelector = createRectangle(Color.RED, size);
-        var orangeSelector = createRectangle(Color.ORANGE, size);
-        var yellowSelector = createRectangle(Color.YELLOW, size);
-        var greenSelector = createRectangle(Color.DARKGREEN, size);
-        var blueSelector = createRectangle(Color.BLUE, size);
-        var purpleSelector = createRectangle(Color.PURPLE, size);
-        var pinkSelector = createRectangle(Color.PINK, size);
-        var blackSelector = createRectangle(Color.BLACK, size);
+        var redSelector = createButton(Color.RED, size);
+        var orangeSelector = createButton(Color.ORANGE, size);
+        var yellowSelector = createButton(Color.YELLOW, size);
+        var greenSelector = createButton(Color.DARKGREEN, size);
+        var blueSelector = createButton(Color.BLUE, size);
+        var purpleSelector = createButton(Color.PURPLE, size);
+        var pinkSelector = createButton(Color.PINK, size);
+        var blackSelector = createButton(Color.BLACK, size);
         visualizationOptionsVHBox.getChildren().addAll(
           redSelector, orangeSelector, yellowSelector, greenSelector, blueSelector, purpleSelector,
           pinkSelector, blackSelector);
@@ -233,24 +231,28 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
   }
 
   /**
-   * Creates and returns a rectangle of the provided color and size. Adds an action that on click will update the
-   * color of the result to the color of the rectangle with opacity reduced.
+   * Creates and returns a button of the provided color and size. Adds an action that on click will update the
+   * color of the result to the color of the button with opacity reduced.
    *
-   * @param color the color to set to the rectangle
-   * @param size the size to set to the rectangle
-   * @return the rectangle
+   * @param color the color to set to the button
+   * @param size the size to set to the button
+   * @return the button
    * @since 100.15.0
    */
-  private Rectangle createRectangle(Color color, int size) {
-    var rectangle = new Rectangle(size, size);
-    rectangle.setFill(color);
+  private Button createButton(Color color, int size) {
+    var button = new Button();
+    var red = color.getRed();
+    var green = color.getGreen();
+    var blue = color.getBlue();
+    var colorStyle = String.format("#%02x%02x%02x", (int) (255 * red), (int) (255 * green), (int) (255 * blue));
+    button.setStyle("-fx-background-color: " + colorStyle + ";");
+    button.setMaxSize(size, size);
+    button.setPrefSize(size, size);
+    button.setMinSize(size, size);
     // add opacity for overlaying on the map
-    var visualizationColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.5);
-    rectangle.setOnMouseClicked(e -> {
-      if (e.getButton() == MouseButton.PRIMARY && e.isStillSincePress()) {
-        result.visualizationColorProperty().set(visualizationColor);
-      }
-    });
-    return rectangle;
+    var visualizationColor = new Color(red, green, blue, 0.5);
+    // on action the button updates the color used to visualize the result on the map
+    button.setOnAction(e -> result.visualizationColorProperty().set(visualizationColor));
+    return button;
   }
 }
