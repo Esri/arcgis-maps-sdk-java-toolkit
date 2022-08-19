@@ -337,7 +337,7 @@ public class UtilityNetworkTraceTool extends Control {
 
   /**
    * Property that determines whether a MapView's onMouseClicked event is used for adding starting points.
-   * Defaults to true.
+   * Defaults to false.
    *
    * @return the isAddingStartingPoints property
    * @since 100.15.0
@@ -662,12 +662,13 @@ public class UtilityNetworkTraceTool extends Control {
    * Adds a starting point to be used for a trace from the provided feature.
    *
    * <p>
-   * This enables the adding of starting points programmatically, and not just via clicks on the MapView.
+   * This method enables the adding of starting points programmatically, and not just via clicks on the MapView.
    * For example, feature results from a query, selection, geocode, route, geoprocessing, search, and more.
    *
    * <p>
    * A starting point is only added to the list if a Utility Network has been selected, the feature is part of the
-   * selected utility network and the starting point does not already exist.
+   * selected utility network and the starting point does not already exist. Starting points can be added
+   * programmatically at any time, regardless of whether isAddingStartingPoints is enabled.
    *
    * @param feature the feature to use as the basis for the starting point
    * @throws NullPointerException if feature is null
@@ -691,7 +692,8 @@ public class UtilityNetworkTraceTool extends Control {
    *
    * <p>
    * A starting point is only added to the list if a Utility Network has been selected, the feature is part of the
-   * selected utility network and the starting point does not already exist.
+   * selected utility network and the starting point does not already exist. Starting points can be added
+   *    * programmatically at any time, regardless of whether isAddingStartingPoints is enabled.
    *
    * @param feature the feature to use as the basis for the starting point
    * @param startingPointLocation the location of the starting point e.g. if the feature is a PolyLine, specify where
