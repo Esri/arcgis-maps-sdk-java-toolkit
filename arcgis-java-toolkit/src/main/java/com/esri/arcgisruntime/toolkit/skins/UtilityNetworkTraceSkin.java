@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.toolkit.skins;
 
 import java.util.logging.Logger;
 
-import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceOperationResult;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceStartingPoint;
@@ -98,9 +97,6 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
 
   private final UtilityNetworkTraceTool skinnable = getSkinnable();
   public final MapView controlMapView;
-  private final Callout callout;
-  private final Label calloutTitle = new Label();
-  private final Label calloutDetail = new Label();
   private Node root;
 
   public final SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
@@ -168,14 +164,6 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     super(control);
     // configure mapview related settings
     controlMapView = skinnable.getMapView();
-    callout = controlMapView.getCallout();
-    callout.setStyle("leader-position: bottom; corner-radius:0; margin:10;");
-    var calloutCustomView = new VBox(5);
-    calloutTitle.getStyleClass().add("arcgis-toolkit-java-h2");
-    calloutDetail.getStyleClass().add("arcgis-toolkit-java-h3");
-    calloutCustomView.getChildren().addAll(calloutTitle, calloutDetail);
-    callout.setCustomView(calloutCustomView);
-    callout.setOnMouseClicked(e -> callout.dismiss());
 
     // load the FXML
     FXMLLoader fxmlLoader = new FXMLLoader();
@@ -359,19 +347,6 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     cancelAddStartingPointsButton.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
     // display the starting points placeholder label if starting points are being added
     startingPointsPlaceholder.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
-
-    // link the callout content to the starting point currently selected in the list view
-    startingPointsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null) {
-        calloutTitle.setText(newValue.getUtilityElement().getNetworkSource().getName());
-        calloutDetail.setText(newValue.getUtilityElement().getAssetGroup().getName());
-        callout.showCalloutAt(newValue.getGraphic().getGeometry().getExtent().getCenter());
-      } else {
-        calloutTitle.setText("");
-        calloutDetail.setText("");
-        callout.dismiss();
-      }
-    });
 
     // configure the UI when an identify is in progress
     isIdentifyInProgressProperty.addListener((observable, oldValue, newValue) -> {
