@@ -70,12 +70,6 @@
      -fx-max-width: -size;
 }
 
-.utility-network-view .starting-point-callout {
-    leader-position: bottom;
-    corner-radius:0;
-    margin:10;
-}
-
 .utility-network-view Label {
     -fx-wrap-text:true;
 }
