@@ -136,7 +136,7 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
       displayElementResults();
     }
 
-    if (!result.getGraphics().isEmpty()) {
+    if (!result.getResultsGraphicsOverlay().getGraphics().isEmpty()) {
       // if there are graphics, configure the visualization options pane
       displayVisualizationOptions();
     }
