@@ -882,7 +882,6 @@ public class UtilityNetworkTraceTool extends Control {
                   graphics.add(graphic);
                 }
 
-                traceResultInProgress.getGraphics().addAll(graphics);
                 traceResultInProgress.getResultsGraphicsOverlay().getGraphics().addAll(graphics);
                 // add the graphics overlay to the MapView
                 getMapView().getGraphicsOverlays().add(traceResultInProgress.getResultsGraphicsOverlay());
