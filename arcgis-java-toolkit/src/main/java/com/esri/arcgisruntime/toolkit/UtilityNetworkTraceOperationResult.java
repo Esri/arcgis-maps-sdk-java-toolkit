@@ -28,7 +28,6 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
-import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
@@ -57,7 +56,6 @@ public class UtilityNetworkTraceOperationResult {
   private Exception exception = null;
   private final GraphicsOverlay resultsGraphicsOverlay = new GraphicsOverlay();
   private final List<ArcGISFeature> features = new ArrayList<>();
-  private final List<Graphic> graphics = new ArrayList<>();
   private final List<String> warnings = new ArrayList<>();
   private final List<UtilityElement> elementResults = new ArrayList<>();
   private final List<UtilityTraceFunctionOutput> functionResults = new ArrayList<>();
@@ -120,7 +118,8 @@ public class UtilityNetworkTraceOperationResult {
   }
 
   /**
-   * Returns the graphics overlay containing the graphics for this result.
+   * Returns the graphics overlay containing the graphics for this result. The list of graphics can be accessed from
+   * the Graphics Overlay.
    *
    * @return the graphics overlay
    * @since 100.15.0
@@ -136,16 +135,6 @@ public class UtilityNetworkTraceOperationResult {
    * @since 100.15.0
    */
   public List<ArcGISFeature> getFeatures() { return features; }
-
-  /**
-   * Returns the graphics associated with the result.
-   *
-   * @return the graphics associated with the result
-   * @since 100.15.0
-   */
-  public List<Graphic> getGraphics() {
-    return graphics;
-  }
 
   /**
    * Returns any warnings that are generated during a trace.
@@ -290,8 +279,8 @@ public class UtilityNetworkTraceOperationResult {
    * @return true if there are graphic or element or function results, false otherwise
    * @since 100.15.0
    */
-  public Boolean hasAnyResults() {
-    return !graphics.isEmpty() || !elementResults.isEmpty() || !functionResults.isEmpty();
+  public boolean hasAnyResults() {
+    return !resultsGraphicsOverlay.getGraphics().isEmpty() || !elementResults.isEmpty() || !functionResults.isEmpty();
   }
 
   /**
@@ -311,7 +300,7 @@ public class UtilityNetworkTraceOperationResult {
    * @since 100.15.0
    */
   private void updateVisualizationColor(Color color) {
-    graphics.forEach(graphic -> {
+    resultsGraphicsOverlay.getGraphics().forEach(graphic -> {
       var symbol = graphic.getSymbol();
       if (symbol instanceof SimpleMarkerSymbol) {
         var marker = (SimpleMarkerSymbol) symbol;
