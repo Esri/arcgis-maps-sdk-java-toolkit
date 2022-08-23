@@ -127,7 +127,7 @@ public class UtilityNetworkTraceOperationResult {
    * @return the value of isSelected. True if the graphics of the result are selected, false otherwise
    * @since 100.15.0
    */
-  public boolean getIsSelected() {
+  public boolean isSelected() {
     return isSelectedProperty.get();
   }
 
