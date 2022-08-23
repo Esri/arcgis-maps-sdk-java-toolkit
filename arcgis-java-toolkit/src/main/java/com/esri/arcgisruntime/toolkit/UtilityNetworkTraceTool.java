@@ -18,14 +18,13 @@ package com.esri.arcgisruntime.toolkit;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -46,7 +45,6 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
-import com.esri.arcgisruntime.utilitynetworks.UtilityAssetGroup;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult;
 import com.esri.arcgisruntime.utilitynetworks.UtilityFunctionTraceResult;
@@ -828,14 +826,8 @@ public class UtilityNetworkTraceTool extends Control {
                 traceResultInProgress.getElementResults().addAll(
                   FXCollections.observableArrayList(utilityElementTraceResult.getElements()));
                 // set the element results organised by asset group
-                Map<UtilityAssetGroup, List<UtilityElement>> elementResultsByAssetGroup = new HashMap<>();
-                for (var elementResult : traceResultInProgress.getElementResults()) {
-                  var utilityAssetGroup = elementResult.getAssetGroup();
-                  List<UtilityElement> utilityElementsInGroup =
-                    elementResultsByAssetGroup.computeIfAbsent(utilityAssetGroup, k -> new ArrayList<>());
-                  utilityElementsInGroup.add(elementResult);
-                }
-                traceResultInProgress.setElementResultsByAssetGroup(elementResultsByAssetGroup);
+                traceResultInProgress.setElementResultsByAssetGroup(traceResultInProgress.getElementResults().stream()
+                  .collect(Collectors.groupingBy(UtilityElement::getAssetGroup)));
 
                 // fetch the features to be displayed on the map via an async method
                 fetchFeaturesForElementsFuture =
