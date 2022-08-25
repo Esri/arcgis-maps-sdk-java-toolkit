@@ -33,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 /**
  * A custom Tab for a UtilityNetworkTraceOperationResult displayed in a {@link UtilityNetworkTraceSkin}.
@@ -322,16 +323,16 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
    */
   private Button createButton(Color color, int size) {
     var button = new Button();
-    var red = color.getRed();
-    var green = color.getGreen();
-    var blue = color.getBlue();
-    var colorStyle = String.format("#%02x%02x%02x", (int) (255 * red), (int) (255 * green), (int) (255 * blue));
-    button.setStyle("-fx-background-color: " + colorStyle + ";");
     button.setMaxSize(size, size);
-    button.setPrefSize(size, size);
     button.setMinSize(size, size);
+    button.setPrefSize(size, size);
+    var rectangle = new Rectangle();
+    rectangle.setFill(color);
+    rectangle.widthProperty().bind(button.maxWidthProperty());
+    rectangle.heightProperty().bind(button.maxHeightProperty());
+    button.setGraphic(rectangle);
     // add opacity for overlaying on the map
-    var visualizationColor = new Color(red, green, blue, 0.5);
+    var visualizationColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0.5);
     // on action the button updates the color used to visualize the result on the map
     button.setOnAction(e -> result.visualizationColorProperty().set(visualizationColor));
     return button;
