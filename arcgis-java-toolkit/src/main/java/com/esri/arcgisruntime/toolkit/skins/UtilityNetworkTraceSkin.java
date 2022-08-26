@@ -436,7 +436,7 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   /**
    * Returns the Tab that is displaying the data for the provided result.
    *
-   * @return the Tab
+   * @return the Tab. Null if no Tab is found.
    * @since 100.15.0
    */
   private Tab findTabForResult(UtilityNetworkTraceOperationResult result) {
