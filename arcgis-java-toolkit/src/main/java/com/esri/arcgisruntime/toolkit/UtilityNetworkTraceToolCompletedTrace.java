@@ -54,7 +54,9 @@ public class UtilityNetworkTraceToolCompletedTrace {
    * @return a list of the results
    * @since 100.15.0
    */
-  public List<UtilityTraceResult> getUtilityTraceResults() { return utilityTraceResults; }
+  public List<UtilityTraceResult> getUtilityTraceResults() {
+    return utilityTraceResults;
+  }
 
   /**
    * Returns the exception resulting from a failed trace.
@@ -62,7 +64,9 @@ public class UtilityNetworkTraceToolCompletedTrace {
    * @return the exception. Null if the trace was successful.
    * @since 100.15.0
    */
-  public Exception getException() { return exception; }
+  public Exception getException() {
+    return exception;
+  }
 
   /**
    * Returns the UtilityTraceParameters used in the trace.
@@ -70,5 +74,7 @@ public class UtilityNetworkTraceToolCompletedTrace {
    * @return the utility trace parameters
    * @since 100.15.0
    */
-  public UtilityTraceParameters getUtilityTraceParameters() { return utilityTraceParameters; }
+  public UtilityTraceParameters getUtilityTraceParameters() {
+    return utilityTraceParameters;
+  }
 }
