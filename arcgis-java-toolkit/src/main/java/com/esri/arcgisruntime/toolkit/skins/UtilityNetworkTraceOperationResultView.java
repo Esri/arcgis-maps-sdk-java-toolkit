@@ -76,7 +76,7 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
     // configure UI universal to all results, successful or unsuccessful
     setupDefaultUI();
 
-    if (result.hasAnyResults()) {
+    if (result.hasResults()) {
       // if there are results, set up the UI to display the results
       displayResults();
     } else {
