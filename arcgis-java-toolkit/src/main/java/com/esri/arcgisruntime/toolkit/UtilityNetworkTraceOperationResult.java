@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -272,14 +273,17 @@ public class UtilityNetworkTraceOperationResult {
   }
 
   /**
-   * Selects or unselects the selection of any features relating to the provided trace result.
+   * Selects or unselects features on feature layers relating to the provided trace result.
    *
    * @param isSelectFeatures true if the features should be selected, false to unselect
    * @since 100.15.0
    */
   public void selectResultFeatures(boolean isSelectFeatures) {
-    Map<Layer, List<ArcGISFeature>> groups =
-      features.stream().collect(Collectors.groupingBy(feature -> feature.getFeatureTable().getLayer()));
+    // group features by layer
+    Map<Layer, List<ArcGISFeature>> groups = features.stream()
+      .filter(feature -> feature.getFeatureTable() != null)
+      .filter(feature -> feature.getFeatureTable().getLayer() != null)
+      .collect(Collectors.groupingBy(feature -> feature.getFeatureTable().getLayer()));
 
     if (isSelectFeatures) {
       isSelectedProperty.set(true);
@@ -313,8 +317,12 @@ public class UtilityNetworkTraceOperationResult {
       graphicsExtent = resultsGraphicsOverlay.getExtent();
     }
     if (!features.isEmpty()) {
-      // if there are features, combine their geometries
-      featuresExtent = GeometryEngine.combineExtents(features.stream().map(Feature::getGeometry).collect(Collectors.toList()));
+      try {
+        // if there are features, combine their geometries
+        featuresExtent = GeometryEngine.combineExtents(features.stream().map(Feature::getGeometry).collect(Collectors.toList()));
+      } catch (IllegalArgumentException | ArcGISRuntimeException ex) {
+        // if geometries cannot be combined leave extent as null
+      }
     }
 
     if (featuresExtent != null && graphicsExtent != null) {
