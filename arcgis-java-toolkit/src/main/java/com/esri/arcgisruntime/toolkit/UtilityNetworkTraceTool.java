@@ -764,14 +764,17 @@ public class UtilityNetworkTraceTool extends Control {
       if (exception == null && traceResultInProgress != null) {
         // if there were no exceptions from either task and the result is not null, configure the data
         traceResultInProgress.setName(name);
+        // add the result to the list
+        traceResultsProperty.add(traceResultInProgress);
+        // add the graphics overlay to the MapView
+        getMapView().getGraphicsOverlays().add(traceResultInProgress.getResultsGraphicsOverlay());
         if (traceResultInProgress.getExtent() != null && autoZoomToResultsProperty.get()) {
           // update the viewpoint if an extent has been set and autoZoomToResults is true
           var resultsExtent = traceResultInProgress.getExtent();
           // update MapView viewpoint on UI thread
           Platform.runLater(() -> mapViewProperty.get().setViewpoint(new Viewpoint(resultsExtent)));
         }
-        // add the result to the list and then reset
-        traceResultsProperty.add(traceResultInProgress);
+        // reset data
         traceResultInProgress = null;
       }
       // whether successful or not reset the data
@@ -838,8 +841,8 @@ public class UtilityNetworkTraceTool extends Control {
                     // add the features to the current result and select the results
                     traceResultInProgress.getFeatures().addAll(FXCollections.observableArrayList(features));
                     traceResultInProgress.selectResultFeatures(true);
-                    if (autoZoomToResultsProperty.get()) {
-                      // if authZoomToResult is true, update the viewpoint of the MapView
+                    if (autoZoomToResultsProperty.get() && traceResultInProgress.getExtent() != null) {
+                      // if autoZoomToResult is true, update the viewpoint of the MapView
                       mapViewProperty.get().setViewpoint(new Viewpoint(traceResultInProgress.getExtent()));
                     }
                     // if this is successful, complete the future
@@ -851,7 +854,7 @@ public class UtilityNetworkTraceTool extends Control {
                   } catch (Exception e) {
                     // if fetch fails due to another reason, set the error to the result and complete
                     traceResultInProgress.setException(e);
-                    fetchFeaturesForElementsCompletableFuture.completeExceptionally(e);
+                    fetchFeaturesForElementsCompletableFuture.complete(null);
                     traceCompletableFuture.cancel(true);
                   }
                 });
@@ -883,8 +886,6 @@ public class UtilityNetworkTraceTool extends Control {
                 }
 
                 traceResultInProgress.getResultsGraphicsOverlay().getGraphics().addAll(graphics);
-                // add the graphics overlay to the MapView
-                getMapView().getGraphicsOverlays().add(traceResultInProgress.getResultsGraphicsOverlay());
               } else if (utilityTraceResult instanceof UtilityFunctionTraceResult) {
                 // handle function results
                 var functionTraceResult = (UtilityFunctionTraceResult) utilityTraceResult;
