@@ -234,8 +234,8 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
     var visualizationOptionsTitledPane = new TitledPane();
     visualizationOptionsTitledPane.setExpanded(false);
     visualizationOptionsTitledPane.setText("Visualization options");
-    var visualizationOptionsVHBox = new HBox(15);
-    visualizationOptionsTitledPane.setContent(visualizationOptionsVHBox);
+    var visualizationOptionsHBox = new HBox(15);
+    visualizationOptionsTitledPane.setContent(visualizationOptionsHBox);
 
     // create colored buttons that set their respective color to the result when clicked
     // this helps differentiate multiple results from one another on the map
@@ -248,7 +248,7 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
     var purpleSelector = createButton(Color.PURPLE, size);
     var pinkSelector = createButton(Color.PINK, size);
     var blackSelector = createButton(Color.BLACK, size);
-    visualizationOptionsVHBox.getChildren().addAll(
+    visualizationOptionsHBox.getChildren().addAll(
       redSelector, orangeSelector, yellowSelector, greenSelector, blueSelector, purpleSelector,
       pinkSelector, blackSelector);
     vBox.getChildren().add(visualizationOptionsTitledPane);
