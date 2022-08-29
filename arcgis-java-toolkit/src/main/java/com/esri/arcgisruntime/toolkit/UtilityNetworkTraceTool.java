@@ -24,6 +24,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -34,7 +35,6 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.LayerContent;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -68,14 +68,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * A control for a Utility Network Trace that enables trace analysis to be performed on a Utility Network with the
@@ -97,15 +97,34 @@ public class UtilityNetworkTraceTool extends Control {
   private final SimpleBooleanProperty isAddingStartingPointsProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty autoZoomToResultsProperty = new SimpleBooleanProperty(true);
   private final SimpleObjectProperty<Symbol> startingPointSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.LIMEGREEN), 20));
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.LIMEGREEN), 20)) {
+    @Override
+    public void set(Symbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   private final SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 20));
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 20)) {
+    @Override
+    public void set(SimpleMarkerSymbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   private final SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleLineSymbol(SimpleLineSymbol.Style.DOT, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 5));
+    new SimpleLineSymbol(SimpleLineSymbol.Style.DOT, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 5)) {
+    @Override
+    public void set(SimpleLineSymbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   private final SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty = new SimpleObjectProperty<>(
     new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)),
-      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 2)));
-
+      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 2)))  {
+    @Override
+    public void set(SimpleFillSymbol newValue) {
+      super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
+    }
+  };
   // internal properties
   private final SimpleListProperty<UtilityNetwork> utilityNetworksProperty =
     new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -127,7 +146,6 @@ public class UtilityNetworkTraceTool extends Control {
   private UtilityNetworkTraceOperationResult traceResultInProgress;
 
   // listenable futures for asynchronous methods so that they can be cancelled
-  private ListenableFuture<List<UtilityNamedTraceConfiguration>> queryNamedTraceConfigurationsFuture;
   private ListenableFuture<List<IdentifyLayerResult>> identifyLayersFuture;
   private ListenableFuture<List<UtilityTraceResult>> traceInProgressFuture;
   private ListenableFuture<List<ArcGISFeature>> fetchFeaturesForElementsFuture;
@@ -162,23 +180,20 @@ public class UtilityNetworkTraceTool extends Control {
     selectedUtilityNetworkProperty.addListener(((observable, oldValue, newValue) -> {
       resetNewTraceConfigurationProperties();
       if (newValue != null) {
-        // async operation to query named trace configurations for the newly selected utility network
-        queryNamedTraceConfigurationsFuture = selectedUtilityNetworkProperty.get().queryNamedTraceConfigurationsAsync(null);
         try {
-          // added a timeout as there is no UI configured to directly cancel this async operation
-          ObservableList<UtilityNamedTraceConfiguration> traceConfigs =
-            FXCollections.observableArrayList(queryNamedTraceConfigurationsFuture.get(30, TimeUnit.SECONDS));
+          // query named trace configurations for the newly selected utility network
+          ObservableList<UtilityNamedTraceConfiguration> traceConfigs = FXCollections.observableArrayList(
+            selectedUtilityNetworkProperty.get().queryNamedTraceConfigurationsAsync(null).get(30 ,TimeUnit.SECONDS));
           traceConfigurationsProperty.set(traceConfigs);
           traceConfigurationsProperty.sort(Comparator.comparing(UtilityNamedTraceConfiguration::getName));
           if (!traceConfigurationsProperty.isEmpty()) {
             // select the first trace configuration by default
             selectedTraceConfigurationProperty.set(traceConfigurationsProperty.get(0));
           }
-        } catch (CancellationException cancellationException) {
-          // ignore cancellations of the async query operation
         } catch (Exception e) {
-          // if there is any other Exception while setting up the named trace configurations, display a warning
-          displayLoggerWarning("Could not load Utility Named Trace Configurations.");
+          // if there is any other Exception while setting up the named trace configurations, display a warning and the
+          // exception message
+          displayLoggerWarning("Could not load Utility Named Trace Configurations.\n" + e.getMessage());
           // ensure data is reset
           traceConfigurationsProperty.clear();
           selectedTraceConfigurationProperty.set(null);
@@ -263,20 +278,11 @@ public class UtilityNetworkTraceTool extends Control {
     skin.isIdentifyInProgressProperty.bind(isIdentifyInProgressProperty);
     skin.isMapAndUtilityNetworkLoadingInProgressProperty.bind(isMapAndUtilityNetworkLoadingInProgressProperty);
     // configure actions requiring internal methods
-    if (skin.getRunTraceButton() != null) {
-      skin.getRunTraceButton().setOnAction(e ->
-        runTraceAsync(
-          Objects.equals(skin.traceNameProperty.get(), "") ? skin.getDefaultTraceName() : skin.traceNameProperty.get()));
-    }
-    if (skin.getCancelIdentifyStartingPointsButton() != null) {
-      skin.getCancelIdentifyStartingPointsButton().setOnAction(e -> cancelIdentifyLayers());
-    }
-    if (skin.getCancelTraceInProgressButton() != null) {
-      skin.getCancelTraceInProgressButton().setOnAction(e -> cancelTrace());
-    }
-    if (skin.getClearResultsButton() != null) {
-      skin.getClearResultsButton().setOnAction(e -> resetTraceResults());
-    }
+    skin.setRunTraceEventHandler(event -> runTraceAsync(
+      Objects.equals(skin.traceNameProperty.get(), "") ? skin.getDefaultTraceName() : skin.traceNameProperty.get()));
+    skin.setCancelIdentifyStartingPointsEventHandler(e -> cancelIdentifyLayers());
+    skin.setCancelTraceEventHandler(e -> cancelTrace());
+    skin.setClearResultsEventHandler(e -> resetTraceResults());
     return skin;
   }
 
@@ -291,7 +297,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the MapView Property as read-only
    * @since 100.15.0
    */
-  public ReadOnlyObjectProperty<MapView> mapViewReadOnlyProperty() { return mapViewProperty.getReadOnlyProperty(); }
+  public ReadOnlyObjectProperty<MapView> mapViewReadOnlyProperty() {
+    return mapViewProperty.getReadOnlyProperty();
+  }
 
   /**
    * Gets the MapView this UtilityNetworkTrace is linked to.
@@ -327,12 +335,14 @@ public class UtilityNetworkTraceTool extends Control {
 
   /**
    * Property that determines whether a MapView's onMouseClicked event is used for adding starting points.
-   * Defaults to true.
+   * Defaults to false.
    *
    * @return the isAddingStartingPoints property
    * @since 100.15.0
    */
-  public SimpleBooleanProperty isAddingStartingPointsProperty() { return isAddingStartingPointsProperty; }
+  public SimpleBooleanProperty isAddingStartingPointsProperty() {
+    return isAddingStartingPointsProperty;
+  }
 
   /**
    * Returns the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
@@ -341,7 +351,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return true if enabled, false otherwise
    * @since 100.15.0
    */
-  public Boolean getIsAddingStartingPoints() { return isAddingStartingPointsProperty.get(); }
+  public boolean getIsAddingStartingPoints() {
+    return isAddingStartingPointsProperty.get();
+  }
 
   /**
    * Sets the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
@@ -350,7 +362,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param isAddingStartingPoints true to enable, false to disable
    * @since 100.15.0
    */
-  public void setIsAddingStartingPoints(Boolean isAddingStartingPoints) { isAddingStartingPointsProperty.set(isAddingStartingPoints); }
+  public void setIsAddingStartingPoints(boolean isAddingStartingPoints) {
+    isAddingStartingPointsProperty.set(isAddingStartingPoints);
+  }
 
   /**
    * Property that determines whether the MapView's viewpoint should change to focus on trace results.
@@ -359,7 +373,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the autoZoomToResults property
    * @since 100.15.0
    */
-  public SimpleBooleanProperty autoZoomToResultsProperty() { return autoZoomToResultsProperty; }
+  public SimpleBooleanProperty autoZoomToResultsProperty() {
+    return autoZoomToResultsProperty;
+  }
 
   /**
    * Returns the value of the autoZoomToResultsProperty which determines whether the MapView's viewpoint should change
@@ -368,7 +384,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return true if enabled, false otherwise
    * @since 100.15.0
    */
-  public Boolean getAutoZoomToResults() { return autoZoomToResultsProperty.get(); }
+  public boolean getAutoZoomToResults() {
+    return autoZoomToResultsProperty.get();
+  }
 
   /**
    * Sets the value of the isAddingStartingPointsProperty which determines whether a MapView's onMouseClicked event
@@ -377,7 +395,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @param autoZoomToResults true to enable, false to disable
    * @since 100.15.0
    */
-  public void setAutoZoomToResults(Boolean autoZoomToResults) { autoZoomToResultsProperty.set(autoZoomToResults); }
+  public void setAutoZoomToResults(boolean autoZoomToResults) {
+    autoZoomToResultsProperty.set(autoZoomToResults);
+  }
 
   /**
    * Property that determines what symbol should be used to denote starting points for a trace.
@@ -386,7 +406,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the startingPointSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<Symbol> startingPointSymbolProperty() { return startingPointSymbolProperty; }
+  public SimpleObjectProperty<Symbol> startingPointSymbolProperty() {
+    return startingPointSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote starting points for a trace.
@@ -394,15 +416,20 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol
    * @since 100.15.0
    */
-  public Symbol getStartingPointSymbol() { return startingPointSymbolProperty.get(); }
+  public Symbol getStartingPointSymbol() {
+    return startingPointSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote starting points for a trace.
    *
    * @param symbol the symbol to use
+   * @throws NullPointerException if symbol is null
    * @since 100.15.0
    */
-  public void setStartingPointSymbol(Symbol symbol) { startingPointSymbolProperty.set(symbol); }
+  public void setStartingPointSymbol(Symbol symbol) {
+    startingPointSymbolProperty.set(symbol);
+  }
 
   /**
    * Property that determines what symbol should be used to denote multipoints in a geometry trace result.
@@ -411,7 +438,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the resultPointSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty() { return resultPointSymbolProperty; }
+  public SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty() {
+    return resultPointSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote multipoints in a geometry trace result.
@@ -419,12 +448,15 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol used for multipoints
    * @since 100.15.0
    */
-  public SimpleMarkerSymbol getResultPointSymbol() { return resultPointSymbolProperty.get(); }
+  public SimpleMarkerSymbol getResultPointSymbol() {
+    return resultPointSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote multipoints in a geometry trace result.
    *
    * @param simpleMarkerSymbol the symbol to use for multipoints
+   * @throws NullPointerException if simpleMarkerSymbol is null
    * @since 100.15.0
    */
   public void setResultPointSymbol(SimpleMarkerSymbol simpleMarkerSymbol) {
@@ -437,7 +469,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the resultLineSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty() { return resultLineSymbolProperty; }
+  public SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty() {
+    return resultLineSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote polylines in a geometry trace result.
@@ -445,15 +479,20 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol used for polylines
    * @since 100.15.0
    */
-  public SimpleLineSymbol getResultLineSymbol() { return resultLineSymbolProperty.get(); }
+  public SimpleLineSymbol getResultLineSymbol() {
+    return resultLineSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote polylines in a geometry trace result.
    *
    * @param simpleLineSymbol the symbol to use for polylines
+   * @throws NullPointerException if simpleLineSymbol is null
    * @since 100.15.0
    */
-  public void setResultLineSymbol(SimpleLineSymbol simpleLineSymbol) { resultLineSymbolProperty.set(simpleLineSymbol); }
+  public void setResultLineSymbol(SimpleLineSymbol simpleLineSymbol) {
+    resultLineSymbolProperty.set(simpleLineSymbol);
+  }
 
   /**
    * Property that determines what symbol should be used to denote polygons in a geometry trace result.
@@ -462,7 +501,9 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the resultFillSymbol property
    * @since 100.15.0
    */
-  public SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty() { return resultFillSymbolProperty; }
+  public SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty() {
+    return resultFillSymbolProperty;
+  }
 
   /**
    * Gets the symbol used to denote polygons in a geometry trace result.
@@ -470,15 +511,20 @@ public class UtilityNetworkTraceTool extends Control {
    * @return the symbol used for polygons
    * @since 100.15.0
    */
-  public SimpleFillSymbol getResultFillSymbol() {return resultFillSymbolProperty.get(); }
+  public SimpleFillSymbol getResultFillSymbol() {
+    return resultFillSymbolProperty.get();
+  }
 
   /**
    * Sets the symbol used to denote polygons in a geometry trace result.
    *
    * @param simpleFillSymbol the symbol to use for polygons
+   * @throws NullPointerException if simpleFillSymbol is null
    * @since 100.15.0
    */
-  public void setResultFillSymbol(SimpleFillSymbol simpleFillSymbol) { resultFillSymbolProperty.set(simpleFillSymbol); }
+  public void setResultFillSymbol(SimpleFillSymbol simpleFillSymbol) {
+    resultFillSymbolProperty.set(simpleFillSymbol);
+  }
 
   /**
    * Gets any UtilityNetworks from the ArcGIS Map attached to the MapView. The ArcGIS Map must be loaded in order to
@@ -500,19 +546,18 @@ public class UtilityNetworkTraceTool extends Control {
             ObservableList<UtilityNetwork> utilityNetworksFromMap = FXCollections.observableArrayList();
             // create completable futures to wait for all utility networks to finish loading before
             // setting the data
-            CompletableFuture<?>[] futures = new CompletableFuture<?>[map.getUtilityNetworks().size()];
+            List<CompletableFuture<?>> futures = new ArrayList<>();
             for (var utilityNetwork : map.getUtilityNetworks()) {
-              var index = map.getUtilityNetworks().indexOf(utilityNetwork);
               var completableFuture = new CompletableFuture<>();
-              futures[index] = completableFuture;
+              futures.add(completableFuture);
               utilityNetwork.addDoneLoadingListener(() -> {
                 if (utilityNetwork.getLoadStatus() == LoadStatus.LOADED) {
                   utilityNetworksFromMap.add(utilityNetwork);
                   // complete the future if the utility network loads successfully
-                  futures[index].complete(null);
+                  completableFuture.complete(null);
                 } else if (utilityNetwork.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
                   // complete the future with an exception if the utility network fails to load
-                  futures[index].completeExceptionally(utilityNetwork.getLoadError());
+                  completableFuture.completeExceptionally(utilityNetwork.getLoadError());
                 }
               });
               if (utilityNetwork.getLoadStatus() == LoadStatus.NOT_LOADED) {
@@ -521,7 +566,7 @@ public class UtilityNetworkTraceTool extends Control {
               }
             }
 
-            CompletableFuture.allOf(futures).whenCompleteAsync((future, exception) -> {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).whenCompleteAsync((future, exception) -> {
               // when all futures complete, set the data to the utility networks property
               utilityNetworksProperty.set(utilityNetworksFromMap);
               isMapAndUtilityNetworkLoadingInProgressProperty.set(false);
@@ -601,10 +646,6 @@ public class UtilityNetworkTraceTool extends Control {
       identifyLayersFuture.cancel(true);
     }
     identifyLayersFuture = null;
-    if (queryNamedTraceConfigurationsFuture != null) {
-      queryNamedTraceConfigurationsFuture.cancel(true);
-    }
-    queryNamedTraceConfigurationsFuture = null;
 
     selectedTraceConfigurationProperty.set(null);
     traceConfigurationsProperty.set(FXCollections.observableArrayList());
@@ -619,18 +660,20 @@ public class UtilityNetworkTraceTool extends Control {
    * Adds a starting point to be used for a trace from the provided feature.
    *
    * <p>
-   * This enables the adding of starting points programmatically, and not just via clicks on the MapView.
+   * This method enables the adding of starting points programmatically, and not just via clicks on the MapView.
    * For example, feature results from a query, selection, geocode, route, geoprocessing, search, and more.
    *
    * <p>
    * A starting point is only added to the list if a Utility Network has been selected, the feature is part of the
-   * selected utility network and the starting point does not already exist.
+   * selected utility network and the starting point does not already exist. Starting points can be added
+   * programmatically at any time, regardless of whether isAddingStartingPoints is enabled.
    *
    * @param feature the feature to use as the basis for the starting point
    * @throws NullPointerException if feature is null
    * @since 100.15.0
    */
   public void addStartingPoint(ArcGISFeature feature) {
+    Objects.requireNonNull(feature);
     addStartingPoint(feature, null);
   }
 
@@ -638,19 +681,26 @@ public class UtilityNetworkTraceTool extends Control {
    * Adds a starting point to be used for a trace from the provided feature and point.
    *
    * <p>
+   * This method allows the provision of a specific starting point location, such as if the provided feature is a
+   * PolyLine and the desired starting point is located at a specific point along the line.
+   *
+   * <p>
    * This enables the adding of starting points programmatically, and not just via clicks on the MapView.
    * For example, feature results from a query, selection, geocode, route, geoprocessing, search, and more.
    *
    * <p>
    * A starting point is only added to the list if a Utility Network has been selected, the feature is part of the
-   * selected utility network and the starting point does not already exist.
+   * selected utility network and the starting point does not already exist. Starting points can be added
+   *    * programmatically at any time, regardless of whether isAddingStartingPoints is enabled.
    *
    * @param feature the feature to use as the basis for the starting point
-   * @param mapPoint the point to use - if it's polyline for location along the line
+   * @param startingPointLocation the location of the starting point e.g. if the feature is a PolyLine, specify where
+   * along the line the starting point is located.
    * @throws NullPointerException if feature is null
    * @since 100.15.0
    */
-  public void addStartingPoint(ArcGISFeature feature, Point mapPoint) {
+  public void addStartingPoint(ArcGISFeature feature, Point startingPointLocation) {
+    Objects.requireNonNull(feature);
     if (selectedUtilityNetworkProperty != null) {
       var geometry = feature.getGeometry();
       UtilityElement utilityElement = null;
@@ -681,14 +731,14 @@ public class UtilityNetworkTraceTool extends Control {
               // get the geometry of the identified feature as a polyline, and remove the z component
               polyline = (Polyline) GeometryEngine.removeZ(polyline);
             }
-            if (mapPoint != null && mapPoint.getSpatialReference() != polyline.getSpatialReference()) {
-              polyline = (Polyline) GeometryEngine.project(polyline, mapPoint.getSpatialReference());
+            if (startingPointLocation != null && startingPointLocation.getSpatialReference() != polyline.getSpatialReference()) {
+              polyline = (Polyline) GeometryEngine.project(polyline, startingPointLocation.getSpatialReference());
             }
             geometry = polyline;
 
-            // compute how far the clicked location is along the edge feature
-            if (mapPoint != null) {
-              double fractionAlongEdge = GeometryEngine.fractionAlong(polyline, mapPoint, -1);
+            // compute how far the location is along the edge feature
+            if (startingPointLocation != null) {
+              double fractionAlongEdge = GeometryEngine.fractionAlong(polyline, startingPointLocation, -1);
               if (!Double.isNaN(fractionAlongEdge)) {
                 // set the fraction along edge
                 utilityElement.setFractionAlongEdge(fractionAlongEdge);
@@ -706,9 +756,7 @@ public class UtilityNetworkTraceTool extends Control {
           }
           // create a graphic based on the geometry of the provided feature and set the starting point symbol
           // this is used to display the starting point on the map
-          var graphic = new Graphic();
-          graphic.setGeometry(geometry);
-          graphic.setSymbol(startingPointSymbolProperty.get());
+          var graphic = new Graphic(geometry, startingPointSymbolProperty.get());
           // get the symbol used for the feature on the feature layer
           // this is used as an indicator in the UI
           Symbol symbol = null;
@@ -748,7 +796,9 @@ public class UtilityNetworkTraceTool extends Control {
         traceResultInProgress.setName(name);
         if (traceResultInProgress.getExtent() != null && autoZoomToResultsProperty.get()) {
           // update the viewpoint if an extent has been set and autoZoomToResults is true
-          mapViewProperty.get().setViewpoint(new Viewpoint(traceResultInProgress.getExtent()));
+          var resultsExtent = traceResultInProgress.getExtent();
+          // update MapView viewpoint on UI thread
+          Platform.runLater(() -> mapViewProperty.get().setViewpoint(new Viewpoint(resultsExtent)));
         }
         // add the result to the list and then reset
         traceResultsProperty.add(traceResultInProgress);
@@ -762,15 +812,6 @@ public class UtilityNetworkTraceTool extends Control {
 
     isTraceInProgressProperty.set(true);
     var selectedUtilityNetwork = selectedUtilityNetworkProperty.get();
-    try {
-      if (selectedUtilityNetwork == null) {
-        // if the selected utility network is null, throw an exception and handle the futures
-        throw new IllegalArgumentException("No Utility Network Selected.");
-      }
-    } catch (IllegalArgumentException e) {
-      traceCompletableFuture.completeExceptionally(e);
-      fetchFeaturesForElementsCompletableFuture.cancel(true);
-    }
 
     if (selectedUtilityNetwork != null) {
       var selectedTraceConfiguration = selectedTraceConfigurationProperty.get();
@@ -814,9 +855,10 @@ public class UtilityNetworkTraceTool extends Control {
                 // add the element trace results to the current result
                 traceResultInProgress.getElementResults().addAll(
                   FXCollections.observableArrayList(utilityElementTraceResult.getElements()));
-                traceResultInProgress.setElementResultsByAssetGroup(
-                  traceResultInProgress.getElementResults().stream()
-                    .collect(groupingBy(UtilityElement::getAssetGroup)));
+                // set the element results organised by asset group
+                traceResultInProgress.setElementResultsByAssetGroup(traceResultInProgress.getElementResults().stream()
+                  .collect(Collectors.groupingBy(UtilityElement::getAssetGroup)));
+
                 // fetch the features to be displayed on the map via an async method
                 fetchFeaturesForElementsFuture =
                   selectedUtilityNetwork.fetchFeaturesForElementsAsync(utilityElementTraceResult.getElements());
@@ -847,30 +889,31 @@ public class UtilityNetworkTraceTool extends Control {
                 // handle geometry results and add graphics to the graphics overlay
                 var geometryTraceResult = (UtilityGeometryTraceResult) utilityTraceResult;
 
+                List<Graphic> graphics = new ArrayList<>();
+
                 var multipoint = geometryTraceResult.getMultipoint();
                 if (multipoint != null) {
                   var graphic = new Graphic(multipoint, new SimpleMarkerSymbol(getResultPointSymbol().getStyle(),
                     getResultPointSymbol().getColor(), getResultPointSymbol().getSize()));
-                  traceResultInProgress.getGraphics().add(graphic);
-                  traceResultInProgress.getResultsGraphicsOverlay().getGraphics().add(graphic);
+                  graphics.add(graphic);
                 }
 
                 var polyline = geometryTraceResult.getPolyline();
                 if (polyline != null) {
                   var graphic = new Graphic(polyline, new SimpleLineSymbol(getResultLineSymbol().getStyle(),
                     getResultLineSymbol().getColor(), getResultLineSymbol().getWidth()));
-                  traceResultInProgress.getGraphics().add(graphic);
-                  traceResultInProgress.getResultsGraphicsOverlay().getGraphics().add(graphic);
+                  graphics.add(graphic);
                 }
 
                 var polygon = geometryTraceResult.getPolygon();
                 if (polygon != null) {
                   var graphic = new Graphic(polygon, new SimpleFillSymbol(getResultFillSymbol().getStyle(),
                     getResultFillSymbol().getColor(), getResultFillSymbol().getOutline()));
-                  traceResultInProgress.getGraphics().add(graphic);
-                  traceResultInProgress.getResultsGraphicsOverlay().getGraphics().add(graphic);
+                  graphics.add(graphic);
                 }
-                // add the graphics to the MapView's graphics overlay
+
+                traceResultInProgress.getResultsGraphicsOverlay().getGraphics().addAll(graphics);
+                // add the graphics overlay to the MapView
                 getMapView().getGraphicsOverlays().add(traceResultInProgress.getResultsGraphicsOverlay());
               } else if (utilityTraceResult instanceof UtilityFunctionTraceResult) {
                 // handle function results
@@ -906,6 +949,10 @@ public class UtilityNetworkTraceTool extends Control {
         traceCompletableFuture.complete(null);
         fetchFeaturesForElementsCompletableFuture.complete(null);
       }
+    } else {
+      // if the selected utility network is null, handle the futures
+      traceCompletableFuture.completeExceptionally(new IllegalArgumentException("No Utility Network Selected."));
+      fetchFeaturesForElementsFuture.cancel(true);
     }
   }
 
@@ -943,26 +990,19 @@ public class UtilityNetworkTraceTool extends Control {
    * @since 100.15.0
    */
   private void identifyStartingPoints(MouseEvent e) {
-    // cancel any previous identify tasks
-    cancelIdentifyLayers();
-    // start new identify
-    isAddingStartingPointsProperty.set(false);
-    isIdentifyInProgressProperty.set(true);
     // get the clicked map point
     Point2D screenPoint = new Point2D(e.getX(), e.getY());
     Point mapPoint = getMapView().screenToLocation(screenPoint);
-    // identify features
-    identifyLayersFuture =
-      getMapView().identifyLayersAsync(screenPoint, 10, false);
-    identifyLayersFuture.addDoneListener(() -> {
+    // runnable to handle identify
+    Runnable getIdentifyResults = () -> {
       try {
         // get the result of the query and find any identified features
         List<IdentifyLayerResult> identifyLayerResults = identifyLayersFuture.get();
         identifyLayerResults.forEach(identifyLayerResult -> {
           LayerContent layerContent = identifyLayerResult.getLayerContent();
-          if (layerContent instanceof FeatureLayer && !identifyLayerResult.getElements().isEmpty()) {
-            List<GeoElement> identifiedFeatures = identifyLayerResult.getElements();
-            identifiedFeatures.forEach(identifiedFeature -> {
+          var resultElements = identifyLayerResult.getElements();
+          if (layerContent instanceof FeatureLayer && !resultElements.isEmpty()) {
+            resultElements.forEach(identifiedFeature -> {
               if (identifiedFeature instanceof ArcGISFeature) {
                 // add any identified features as starting points
                 addStartingPoint((ArcGISFeature) identifiedFeature, mapPoint);
@@ -977,7 +1017,21 @@ public class UtilityNetworkTraceTool extends Control {
         identifyLayersFuture = null;
         isIdentifyInProgressProperty.set(false);
       }
-    });
+    };
+
+    // cancel any previous identify tasks
+    if (identifyLayersFuture != null) {
+      identifyLayersFuture.removeDoneListener(getIdentifyResults);
+    }
+    cancelIdentifyLayers();
+    // start new identify
+    isAddingStartingPointsProperty.set(false);
+    isIdentifyInProgressProperty.set(true);
+
+    // identify features
+    identifyLayersFuture =
+      getMapView().identifyLayersAsync(screenPoint, 10, false);
+    identifyLayersFuture.addDoneListener(getIdentifyResults);
   }
 
   /**
@@ -988,7 +1042,11 @@ public class UtilityNetworkTraceTool extends Control {
    */
   private void applyStartingPointWarnings() {
     if (selectedTraceConfigurationProperty.get() != null) {
-      var minimum = selectedTraceConfigurationProperty.get().getMinimumStartingLocations() == UtilityMinimumStartingLocations.MANY ? 2 : 1;
+      var minimumStartingLocations = selectedTraceConfigurationProperty.get().getMinimumStartingLocations();
+      var minimum = 1;
+      if (minimumStartingLocations == UtilityMinimumStartingLocations.MANY) {
+        minimum = 2;
+      }
       insufficientStartingPointsProperty.set(startingPointsProperty.size() < minimum);
       aboveMinimumStartingPointsProperty.set(startingPointsProperty.size() > minimum);
     }

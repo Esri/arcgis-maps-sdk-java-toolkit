@@ -34,8 +34,8 @@ public class UtilityNetworkTraceStartingPoint {
 
   private final SimpleDoubleProperty fractionAlongEdgeProperty = new SimpleDoubleProperty();
 
-  private Boolean hasMultipleTerminals = false;
-  private Boolean hasFractionAlongEdge = false;
+  private boolean hasMultipleTerminals = false;
+  private boolean hasFractionAlongEdge = false;
   private final Envelope extent;
   private final Graphic graphic;
   private final Symbol featureSymbol;
@@ -45,9 +45,9 @@ public class UtilityNetworkTraceStartingPoint {
    * Creates a UtilityNetworkTraceStartingPoint.
    *
    * @param utilityElement the utility element the starting point represents
-   * @param graphic the graphic used to display the on the MapView
+   * @param graphic the graphic used to display the starting point location on the MapView
    * @param featureSymbol the symbol of the feature itself
-   * @param extent the extent
+   * @param extent the extent of the feature used to create the utilityElement
    * @since 100.15.0
    */
   protected UtilityNetworkTraceStartingPoint(
@@ -75,7 +75,7 @@ public class UtilityNetworkTraceStartingPoint {
       fractionAlongEdgeProperty.addListener((observable, oldValue, newValue) -> {
         graphic.setGeometry(
           GeometryEngine.createPointAlong(polyline, GeometryEngine.length(polyline) * newValue.doubleValue()));
-        utilityElement.setFractionAlongEdge((Double) newValue);
+        utilityElement.setFractionAlongEdge(newValue.doubleValue());
       });
     }
   }
@@ -86,7 +86,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the fraction along edge property. Null if the starting point is not an edge feature
    * @since 100.15.0
    */
-  public SimpleDoubleProperty fractionAlongEdgeProperty() {return fractionAlongEdgeProperty;}
+  public SimpleDoubleProperty fractionAlongEdgeProperty() {
+    return fractionAlongEdgeProperty;
+  }
 
   /**
    * Returns the fraction along edge value.
@@ -94,7 +96,19 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the fraction along edge value. Null if the starting point is not an edge feature
    * @since 100.15.0
    */
-  public Double getFractionAlongEdge() {return fractionAlongEdgeProperty.get();}
+  public Double getFractionAlongEdge() {
+    return fractionAlongEdgeProperty.get();
+  }
+
+  /**
+   * Sets the fraction along edge value.
+   *
+   * @param fractionAlongEdge the fraction along edge value.
+   * @since 100.15.0
+   */
+  public void setFractionAlongEdge(Double fractionAlongEdge) {
+    fractionAlongEdgeProperty.set(fractionAlongEdge);
+  }
 
   /**
    * Returns a boolean value which determines whether the starting point has a fraction along edge.
@@ -102,7 +116,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the hasFractionAlongEdge value. True if it does, false otherwise
    * @since 100.15.0
    */
-  public Boolean getHasFractionAlongEdge() {return hasFractionAlongEdge;}
+  public boolean getHasFractionAlongEdge() {
+    return hasFractionAlongEdge;
+  }
 
   /**
    * Returns a boolean value which determines whether the starting point has multiple terminals.
@@ -110,15 +126,19 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the hasMultipleTerminals value. True if there is more than 1 terminal, false otherwise
    * @since 100.15.0
    */
-  public Boolean getHasMultipleTerminals() {return hasMultipleTerminals;}
+  public boolean getHasMultipleTerminals() {
+    return hasMultipleTerminals;
+  }
 
   /**
-   * Returns an Envelope of the extent of the starting point.
+   * Returns an Envelope of the extent of the feature used to create the UtilityElement this starting point is based on.
    *
-   * @return the extent
+   * @return the extent of the feature
    * @since 100.15.0
    */
-  public Envelope getExtent() { return extent; }
+  public Envelope getExtent() {
+    return extent;
+  }
 
   /**
    * Returns the graphic associated with the starting point.
@@ -146,7 +166,9 @@ public class UtilityNetworkTraceStartingPoint {
    * @return the symbol
    * @since 100.15.0
    */
-  public Symbol getFeatureSymbol() {return featureSymbol;}
+  public Symbol getFeatureSymbol() {
+    return featureSymbol;
+  }
 
   /**
    * Returns the UtilityElement associated with the starting point.
