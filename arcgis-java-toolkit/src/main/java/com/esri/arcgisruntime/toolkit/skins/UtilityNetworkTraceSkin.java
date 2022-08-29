@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.toolkit.skins;
 
 import java.util.logging.Logger;
 
-import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceOperationResult;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceStartingPoint;
@@ -33,6 +32,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -47,8 +48,6 @@ import javafx.scene.control.SkinBase;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -98,24 +97,21 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
 
   private final UtilityNetworkTraceTool skinnable = getSkinnable();
   public final MapView controlMapView;
-  private final Callout callout;
-  private final Label calloutTitle = new Label();
-  private final Label calloutDetail = new Label();
   private Node root;
 
-  public SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
-  public SimpleBooleanProperty insufficientStartingPointsProperty = new SimpleBooleanProperty(false);
-  public SimpleBooleanProperty aboveMinimumStartingPointsProperty = new SimpleBooleanProperty(false);
-  public SimpleBooleanProperty enableTraceProperty = new SimpleBooleanProperty();
-  public SimpleBooleanProperty isIdentifyInProgressProperty = new SimpleBooleanProperty(false);
-  public SimpleBooleanProperty isTraceInProgressProperty = new SimpleBooleanProperty(false);
-  public SimpleListProperty<UtilityNetwork> utilityNetworksProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleListProperty<UtilityNamedTraceConfiguration> traceConfigurationsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleListProperty<UtilityNetworkTraceStartingPoint> startingPointsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleListProperty<UtilityNetworkTraceOperationResult> traceResultsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
-  public SimpleObjectProperty<UtilityNetwork> selectedUtilityNetworkProperty = new SimpleObjectProperty<>();
-  public SimpleObjectProperty<UtilityNamedTraceConfiguration> selectedTraceConfigurationProperty = new SimpleObjectProperty<>();
-  public SimpleStringProperty traceNameProperty = new SimpleStringProperty();
+  public final SimpleBooleanProperty isMapAndUtilityNetworkLoadingInProgressProperty = new SimpleBooleanProperty();
+  public final SimpleBooleanProperty insufficientStartingPointsProperty = new SimpleBooleanProperty(false);
+  public final SimpleBooleanProperty aboveMinimumStartingPointsProperty = new SimpleBooleanProperty(false);
+  public final SimpleBooleanProperty enableTraceProperty = new SimpleBooleanProperty();
+  public final SimpleBooleanProperty isIdentifyInProgressProperty = new SimpleBooleanProperty(false);
+  public final SimpleBooleanProperty isTraceInProgressProperty = new SimpleBooleanProperty(false);
+  public final SimpleListProperty<UtilityNetwork> utilityNetworksProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleListProperty<UtilityNamedTraceConfiguration> traceConfigurationsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleListProperty<UtilityNetworkTraceStartingPoint> startingPointsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleListProperty<UtilityNetworkTraceOperationResult> traceResultsProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+  public final SimpleObjectProperty<UtilityNetwork> selectedUtilityNetworkProperty = new SimpleObjectProperty<>();
+  public final SimpleObjectProperty<UtilityNamedTraceConfiguration> selectedTraceConfigurationProperty = new SimpleObjectProperty<>();
+  public final SimpleStringProperty traceNameProperty = new SimpleStringProperty();
 
   @FXML ProgressIndicator utilityNetworkLoadingProgressIndicator;
   // displays if no utility networks are found
@@ -162,19 +158,12 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
    * Constructor for all SkinBase instances.
    *
    * @param control The control for which this Skin should attach to.
+   * @since 100.15.0
    */
   public UtilityNetworkTraceSkin(UtilityNetworkTraceTool control) {
     super(control);
     // configure mapview related settings
     controlMapView = skinnable.getMapView();
-    callout = controlMapView.getCallout();
-    callout.setStyle("leader-position: bottom; corner-radius:0; margin:10;");
-    var calloutCustomView = new VBox(5);
-    calloutTitle.getStyleClass().add("arcgis-toolkit-java-h2");
-    calloutDetail.getStyleClass().add("arcgis-toolkit-java-h3");
-    calloutCustomView.getChildren().addAll(calloutTitle, calloutDetail);
-    callout.setCustomView(calloutCustomView);
-    callout.setOnMouseClicked(e -> callout.dismiss());
 
     // load the FXML
     FXMLLoader fxmlLoader = new FXMLLoader();
@@ -187,59 +176,92 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     }  catch (Exception e) {
       // if the FXML file fails to load, log a warning
       Logger.getLogger(UtilityNetworkTraceSkin.class.getName()).warning(
-        "Failed to load the FXML file. UtilityNetworkTraceSkin will not be displayed.");
+        "Failed to load the FXML file. UtilityNetworkTraceSkin will not be displayed.\n" + e);
     }
   }
 
   /**
-   * Returns the runTraceButton.
+   * Takes an event handler for run trace events and sets to the runTraceButton.
    *
-   * @return the runTraceButton
+   * @param eventHandler the event handler for run trace events
    * @since 100.15.0
    */
-  public Button getRunTraceButton() { return runTraceButton; }
+  public void setRunTraceEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (runTraceButton != null) {
+      runTraceButton.setOnAction(eventHandler);
+    }
+  }
 
   /**
-   * Returns the getCancelTraceInProgressButton.
+   * Takes an event handler for cancel trace events and sets to the cancelTraceInProgressButton.
    *
-   * @return the getCancelTraceInProgressButton
+   * @param eventHandler the event handler for cancel trace events
    * @since 100.15.0
    */
-  public Button getCancelTraceInProgressButton() { return cancelTraceInProgressButton; }
+  public void setCancelTraceEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (cancelTraceInProgressButton != null) {
+      cancelTraceInProgressButton.setOnAction(eventHandler);
+    }
+  }
 
   /**
-   * Returns the getCancelIdentifyStartingPointsButton.
+   * Takes an event handler for cancel identify starting point events and sets to the
+   * cancelIdentifyStartingPointsButton.
    *
-   * @return the getCancelIdentifyStartingPointsButton
+   * @param eventHandler the event handler for cancel identify starting point events
    * @since 100.15.0
    */
-  public Button getCancelIdentifyStartingPointsButton() { return cancelIdentifyStartingPointsButton; }
+  public void setCancelIdentifyStartingPointsEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (cancelIdentifyStartingPointsButton != null) {
+      cancelIdentifyStartingPointsButton.setOnAction(eventHandler);
+    }
+  }
 
   /**
-   * Returns the getClearResultsButton.
+   * Takes an event handler for clear results events and sets to the clearResultsButton.
    *
-   * @return the getClearResultsButton
+   * @param eventHandler the event handler for clear results events
    * @since 100.15.0
    */
-  public Button getClearResultsButton() { return clearResultsButton; }
-
+  public void setClearResultsEventHandler(EventHandler<ActionEvent> eventHandler) {
+    if (clearResultsButton != null) {
+      clearResultsButton.setOnAction(eventHandler);
+    }
+  }
   /**
    * Returns the value of the variable used to define the height of the cells used in the starting points ListView.
    *
    * @return the height
    * @since 100.15.0
    */
-  public double getStartingPointListCellHeight() { return STARTING_POINT_LIST_CELL_HEIGHT; }
+  public double getStartingPointListCellHeight() {
+    return STARTING_POINT_LIST_CELL_HEIGHT;
+  }
 
   /**
-   * Configures the UI.
+   * Configures the UI by setting up relationships between UI controls and the properties and data that determine
+   * what is displayed and what interactions occur.
    *
    * @since 100.15.0
    */
   private void configureUI() {
     // handle progress indicator for initial load
     utilityNetworkLoadingProgressIndicator.visibleProperty().bind(isMapAndUtilityNetworkLoadingInProgressProperty);
-    // Utility Network selection setup
+    utilityNetworkSelectionSetup();
+    traceConfigurationSelectionSetup();
+    startingPointSelectionSetup();
+    warningsSetup();
+    traceControlsSetup();
+    resultsSetup();
+    getChildren().add(root);
+  }
+
+  /**
+   * Configures the UI, listeners and properties relating to the selection of a UtilityNetwork.
+   *
+   * @since 100.15.0
+   */
+  private void utilityNetworkSelectionSetup() {
     // if there are no utility networks, display an error message and don't display the tabpane
     utilityNetworksNotFoundVBox.visibleProperty().bind(Bindings.and(utilityNetworksProperty.emptyProperty(), isMapAndUtilityNetworkLoadingInProgressProperty.not()));
     // if there are utility networks, display the tabpane and don't display the error message
@@ -269,8 +291,14 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         utilityNetworkSelectionComboBox.getSelectionModel().select(newValue);
       }
     }));
+  }
 
-    // Trace Configuration selection setup
+  /**
+   * Configures the UI, listeners and properties relating to the selection of a UtilityNamedTraceConfiguration.
+   *
+   * @since 100.15.0
+   */
+  private void traceConfigurationSelectionSetup() {
     // only display the trace configuration settings when there is a utility network selected
     traceConfigVBox.visibleProperty().bind(selectedUtilityNetworkProperty.isNotNull());
 
@@ -296,9 +324,14 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         traceConfigComboBox.getSelectionModel().select(newValue);
       }
     }));
+  }
 
-    // Starting Point selection setup
-
+  /**
+   * Configures the UI, listeners and properties relating to the selection of starting points.
+   *
+   * @since 100.15.0
+   */
+  private void startingPointSelectionSetup() {
     // only display the starting points listview and remove button if there are any
     startingPointsListView.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
     clearStartingPointsButton.visibleProperty().bind(Bindings.isNotEmpty(startingPointsProperty));
@@ -315,19 +348,6 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
     // display the starting points placeholder label if starting points are being added
     startingPointsPlaceholder.visibleProperty().bind(skinnable.isAddingStartingPointsProperty());
 
-    // link the callout content to the starting point currently selected in the list view
-    startingPointsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null) {
-        calloutTitle.setText(newValue.getUtilityElement().getNetworkSource().getName());
-        calloutDetail.setText(newValue.getUtilityElement().getAssetGroup().getName());
-        callout.showCalloutAt(newValue.getGraphic().getGeometry().getExtent().getCenter());
-      } else {
-        calloutTitle.setText("");
-        calloutDetail.setText("");
-        callout.dismiss();
-      }
-    });
-
     // configure the UI when an identify is in progress
     isIdentifyInProgressProperty.addListener((observable, oldValue, newValue) -> {
       if (newValue) {
@@ -338,19 +358,53 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
         newTraceBorderPane.setVisible(true);
       }
     });
+  }
 
+  /**
+   * Configures the UI relating to the display of warnings.
+   *
+   * @since 100.15.0
+   */
+  private void warningsSetup() {
     // only show warning if there are insufficient starting points
     insufficientStartingPointsWarningHBox.visibleProperty().bind(insufficientStartingPointsProperty);
-
     // only show warning if there are above the minimum starting points
     aboveMinStartingPointsWarningHBox.visibleProperty().bind(aboveMinimumStartingPointsProperty);
+  }
 
+  /**
+   * Configures the UI, listeners and properties relating to the running of a trace.
+   *
+   * @since 100.15.0
+   */
+  private void traceControlsSetup() {
     // bind the trace name to the value in the text field
     traceNameProperty.bind(traceNameTextField.textProperty());
 
     // only enable the trace button if trace is enabled
     runTraceButton.disableProperty().bind(enableTraceProperty.not());
 
+    // configure the UI for when a trace is running
+    isTraceInProgressProperty.addListener(((observable, oldValue, newValue) -> {
+      if (newValue) {
+        tabPane.getSelectionModel().select(resultsTab);
+        newTraceTab.setDisable(true);
+        resultsVBox.setVisible(false);
+        traceInProgressVBox.setVisible(true);
+      } else {
+        resultsVBox.setVisible(true);
+        traceInProgressVBox.setVisible(false);
+        newTraceTab.setDisable(false);
+      }
+    }));
+  }
+
+  /**
+   * Configures the UI, listeners and properties relating to the display of results.
+   *
+   * @since 100.15.0
+   */
+  private void resultsSetup() {
     // only show the results tab when there are results and/or a result is in progress
     noResultsFoundVBox.visibleProperty().bind(Bindings.and(isTraceInProgressProperty.not(), traceResultsProperty.emptyProperty()));
 
@@ -374,36 +428,22 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
       }
     });
 
-    // configure the UI for when a trace is running
-    isTraceInProgressProperty.addListener(((observable, oldValue, newValue) -> {
-      if (newValue) {
-        tabPane.getSelectionModel().select(resultsTab);
-        newTraceTab.setDisable(true);
-        resultsVBox.setVisible(false);
-        traceInProgressVBox.setVisible(true);
-      } else {
-        resultsVBox.setVisible(true);
-        traceInProgressVBox.setVisible(false);
-        newTraceTab.setDisable(false);
-      }
-    }));
-
     // configure the clear results button and only display when there are trace results
     clearResultsButton.setOnAction(e -> traceResultsProperty.clear());
     clearResultsButton.visibleProperty().bind(Bindings.isNotEmpty(traceResultsProperty));
-
-    getChildren().add(root);
   }
 
   /**
    * Returns the Tab that is displaying the data for the provided result.
    *
-   * @return the Tab
+   * @return the Tab. Null if no Tab is found.
    * @since 100.15.0
    */
   private Tab findTabForResult(UtilityNetworkTraceOperationResult result) {
-    return resultsTabPane.getTabs().stream()
-      .filter(c -> ((UtilityNetworkTraceOperationResultView) c).getResult() == result).findFirst().orElse(null);
+    return resultsTabPane.getTabs()
+      .stream()
+      .map(UtilityNetworkTraceOperationResultView.class::cast)
+      .filter(t -> t.getResult() == result).findFirst().orElse(null);
   }
 
   /**
@@ -417,44 +457,35 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
   }
 
   /**
-   * Handles clicks on the addStartingPointsButton.
+   * Handles actions on the addStartingPointsButton.
    *
-   * @param mouseEvent the mouse event captured by the click
    * @since 100.15.0
    */
   @FXML
-  private void handleAddStartingPointButtonClicked(MouseEvent mouseEvent) {
-    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-      skinnable.isAddingStartingPointsProperty().set(true);
-    }
+  private void handleAddStartingPointButton() {
+    skinnable.isAddingStartingPointsProperty().set(true);
   }
 
   /**
-   * Handles clicks on the clearStartingPointsButton.
+   * Handles actions on the clearStartingPointsButton.
    *
-   * @param mouseEvent the mouse event captured by the click
    * @since 100.15.0
    */
   @FXML
-  private void handleClearStartingPointsButtonClicked(MouseEvent mouseEvent) {
-    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-      startingPointsProperty.clear();
-    }
+  private void handleClearStartingPointsButton() {
+    startingPointsProperty.clear();
   }
 
   /**
-   * Handles clicks on the cancelAddStartingPointsButton.
+   * Handles actions on the cancelAddStartingPointsButton.
    *
-   * @param mouseEvent the mouse event captured by the click
    * @since 100.15.0
    */
   @FXML
-  private void handleCancelAddStartingPointsButtonClicked(MouseEvent mouseEvent) {
-    if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.isStillSincePress()) {
-      skinnable.isAddingStartingPointsProperty().set(false);
-      if (traceResultsProperty.isEmpty()) {
-        tabPane.getSelectionModel().select(newTraceTab);
-      }
+  private void handleCancelAddStartingPointsButton() {
+    skinnable.isAddingStartingPointsProperty().set(false);
+    if (traceResultsProperty.isEmpty()) {
+      tabPane.getSelectionModel().select(newTraceTab);
     }
   }
 
