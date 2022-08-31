@@ -339,8 +339,18 @@ public class UtilityNetworkTraceOperationResult {
    * @return true if there are graphic or element or function results, false otherwise
    * @since 100.15.0
    */
-  public boolean hasAnyResults() {
+  public boolean hasResults() {
     return !resultsGraphicsOverlay.getGraphics().isEmpty() || !elementResults.isEmpty() || !functionResults.isEmpty();
+  }
+
+  /**
+   * Validates whether the result failed with an Exception.
+   *
+   * @return true if there is an Exception, false otherwise
+   * @since 100.15.0
+   */
+  public boolean hasException() {
+    return exception != null;
   }
 
   /**
