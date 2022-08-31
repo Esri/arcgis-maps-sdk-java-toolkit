@@ -224,6 +224,7 @@ public class OverviewMap extends Control {
   /**
    * Sets the value used to scale the OverviewMap compared to the geoView. The default is 25.0.
    *
+   * @param scaleFactor the scale factor to set
    * @since 100.14.0
    */
   public void setScaleFactor(double scaleFactor) {

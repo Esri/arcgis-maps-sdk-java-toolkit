@@ -2,16 +2,14 @@ plugins {
   id "java-library"
   id "idea"
   id "eclipse"
-  id 'org.openjfx.javafxplugin' version '0.0.8'
+  id 'org.openjfx.javafxplugin' version '0.0.13'
   id "com.jfrog.artifactory" version "4.26.1"
   id "maven-publish"
 }
 
 javafx {
-  version = "11.0.2"
-  modules = [
-    'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media'
-  ]
+  version = "17.0.2"
+  modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media']
 }
 
 group = GROUP
@@ -111,5 +109,5 @@ artifactory {
 }
 
 wrapper {
-  gradleVersion = '7.3.3'
+  gradleVersion = '7.5.1'
 }

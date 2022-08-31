@@ -51,41 +51,48 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
- * <p>A skin for displaying a {@link FeatureTemplatePicker} with tile panes. Feature template groups correspond to
- * tile panes and feature template items correspond to toggle buttons within the tile panes.</p>
+ * <p>
+ * A skin for displaying a {@link FeatureTemplatePicker} with tile panes. Feature template groups correspond to
+ * tile panes and feature template items correspond to toggle buttons within the tile panes.
  *
- * <p> If the picker's orientation is horizontal, tile panes will be aligned left to right. If vertical, tile panes
- * are aligned top to bottom.</p>
+ * <p>
+ * If the picker's orientation is horizontal, tile panes will be aligned left to right. If vertical, tile panes
+ * are aligned top to bottom.
  *
- * <p>The symbol size determines the height and width in dp of the symbol swatch. Toggle buttons will have a
- * preferred size of 2 * symbol size. Template names which overflow this size will be clipped with ellipsis.</p>
+ * <p>
+ * The symbol size determines the height and width in dp of the symbol swatch. Toggle buttons will have a
+ * preferred size of 2 * symbol size. Template names which overflow this size will be clipped with ellipsis.
  *
- * <p>The following css selectors can be used to style the picker:</p>
+ * <p>
+ * The following css selectors can be used to style the picker:
  *
  * <ul>
  * <li>.feature-template-picker: styles the content node of the scroll pane</li>
  * <li>.feature-template-group: styles the vbox containing the feature template group label and tile pane</li>
  * <li>.tile-pane: style the tile pane in a feature template group</li>
- * <li>.feature-template-item: styles the toggle button</li></p>
+ * <li>.feature-template-item: styles the toggle button</li>
  * </ul>
  *
- * <p>A "horizontal" pseudo class is added to the template picker when its orientation is horizontal. The following
+ * <p>
+ * A "horizontal" pseudo class is added to the template picker when its orientation is horizontal. The following
  * snippet shows a selector for applying a style to feature template groups only when the picker has a horizontal
- * orientation:</p>
+ * orientation:
  * <pre>
  * .feature-template-picker:horizontal .feature-template-group {
  *
  * }
  * </pre>
  *
- * <p>To hide feature template group labels:</p>
+ * <p>
+ * To hide feature template group labels:
  * <pre>
- * .feature-template-group > .label {
+ * .feature-template-group .label {
  *   visibility: hidden;
  * }
  * </pre>
  *
- * <p>To hide feature template item names:</p>
+ * <p>
+ * To hide feature template item names:
  * <pre>
  * .feature-template-item {
  *   -fx-content-display: graphic-only;
