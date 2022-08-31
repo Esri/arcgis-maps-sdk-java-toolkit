@@ -1,17 +1,17 @@
 /*
- COPYRIGHT 1995-2022 ESRI
-
- TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
- Unpublished material - all rights reserved under the
- Copyright Laws of the United States.
-
- For additional information, contact:
- Environmental Systems Research Institute, Inc.
- Attn: Contracts Dept
- 380 New York Street
- Redlands, California, USA 92373
-
- email: contracts@esri.com
+ * Copyright 2022 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.esri.arcgisruntime.toolkit;
@@ -172,6 +172,7 @@ public class FloorFilter extends Control {
   /**
    * Gets the selection mode. Default is AutomaticSelectionMode.ALWAYS.
    *
+   * @return the automatic selection mode
    * @since 100.14.0
    */
   public AutomaticSelectionMode getAutomaticSelectionMode() {
@@ -182,6 +183,7 @@ public class FloorFilter extends Control {
    * Sets the selection mode; defines how the floor filter updates its selection as the user navigated the connected
    * GeoView.
    *
+   * @param selectionMode the automatic selection mode to set
    * @throws NullPointerException if the selection mode is null
    * @since 100.14.0
    */
