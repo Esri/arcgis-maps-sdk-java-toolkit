@@ -13,6 +13,7 @@ The latest version of the ArcGIS Runtime API for Java Toolkit features the follo
 - Floor Filter: Shows sites and facilities, and enables toggling the visibility of levels on floor aware maps and scenes.
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
+- Utility Network Trace Tool: Use named trace configurations defined in a web map to perform connected trace operations and compare results.
 
 ## Requirements
 
@@ -55,7 +56,7 @@ ext {
 
 javafx {
     version = "11.0.2"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 compileJava.options.encoding = 'UTF-8'

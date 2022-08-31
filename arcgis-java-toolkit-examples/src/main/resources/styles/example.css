@@ -1,7 +1,6 @@
 /* Stylesheet containing specific styles for an Example View */
 
 /* Colors and themes taken from Esri Calcite Web */
-/* https://esri.github.io/calcite-web */
 * {
     -calcite-ui-brand: #007AC2;
     -calcite-ui-brand-hover: #00619B;
@@ -55,11 +54,20 @@
     -fx-wrap-text: true;
 }
 
-/* Other styles */
+.color-picker {
+    -fx-min-height: 35;
+    -fx-max-width: Infinity;
+}
+
+.color-picker .arrow-button {
+    -fx-padding: 10;
+}
 
 .titled-pane > .title {
     -fx-font-size: 16;
 }
+
+/* Other styles */
 
 .example-stackpane {
     -fx-border-color: black;
