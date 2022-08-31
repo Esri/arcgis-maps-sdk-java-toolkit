@@ -77,7 +77,7 @@ public class ExampleUtils {
         vBox.setAlignment(Pos.TOP_LEFT);
         // set a heading using the example name
         Label label = new Label(exampleName + " Settings");
-        label.getStyleClass().add("h3");
+        label.getStyleClass().add("arcgis-toolkit-java-h3");
         vBox.getChildren().add(label);
         // for each provided setting add a styleclass and add to the VBox
         settings.forEach(node -> {
