@@ -1,0 +1,75 @@
+/* Stylesheet containing styles applied to the Utility Network tool in a functional capacity */
+* {
+    -utility-network-view-trash-icon-svg: "M12.854 4h1.003l-.79 11.071a1.004 1.004 0 0 1-.999.929H3.932a1.004 1.004 0 0 1-.998-.93L2.143 4h1.003l.786 11h8.136zm-9.78-1H1V2h4V1a1.001 1.001 0 0 1 1-1h4a1.001 1.001 0 0 1 1 1v1h4v1H3.074zM6 2h4V1H6zm3.5 11a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-1 0v7a.5.5 0 0 0 .5.5zm-3 0a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-1 0v7a.5.5 0 0 0 .5.5";
+    -utility-network-view-trash-icon-color: black;
+    -utility-network-view-zoom-icon-svg: "M15.293 16L12 12.707V15h-1v-4h4v1h-2.293L16 15.293zm0-16L12 3.293V1h-1v4h4V4h-2.293L16 .707zM8 6a2 2 0 1 1-2 2 2 2 0 0 1 2-2zm0 1a1 1 0 1 0 1 1 1 1 0 0 0-1-1zm-7 5h2.293L0 15.293.707 16 4 12.707V15h1v-4H1zm3-8.707L.707 0 0 .707 3.293 4H1v1h4V1H4z";
+    -utility-network-view-zoom-icon-color: black;
+    -utility-network-view-warning-icon-svg: "M3.929 29h25.148a1.897 1.897 0 0 0 1.67-2.797L18.217 2.951a1.897 1.897 0 0 0-3.337-.005L2.261 26.198A1.897 1.897 0 0 0 3.93 29zm-.788-2.324L15.759 3.423a.896.896 0 0 1 1.577.002l12.531 23.253a.898.898 0 0 1-.79 1.322H3.93a.897.897 0 0 1-.788-1.324zM15.5 24.5a1 1 0 1 1 1 1 1.002 1.002 0 0 1-1-1zM17 21h-1V10h1z";
+    -utility-network-view-warning-icon-color: #EDD317;
+    -utility-network-view-info-icon-svg: "M16.5 9.5a1 1 0 1 1 1-1 1.002 1.002 0 0 1-1 1zM17 23V12h-2v1h1v10h-1v1h3v-1zm12.8-6.5A13.3 13.3 0 1 1 16.5 3.2a13.3 13.3 0 0 1 13.3 13.3zm-1 0a12.3 12.3 0 1 0-12.3 12.3 12.314 12.314 0 0 0 12.3-12.3z";
+    -utility-network-view-info-icon-color: #00619B;
+    -utility-network-view-error-icon-svg: "M16.5 24.5a1 1 0 1 1 1-1 1.002 1.002 0 0 1-1 1zM16 20h1V9h-1zm13.8-3.5A13.3 13.3 0 1 1 16.5 3.2a13.3 13.3 0 0 1 13.3 13.3zm-1 0a12.3 12.3 0 1 0-12.3 12.3 12.314 12.314 0 0 0 12.3-12.3z";
+    -utility-network-view-error-icon-color: #D83020;
+    -utility-network-view-border-color: #CACACA;
+    -utility-network-view-background-color: #FFFFFF;
+}
+
+.utility-network-view {
+    -fx-border-color: -utility-network-view-border-color;
+    -fx-border-width: 1;
+    -fx-background-color: -utility-network-view-background-color;
+}
+
+.utility-network-view .arcgis-toolkit-java-trash-icon {
+     -fx-shape: -utility-network-view-trash-icon-svg;
+     -size: 20;
+     -fx-background-color: -utility-network-view-trash-icon-color;
+     -fx-min-height: -size;
+     -fx-min-width: -size;
+     -fx-max-height: -size;
+     -fx-max-width: -size;
+}
+
+.utility-network-view .arcgis-toolkit-java-zoom-icon {
+    -fx-shape: -utility-network-view-zoom-icon-svg;
+    -fx-background-color: -utility-network-view-zoom-icon-color;
+    -size: 20;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+}
+
+.utility-network-view .arcgis-toolkit-java-warning-icon {
+     -fx-shape: -utility-network-view-warning-icon-svg;
+     -size: 30;
+     -fx-background-color: -utility-network-view-warning-icon-color;
+     -fx-min-height: -size;
+     -fx-min-width: -size;
+     -fx-max-height: -size;
+     -fx-max-width: -size;
+}
+
+.utility-network-view .arcgis-toolkit-java-info-icon {
+     -fx-shape: -utility-network-view-info-icon-svg;
+     -size: 30;
+     -fx-background-color: -utility-network-view-info-icon-color;
+     -fx-min-height: -size;
+     -fx-min-width: -size;
+     -fx-max-height: -size;
+     -fx-max-width: -size;
+}
+
+.utility-network-view .arcgis-toolkit-java-error-icon {
+     -fx-shape: -utility-network-view-error-icon-svg;
+     -size: 30;
+     -fx-background-color: -utility-network-view-error-icon-color;
+     -fx-min-height: -size;
+     -fx-min-width: -size;
+     -fx-max-height: -size;
+     -fx-max-width: -size;
+}
+
+.utility-network-view Label {
+    -fx-wrap-text:true;
+}

@@ -21,6 +21,7 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.toolkit.examples.CompassExample;
 import com.esri.arcgisruntime.toolkit.examples.FloorFilterExample;
 import com.esri.arcgisruntime.toolkit.examples.OverviewMapExample;
+import com.esri.arcgisruntime.toolkit.examples.UtilityNetworkTraceToolExample;
 import com.esri.arcgisruntime.toolkit.model.Example;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -120,7 +121,8 @@ public class ExamplesAppController {
         Example compassExample = new CompassExample();
         Example floorFilterExample = new FloorFilterExample();
         Example overviewMapExample = new OverviewMapExample();
-        return List.of(compassExample, floorFilterExample, overviewMapExample);
+        Example utilityNetworkTraceToolExample = new UtilityNetworkTraceToolExample();
+        return List.of(compassExample, floorFilterExample, overviewMapExample, utilityNetworkTraceToolExample);
     }
 
     /**
@@ -139,8 +141,8 @@ public class ExamplesAppController {
             var example = examples.get(indexOfExample);
             // HBox container for each example
             HBox hbox = new HBox(15);
-            hbox.getStyleClass().add("panel");
-            hbox.getStyleClass().add("panel-white");
+            hbox.getStyleClass().add("arcgis-toolkit-java-panel");
+            hbox.getStyleClass().add("arcgis-toolkit-java-panel-white");
             hbox.setId("example-grid-pane-item");
             hbox.setAlignment(Pos.CENTER_LEFT);
             // on clicking the HBox the example will be selected
@@ -157,14 +159,13 @@ public class ExamplesAppController {
             }
             // VBox containing the name and description for the example
             var labelVBox = new VBox(8);
-            labelVBox.getStyleClass().add("panel-no-padding, panel-no-border, panel-white");
+            labelVBox.getStyleClass().add(
+                    "arcgis-toolkit-java-panel-no-padding, arcgis-toolkit-java-panel-no-border, arcgis-toolkit-java-panel-white");
             labelVBox.setAlignment(Pos.CENTER_LEFT);
             var componentName = new Label(example.getName());
-            componentName.getStyleClass().add("h2");
-            componentName.getStyleClass().add("blue-text");
-            componentName.getStyleClass().add("label-wrap-text");
+            componentName.getStyleClass().add("arcgis-toolkit-java-h2");
+            componentName.getStyleClass().add("arcgis-toolkit-java-blue-text");
             var componentDescription = new Label(example.getDescription());
-            componentDescription.getStyleClass().add("label-wrap-text");
             labelVBox.getChildren().addAll(componentName, componentDescription);
             // add child components to the HBox
             hbox.getChildren().addAll(imageView, labelVBox);

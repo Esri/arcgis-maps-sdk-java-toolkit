@@ -13,6 +13,7 @@ The latest version of the ArcGIS Runtime API for Java Toolkit features the follo
 - Floor Filter: Shows sites and facilities, and enables toggling the visibility of levels on floor aware maps and scenes.
 - Overview Map: Indicates the viewpoint of the main map/scene view.
 - Scalebar: Shows a ruler with units proportional to the map's current scale.
+- Utility Network Trace Tool: Use named trace configurations defined in a web map to perform connected trace operations and compare results.
 
 ## Requirements
 
@@ -26,6 +27,7 @@ The following table shows the minimum version of the SDK compatible with the too
 |-------------|-----------------|
 | 100.2.1     | 100.2.1         |
 | 100.14.0    | 100.14.0        |
+| 100.15.0    | 100.15.0        |
 
 ### API Key requirements
 
@@ -48,14 +50,14 @@ plugins {
 }
 
 // Replace with version number of ArcGIS SDK you are using in your app, such as:
-// arcgisVersion = '100.14.0'. See table below for SDK Versions that support the toolkit.
+// arcgisVersion = '100.15.0'. See table below for SDK Versions that support the toolkit.
 ext {
-  arcgisVersion = '100.14.0'
+  arcgisVersion = '100.15.0'
 }
 
 javafx {
     version = "11.0.2"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -76,7 +78,7 @@ dependencies {
     implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
     natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
     natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
-    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.14.0'
+    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.15.0'
 }
 ```
 
