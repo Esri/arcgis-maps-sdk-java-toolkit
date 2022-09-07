@@ -24,11 +24,11 @@ import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
  * @since 100.15.0
  */
 public class CompassExampleLauncher {
-    public static void main(String[] args) {
-        // configure the API Key
-        // authentication with an API key or named user is required to access basemaps and other location services
-        ExampleUtils.configureAPIKeyForRunningStandAloneExample();
-        // run the app
-        CompassExample.main(args);
-    }
+  public static void main(String[] args) {
+    // configure the API Key
+    // authentication with an API key or named user is required to access basemaps and other location services
+    ExampleUtils.configureAPIKeyForRunningStandAloneExample();
+    // run the app
+    CompassExample.main(args);
+  }
 }

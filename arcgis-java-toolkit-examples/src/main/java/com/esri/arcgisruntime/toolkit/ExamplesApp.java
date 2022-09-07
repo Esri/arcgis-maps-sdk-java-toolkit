@@ -32,41 +32,41 @@ import javafx.stage.Stage;
  */
 public class ExamplesApp extends Application {
 
-    private ExamplesAppController controller;
+  private ExamplesAppController controller;
 
-    @Override
-    public void start(Stage primaryStage) {
-        // loads the FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/app.fxml"));
-        try {
-            Parent root = loader.load();
-            controller = loader.getController();
-            // sets the stage title
-            primaryStage.setTitle("ArcGIS Runtime API for Java Toolkit - Examples");
-            // on initial launch the stage is set to 75% of the screen size
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            primaryStage.setWidth(screenBounds.getWidth() * 0.75);
-            primaryStage.setHeight(screenBounds.getHeight() * .75);
+  @Override
+  public void start(Stage primaryStage) {
+    // loads the FXML
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/app.fxml"));
+    try {
+      Parent root = loader.load();
+      controller = loader.getController();
+      // sets the stage title
+      primaryStage.setTitle("ArcGIS Runtime API for Java Toolkit - Examples");
+      // on initial launch the stage is set to 75% of the screen size
+      Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+      primaryStage.setWidth(screenBounds.getWidth() * 0.75);
+      primaryStage.setHeight(screenBounds.getHeight() * .75);
 
-            // configures the scene and sets it to the stage
-            var scene = new Scene(root);
-            // individual stylesheets can be commented out for testing purposes
-            scene.getStylesheets().add("/styles/style.css");
-            scene.getStylesheets().add("/styles/app.css");
-            scene.getStylesheets().add("/styles/example.css");
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+      // configures the scene and sets it to the stage
+      var scene = new Scene(root);
+      // individual stylesheets can be commented out for testing purposes
+      scene.getStylesheets().add("/styles/style.css");
+      scene.getStylesheets().add("/styles/app.css");
+      scene.getStylesheets().add("/styles/example.css");
+      primaryStage.setScene(scene);
+      primaryStage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-    @Override
-    public void stop() {
-        controller.terminate();
-    }
+  @Override
+  public void stop() {
+    controller.terminate();
+  }
 }
