@@ -1,0 +1,113 @@
+plugins {
+  id "java-library"
+  id "idea"
+  id "eclipse"
+  id 'org.openjfx.javafxplugin' version '0.0.13'
+  id "com.jfrog.artifactory" version "4.26.1"
+  id "maven-publish"
+}
+
+javafx {
+  version = "17.0.2"
+  modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media']
+}
+
+group = GROUP
+version = VERSION
+archivesBaseName = "arcgis-java-toolkit"
+
+idea.module.downloadJavadoc = true
+eclipse.classpath.downloadJavadoc = true
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+  mavenCentral()
+  maven {
+    url = 'https://esri.jfrog.io/artifactory/arcgis'
+  }
+  maven {
+    url = 'https://olympus.esri.com/artifactory/arcgisruntime-repo'
+  }
+}
+
+sourceSets {
+  main {
+    resources.srcDirs = ['src/main/java']
+  }
+  integrationTest {
+    java.srcDirs = ['src/integration-test/java']
+    compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+    resources.srcDirs = ["src/integration-test/resources"]
+    runtimeClasspath += output + compileClasspath
+  }
+}
+
+dependencies {
+  implementation "com.esri.arcgisruntime:arcgis-java:$SDKVERSION"
+
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
+
+  testImplementation "org.testfx:testfx-core:4.0.15-alpha"
+  testImplementation "org.testfx:testfx-junit5:4.0.15-alpha"
+  testImplementation "org.hamcrest:hamcrest:2.1"
+}
+
+task integrationTest(type: Test) {
+  description = 'Runs the integration tests.'
+  group = 'verification'
+  testClassesDirs = sourceSets.integrationTest.output.classesDirs
+  classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+tasks.withType(Test.class) {
+  useJUnitPlatform()
+}
+
+task javadocJar(type: Jar) {
+  dependsOn javadoc
+  description = "Creates a javadoc jar."
+  group = "Documentation"
+  archiveClassifier.set('javadoc')
+  from javadoc.destinationDir
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId = archivesBaseName
+      from components.java
+      pom {
+        licenses {
+          license {
+            name = 'Esri License Agreement, E204'
+            url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
+            distribution = 'repo'
+          }
+        }
+      }
+    }
+  }
+}
+
+artifactory {
+  contextUrl = ARTIFACTORY_URL
+  publish {
+    repository {
+      repoKey = REPO_KEY
+      username = ARTIFACTORY_USER
+      password = ARTIFACTORY_PASSWORD
+    }
+    defaults {
+      publications('mavenJava')
+    }
+  }
+  resolve {
+    repoKey = 'arcgisruntime-repo'
+  }
+}
+
+wrapper {
+  gradleVersion = '7.5.1'
+}
