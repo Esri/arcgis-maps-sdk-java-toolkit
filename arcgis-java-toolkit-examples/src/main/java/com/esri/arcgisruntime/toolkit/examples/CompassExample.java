@@ -74,7 +74,7 @@ public class CompassExample extends Application implements Example {
   public CompassExample() {
     // configure MapView tab
     mapView.setMap(new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY));
-    StackPane mapViewStackPane = new StackPane();
+    var mapViewStackPane = new StackPane();
     // instantiate a Compass passing in the MapView
     mapViewCompass = new Compass(mapView);
     // set the autohide property to false initially so the Compass is always visible
@@ -82,11 +82,11 @@ public class CompassExample extends Application implements Example {
     // add the MapView and Compass to the StackPane
     mapViewStackPane.getChildren().addAll(mapView, mapViewCompass);
     StackPane.setAlignment(mapViewCompass, Pos.TOP_LEFT);
-    Tab mapViewTab = ExampleUtils.createTab(mapViewStackPane, "Map");
+    var mapViewTab = ExampleUtils.createTab(mapViewStackPane, "Map");
 
     // configure SceneView tab
     sceneView.setArcGISScene(new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY));
-    StackPane sceneViewStackPane = new StackPane();
+    var sceneViewStackPane = new StackPane();
     // instantiate a Compass passing in the SceneView
     sceneViewCompass = new Compass(sceneView);
     // set the autohide property to false initially so the compass is always visible
@@ -94,7 +94,7 @@ public class CompassExample extends Application implements Example {
     // add the SceneView and Compass to the StackPane
     sceneViewStackPane.getChildren().addAll(sceneView, sceneViewCompass);
     StackPane.setAlignment(sceneViewCompass, Pos.TOP_LEFT);
-    Tab sceneViewTab = ExampleUtils.createTab(sceneViewStackPane, "Scene");
+    var sceneViewTab = ExampleUtils.createTab(sceneViewStackPane, "Scene");
 
     // add both tabs to the list
     tabs.addAll(List.of(mapViewTab, sceneViewTab));
@@ -116,13 +116,13 @@ public class CompassExample extends Application implements Example {
     List<Node> compassSettings = new ArrayList<>();
 
     // Auto Hide
-    HBox autoHideSettings = new HBox(10);
+    var autoHideSettings = new HBox(10);
     autoHideSettings.setAlignment(Pos.CENTER_LEFT);
-    Label autohideLabel = new Label("Toggle auto-hide:");
-    ToggleGroup autoHideToggleGroup = new ToggleGroup();
-    RadioButton trueAutoHide = new RadioButton();
+    var autohideLabel = new Label("Toggle auto-hide:");
+    var autoHideToggleGroup = new ToggleGroup();
+    var trueAutoHide = new RadioButton();
     trueAutoHide.setText("True");
-    RadioButton falseAutoHide = new RadioButton();
+    var falseAutoHide = new RadioButton();
     falseAutoHide.setText("False");
     trueAutoHide.setToggleGroup(autoHideToggleGroup);
     falseAutoHide.setToggleGroup(autoHideToggleGroup);
@@ -139,22 +139,22 @@ public class CompassExample extends Application implements Example {
     compassSettings.add(autoHideSettings);
 
     // Adjust Heading
-    VBox headingSettings = new VBox();
-    Label headingLabel = new Label("Heading:");
-    Label headingText = new Label("Use 'A' and 'D' on your keyboard to rotate the MapView / SceneView. The " +
+    var headingSettings = new VBox();
+    var headingLabel = new Label("Heading:");
+    var headingText = new Label("Use 'A' and 'D' on your keyboard to rotate the MapView / SceneView. The " +
       "Compass will follow. Click on the Compass to reset heading to 0.0 (North).");
     headingSettings.getChildren().addAll(headingLabel, headingText);
     compassSettings.add(headingSettings);
 
     // Layout settings
-    TitledPane layoutTitledPane = new TitledPane();
+    var layoutTitledPane = new TitledPane();
     layoutTitledPane.setExpanded(false);
     layoutTitledPane.setText("Layout settings");
-    VBox layoutVBox = new VBox(5);
+    var layoutVBox = new VBox(5);
     layoutTitledPane.setContent(layoutVBox);
     // resize
-    Label sizeLabel = new Label("Resize:");
-    Slider sizeSlider = new Slider(0, 500, 100);
+    var sizeLabel = new Label("Resize:");
+    var sizeSlider = new Slider(0, 500, 100);
     sizeSlider.setShowTickLabels(true);
     sizeSlider.setMajorTickUnit(500);
     sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -164,7 +164,7 @@ public class CompassExample extends Application implements Example {
     });
     layoutVBox.getChildren().addAll(sizeLabel, sizeSlider);
     // position
-    Label positionLabel = new Label("Re-position:");
+    var positionLabel = new Label("Re-position:");
     ComboBox<Pos> positionComboBox = new ComboBox<>();
     positionComboBox.getItems().addAll(Pos.TOP_LEFT, Pos.TOP_CENTER, Pos.TOP_RIGHT, Pos.CENTER, Pos.BOTTOM_LEFT,
       Pos.BOTTOM_CENTER, Pos.BOTTOM_RIGHT);

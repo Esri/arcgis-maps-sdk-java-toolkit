@@ -117,9 +117,9 @@ public class ExamplesAppController {
    * @since 100.15.0
    */
   private List<Example> getExamples() {
-    Example compassExample = new CompassExample();
-    Example floorFilterExample = new FloorFilterExample();
-    Example utilityNetworkTraceToolExample = new UtilityNetworkTraceToolExample();
+    var compassExample = new CompassExample();
+    var floorFilterExample = new FloorFilterExample();
+    var utilityNetworkTraceToolExample = new UtilityNetworkTraceToolExample();
     return List.of(compassExample, floorFilterExample, utilityNetworkTraceToolExample);
   }
 
@@ -138,7 +138,7 @@ public class ExamplesAppController {
       int col = indexOfExample % numberOfColumns;
       var example = examples.get(indexOfExample);
       // HBox container for each example
-      HBox hbox = new HBox(15);
+      var hbox = new HBox(15);
       hbox.getStyleClass().add("arcgis-toolkit-java-panel");
       hbox.getStyleClass().add("arcgis-toolkit-java-panel-white");
       hbox.setId("example-grid-pane-item");
