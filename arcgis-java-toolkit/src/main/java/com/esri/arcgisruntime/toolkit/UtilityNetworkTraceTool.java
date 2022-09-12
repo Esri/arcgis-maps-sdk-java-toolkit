@@ -68,8 +68,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -288,7 +286,7 @@ public class UtilityNetworkTraceTool extends Control {
 
   @Override
   public String getUserAgentStylesheet() {
-    return Objects.requireNonNull(this.getClass().getResource("skins/utility-network-trace.css")).toExternalForm();
+    return Objects.requireNonNull(this.getClass().getResource("utility-network-trace.css")).toExternalForm();
   }
 
   /**

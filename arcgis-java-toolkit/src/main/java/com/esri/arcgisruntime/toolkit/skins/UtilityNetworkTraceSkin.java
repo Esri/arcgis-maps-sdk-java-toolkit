@@ -167,7 +167,7 @@ public class UtilityNetworkTraceSkin extends SkinBase<UtilityNetworkTraceTool> {
 
     // load the FXML
     FXMLLoader fxmlLoader = new FXMLLoader();
-    fxmlLoader.setLocation(getClass().getResource("utility_network_trace.fxml"));
+    fxmlLoader.setLocation(this.getClass().getResource("utility_network_trace.fxml"));
     fxmlLoader.setControllerFactory(param -> this);
     try {
       root = fxmlLoader.load();

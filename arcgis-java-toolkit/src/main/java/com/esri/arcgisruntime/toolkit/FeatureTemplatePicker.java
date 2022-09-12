@@ -110,7 +110,7 @@ public final class FeatureTemplatePicker extends Control {
 
   @Override
   public String getUserAgentStylesheet() {
-    return this.getClass().getResource("skins/feature-template-picker.css").toExternalForm();
+    return this.getClass().getResource("feature-template-picker.css").toExternalForm();
   }
 
   /**

@@ -166,7 +166,7 @@ public class FloorFilter extends Control {
 
   @Override
   public String getUserAgentStylesheet() {
-    return Objects.requireNonNull(this.getClass().getResource("skins/floor-filter.css")).toExternalForm();
+    return Objects.requireNonNull(this.getClass().getResource("floor-filter.css")).toExternalForm();
   }
 
   /**
