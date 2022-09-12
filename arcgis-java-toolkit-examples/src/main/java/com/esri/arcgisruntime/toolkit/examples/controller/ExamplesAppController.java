@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.controller;
+package com.esri.arcgisruntime.toolkit.examples.controller;
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.view.GeoView;
-import com.esri.arcgisruntime.toolkit.examples.CompassExample;
-import com.esri.arcgisruntime.toolkit.examples.FloorFilterExample;
-import com.esri.arcgisruntime.toolkit.examples.UtilityNetworkTraceToolExample;
-import com.esri.arcgisruntime.toolkit.model.Example;
+import com.esri.arcgisruntime.toolkit.examples.ExamplesApp;
+import com.esri.arcgisruntime.toolkit.examples.examples.CompassExample;
+import com.esri.arcgisruntime.toolkit.examples.examples.FloorFilterExample;
+import com.esri.arcgisruntime.toolkit.examples.examples.UtilityNetworkTraceToolExample;
+import com.esri.arcgisruntime.toolkit.examples.model.Example;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Controller for the {@link com.esri.arcgisruntime.toolkit.ExamplesApp}. This includes a header section with ComboBox
+ * A Controller for the {@link ExamplesApp}. This includes a header section with ComboBox
  * menu to select an Example to view, and also includes an initial Landing Page that displays when the app first loads
  * giving an overview of the available Examples in a GridPane layout.
  *
@@ -150,10 +151,10 @@ public class ExamplesAppController {
             imageView.setFitWidth(100);
             imageView.setFitHeight(100);
             // check if an image exists for the example and display the default if not
-            if (ExamplesAppController.class.getResource("/images/" + example.getName() + ".png") != null) {
-                imageView.setImage(new Image("/images/" + example.getName() + ".png"));
-            } else if (ExamplesAppController.class.getResource("/images/default.png") != null){
-                imageView.setImage(new Image("/images/default.png"));
+            if (ExamplesAppController.class.getResource("images/" + example.getName() + ".png") != null) {
+                imageView.setImage(new Image(String.valueOf(ExamplesAppController.class.getResource("images/" + example.getName() + ".png"))));
+            } else if (ExamplesAppController.class.getResource("images/default.png") != null){
+              imageView.setImage(new Image(String.valueOf(ExamplesAppController.class.getResource("images/default.png"))));
             }
             // VBox containing the name and description for the example
             var labelVBox = new VBox(8);
