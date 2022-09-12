@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.examples;
+package com.esri.arcgisruntime.toolkit.examples.examples;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
@@ -23,8 +23,9 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.Compass;
-import com.esri.arcgisruntime.toolkit.model.Example;
-import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
+import com.esri.arcgisruntime.toolkit.examples.ExamplesApp;
+import com.esri.arcgisruntime.toolkit.examples.model.Example;
+import com.esri.arcgisruntime.toolkit.examples.utils.ExampleUtils;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -40,8 +41,8 @@ import java.util.List;
 /**
  * An Example Class for the {@link Compass} Toolkit Component. Implements the {@link Example} interface to ensure
  * required methods are implemented. The Compass can be used on a {@link MapView} or {@link SceneView} and so a tab
- * is created for each view. The example can be viewed by running the {@link com.esri.arcgisruntime.toolkit.ExamplesApp},
- * or as a standalone app via the {@link CompassExampleLauncher} class.
+ * is created for each view. The example can be viewed by running the {@link ExamplesApp},
+ * or as a standalone app via {@link CompassExample}.
  *
  * @since 100.15.0
  */
@@ -206,7 +207,10 @@ public class CompassExample extends Application implements Example {
     }
 
     public static void main(String[] args) {
-        Application.launch(args);
+      // configure the API Key
+      // authentication with an API key or named user is required to access basemaps and other location services
+      ExampleUtils.configureAPIKeyForRunningStandAloneExample();
+      Application.launch(args);
     }
 
     @Override

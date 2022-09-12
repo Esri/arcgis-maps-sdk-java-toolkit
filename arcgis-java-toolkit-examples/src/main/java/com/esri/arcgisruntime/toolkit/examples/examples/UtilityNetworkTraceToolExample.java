@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.examples;
+package com.esri.arcgisruntime.toolkit.examples.examples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,9 @@ import com.esri.arcgisruntime.security.UserCredential;
 import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceTool;
-import com.esri.arcgisruntime.toolkit.model.Example;
-import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
+import com.esri.arcgisruntime.toolkit.examples.ExamplesApp;
+import com.esri.arcgisruntime.toolkit.examples.model.Example;
+import com.esri.arcgisruntime.toolkit.examples.utils.ExampleUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -53,8 +54,8 @@ import javafx.util.StringConverter;
 /**
  * An Example Class for the {@link UtilityNetworkTraceTool} Toolkit Component. Implements the {@link Example} interface
  * to ensure required methods are implemented. The example can be viewed by running the
- * {@link com.esri.arcgisruntime.toolkit.ExamplesApp}, or as a standalone app via the
- * {@link UtilityNetworkTraceToolExampleLauncher} class.
+ * {@link ExamplesApp}, or as a standalone app via
+ * {@link UtilityNetworkTraceToolExample}.
  *
  * @since 100.15.0
  */
@@ -290,9 +291,11 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     stylesToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue.getUserData() instanceof Boolean) {
         if ((Boolean) newValue.getUserData()) {
-          primaryStageProperty.get().getScene().getStylesheets().add("/styles/style.css");
+          primaryStageProperty.get().getScene().getStylesheets().add("/com/esri/arcgisruntime/toolkitexamples/styles" +
+            "/style.css");
         } else {
-          primaryStageProperty.get().getScene().getStylesheets().remove("/styles/style.css");
+          primaryStageProperty.get().getScene().getStylesheets().remove("/com/esri/arcgisruntime/toolkitexamples" +
+            "/styles/style.css");
         }
       }
     });

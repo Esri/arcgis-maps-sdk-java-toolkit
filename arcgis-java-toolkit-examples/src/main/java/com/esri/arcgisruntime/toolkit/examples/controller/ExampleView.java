@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.controller;
+package com.esri.arcgisruntime.toolkit.examples.controller;
 
-import com.esri.arcgisruntime.toolkit.model.Example;
+import com.esri.arcgisruntime.toolkit.examples.model.Example;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +45,7 @@ public class ExampleView extends BorderPane {
      */
     public ExampleView() {
         // load the FXML file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/example_view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("example_view.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         try {

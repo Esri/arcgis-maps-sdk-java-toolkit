@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.examples;
+package com.esri.arcgisruntime.toolkit.examples.examples;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.toolkit.FloorFilter;
-import com.esri.arcgisruntime.toolkit.model.Example;
-import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
+import com.esri.arcgisruntime.toolkit.examples.ExamplesApp;
+import com.esri.arcgisruntime.toolkit.examples.model.Example;
+import com.esri.arcgisruntime.toolkit.examples.utils.ExampleUtils;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -35,8 +36,7 @@ import java.util.List;
 /**
  * An Example Class for the {@link FloorFilter} Toolkit Component. Implements the {@link Example} interface to ensure
  * required methods are implemented. The example can be viewed by running the
- * {@link com.esri.arcgisruntime.toolkit.ExamplesApp}, or as a standalone app via the {@link FloorFilterExampleLauncher}
- * class.
+ * {@link ExamplesApp}, or as a standalone app via {@link FloorFilterExample}.
  *
  * @since 100.15.0
  */
@@ -170,7 +170,11 @@ public class FloorFilterExample extends Application implements Example {
         ExampleUtils.setupIndividualExampleStage(primaryStage, this);
     }
 
-    public static void main(String[] args) { Application.launch(args); }
+    public static void main(String[] args) {
+      // configure the API Key
+      // authentication with an API key or named user is required to access basemaps and other location services
+      ExampleUtils.configureAPIKeyForRunningStandAloneExample();
+      Application.launch(args); }
 
     @Override
     public void stop() {
