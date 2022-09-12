@@ -13,8 +13,8 @@ javafx {
 }
 
 group = GROUP
-// if VERSION property is not set via gradle, default to empty string
-version = project.findProperty("VERSION") ?: ""
+// if VERSION property is not set via gradle, default to test
+version = project.findProperty("VERSION") ?: "test"
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
