@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module com.esri.arcgisruntime.toolkit.examples.main {
+module com.esri.arcgisruntime.toolkit.examples {
   // require ArcGISRuntime module
   requires com.esri.arcgisruntime;
   // require ArcGISRuntime toolkit module
   requires com.esri.arcgisruntime.toolkit;
-  // require JavaFX modules
+  // require JavaFX modules the application uses
   requires javafx.graphics;
   requires javafx.controls;
-  requires javafx.web;
-  requires javafx.base;
   requires javafx.fxml;
-  requires javafx.media;
+
+  // require other modules the application uses
   requires java.logging;
 
   exports com.esri.arcgisruntime.toolkit.examples;
