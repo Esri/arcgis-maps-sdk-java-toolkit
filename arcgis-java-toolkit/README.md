@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The ArcGIS Runtime API for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource (licensed under the Apache License Version 2.0), so you can feel free to download or clone the code and customize to meet your requirements.
+The ArcGIS Maps SDK for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource (licensed under the Apache License Version 2.0), so you can feel free to download or clone the code and customize to meet your requirements.
 
 ## Features
 
-The latest version of the ArcGIS Runtime API for Java Toolkit features the following JavaFX components:
+The latest version of the ArcGIS Maps SDK for Java Toolkit features the following JavaFX components:
 
 - Compass: Shows the current viewpoint heading. Can be clicked to reorient the view to north.
 - Feature Template Picker: Shows feature templates for a collection of feature layers.
@@ -17,7 +17,7 @@ The latest version of the ArcGIS Runtime API for Java Toolkit features the follo
 
 ## Requirements
 
-The toolkit requires the ArcGIS Runtime API for Java. Refer to the 'Instructions' section below if you are using Gradle.
+The toolkit requires the ArcGIS Maps SDK for Java. Refer to the 'Instructions' section below if you are using Gradle.
 See [the developer guide](https://developers.arcgis.com/java/install-and-set-up/) for complete instructions and
 getting setup with the SDK.
 
@@ -62,7 +62,7 @@ javafx {
 
 compileJava.options.encoding = 'UTF-8'
 
-// Toolkit and Runtime SDK repository
+// Toolkit and ArcGIS Maps SDK for Java repository
 repositories {
     jcenter()
     maven {
