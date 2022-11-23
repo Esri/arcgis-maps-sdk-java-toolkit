@@ -16,13 +16,12 @@
 module com.esri.arcgisruntime.toolkit {
   // require ArcGISRuntime module
   requires com.esri.arcgisruntime;
-  // require JavaFX modules
-  requires javafx.graphics;
-  requires javafx.controls;
-  requires javafx.web;
-  requires javafx.base;
-  requires javafx.fxml;
-  requires javafx.media;
+  // require JavaFX modules required by this module
+  requires transitive javafx.graphics;
+  requires transitive javafx.controls;
+  requires transitive javafx.fxml;
+
+  // require other modules required by this module
   requires java.logging;
 
   exports com.esri.arcgisruntime.toolkit;
