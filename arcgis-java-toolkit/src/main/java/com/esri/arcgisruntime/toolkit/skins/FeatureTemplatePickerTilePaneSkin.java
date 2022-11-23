@@ -43,6 +43,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 
 import java.util.List;
@@ -346,7 +347,7 @@ public final class FeatureTemplatePickerTilePaneSkin extends SkinBase<FeatureTem
     Symbol symbol = featureLayer.getRenderer().getSymbol(graphic);
     // create a swatch of the symbol according to the control's symbol size property
     ListenableFuture<Image> swatch = symbol.createSwatchAsync(this.getSkinnable().getSymbolSize(),
-        this.getSkinnable().getSymbolSize(), (float) Screen.getPrimary().getOutputScaleX(), 0x00);
+        this.getSkinnable().getSymbolSize(), (float) Screen.getPrimary().getOutputScaleX(), Color.TRANSPARENT);
     // update the image view's image with the swatch
     swatch.addDoneListener(() -> {
       try {

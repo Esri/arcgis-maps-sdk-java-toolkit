@@ -95,29 +95,29 @@ public class UtilityNetworkTraceTool extends Control {
   private final SimpleBooleanProperty isAddingStartingPointsProperty = new SimpleBooleanProperty(false);
   private final SimpleBooleanProperty autoZoomToResultsProperty = new SimpleBooleanProperty(true);
   private final SimpleObjectProperty<Symbol> startingPointSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.LIMEGREEN), 20)) {
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.LIMEGREEN, 20)) {
     @Override
     public void set(Symbol newValue) {
       super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
     }
   };
   private final SimpleObjectProperty<SimpleMarkerSymbol> resultPointSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 20)) {
+    new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(0, 0, 255, 0.5), 20)) {
     @Override
     public void set(SimpleMarkerSymbol newValue) {
       super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
     }
   };
   private final SimpleObjectProperty<SimpleLineSymbol> resultLineSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleLineSymbol(SimpleLineSymbol.Style.DOT, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 5)) {
+    new SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.rgb(0, 0, 255, 0.5), 5)) {
     @Override
     public void set(SimpleLineSymbol newValue) {
       super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));
     }
   };
   private final SimpleObjectProperty<SimpleFillSymbol> resultFillSymbolProperty = new SimpleObjectProperty<>(
-    new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)),
-      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtil.colorToArgb(Color.rgb(0, 0, 255, 0.5)), 2)))  {
+    new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.rgb(0, 0, 255, 0.5),
+      new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255, 0.5), 2)))  {
     @Override
     public void set(SimpleFillSymbol newValue) {
       super.set(Objects.requireNonNull(newValue, "Symbol cannot be null"));

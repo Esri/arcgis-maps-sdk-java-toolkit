@@ -223,12 +223,9 @@ public class UtilityNetworkTraceToolExample extends Application implements Examp
     // update starting point symbol color
     var updateStartingPointSymbolColorLabel = new Label("Update starting point color");
     var colorPicker =
-      new ColorPicker(ColorUtil.argbToColor(
-        ((SimpleMarkerSymbol) utilityNetworkTraceTool.getStartingPointSymbol()).getColor()));
-    colorPicker.setOnAction(event -> {
-      ((SimpleMarkerSymbol) utilityNetworkTraceTool.getStartingPointSymbol()).setColor(
-        ColorUtil.colorToArgb(colorPicker.getValue()));
-    });
+      new ColorPicker(((SimpleMarkerSymbol) utilityNetworkTraceTool.getStartingPointSymbol()).getColor());
+    colorPicker.setOnAction(event ->
+      ((SimpleMarkerSymbol) utilityNetworkTraceTool.getStartingPointSymbol()).setColor(colorPicker.getValue()));
     propertyVBox.getChildren().addAll(updateStartingPointSymbolColorLabel, colorPicker);
 
     // map settings

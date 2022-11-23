@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.toolkit.skins;
 import java.util.concurrent.TimeUnit;
 
 import com.esri.arcgisruntime.mapping.Viewpoint;
-import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceStartingPoint;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal;
 import javafx.beans.binding.Bindings;
@@ -73,8 +72,7 @@ public class UtilityNetworkTraceStartingPointView extends BorderPane {
     symbolVBox.getChildren().add(featureSymbolImageView);
     try {
       featureSymbolImageView.setImage(
-        startingPoint.getFeatureSymbol().createSwatchAsync(
-          ColorUtil.colorToArgb(Color.TRANSPARENT), 1f).get(5, TimeUnit.SECONDS));
+        startingPoint.getFeatureSymbol().createSwatchAsync(Color.TRANSPARENT, 1f).get(5, TimeUnit.SECONDS));
     } catch (Exception ex) {
       // if the async swatch method fails, set the image to null
       featureSymbolImageView.setImage(null);
