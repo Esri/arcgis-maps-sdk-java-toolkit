@@ -6,16 +6,16 @@ plugins {
 group = 'com.esri.arcgisruntime.toolkit.examples'
 
 ext {
-    arcgisVersion = '200.0.0-3628'
+    arcgisVersion = '200.0.0-3702'
 }
 
 javafx {
     version = "17.0.2"
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media']
+    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media' ]
 }
 
 application {
-    mainModule = "com.esri.arcgisruntime.toolkit.examples.main"
+    mainModule = "com.esri.arcgisruntime.toolkit.examples"
     mainClass = "com.esri.arcgisruntime.toolkit.examples.ExamplesApp"
 }
 
