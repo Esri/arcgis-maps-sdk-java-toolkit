@@ -364,16 +364,16 @@ public class UtilityNetworkTraceOperationResult {
       var symbol = graphic.getSymbol();
       if (symbol instanceof SimpleMarkerSymbol) {
         var marker = (SimpleMarkerSymbol) symbol;
-        marker.setColor(ColorUtil.colorToArgb(color));
+        marker.setColor(color);
       } else if (symbol instanceof SimpleLineSymbol) {
         var marker = (SimpleLineSymbol) symbol;
-        marker.setColor(ColorUtil.colorToArgb(color));
+        marker.setColor(color);
       } else if (symbol instanceof SimpleFillSymbol) {
         var fillMarker = (SimpleFillSymbol) symbol;
-        fillMarker.setColor(ColorUtil.colorToArgb(color));
+        fillMarker.setColor(color);
         if (fillMarker.getOutline() instanceof SimpleLineSymbol) {
           var outline = (SimpleLineSymbol) fillMarker.getOutline();
-          outline.setColor(ColorUtil.colorToArgb(color));
+          outline.setColor(color);
         }
       }
     });

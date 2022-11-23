@@ -17,8 +17,8 @@
 package com.esri.arcgisruntime.toolkit.skins;
 
 import java.util.HashMap;
+import java.util.Objects;
 
-import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceOperationResult;
 import javafx.geometry.Insets;
@@ -285,14 +285,7 @@ public class UtilityNetworkTraceOperationResultView extends Tab {
     var error = new Label();
     var resultException = result.getException();
     var resultCause = resultException.getCause();
-    if (resultCause instanceof ArcGISRuntimeException) {
-      var runtimeException = (ArcGISRuntimeException) resultCause;
-      error.setText(runtimeException.getMessage() + " " + runtimeException.getAdditionalMessage());
-    } else if (resultCause != null) {
-      error.setText(resultCause.getMessage());
-    } else {
-      error.setText(resultException.getMessage());
-    }
+    error.setText(Objects.requireNonNullElse(resultCause, resultException).getMessage());
     errorPanel.getChildren().addAll(errorIcon, error);
     vBox.getChildren().add(errorPanel);
   }
