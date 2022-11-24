@@ -83,6 +83,14 @@ publishing {
             distribution = 'repo'
           }
         }
+        // remove JavaFX dependencies
+        withXml {
+          asNode().dependencies.'*'.findAll() {
+              it.groupId.text() == 'org.openjfx'
+          }.each {
+              it.parent().remove(it)
+          }
+        }
       }
     }
   }
