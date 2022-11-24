@@ -70,6 +70,11 @@ task javadocJar(type: Jar) {
   from javadoc.destinationDir
 }
 
+// do not generate a .module file
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
