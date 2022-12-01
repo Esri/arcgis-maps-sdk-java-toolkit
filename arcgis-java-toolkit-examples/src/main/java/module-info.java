@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 module com.esri.arcgisruntime.toolkit.examples {
-  // require ArcGISRuntime module
+  // require ArcGIS Maps SDK for Java module
   requires com.esri.arcgisruntime;
-  // require ArcGISRuntime toolkit module
+  // require ArcGIS Maps SDK for Java toolkit module
   requires com.esri.arcgisruntime.toolkit;
   // require JavaFX modules the application uses
   requires javafx.graphics;
