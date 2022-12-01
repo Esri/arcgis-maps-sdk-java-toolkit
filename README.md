@@ -9,7 +9,7 @@ There are 2 projects within this repository: the Toolkit itself, `arcgis-java-to
 ## Resources
 
 * [ArcGIS Maps SDK for Java](https://developers.arcgis.com/java/)
-* [ArcGIS Maps SDK for Native Apps Blog](https://community.esri.com/t5/arcgis-runtime-sdks-blog/bg-p/arcgis-runtime-sdks-blog)
+* [ArcGIS Maps SDKs for Native Apps Blog](https://community.esri.com/t5/arcgis-runtime-sdks-blog/bg-p/arcgis-runtime-sdks-blog)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * [twitter@esri](http://twitter.com/esri)
 
