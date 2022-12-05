@@ -27,7 +27,6 @@ module com.esri.arcgisruntime.toolkit.examples {
   requires java.logging;
 
   exports com.esri.arcgisruntime.toolkit.examples;
-  exports com.esri.arcgisruntime.toolkit.examples.examples;
   exports com.esri.arcgisruntime.toolkit.examples.controller;
   exports com.esri.arcgisruntime.toolkit.examples.utils;
   // allow FXML module access to Example FXML files

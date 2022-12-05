@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.examples.examples;
+package com.esri.arcgisruntime.toolkit.examples;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
@@ -23,7 +23,6 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.Compass;
-import com.esri.arcgisruntime.toolkit.examples.ExamplesApp;
 import com.esri.arcgisruntime.toolkit.examples.model.Example;
 import com.esri.arcgisruntime.toolkit.examples.utils.ExampleUtils;
 import javafx.application.Application;

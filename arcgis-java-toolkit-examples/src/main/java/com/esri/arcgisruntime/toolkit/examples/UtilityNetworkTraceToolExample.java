@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.examples.examples;
+package com.esri.arcgisruntime.toolkit.examples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +26,8 @@ import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.security.UserCredential;
-import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.toolkit.UtilityNetworkTraceTool;
-import com.esri.arcgisruntime.toolkit.examples.ExamplesApp;
 import com.esri.arcgisruntime.toolkit.examples.model.Example;
 import com.esri.arcgisruntime.toolkit.examples.utils.ExampleUtils;
 import javafx.application.Application;
