@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+module com.esri.arcgisruntime.toolkit {
+  // require ArcGIS Maps SDK for Java module
+  requires com.esri.arcgisruntime;
+  // require JavaFX modules required by this module
+  requires transitive javafx.graphics;
+  requires transitive javafx.controls;
+  requires transitive javafx.fxml;
 
-package com.esri.arcgisruntime.toolkit.examples;
+  // require other modules required by this module
+  requires java.logging;
 
-import com.esri.arcgisruntime.toolkit.utils.ExampleUtils;
+  exports com.esri.arcgisruntime.toolkit;
+  exports com.esri.arcgisruntime.toolkit.skins;
 
-/**
- * A Launcher class for the {@link FloorFilterExample}.
- *
- * @since 100.15.0
- */
-public class FloorFilterExampleLauncher {
-    public static void main(String[] args) {
-        // configure the API Key
-        // authentication with an API key or named user is required to access basemaps and other location services
-        ExampleUtils.configureAPIKeyForRunningStandAloneExample();
-        // run the app
-        FloorFilterExample.main(args);
-    }
+  // allow FXML module access to Skin FXML files
+  opens com.esri.arcgisruntime.toolkit.skins to javafx.fxml;
 }

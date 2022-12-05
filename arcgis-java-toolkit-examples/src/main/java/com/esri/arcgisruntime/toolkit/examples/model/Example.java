@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.model;
+package com.esri.arcgisruntime.toolkit.examples.model;
 
 import com.esri.arcgisruntime.mapping.view.GeoView;
+import com.esri.arcgisruntime.toolkit.examples.controller.ExampleView;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 /**
  * Defines methods that are required for all Examples that are displayed within an
- * {@link com.esri.arcgisruntime.toolkit.controller.ExampleView}.
+ * {@link ExampleView}.
  *
  * @since 100.15.0
  */
