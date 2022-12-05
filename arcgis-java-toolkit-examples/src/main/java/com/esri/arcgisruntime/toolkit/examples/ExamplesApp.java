@@ -42,7 +42,7 @@ public class ExamplesApp extends Application {
             Parent root = loader.load();
             controller = loader.getController();
             // sets the stage title
-            primaryStage.setTitle("ArcGIS Runtime API for Java Toolkit - Examples");
+            primaryStage.setTitle("ArcGIS Maps SDK for Java Toolkit - Examples");
             // on initial launch the stage is set to 75% of the screen size
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             primaryStage.setWidth(screenBounds.getWidth() * 0.75);

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project provides an Example App to view demo implementations of the ArcGIS Runtime API for Java Toolkit components.
+This project provides an Example App to view demo implementations of the ArcGIS Maps SDK for Java Toolkit components.
 
 ## Features
 

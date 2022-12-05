@@ -102,7 +102,7 @@ public class ExampleUtils {
         stackPane.getChildren().add(exampleView);
 
         // set the stage title
-        primaryStage.setTitle("ArcGIS Runtime for Java Toolkit Examples - " + example.getName());
+        primaryStage.setTitle("ArcGIS Maps SDK for Java Toolkit Examples - " + example.getName());
         // initially launch the stage at 75% of the screen size
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setWidth(screenBounds.getWidth() * 0.75);
