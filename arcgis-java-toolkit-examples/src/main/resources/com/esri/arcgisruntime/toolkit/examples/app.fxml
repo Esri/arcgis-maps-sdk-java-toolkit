@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import com.esri.arcgisruntime.toolkit.controller.ExampleView?>
+<?import com.esri.arcgisruntime.toolkit.examples.controller.ExampleView?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
 <!-- Defines the main layout for the Examples App -->
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.esri.arcgisruntime.toolkit.controller.ExamplesAppController" styleClass="arcgis-toolkit-java">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.esri.arcgisruntime.toolkit.examples.controller.ExamplesAppController" styleClass="arcgis-toolkit-java">
     <!-- Top section of the BorderPane is the Header bar with menu for selecting an Example -->
     <top>
         <HBox spacing="50" alignment="CENTER" styleClass="arcgis-toolkit-java-panel, arcgis-toolkit-java-panel-large-padding, arcgis-toolkit-java-panel-no-border">
