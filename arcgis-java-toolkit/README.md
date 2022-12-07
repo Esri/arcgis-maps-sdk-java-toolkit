@@ -28,6 +28,7 @@ The following table shows the minimum version of the SDK compatible with the too
 | 100.2.1     | 100.2.1         |
 | 100.14.0    | 100.14.0        |
 | 100.15.0    | 100.15.0        |
+| 200.0.0     | 200.0.0         |
 
 ### API Key requirements
 
@@ -50,14 +51,14 @@ plugins {
 }
 
 // Replace with version number of ArcGIS Maps SDK for Java you are using in your app, such as:
-// arcgisVersion = '100.15.0'. See table below for SDK Versions that support the toolkit.
+// arcgisVersion = '200.0.0'. See table below for SDK Versions that support the toolkit.
 ext {
-  arcgisVersion = '100.15.0'
+  arcgisVersion = '200.0.0'
 }
 
 javafx {
-    version = "11.0.2"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    version = "17.0.2"
+    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media' ]
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -78,7 +79,7 @@ dependencies {
     implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
     natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
     natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
-    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:100.15.0'
+    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:200.0.0'
 }
 ```
 
