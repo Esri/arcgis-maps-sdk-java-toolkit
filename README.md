@@ -1,15 +1,15 @@
-# ArcGIS Runtime API for Java Toolkit
+# ArcGIS Maps SDK for Java Toolkit
 
 ## Introduction
 
-The ArcGIS Runtime API for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource (licensed under the Apache License Version 2.0), so you can feel free to download or clone the code and customize to meet your requirements.
+The ArcGIS Maps SDK for Java Toolkit contains controls and utilities to simplify your app development. The toolkit is provided as an open source resource (licensed under the Apache License Version 2.0), so you can feel free to download or clone the code and customize to meet your requirements.
 
 There are 2 projects within this repository: the Toolkit itself, `arcgis-java-toolkit`, and an Examples project, `arcgis-java-toolkit-examples`, which contains example implementations of the components to aid in your development.
 
 ## Resources
 
-* [ArcGIS Runtime API for Java](https://developers.arcgis.com/java/)
-* [ArcGIS Runtime Blog](https://community.esri.com/t5/arcgis-runtime-sdks-blog/bg-p/arcgis-runtime-sdks-blog)
+* [ArcGIS Maps SDK for Java](https://developers.arcgis.com/java/)
+* [ArcGIS Maps SDKs for Native Apps Blog](https://community.esri.com/t5/arcgis-runtime-sdks-blog/bg-p/arcgis-runtime-sdks-blog)
 * [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
 * [twitter@esri](http://twitter.com/esri)
 

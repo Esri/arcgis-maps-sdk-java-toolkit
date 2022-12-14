@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.toolkit.utils;
+package com.esri.arcgisruntime.toolkit.examples.utils;
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
-import com.esri.arcgisruntime.toolkit.controller.ExampleView;
-import com.esri.arcgisruntime.toolkit.model.Example;
+import com.esri.arcgisruntime.toolkit.examples.controller.ExampleView;
+import com.esri.arcgisruntime.toolkit.examples.model.Example;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 
 /**
  * Defines util methods to support the configuration of Examples that are displayed within an
- * {@link com.esri.arcgisruntime.toolkit.controller.ExampleView}.
+ * {@link ExampleView}.
  *
  * @since 100.15.0
  */
@@ -102,7 +102,7 @@ public class ExampleUtils {
         stackPane.getChildren().add(exampleView);
 
         // set the stage title
-        primaryStage.setTitle("ArcGIS Runtime for Java Toolkit Examples - " + example.getName());
+        primaryStage.setTitle("ArcGIS Maps SDK for Java Toolkit Examples - " + example.getName());
         // initially launch the stage at 75% of the screen size
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setWidth(screenBounds.getWidth() * 0.75);
@@ -110,8 +110,8 @@ public class ExampleUtils {
         // configure the Scene and add to the Stage
         var scene = new Scene(stackPane);
         // individual stylesheets can be commented out for testing purposes
-        scene.getStylesheets().add("/styles/example.css");
-        scene.getStylesheets().add("/styles/style.css");
+        scene.getStylesheets().add("/com/esri/arcgisruntime/toolkit/examples/styles/example.css");
+        scene.getStylesheets().add("/com/esri/arcgisruntime/toolkit/examples/styles/style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

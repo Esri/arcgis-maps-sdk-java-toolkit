@@ -9,11 +9,12 @@ plugins {
 
 javafx {
   version = "17.0.2"
-  modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media']
+  modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media' ]
 }
 
 group = GROUP
-version = VERSION
+// if VERSION property is not set via gradle, default to test
+version = project.findProperty("VERSION") ?: "9999"
 archivesBaseName = "arcgis-java-toolkit"
 
 idea.module.downloadJavadoc = true
@@ -32,9 +33,6 @@ repositories {
 }
 
 sourceSets {
-  main {
-    resources.srcDirs = ['src/main/java']
-  }
   integrationTest {
     java.srcDirs = ['src/integration-test/java']
     compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
@@ -51,7 +49,6 @@ dependencies {
 
   testImplementation "org.testfx:testfx-core:4.0.15-alpha"
   testImplementation "org.testfx:testfx-junit5:4.0.15-alpha"
-  testImplementation "org.hamcrest:hamcrest:2.1"
 }
 
 task integrationTest(type: Test) {
@@ -73,6 +70,11 @@ task javadocJar(type: Jar) {
   from javadoc.destinationDir
 }
 
+// do not generate a .module file
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -84,6 +86,14 @@ publishing {
             name = 'Esri License Agreement, E204'
             url = 'http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english'
             distribution = 'repo'
+          }
+        }
+        // remove JavaFX dependencies
+        withXml {
+          asNode().dependencies.'*'.findAll() {
+              it.groupId.text() == 'org.openjfx'
+          }.each {
+              it.parent().remove(it)
           }
         }
       }
@@ -108,6 +118,9 @@ artifactory {
   }
 }
 
-wrapper {
-  gradleVersion = '7.5.1'
+// This wrapper task is only used if this project is the root project not if it is a subproject e.g. of an app project
+if (rootProject == project) {
+    wrapper {
+        gradleVersion = '7.5.1'
+    }
 }

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project provides an Example App to view demo implementations of the ArcGIS Runtime API for Java Toolkit components.
+This project provides an Example App to view demo implementations of the ArcGIS Maps SDK for Java Toolkit components.
 
 ## Features
 
@@ -24,7 +24,7 @@ The Example App requires the `arcgis-java-toolkit` project to run. The whole rep
 6. Open the Gradle view with View > Tool Windows > Gradle.
 7. In the Gradle view, double-click the run task under Tasks > application to run the main Example App.
 Note: if you encounter the error `Could not get unknown property 'apiKey' for task ':run' of type org.gradle.api.tasks.JavaExec` you may have to set the Gradle user home in the IntelliJ Gradle settings to the /.gradle folder in your home directory, or may not have added your API key to your gradle.properties file.
-8. An alternative to steps 6 and 7, is to run an individual demo by right-clicking on a "Launcher" class, e.g. `com.esri.arcgisruntime.toolkit.examples.CompassExampleLauncher`, and selecting "Run CompassExampleLauncher.main()".
+8. An alternative to steps 6 and 7, is to run an individual demo by right-clicking on the Example class, e.g. `com.esri.arcgisruntime.toolkit.examples.CompassExample`, and selecting "Run CompassExample.main()".
 
 ### API Key requirements
 

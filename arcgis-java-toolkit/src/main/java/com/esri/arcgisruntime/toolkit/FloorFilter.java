@@ -30,7 +30,6 @@ import com.esri.arcgisruntime.mapping.floor.FloorManager;
 import com.esri.arcgisruntime.mapping.floor.FloorSite;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.NavigationChangedListener;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.toolkit.skins.FloorFilterSkin;
 import javafx.beans.NamedArg;
@@ -137,8 +136,8 @@ public class FloorFilter extends Control {
   public FloorFilter(GeoView geoView, AutomaticSelectionMode selectionMode) {
     geoViewProperty.set(geoView);
     automaticSelectionModeProperty.set(selectionMode);
-    NavigationChangedListener navigationChangedListener = navigationChangedEvent -> updateSelectionIfNeeded();
-    geoView.addNavigationChangedListener(navigationChangedListener);
+    ChangeListener<Boolean> navigationChangedListener = (observable, oldValue, newValue) -> updateSelectionIfNeeded();
+    geoView.navigatingProperty().addListener(navigationChangedListener);
     ChangeListener<? super FloorSite> siteListener =
       (observable, oldValue, newValue) -> handleUpdateSelectedSite(oldValue, newValue);
     selectedSiteProperty.addListener(siteListener);
@@ -166,7 +165,7 @@ public class FloorFilter extends Control {
 
   @Override
   public String getUserAgentStylesheet() {
-    return Objects.requireNonNull(this.getClass().getResource("skins/floor-filter.css")).toExternalForm();
+    return Objects.requireNonNull(this.getClass().getResource("floor-filter.css")).toExternalForm();
   }
 
   /**
