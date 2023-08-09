@@ -43,44 +43,9 @@ key, this will be indicated within the JavaDoc for the component.
 
 The toolkit library jar is hosted on https://esri.jfrog.io/artifactory/arcgis.
 
-To add the dependency to your project using Gradle:
+To add the dependency to your project, include the following in your Gradle script:
 ```groovy
-plugins {
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
-
-// Replace with version number of ArcGIS Maps SDK for Java you are using in your app, such as:
-// arcgisVersion = '200.0.0'. See table below for SDK Versions that support the toolkit.
-ext {
-  arcgisVersion = '200.0.0'
-}
-
-javafx {
-    version = "17.0.2"
-    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media' ]
-}
-
-compileJava.options.encoding = 'UTF-8'
-
-// Toolkit and ArcGIS Maps SDK for Java repository
-repositories {
-    jcenter()
-    maven {
-        url 'https://esri.jfrog.io/artifactory/arcgis'
-    }
-}
-
-configurations {
-    natives
-}
-
-dependencies {
-    implementation "com.esri.arcgisruntime:arcgis-java:$arcgisVersion"
-    natives "com.esri.arcgisruntime:arcgis-java-jnilibs:$arcgisVersion"
-    natives "com.esri.arcgisruntime:arcgis-java-resources:$arcgisVersion"
-    implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:200.0.0'
-}
+implementation 'com.esri.arcgisruntime:arcgis-java-toolkit:200.0.0'
 ```
 
 The toolkit is open source (licensed under the Apache License Version 2.0), so you are also free to clone or download this repository, customize to meet your requirements, and then build and deploy using Gradle.
